@@ -12,11 +12,9 @@ public class ConfigManagerTest extends TestCase {
 	
 	public void testGetParameterValueExisting() {
 		ConfigManager configManager = ConfigManager.getInstance();
-		
-		logger.warn("Testing log.");
-		
+			
 		String testValue = configManager.getPropertyByName("test");
 		
-		 assertEquals("test", testValue);
+		assertEquals("test", testValue);
 	}	
 }

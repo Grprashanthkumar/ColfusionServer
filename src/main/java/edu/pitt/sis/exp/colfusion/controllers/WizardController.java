@@ -1,26 +1,21 @@
 package edu.pitt.sis.exp.colfusion.controllers;
 
 import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.ws.rs.Consumes;
-import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
-import javax.ws.rs.OPTIONS;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Request;
 import javax.ws.rs.core.Response;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.glassfish.jersey.media.multipart.FormDataBodyPart;
-import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 
 import edu.pitt.sis.exp.colfusion.bll.dataSubmissionWizard.DataSubmissionWizzard;
@@ -29,6 +24,9 @@ import edu.pitt.sis.exp.colfusion.models.GeneralResponseModel;
 
 @Path("Wizard/")
 public class WizardController {
+	
+	Logger logger = LogManager.getLogger(WizardController.class.getName());
+	
 	/**
      * Method handling HTTP GET requests. The returned object will be sent
      * to the client as "application/json" media type.

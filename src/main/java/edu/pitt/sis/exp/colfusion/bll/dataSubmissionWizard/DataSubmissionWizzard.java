@@ -5,13 +5,13 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.List;
 import java.util.Map;
 
-import org.glassfish.jersey.media.multipart.FormDataBodyPart;
-
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import edu.pitt.sis.exp.colfusion.ConfigManager;
 import edu.pitt.sis.exp.colfusion.models.GeneralResponseModel;
+
 
 /**
  * Handles all business logic for the data submission wizard.
@@ -20,6 +20,8 @@ import edu.pitt.sis.exp.colfusion.models.GeneralResponseModel;
  *
  */
 public class DataSubmissionWizzard {
+	
+	Logger logger = LogManager.getLogger(DataSubmissionWizzard.class.getName());
 	
 	/**
 	 * Stores the uploaded files into disk. Also it performs some actions depending on the file type. e.g. unzips archives.
@@ -46,7 +48,13 @@ public class DataSubmissionWizzard {
 		return null;		
 	}
 	
-	// save uploaded file to new location
+	/**
+	 * Save uploaded file from input stream to the specified location on the disk.
+	 * 
+	 * @param uploadedInputStream the stream with the file.
+	 * @param uploadedFileDirLocation the location of the directory where the file should be saved. If intermediate directories do not exist, they will be created.
+	 * @param uploadedFileName the file name to be created.
+	 */
 	private void writeToFile(InputStream uploadedInputStream, String uploadedFileDirLocation, String uploadedFileName) {
  
 		try {
@@ -66,7 +74,7 @@ public class DataSubmissionWizzard {
 			out.close();
 		} catch (IOException e) {
  
-			e.printStackTrace();
+			logger.error("Write uploaded file to file failed!", e);
 		}
  
 	}
