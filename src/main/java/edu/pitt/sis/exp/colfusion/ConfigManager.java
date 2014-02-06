@@ -23,6 +23,9 @@ public class ConfigManager {
 	      return instance;
 	}
 	
+	/**
+	 * Loads properties from the properties file.
+	 */
 	private void getProperties() {
 		
 		if (instance.properties == null) {
@@ -50,7 +53,15 @@ public class ConfigManager {
 				}
 			}
 		}
-		
-		
+	}
+	
+	/**
+	 * Get the configuration property value by the property name
+	 * 
+	 * @param propertyName for which to get the value
+	 * @return the value of the property
+	 */
+	public String getPropertyByName(String propertyName) {
+		return properties.getProperty(propertyName);
 	}
 }
