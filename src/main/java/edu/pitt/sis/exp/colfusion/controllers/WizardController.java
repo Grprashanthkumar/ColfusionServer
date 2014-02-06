@@ -60,7 +60,7 @@ public class WizardController {
     		@FormDataParam("sid") String sid, @FormDataParam("uploadTimestamp") String uploadTimestamp, 
     		@FormDataParam("fileType") String fileType,
     		@FormDataParam("dbType") String dbType,
-    		@FormDataParam("upload_file[]") List<FormDataBodyPart> files
+    		@FormDataParam("upload_file") List<FormDataBodyPart> files
     		 ) {
     	
 		List<InputStream> inputStreams = new ArrayList<InputStream>();

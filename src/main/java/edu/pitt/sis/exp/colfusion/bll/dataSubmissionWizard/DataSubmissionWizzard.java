@@ -5,7 +5,7 @@ import java.util.List;
 import edu.pitt.sis.exp.colfusion.models.GeneralResponseModel;
 
 /**
- * Handles all business logic for the data submisison wizard.
+ * Handles all business logic for the data submission wizard.
  * 
  * @author Evgeny
  *
@@ -20,7 +20,7 @@ public class DataSubmissionWizzard {
 	 * @param fileType the types of the file (most probably it is file extension, I will need to update this comment).
 	 * @param dbType if the uploaded file is database dump file, then this parameters says what database engine.
 	 * @param files the input streams of the files. 
-	 * @return
+	 * @return the response message which will say if the upload was successful and if not what might be the reason.
 	 */
 	public GeneralResponseModel StoreUploadedFiles(String sid, String uploadTimestamp, 
     		String fileType, String dbType, List<InputStream> files) {
