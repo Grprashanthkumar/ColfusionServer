@@ -31,15 +31,13 @@ public class WizardController {
 	Logger logger = LogManager.getLogger(WizardController.class.getName());
 	
 	
-	private String _corsHeaders;
-
-	private Response makeCORS(ResponseBuilder req, String returnMethod) {
+	private Response makeCORS(ResponseBuilder req) {
 	   ResponseBuilder rb = req.header("Access-Control-Allow-Origin", "*")
 	      .header("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
 
-	   if (!"".equals(returnMethod)) {
-	      rb.header("Access-Control-Allow-Headers", returnMethod);
-	   }
+	   //if (!"".equals(returnMethod)) {
+	      rb.header("Access-Control-Allow-Headers", "Content-Type, Accept"); //returnMethod);
+	   //}
 
 	   return rb.build();
 	}
@@ -63,19 +61,24 @@ public class WizardController {
     	
         return grm;
     }
-    
+	
+	
+    /**
+     * Because we do cross domain AJAX calls, we need to use CORS. Actually it worked for me from simple form, but didn't work from file upload.
+     * @param requestH
+     * @return
+     */
 	@OPTIONS
     @Path("/acceptFileFromWizard")
     public Response corsMyResource(@HeaderParam("Access-Control-Request-Headers") String requestH) {
-		_corsHeaders = requestH;
-        return makeCORS(Response.ok(), requestH);
+		return makeCORS(Response.ok()); //, requestH);
     }
 	
 	/**
-     * Processes the form submitted from wizard step where data file is uploaded
+     * Processes the form submitted from wizard step where data file is uploaded.
      * 
-     * @param sid
-     * @return
+     * @param sid story id for which the files are submitted.
+     * @return sends back the general response with status and message.
      */
 	@Path("acceptFileFromWizard")
     @POST
@@ -98,9 +101,7 @@ public class WizardController {
     	DataSubmissionWizzard wizardBLL = new DataSubmissionWizzard();
     	result = wizardBLL.StoreUploadedFiles(sid, uploadTimestamp, fileType, dbType, inputStreams);
     	
-    	return Response.status(200).header("Access-Control-Allow-Origin", "*")
-        	      .header("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
-        	      .header("Access-Control-Allow-Headers", "Content-Type, Accept").entity(result).build();
+    	return makeCORS(Response.status(200).entity(result)); //.build();
     }
 }
 
