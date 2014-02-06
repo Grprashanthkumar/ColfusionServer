@@ -7,11 +7,14 @@ import java.util.Map;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
+import javax.ws.rs.HeaderParam;
+import javax.ws.rs.OPTIONS;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.ResponseBuilder;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -26,6 +29,21 @@ import edu.pitt.sis.exp.colfusion.models.GeneralResponseModel;
 public class WizardController {
 	
 	Logger logger = LogManager.getLogger(WizardController.class.getName());
+	
+	
+	private String _corsHeaders;
+
+	private Response makeCORS(ResponseBuilder req, String returnMethod) {
+	   ResponseBuilder rb = req.header("Access-Control-Allow-Origin", "*")
+	      .header("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+
+	   if (!"".equals(returnMethod)) {
+	      rb.header("Access-Control-Allow-Headers", returnMethod);
+	   }
+
+	   return rb.build();
+	}
+
 	
 	/**
      * Method handling HTTP GET requests. The returned object will be sent
@@ -46,6 +64,13 @@ public class WizardController {
         return grm;
     }
     
+	@OPTIONS
+    @Path("/acceptFileFromWizard")
+    public Response corsMyResource(@HeaderParam("Access-Control-Request-Headers") String requestH) {
+		_corsHeaders = requestH;
+        return makeCORS(Response.ok(), requestH);
+    }
+	
 	/**
      * Processes the form submitted from wizard step where data file is uploaded
      * 
@@ -73,9 +98,9 @@ public class WizardController {
     	DataSubmissionWizzard wizardBLL = new DataSubmissionWizzard();
     	result = wizardBLL.StoreUploadedFiles(sid, uploadTimestamp, fileType, dbType, inputStreams);
     	
-    	return Response.status(200).header("Access-Control-Allow-Origin", "http://localhost:8080")
-        	      .header("Access-Control-Allow-Methods", "POST, GET, PUT, UPDATE, OPTIONS")
-        	      .header("Access-Control-Allow-Headers", "Content-Type, Accept, X-Requested-With").entity(result).build();
+    	return Response.status(200).header("Access-Control-Allow-Origin", "*")
+        	      .header("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
+        	      .header("Access-Control-Allow-Headers", "Content-Type, Accept").entity(result).build();
     }
 }
 

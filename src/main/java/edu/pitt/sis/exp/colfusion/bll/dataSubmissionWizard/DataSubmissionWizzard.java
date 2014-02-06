@@ -45,7 +45,11 @@ public class DataSubmissionWizzard {
 			writeToFile(inputStream.getValue(), uploadFileAbsolutePath, inputStream.getKey());
 		}
 		
-		return null;		
+		GeneralResponseModel result = new GeneralResponseModel();
+		result.Status = "OK";
+		result.Message = "no errors";
+		
+		return result;		
 	}
 	
 	/**
