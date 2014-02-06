@@ -34,14 +34,15 @@ public class ConfigManager {
 		 
 			try {
 		 
-				input = new FileInputStream(configFileLocation);
+				//input = new FileInputStream(configFileLocation);
+				prop.load(Thread.currentThread().getContextClassLoader().getResourceAsStream(configFileLocation));
 		 
 				// load a properties file
-				prop.load(input);
+				//prop.load(input);
 		 
 				instance.properties = prop;
 		 
-			} catch (IOException ex) {
+			} catch (Exception ex) {
 				ex.printStackTrace();
 			} finally {
 				if (input != null) {
@@ -64,4 +65,11 @@ public class ConfigManager {
 	public String getPropertyByName(String propertyName) {
 		return properties.getProperty(propertyName);
 	}
+	
+	//******************************************************************************
+	// The following public static fields should be used to look up property values.
+	// The key values should correspond to property keys in config.properties file.
+	//*******************************************************************************
+	
+	public static String uploadRawFileLocationKey = "uploadRawFilesBaseLocation";
 }

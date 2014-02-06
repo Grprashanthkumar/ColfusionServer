@@ -2,7 +2,9 @@ package edu.pitt.sis.exp.colfusion.controllers;
 
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.FormParam;
@@ -63,9 +65,10 @@ public class WizardController {
     		@FormDataParam("upload_file") List<FormDataBodyPart> files
     		 ) {
     	
-		List<InputStream> inputStreams = new ArrayList<InputStream>();
-		for(FormDataBodyPart file : files){
-			inputStreams.add(file.getValueAs(InputStream.class));
+		Map<String, InputStream> inputStreams = new HashMap<String, InputStream>();
+		for (FormDataBodyPart file : files){
+						
+			inputStreams.put(file.getContentDisposition().getFileName(), file.getValueAs(InputStream.class));
 		}
 		
     	GeneralResponseModel result; 
