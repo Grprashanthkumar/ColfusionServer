@@ -21,7 +21,7 @@ import edu.pitt.sis.exp.colfusion.models.GeneralResponseModel;
  */
 public class DataSubmissionWizzard {
 	
-	Logger logger = LogManager.getLogger(DataSubmissionWizzard.class.getName());
+	final Logger logger = LogManager.getLogger(DataSubmissionWizzard.class.getName());
 	
 	/**
 	 * Stores the uploaded files into disk. Also it performs some actions depending on the file type. e.g. unzips archives.

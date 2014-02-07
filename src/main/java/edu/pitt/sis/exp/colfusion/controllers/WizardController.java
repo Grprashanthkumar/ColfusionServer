@@ -28,8 +28,7 @@ import edu.pitt.sis.exp.colfusion.models.GeneralResponseModel;
 @Path("Wizard/")
 public class WizardController {
 	
-	Logger logger = LogManager.getLogger(WizardController.class.getName());
-	
+	final Logger logger = LogManager.getLogger(WizardController.class.getName());
 	
 	private Response makeCORS(ResponseBuilder req) {
 	   ResponseBuilder rb = req.header("Access-Control-Allow-Origin", "*")
@@ -41,7 +40,6 @@ public class WizardController {
 
 	   return rb.build();
 	}
-
 	
 	/**
      * Method handling HTTP GET requests. The returned object will be sent
@@ -61,8 +59,7 @@ public class WizardController {
     	
         return grm;
     }
-	
-	
+		
     /**
      * Because we do cross domain AJAX calls, we need to use CORS. Actually it worked for me from simple form, but didn't work from file upload.
      * @param requestH
@@ -85,21 +82,21 @@ public class WizardController {
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     @Produces("application/json")
     public Response acceptFileFromWizard(
-    		@FormDataParam("sid") String sid, @FormDataParam("uploadTimestamp") String uploadTimestamp, 
+    		@FormDataParam("sid") String sid, 
+    		@FormDataParam("uploadTimestamp") String uploadTimestamp, 
     		@FormDataParam("fileType") String fileType,
     		@FormDataParam("dbType") String dbType,
-    		@FormDataParam("upload_file") List<FormDataBodyPart> files
-    		 ) {
+    		@FormDataParam("upload_file") List<FormDataBodyPart> files) {
     	
+		// Extract files names and files from the input parameter.
 		Map<String, InputStream> inputStreams = new HashMap<String, InputStream>();
-		for (FormDataBodyPart file : files){
-						
+		for (FormDataBodyPart file : files) {						
 			inputStreams.put(file.getContentDisposition().getFileName(), file.getValueAs(InputStream.class));
 		}
 		
-    	GeneralResponseModel result; 
+    	//Store the files
     	DataSubmissionWizzard wizardBLL = new DataSubmissionWizzard();
-    	result = wizardBLL.StoreUploadedFiles(sid, uploadTimestamp, fileType, dbType, inputStreams);
+    	GeneralResponseModel result = wizardBLL.StoreUploadedFiles(sid, uploadTimestamp, fileType, dbType, inputStreams);
     	
     	return makeCORS(Response.status(200).entity(result)); //.build();
     }
