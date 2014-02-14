@@ -21,7 +21,7 @@ import org.apache.logging.log4j.Logger;
 import org.glassfish.jersey.media.multipart.FormDataBodyPart;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 
-import edu.pitt.sis.exp.colfusion.bll.dataSubmissionWizard.DataSubmissionWizzard;
+import edu.pitt.sis.exp.colfusion.bll.dataSubmissionWizzard.DataSubmissionWizzard;
 import edu.pitt.sis.exp.colfusion.models.GeneralResponseModel;
 
 

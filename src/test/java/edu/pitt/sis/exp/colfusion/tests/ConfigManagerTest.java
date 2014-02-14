@@ -13,7 +13,7 @@ public class ConfigManagerTest extends TestCase {
 	public void testGetParameterValueExisting() {
 		ConfigManager configManager = ConfigManager.getInstance();
 			
-		String testValue = configManager.getPropertyByName("test");
+		String testValue = configManager.getPropertyByName(PropertyKeysTest.test);
 		
 		assertEquals("test", testValue);
 	}	

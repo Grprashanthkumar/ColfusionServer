@@ -1,4 +1,4 @@
-package edu.pitt.sis.exp.colfusion.bll.dataSubmissionWizard;
+package edu.pitt.sis.exp.colfusion.bll.dataSubmissionWizzard;
 
 import java.io.File;
 import java.io.InputStream;
@@ -8,6 +8,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import edu.pitt.sis.exp.colfusion.ConfigManager;
+import edu.pitt.sis.exp.colfusion.PropertyKeys;
 import edu.pitt.sis.exp.colfusion.models.GeneralResponseModel;
 import edu.pitt.sis.exp.colfusion.utils.IOUtils;
 import edu.pitt.sis.exp.colfusion.utils.models.IOUtilsStoredFileInfoModel;
@@ -36,7 +37,7 @@ public class DataSubmissionWizzard {
 	public GeneralResponseModel StoreUploadedFiles(String sid, String uploadTimestamp, 
     		String fileType, String dbType, Map<String, InputStream> inputStreams) {
 				
-		String uploadFilesLocation = ConfigManager.getInstance().getPropertyByName(ConfigManager.uploadRawFileLocationKey);
+		String uploadFilesLocation = ConfigManager.getInstance().getPropertyByName(PropertyKeys.uploadRawFileLocationKey);
 		String uploadFileAbsolutePath = uploadFilesLocation + File.separator + sid; 
 		
 		try {

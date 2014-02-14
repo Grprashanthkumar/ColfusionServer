@@ -62,7 +62,7 @@ public class IOUtilsStoredFileInfoModel {
 	 * 
 	 * @return last modified value in Unix epoch.
 	 */
-	public long setLastModified() {
+	public long getLastModified() {
 		return _lastModified;
 	}
 
