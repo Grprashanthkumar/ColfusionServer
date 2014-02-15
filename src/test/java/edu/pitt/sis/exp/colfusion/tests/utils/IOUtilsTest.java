@@ -2,7 +2,9 @@ package edu.pitt.sis.exp.colfusion.tests.utils;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
 
+import org.apache.commons.compress.archivers.ArchiveException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -69,6 +71,34 @@ public class IOUtilsTest extends TestCase {
 			assertEquals(testFileInfo.getFileName(), fileInfo.getFileName());
 			assertEquals(testFileInfo.getFileExtension(), fileInfo.getFileExtension());
 		} catch (IOException e) {
+			
+			logger.error("testWriteTarGzArchiveAsInputStremToFile failed!", e);
+		}
+	}
+	
+	/**
+	 * Test unarchival of a zip archive
+	 */
+	public void testUnarchive() {
+		String testFileUploadDir = configManager.getPropertyByName(PropertyKeysTest.testUploadRawFilesBaseLocation);
+		
+		String testFileName = configManager.getPropertyByName(PropertyKeysTest.testZipArchive);
+		
+		assertEquals("testZipArchive.zip", testFileName);
+		
+		String testFileNameAbsolutePath = Thread.currentThread().getContextClassLoader().getResource(testFileName).getFile();
+		
+		
+		
+		try {
+			List<IOUtilsStoredFileInfoModel> fileInfo = IOUtils.getInstance().unarchive(testFileNameAbsolutePath, testFileUploadDir);
+			
+			assertEquals(2, fileInfo.size());
+			
+		} catch (IOException e) {
+			
+			logger.error("testWriteTarGzArchiveAsInputStremToFile failed!", e);
+		} catch (ArchiveException e) {
 			
 			logger.error("testWriteTarGzArchiveAsInputStremToFile failed!", e);
 		}

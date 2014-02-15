@@ -20,4 +20,6 @@ public class PropertyKeysTest {
 	public static String testUploadRawFilesBaseLocation = "testUploadRawFilesBaseLocation";
 	
 	public static String testTarGzArchiveFileNameInResourceFolder = "testTarGzArchiveFileNameInResourceFolder";
+	
+	public static String testZipArchive = "testZipArchive";
 }

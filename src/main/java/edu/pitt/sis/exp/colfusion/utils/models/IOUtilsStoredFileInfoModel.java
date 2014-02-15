@@ -9,6 +9,7 @@ package edu.pitt.sis.exp.colfusion.utils.models;
 public class IOUtilsStoredFileInfoModel {
 
 	private String _name = "";
+	private String _absoluteName = "";
 	private String _extension = "";
 	private long _lastModified;
 	
@@ -31,21 +32,39 @@ public class IOUtilsStoredFileInfoModel {
 	}
 
 	/**
-	 * Set the name of the file.
+	 * Set the name of the file with extension.
 	 * 
-	 * @param name of the file.
+	 * @param name of the file with extension.
 	 */
 	public void setFileName(String name) {
 		_name = name;
 	}
 	
 	/**
-	 * Returns the name of the file.
+	 * Returns the name of the file with extension.
 	 * 
-	 * @return the name of the file.
+	 * @return the name of the file with extension.
 	 */
 	public String getFileName() {
 		return _name;
+	}
+	
+	/**
+	 * Set the absolute name of the file which include absolute path and the file name with extension
+	 * 
+	 * @param name of the file.
+	 */
+	public void setAbsoluteFileName(String absoluteName) {
+		_absoluteName = absoluteName;
+	}
+	
+	/**
+	 * Returns the absolute name of the file which include absolute path and the file name with extension
+	 * 
+	 * @return the absolute name of the file which include absolute path and the file name with extension
+	 */
+	public String getAbsoluteFileName() {
+		return _absoluteName;
 	}
 
 	/**
@@ -64,6 +83,20 @@ public class IOUtilsStoredFileInfoModel {
 	 */
 	public long getLastModified() {
 		return _lastModified;
+	}
+
+	/**
+	 * Check if the file is an archive.
+	 * 
+	 * @return true if the file is an archive and false otherwise.
+	 */
+	public boolean isArchive() {
+		//TODO: check for other types of archives
+		if (_extension == "zip") {
+			return true;
+		}
+		
+		return false;
 	}
 
 }

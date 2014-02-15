@@ -1,9 +1,13 @@
 package edu.pitt.sis.exp.colfusion.bll.dataSubmissionWizzard;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.compress.archivers.ArchiveException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -40,21 +44,34 @@ public class DataSubmissionWizzard {
 		String uploadFilesLocation = ConfigManager.getInstance().getPropertyByName(PropertyKeys.uploadRawFileLocationKey);
 		String uploadFileAbsolutePath = uploadFilesLocation + File.separator + sid; 
 		
+		GeneralResponseModel result = new GeneralResponseModel();
+		
 		try {
 		
 			for (Map.Entry<String, InputStream> inputStream : inputStreams.entrySet()){
 				
 				IOUtilsStoredFileInfoModel fileInfo = IOUtils.getInstance().writeInputStreamToFile(inputStream.getValue(), uploadFileAbsolutePath, inputStream.getKey());
+				
+				if (fileInfo.isArchive()) {
+					List<IOUtilsStoredFileInfoModel> filesInfo = IOUtils.getInstance().unarchive(fileInfo.getAbsoluteFileName());
+				}
+				
+				result.Status = "OK";
+				result.Message = "no errors";
 			}
-		} catch (Exception e) {
+		} catch (IOException e) {
 			 
 			logger.error("StoreUploadedFiles failed!", e);
+			
+			result.Status = "Error";
+			result.Message = "IO Error";
+		} catch (ArchiveException e) {
+			
+			logger.error("StoreUploadedFiles failed!", e);
+			
+			result.Status = "Error";
+			result.Message = "ArchiveException error";
 		}
-		
-		
-		GeneralResponseModel result = new GeneralResponseModel();
-		result.Status = "OK";
-		result.Message = "no errors";
 		
 		return result;		
 	}
