@@ -22,6 +22,7 @@ import org.glassfish.jersey.media.multipart.FormDataBodyPart;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 
 import edu.pitt.sis.exp.colfusion.bll.dataSubmissionWizzard.DataSubmissionWizzard;
+import edu.pitt.sis.exp.colfusion.models.AcceptedFilesResponseModel;
 import edu.pitt.sis.exp.colfusion.models.GeneralResponseModel;
 
 
@@ -49,7 +50,7 @@ public class WizardController {
      */ 
 	@Path("test")
     @GET
-    @Produces("application/json")
+    @Produces(MediaType.APPLICATION_JSON)
     public GeneralResponseModel getProvenance() {
     	
     	GeneralResponseModel grm = new GeneralResponseModel(); 
@@ -80,7 +81,7 @@ public class WizardController {
 	@Path("acceptFileFromWizard")
     @POST
     @Consumes(MediaType.MULTIPART_FORM_DATA)
-    @Produces("application/json")
+    @Produces(MediaType.APPLICATION_JSON)
     public Response acceptFileFromWizard(
     		@FormDataParam("sid") String sid, 
     		@FormDataParam("uploadTimestamp") String uploadTimestamp, 
@@ -96,7 +97,7 @@ public class WizardController {
 		
     	//Store the files
     	DataSubmissionWizzard wizardBLL = new DataSubmissionWizzard();
-    	GeneralResponseModel result = wizardBLL.storeUploadedFiles(sid, uploadTimestamp, fileType, dbType, inputStreams);
+    	AcceptedFilesResponseModel result = wizardBLL.storeUploadedFiles(sid, uploadTimestamp, fileType, dbType, inputStreams);
     	
     	return makeCORS(Response.status(200).entity(result)); //.build();
     }

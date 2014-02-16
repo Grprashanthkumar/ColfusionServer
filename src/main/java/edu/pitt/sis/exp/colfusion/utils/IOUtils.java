@@ -108,7 +108,7 @@ public class IOUtils {
 	 * @throws IOException
 	 * @throws ArchiveException
 	 */
-	public List<IOUtilsStoredFileInfoModel> unarchive(String absoluteFileName, String directory) throws IOException, ArchiveException {
+	public ArrayList<IOUtilsStoredFileInfoModel> unarchive(String absoluteFileName, String directory) throws IOException, ArchiveException {
 		
 		logger.info(String.format("Unarchiving %s to dir %s", absoluteFileName, directory));
 		
@@ -159,7 +159,7 @@ public class IOUtils {
 	 * @throws IOException
 	 * @throws ArchiveException
 	 */
-	public List<IOUtilsStoredFileInfoModel> unarchive(String absoluteFileName) throws IOException, ArchiveException {
+	public ArrayList<IOUtilsStoredFileInfoModel> unarchive(String absoluteFileName) throws IOException, ArchiveException {
 		
 		File archiveFile = new File(absoluteFileName);
 		
