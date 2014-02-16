@@ -71,21 +71,21 @@ public class DataSubmissionWizzard {
 				}
 			}
 			
-			result.IsSuccessful = true;
-			result.Message = "no errors";
+			result.isSuccessful = true;
+			result.message = "Files are uploaded successfully";
 			
 		} catch (IOException e) {
 			 
 			logger.error("StoreUploadedFiles failed!", e);
 			
-			result.IsSuccessful = false;
-			result.Message = "IO Error";
+			result.isSuccessful = false;
+			result.message = "There seems to be an error, try later.";
 		} catch (ArchiveException e) {
 			
 			logger.error("StoreUploadedFiles failed!", e);
 			
-			result.IsSuccessful = false;
-			result.Message = "ArchiveException error";
+			result.isSuccessful = false;
+			result.message = "There seems to be an error, try later.";
 		}
 		
 		return result;		

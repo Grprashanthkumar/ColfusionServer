@@ -55,8 +55,8 @@ public class WizardController {
     	
     	GeneralResponseModel grm = new GeneralResponseModel(); 
     	
-    	grm.IsSuccessful = true;
-    	grm.Message = "MsgBLBL";
+    	grm.isSuccessful = true;
+    	grm.message = "MsgBLBL";
     	
         return grm;
     }
