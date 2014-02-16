@@ -3,7 +3,6 @@ package edu.pitt.sis.exp.colfusion.bll.dataSubmissionWizzard;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -38,7 +37,7 @@ public class DataSubmissionWizzard {
 	 * @param inputStreams the input streams of the files. 
 	 * @return the response message which will say if the upload was successful and if not what might be the reason.
 	 */
-	public GeneralResponseModel StoreUploadedFiles(String sid, String uploadTimestamp, 
+	public GeneralResponseModel storeUploadedFiles(String sid, String uploadTimestamp, 
     		String fileType, String dbType, Map<String, InputStream> inputStreams) {
 				
 		String uploadFilesLocation = ConfigManager.getInstance().getPropertyByName(PropertyKeys.uploadRawFileLocationKey);
@@ -54,22 +53,28 @@ public class DataSubmissionWizzard {
 				
 				if (fileInfo.isArchive()) {
 					List<IOUtilsStoredFileInfoModel> filesInfo = IOUtils.getInstance().unarchive(fileInfo.getAbsoluteFileName());
+					
+					result.PayLoad.add(filesInfo);
 				}
-				
-				result.Status = "OK";
-				result.Message = "no errors";
+				else {
+					result.PayLoad.add(fileInfo);
+				}
 			}
+			
+			result.IsSuccessful = true;
+			result.Message = "no errors";
+			
 		} catch (IOException e) {
 			 
 			logger.error("StoreUploadedFiles failed!", e);
 			
-			result.Status = "Error";
+			result.IsSuccessful = false;
 			result.Message = "IO Error";
 		} catch (ArchiveException e) {
 			
 			logger.error("StoreUploadedFiles failed!", e);
 			
-			result.Status = "Error";
+			result.IsSuccessful = false;
 			result.Message = "ArchiveException error";
 		}
 		

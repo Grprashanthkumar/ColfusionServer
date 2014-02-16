@@ -54,7 +54,7 @@ public class WizardController {
     	
     	GeneralResponseModel grm = new GeneralResponseModel(); 
     	
-    	grm.Status = "StatBLBL";
+    	grm.IsSuccessful = true;
     	grm.Message = "MsgBLBL";
     	
         return grm;
@@ -96,7 +96,7 @@ public class WizardController {
 		
     	//Store the files
     	DataSubmissionWizzard wizardBLL = new DataSubmissionWizzard();
-    	GeneralResponseModel result = wizardBLL.StoreUploadedFiles(sid, uploadTimestamp, fileType, dbType, inputStreams);
+    	GeneralResponseModel result = wizardBLL.storeUploadedFiles(sid, uploadTimestamp, fileType, dbType, inputStreams);
     	
     	return makeCORS(Response.status(200).entity(result)); //.build();
     }

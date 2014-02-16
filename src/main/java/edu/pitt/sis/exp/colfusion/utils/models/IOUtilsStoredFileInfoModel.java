@@ -1,13 +1,20 @@
 package edu.pitt.sis.exp.colfusion.utils.models;
 
+import java.io.Serializable;
+
 /**
  * The class holds some information of the files which were successfully stored on the disk.
  * 
  * @author Evgeny
  *
  */
-public class IOUtilsStoredFileInfoModel {
+public class IOUtilsStoredFileInfoModel implements Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	
 	private String _name = "";
 	private String _absoluteName = "";
 	private String _extension = "";
@@ -92,7 +99,7 @@ public class IOUtilsStoredFileInfoModel {
 	 */
 	public boolean isArchive() {
 		//TODO: check for other types of archives
-		if (_extension == "zip") {
+		if (_extension.equals("zip")) {
 			return true;
 		}
 		
