@@ -37,7 +37,7 @@ public class SourceInfoManagerTest extends TestCase {
 		assertEquals("register-wrapper/1085.ktr", si.getPath());
 		
 		Format formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		String dateString = formatter.format(si.getEntryDate().toString());
+		String dateString = formatter.format(si.getEntryDate());
 		assertEquals("2013-09-23 11:40:30", dateString);
 		assertEquals("queued", si.getStatus());
 		assertEquals("database", si.getSourceType());

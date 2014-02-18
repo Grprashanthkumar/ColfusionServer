@@ -40,10 +40,10 @@ public class SourceInfoDAOImpl extends GenericDAOImpl<ColfusionSourceinfo, BigDe
 		ColfusionSourceinfo sourceInfo = null;
 		String sql = "";
 		if (includeDraft) {
-			sql = "SELECT si FROM colfusion_sourceinfo si WHERE si.sid = :sid and (Status = 'queued' or Status = 'draft')";
+			sql = "SELECT si FROM ColfusionSourceinfo si WHERE si.sid = :sid and (Status = 'queued' or Status = 'draft')";
 	    }
 		else {
-			sql = "SELECT si FROM colfusion_sourceinfo si WHERE si.sid = :sid and Status = 'queued'";
+			sql = "SELECT si FROM ColfusionSourceinfo si WHERE si.sid = :sid and Status = 'queued'";
 		}
 		
 		logger.info(String.format("Starting processing findDatasetInfoBySid for %s with drafts included %s", sid, includeDraft));
