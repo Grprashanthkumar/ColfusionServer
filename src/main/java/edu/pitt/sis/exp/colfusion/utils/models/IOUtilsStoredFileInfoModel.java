@@ -2,12 +2,15 @@ package edu.pitt.sis.exp.colfusion.utils.models;
 
 import java.io.Serializable;
 
+import javax.xml.bind.annotation.XmlRootElement;
+
 /**
  * The class holds some information of the files which were successfully stored on the disk.
  * 
  * @author Evgeny
  *
  */
+@XmlRootElement
 public class IOUtilsStoredFileInfoModel implements Serializable {
 
 	/**

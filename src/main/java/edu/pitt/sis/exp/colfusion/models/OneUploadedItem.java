@@ -5,6 +5,8 @@ package edu.pitt.sis.exp.colfusion.models;
 
 import java.util.ArrayList;
 
+import javax.xml.bind.annotation.XmlRootElement;
+
 import edu.pitt.sis.exp.colfusion.utils.models.IOUtilsStoredFileInfoModel;
 
 /**
@@ -15,6 +17,7 @@ import edu.pitt.sis.exp.colfusion.utils.models.IOUtilsStoredFileInfoModel;
  * @author Evgeny
  *
  */
+@XmlRootElement
 public class OneUploadedItem {
 	/**
 	 * In case of excel file, the files field will have always only one element - the uploaded excel file.
