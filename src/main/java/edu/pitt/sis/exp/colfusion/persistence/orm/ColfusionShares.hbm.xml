@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Feb 17, 2014 8:18:50 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionShares" table="colfusion_shares" catalog="colfusion">
+        <composite-id name="id" class="edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionSharesId">
+            <key-property name="vid" type="java.lang.Integer">
+                <column name="vid" />
+            </key-property>
+            <key-property name="userId" type="java.lang.Integer">
+                <column name="user_id" />
+            </key-property>
+            <key-property name="privilege" type="java.lang.Integer">
+                <column name="privilege" />
+            </key-property>
+        </composite-id>
+        <many-to-one name="colfusionUsers" class="edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionUsers" update="false" insert="false" fetch="select">
+            <column name="user_id" />
+        </many-to-one>
+        <many-to-one name="colfusionCanvases" class="edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionCanvases" update="false" insert="false" fetch="select">
+            <column name="vid" />
+        </many-to-one>
+    </class>
+</hibernate-mapping>

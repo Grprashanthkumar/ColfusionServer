@@ -1,0 +1,46 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Feb 17, 2014 8:18:50 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionPentahoLogLoggingChannels" table="colfusion_pentaho_log_logging_channels" catalog="colfusion">
+        <composite-id name="id" class="edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionPentahoLogLoggingChannelsId">
+            <key-property name="idBatch" type="java.lang.Integer">
+                <column name="ID_BATCH" />
+            </key-property>
+            <key-property name="channelId" type="string">
+                <column name="CHANNEL_ID" />
+            </key-property>
+            <key-property name="logDate" type="timestamp">
+                <column name="LOG_DATE" length="19" />
+            </key-property>
+            <key-property name="loggingObjectType" type="string">
+                <column name="LOGGING_OBJECT_TYPE" />
+            </key-property>
+            <key-property name="objectName" type="string">
+                <column name="OBJECT_NAME" />
+            </key-property>
+            <key-property name="objectCopy" type="string">
+                <column name="OBJECT_COPY" />
+            </key-property>
+            <key-property name="repositoryDirectory" type="string">
+                <column name="REPOSITORY_DIRECTORY" />
+            </key-property>
+            <key-property name="filename" type="string">
+                <column name="FILENAME" />
+            </key-property>
+            <key-property name="objectId" type="string">
+                <column name="OBJECT_ID" />
+            </key-property>
+            <key-property name="objectRevision" type="string">
+                <column name="OBJECT_REVISION" />
+            </key-property>
+            <key-property name="parentChannelId" type="string">
+                <column name="PARENT_CHANNEL_ID" />
+            </key-property>
+            <key-property name="rootChannelId" type="string">
+                <column name="ROOT_CHANNEL_ID" />
+            </key-property>
+        </composite-id>
+    </class>
+</hibernate-mapping>

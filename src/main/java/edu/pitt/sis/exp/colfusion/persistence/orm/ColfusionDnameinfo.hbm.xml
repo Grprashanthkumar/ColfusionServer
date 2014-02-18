@@ -1,0 +1,52 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Feb 17, 2014 8:18:50 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionDnameinfo" table="colfusion_dnameinfo" catalog="colfusion">
+        <id name="cid" type="java.lang.Integer">
+            <column name="cid" />
+            <generator class="identity" />
+        </id>
+        <many-to-one name="colfusionSourceinfo" class="edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionSourceinfo" fetch="select">
+            <column name="sid" not-null="true" />
+        </many-to-one>
+        <property name="dnameChosen" type="string">
+            <column name="dname_chosen" length="100" not-null="true" />
+        </property>
+        <property name="dnameValueType" type="string">
+            <column name="dname_value_type" length="20" />
+        </property>
+        <property name="dnameValueUnit" type="string">
+            <column name="dname_value_unit" length="40" />
+        </property>
+        <property name="dnameValueDescription" type="string">
+            <column name="dname_value_description" length="100" />
+        </property>
+        <property name="dnameOriginalName" type="string">
+            <column name="dname_original_name" length="200" not-null="true">
+                <comment>This table stores information about each column in any submitted dataset</comment>
+            </column>
+        </property>
+        <property name="isConstant" type="boolean">
+            <column name="isConstant" not-null="true">
+                <comment>if user is submitting database and on matching chema they provide input value, this flagg will be set</comment>
+            </column>
+        </property>
+        <property name="constantValue" type="string">
+            <column name="constant_value">
+                <comment>if user is submitting database and on matching chema they provide input value, the value will be stored here</comment>
+            </column>
+        </property>
+        <property name="missingValue" type="string">
+            <column name="missing_value" />
+        </property>
+        <set name="colfusionDnameMetaDatas" table="colfusion_dname_meta_data" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="cid" not-null="true" />
+            </key>
+            <one-to-many class="edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionDnameMetaData" />
+        </set>
+        <one-to-one name="colfusionColumnTableInfo" class="edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionColumnTableInfo"></one-to-one>
+    </class>
+</hibernate-mapping>

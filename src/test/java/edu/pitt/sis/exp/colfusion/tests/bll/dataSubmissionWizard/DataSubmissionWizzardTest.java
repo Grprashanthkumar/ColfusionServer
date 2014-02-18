@@ -42,7 +42,7 @@ public class DataSubmissionWizzardTest extends TestCase {
 		AcceptedFilesResponseModel result = wizardBLL.storeUploadedFiles("test", "123", "fileType", "dbType", inputStreams);
 		
     	assertEquals(true, result.isSuccessful);
-    	assertEquals("no errors", result.message);
+    	assertEquals("Files are uploaded successfully", result.message);
     	assertEquals(2, result.Payload.size());
     	
     	OneUploadedItem filesFromArray = result.Payload.get(0);

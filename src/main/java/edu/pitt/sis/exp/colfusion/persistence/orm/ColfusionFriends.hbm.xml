@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Feb 17, 2014 8:18:50 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionFriends" table="colfusion_friends" catalog="colfusion">
+        <id name="friendId" type="java.lang.Integer">
+            <column name="friend_id" />
+            <generator class="identity" />
+        </id>
+        <property name="friendFrom" type="long">
+            <column name="friend_from" not-null="true" />
+        </property>
+        <property name="friendTo" type="long">
+            <column name="friend_to" not-null="true" />
+        </property>
+    </class>
+</hibernate-mapping>

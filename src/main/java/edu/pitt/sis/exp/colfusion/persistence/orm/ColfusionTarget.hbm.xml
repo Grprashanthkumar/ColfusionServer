@@ -1,0 +1,57 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Feb 17, 2014 8:18:50 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionTarget" table="colfusion_target" catalog="colfusion">
+        <id name="tid" type="java.lang.Integer">
+            <column name="Tid" />
+            <generator class="identity" />
+        </id>
+        <property name="sid" type="int">
+            <column name="Sid" not-null="true" />
+        </property>
+        <property name="spd" type="date">
+            <column name="Spd" length="10" />
+        </property>
+        <property name="drd" type="date">
+            <column name="Drd" length="10" />
+        </property>
+        <property name="dname" type="string">
+            <column name="Dname" length="80" />
+        </property>
+        <property name="location" type="string">
+            <column name="Location" length="40" />
+        </property>
+        <property name="aggrType" type="string">
+            <column name="AggrType" length="20" />
+        </property>
+        <property name="start" type="date">
+            <column name="Start" length="10" />
+        </property>
+        <property name="end" type="date">
+            <column name="End" length="10" />
+        </property>
+        <property name="value" type="string">
+            <column name="Value" length="100" />
+        </property>
+        <property name="eid" type="int">
+            <column name="Eid" not-null="true" />
+        </property>
+        <property name="country" type="string">
+            <column name="Country" length="50" />
+        </property>
+        <property name="countrySubDiv" type="string">
+            <column name="CountrySubDiv" length="50" />
+        </property>
+        <property name="locality" type="string">
+            <column name="Locality" length="50" />
+        </property>
+        <property name="rownum" type="java.lang.Integer">
+            <column name="rownum" />
+        </property>
+        <property name="columnnum" type="java.lang.Integer">
+            <column name="columnnum" />
+        </property>
+    </class>
+</hibernate-mapping>

@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Feb 17, 2014 8:18:50 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionVotes" table="colfusion_votes" catalog="colfusion">
+        <id name="voteId" type="java.lang.Integer">
+            <column name="vote_id" />
+            <generator class="identity" />
+        </id>
+        <property name="voteType" type="string">
+            <column name="vote_type" length="8" not-null="true" />
+        </property>
+        <property name="voteDate" type="timestamp">
+            <column name="vote_date" length="19" not-null="true" />
+        </property>
+        <property name="voteLinkId" type="int">
+            <column name="vote_link_id" not-null="true" />
+        </property>
+        <property name="voteUserId" type="int">
+            <column name="vote_user_id" not-null="true" />
+        </property>
+        <property name="voteValue" type="short">
+            <column name="vote_value" not-null="true" />
+        </property>
+        <property name="voteKarma" type="java.lang.Integer">
+            <column name="vote_karma" />
+        </property>
+        <property name="voteIp" type="string">
+            <column name="vote_ip" length="64" />
+        </property>
+    </class>
+</hibernate-mapping>

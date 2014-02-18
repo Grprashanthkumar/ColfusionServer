@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Feb 17, 2014 8:18:50 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionTags" table="colfusion_tags" catalog="colfusion">
+        <composite-id name="id" class="edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionTagsId">
+            <key-property name="tagLinkId" type="int">
+                <column name="tag_link_id" />
+            </key-property>
+            <key-property name="tagLang" type="string">
+                <column name="tag_lang" length="4" />
+            </key-property>
+            <key-property name="tagDate" type="timestamp">
+                <column name="tag_date" length="19" />
+            </key-property>
+            <key-property name="tagWords" type="string">
+                <column name="tag_words" length="64" />
+            </key-property>
+        </composite-id>
+    </class>
+</hibernate-mapping>

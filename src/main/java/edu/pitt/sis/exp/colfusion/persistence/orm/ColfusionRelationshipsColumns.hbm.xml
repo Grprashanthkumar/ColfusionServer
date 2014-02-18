@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Feb 17, 2014 8:18:50 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionRelationshipsColumns" table="colfusion_relationships_columns" catalog="colfusion">
+        <composite-id name="id" class="edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionRelationshipsColumnsId">
+            <key-property name="relId" type="int">
+                <column name="rel_id" />
+            </key-property>
+            <key-property name="clFrom" type="string">
+                <column name="cl_from" />
+            </key-property>
+            <key-property name="clTo" type="string">
+                <column name="cl_to" />
+            </key-property>
+        </composite-id>
+        <many-to-one name="colfusionRelationships" class="edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionRelationships" update="false" insert="false" fetch="select">
+            <column name="rel_id" not-null="true" />
+        </many-to-one>
+        <property name="dataMatchingFromRatio" type="big_decimal">
+            <column name="dataMatchingFromRatio" precision="4" />
+        </property>
+        <property name="dataMatchingToRatio" type="big_decimal">
+            <column name="dataMatchingToRatio" precision="4" />
+        </property>
+    </class>
+</hibernate-mapping>

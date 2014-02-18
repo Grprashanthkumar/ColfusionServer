@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Feb 17, 2014 8:18:50 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionComments" table="colfusion_comments" catalog="colfusion">
+        <id name="commentId" type="java.lang.Integer">
+            <column name="comment_id" />
+            <generator class="identity" />
+        </id>
+        <property name="commentRandkey" type="int">
+            <column name="comment_randkey" not-null="true" />
+        </property>
+        <property name="commentParent" type="java.lang.Integer">
+            <column name="comment_parent" />
+        </property>
+        <property name="commentLinkId" type="int">
+            <column name="comment_link_id" not-null="true" />
+        </property>
+        <property name="commentUserId" type="int">
+            <column name="comment_user_id" not-null="true" />
+        </property>
+        <property name="commentDate" type="timestamp">
+            <column name="comment_date" length="19" not-null="true" />
+        </property>
+        <property name="commentKarma" type="short">
+            <column name="comment_karma" not-null="true" />
+        </property>
+        <property name="commentContent" type="string">
+            <column name="comment_content" length="65535" />
+        </property>
+        <property name="commentVotes" type="int">
+            <column name="comment_votes" not-null="true" />
+        </property>
+        <property name="commentStatus" type="string">
+            <column name="comment_status" length="9" not-null="true" />
+        </property>
+    </class>
+</hibernate-mapping>
