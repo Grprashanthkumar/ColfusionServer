@@ -1,21 +1,71 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE hibernate-configuration PUBLIC
-		"-//Hibernate/Hibernate Configuration DTD 3.0//EN"
-		"http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
+<!DOCTYPE hibernate-configuration PUBLIC "-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+                                         "http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
 <hibernate-configuration>
-    <session-factory>
-        <property name="hibernate.connection.driver_class">com.mysql.jdbc.Driver</property>
-        <property name="hibernate.connection.password">dataverse</property>
-        <property name="hibernate.connection.url">jdbc:mysql://localhost:3306/colfusion</property>
-        <property name="hibernate.connection.username">dataverse</property>
-        <property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect</property>
-        
-        <!-- Enable Hibernate's automatic session context management -->
-    	<property name="current_session_context_class">thread</property>
-    	
-    	<!-- Display and format all executed SQL to stdout -->
-  		<property name="show_sql">true</property>
-		<property name="format_sql">true</property>
-    	
-    </session-factory>
+ <session-factory name="">
+  <property name="hibernate.connection.driver_class">com.mysql.jdbc.Driver</property>
+  <property name="hibernate.connection.password">dataverse</property>
+  <property name="hibernate.connection.url">jdbc:mysql://localhost:3306/colfusion</property>
+  <property name="hibernate.connection.username">dataverse</property>
+  <property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect</property>
+  <!-- Enable Hibernate's automatic session context management -->
+  <property name="current_session_context_class">thread</property>
+  <!-- Display and format all executed SQL to stdout -->
+  <property name="show_sql">true</property>
+  <property name="format_sql">true</property>
+  <mapping resource="edu/pitt/sis/exp/colfusion/persistence/orm/ColfusionAdditionalCategories.hbm.xml"/>
+  <mapping resource="edu/pitt/sis/exp/colfusion/persistence/orm/ColfusionCachedQueriesInfo.hbm.xml"/>
+  <mapping resource="edu/pitt/sis/exp/colfusion/persistence/orm/ColfusionCanvases.hbm.xml"/>
+  <mapping resource="edu/pitt/sis/exp/colfusion/persistence/orm/ColfusionCategories.hbm.xml"/>
+  <mapping resource="edu/pitt/sis/exp/colfusion/persistence/orm/ColfusionCharts.hbm.xml"/>
+  <mapping resource="edu/pitt/sis/exp/colfusion/persistence/orm/ColfusionColumnTableInfo.hbm.xml"/>
+  <mapping resource="edu/pitt/sis/exp/colfusion/persistence/orm/ColfusionComments.hbm.xml"/>
+  <mapping resource="edu/pitt/sis/exp/colfusion/persistence/orm/ColfusionConfig.hbm.xml"/>
+  <mapping resource="edu/pitt/sis/exp/colfusion/persistence/orm/ColfusionDesAttachments.hbm.xml"/>
+  <mapping resource="edu/pitt/sis/exp/colfusion/persistence/orm/ColfusionDnameinfo.hbm.xml"/>
+  <mapping resource="edu/pitt/sis/exp/colfusion/persistence/orm/ColfusionDnameMetaData.hbm.xml"/>
+  <mapping resource="edu/pitt/sis/exp/colfusion/persistence/orm/ColfusionExecuteinfo.hbm.xml"/>
+  <mapping resource="edu/pitt/sis/exp/colfusion/persistence/orm/ColfusionFormulas.hbm.xml"/>
+  <mapping resource="edu/pitt/sis/exp/colfusion/persistence/orm/ColfusionFriends.hbm.xml"/>
+  <mapping resource="edu/pitt/sis/exp/colfusion/persistence/orm/ColfusionGroupMember.hbm.xml"/>
+  <mapping resource="edu/pitt/sis/exp/colfusion/persistence/orm/ColfusionGroups.hbm.xml"/>
+  <mapping resource="edu/pitt/sis/exp/colfusion/persistence/orm/ColfusionGroupShared.hbm.xml"/>
+  <mapping resource="edu/pitt/sis/exp/colfusion/persistence/orm/ColfusionLikes.hbm.xml"/>
+  <mapping resource="edu/pitt/sis/exp/colfusion/persistence/orm/ColfusionLinks.hbm.xml"/>
+  <mapping resource="edu/pitt/sis/exp/colfusion/persistence/orm/ColfusionLoginAttempts.hbm.xml"/>
+  <mapping resource="edu/pitt/sis/exp/colfusion/persistence/orm/ColfusionMessages.hbm.xml"/>
+  <mapping resource="edu/pitt/sis/exp/colfusion/persistence/orm/ColfusionMiscData.hbm.xml"/>
+  <mapping resource="edu/pitt/sis/exp/colfusion/persistence/orm/ColfusionModules.hbm.xml"/>
+  <mapping resource="edu/pitt/sis/exp/colfusion/persistence/orm/ColfusionNotifications.hbm.xml"/>
+  <mapping resource="edu/pitt/sis/exp/colfusion/persistence/orm/ColfusionNotificationsUnread.hbm.xml"/>
+  <mapping resource="edu/pitt/sis/exp/colfusion/persistence/orm/ColfusionOldUrls.hbm.xml"/>
+  <mapping resource="edu/pitt/sis/exp/colfusion/persistence/orm/ColfusionPentahoLogLoggingChannels.hbm.xml"/>
+  <mapping resource="edu/pitt/sis/exp/colfusion/persistence/orm/ColfusionPentahoLogPerformance.hbm.xml"/>
+  <mapping resource="edu/pitt/sis/exp/colfusion/persistence/orm/ColfusionPentahoLogStep.hbm.xml"/>
+  <mapping resource="edu/pitt/sis/exp/colfusion/persistence/orm/ColfusionPentahoLogTransformaion.hbm.xml"/>
+  <mapping resource="edu/pitt/sis/exp/colfusion/persistence/orm/ColfusionRedirects.hbm.xml"/>
+  <mapping resource="edu/pitt/sis/exp/colfusion/persistence/orm/ColfusionRelationships.hbm.xml"/>
+  <mapping resource="edu/pitt/sis/exp/colfusion/persistence/orm/ColfusionRelationshipsColumns.hbm.xml"/>
+  <mapping resource="edu/pitt/sis/exp/colfusion/persistence/orm/ColfusionRelationshipsColumnsCachingExecutionInfo.hbm.xml"/>
+  <mapping resource="edu/pitt/sis/exp/colfusion/persistence/orm/ColfusionSavedLinks.hbm.xml"/>
+  <mapping resource="edu/pitt/sis/exp/colfusion/persistence/orm/ColfusionShares.hbm.xml"/>
+  <mapping resource="edu/pitt/sis/exp/colfusion/persistence/orm/ColfusionSourceinfo.hbm.xml"/>
+  <mapping resource="edu/pitt/sis/exp/colfusion/persistence/orm/ColfusionSourceinfoDb.hbm.xml"/>
+  <mapping resource="edu/pitt/sis/exp/colfusion/persistence/orm/ColfusionSynonymsFrom.hbm.xml"/>
+  <mapping resource="edu/pitt/sis/exp/colfusion/persistence/orm/ColfusionSynonymsTo.hbm.xml"/>
+  <mapping resource="edu/pitt/sis/exp/colfusion/persistence/orm/ColfusionTagCache.hbm.xml"/>
+  <mapping resource="edu/pitt/sis/exp/colfusion/persistence/orm/ColfusionTags.hbm.xml"/>
+  <mapping resource="edu/pitt/sis/exp/colfusion/persistence/orm/ColfusionTarget.hbm.xml"/>
+  <mapping resource="edu/pitt/sis/exp/colfusion/persistence/orm/ColfusionTemporary.hbm.xml"/>
+  <mapping resource="edu/pitt/sis/exp/colfusion/persistence/orm/ColfusionTotals.hbm.xml"/>
+  <mapping resource="edu/pitt/sis/exp/colfusion/persistence/orm/ColfusionTrackbacks.hbm.xml"/>
+  <mapping resource="edu/pitt/sis/exp/colfusion/persistence/orm/ColfusionUpdates.hbm.xml"/>
+  <mapping resource="edu/pitt/sis/exp/colfusion/persistence/orm/ColfusionUserRelationshipVerdict.hbm.xml"/>
+  <mapping resource="edu/pitt/sis/exp/colfusion/persistence/orm/ColfusionUsers.hbm.xml"/>
+  <mapping resource="edu/pitt/sis/exp/colfusion/persistence/orm/ColfusionValidationCode.hbm.xml"/>
+  <mapping resource="edu/pitt/sis/exp/colfusion/persistence/orm/ColfusionVisualization.hbm.xml"/>
+  <mapping resource="edu/pitt/sis/exp/colfusion/persistence/orm/ColfusionVotes.hbm.xml"/>
+  <mapping resource="edu/pitt/sis/exp/colfusion/persistence/orm/ColfusionWidgets.hbm.xml"/>
+  <mapping resource="edu/pitt/sis/exp/colfusion/persistence/orm/Statonverdicts.hbm.xml"/>
+ </session-factory>
 </hibernate-configuration>

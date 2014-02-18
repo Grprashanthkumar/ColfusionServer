@@ -6,6 +6,11 @@ package edu.pitt.sis.exp.colfusion.persistence.dao;
 import java.math.BigDecimal;
 import java.util.List;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.hibernate.Query;
+
+import edu.pitt.sis.exp.colfusion.persistence.HibernateUtil;
 import edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionSourceinfo;
 
 /**
@@ -14,6 +19,8 @@ import edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionSourceinfo;
  */
 public class SourceInfoDAOImpl extends GenericDAOImpl<ColfusionSourceinfo, BigDecimal> implements SourceInfoDAO {
 
+	Logger logger = LogManager.getLogger(SourceInfoDAOImpl.class.getName());
+	
 	@Override
 	public List<ColfusionSourceinfo> findDatasetsInfoByUserId(int userId) {
 		// TODO Auto-generated method stub
@@ -29,8 +36,24 @@ public class SourceInfoDAOImpl extends GenericDAOImpl<ColfusionSourceinfo, BigDe
 
 	@Override
 	public ColfusionSourceinfo findDatasetInfoBySid(int sid, boolean includeDraft) {
-		// TODO Auto-generated method stub
-		return null;
+		
+		ColfusionSourceinfo sourceInfo = null;
+		String sql = "";
+		if (includeDraft) {
+			sql = "SELECT si FROM colfusion_sourceinfo si WHERE si.sid = :sid and (Status = 'queued' or Status = 'draft')";
+	    }
+		else {
+			sql = "SELECT si FROM colfusion_sourceinfo si WHERE si.sid = :sid and Status = 'queued'";
+		}
+		
+		logger.info(String.format("Starting processing findDatasetInfoBySid for %s with drafts included %s", sid, includeDraft));
+		
+		Query query = HibernateUtil.getSession().createQuery(sql).setParameter("sid", sid);
+        sourceInfo = findOne(query);
+        
+        logger.info(String.format("Finish processing findDatasetInfoBySid for %s with drafts included %s", sid, includeDraft));
+        
+		return sourceInfo;
 	}
 
 	@Override

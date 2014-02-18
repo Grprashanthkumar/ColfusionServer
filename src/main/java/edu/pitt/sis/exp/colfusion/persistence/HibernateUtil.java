@@ -27,7 +27,7 @@ public class HibernateUtil {
 	        sessionFactory = cfg.buildSessionFactory(standardServiceRegistry);
 		} catch (Throwable ex) {
 			// Log the exception.
-			logger.error("writeInputStreamToFile failed!", ex);
+			logger.error("sessionFactory initialization failed!", ex);
 		}
 	}
  
