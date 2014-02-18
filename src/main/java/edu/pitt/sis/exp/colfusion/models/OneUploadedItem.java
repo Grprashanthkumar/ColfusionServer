@@ -20,9 +20,27 @@ public class OneUploadedItem {
 	 * In case of excel file, the files field will have always only one element - the uploaded excel file.
 	 * In case of archive, the files field will have all files from the archive.
 	 */
-	public ArrayList<IOUtilsStoredFileInfoModel> files;
+	private ArrayList<IOUtilsStoredFileInfoModel> files;
 	
 	public OneUploadedItem() {
-		files = new ArrayList<IOUtilsStoredFileInfoModel>();
+		setFiles(new ArrayList<IOUtilsStoredFileInfoModel>());
+	}
+	
+	public OneUploadedItem(ArrayList<IOUtilsStoredFileInfoModel> files) {
+		setFiles(files);
+	}
+
+	/**
+	 * @return the files
+	 */
+	public ArrayList<IOUtilsStoredFileInfoModel> getFiles() {
+		return files;
+	}
+
+	/**
+	 * @param files the files to set
+	 */
+	public void setFiles(ArrayList<IOUtilsStoredFileInfoModel> files) {
+		this.files = files;
 	}
 }

@@ -56,18 +56,18 @@ public class DataSubmissionWizzard {
 					ArrayList<IOUtilsStoredFileInfoModel> filesInfo = IOUtils.getInstance().unarchive(fileInfo.getAbsoluteFileName());
 					
 					OneUploadedItem oneItem = new OneUploadedItem();
-					oneItem.files.addAll(filesInfo);
+					oneItem.getFiles().addAll(filesInfo);
 					
-					result.Payload.add(oneItem);
+					result.getPayload().add(oneItem);
 				}
 				else {
 					ArrayList<IOUtilsStoredFileInfoModel> fileInfoArrayList = new ArrayList<IOUtilsStoredFileInfoModel>();
 					fileInfoArrayList.add(fileInfo);
 					
 					OneUploadedItem oneItem = new OneUploadedItem();
-					oneItem.files.add(fileInfo);
+					oneItem.getFiles().add(fileInfo);
 					
-					result.Payload.add(oneItem);
+					result.getPayload().add(oneItem);
 				}
 			}
 			

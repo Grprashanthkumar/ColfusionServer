@@ -43,10 +43,10 @@ public class DataSubmissionWizzardTest extends TestCase {
 		
     	assertEquals(true, result.isSuccessful);
     	assertEquals("Files are uploaded successfully", result.message);
-    	assertEquals(2, result.Payload.size());
+    	assertEquals(2, result.getPayload().size());
     	
-    	OneUploadedItem filesFromArray = result.Payload.get(0);
+    	OneUploadedItem filesFromArray = result.getPayload().get(0);
     	
-    	assertEquals(2, filesFromArray.files.size());
+    	assertEquals(2, filesFromArray.getFiles().size());
 	}
 }
