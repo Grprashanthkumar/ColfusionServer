@@ -1,7 +1,7 @@
 /**
  * 
  */
-package edu.pitt.sis.exp.colfusion.models;
+package edu.pitt.sis.exp.colfusion.viewmodels;
 
 import java.util.ArrayList;
 
@@ -18,18 +18,18 @@ import edu.pitt.sis.exp.colfusion.utils.models.IOUtilsStoredFileInfoModel;
  *
  */
 @XmlRootElement
-public class OneUploadedItem {
+public class OneUploadedItemViewModel {
 	/**
 	 * In case of excel file, the files field will have always only one element - the uploaded excel file.
 	 * In case of archive, the files field will have all files from the archive.
 	 */
 	private ArrayList<IOUtilsStoredFileInfoModel> files;
 	
-	public OneUploadedItem() {
+	public OneUploadedItemViewModel() {
 		setFiles(new ArrayList<IOUtilsStoredFileInfoModel>());
 	}
 	
-	public OneUploadedItem(ArrayList<IOUtilsStoredFileInfoModel> files) {
+	public OneUploadedItemViewModel(ArrayList<IOUtilsStoredFileInfoModel> files) {
 		setFiles(files);
 	}
 

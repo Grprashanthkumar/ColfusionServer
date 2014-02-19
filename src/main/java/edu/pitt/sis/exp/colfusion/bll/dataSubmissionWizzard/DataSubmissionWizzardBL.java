@@ -12,10 +12,10 @@ import org.apache.logging.log4j.Logger;
 
 import edu.pitt.sis.exp.colfusion.ConfigManager;
 import edu.pitt.sis.exp.colfusion.PropertyKeys;
-import edu.pitt.sis.exp.colfusion.models.AcceptedFilesResponseModel;
-import edu.pitt.sis.exp.colfusion.models.OneUploadedItem;
+import edu.pitt.sis.exp.colfusion.responseModels.AcceptedFilesResponse;
 import edu.pitt.sis.exp.colfusion.utils.IOUtils;
 import edu.pitt.sis.exp.colfusion.utils.models.IOUtilsStoredFileInfoModel;
+import edu.pitt.sis.exp.colfusion.viewmodels.OneUploadedItemViewModel;
 
 
 /**
@@ -24,9 +24,9 @@ import edu.pitt.sis.exp.colfusion.utils.models.IOUtilsStoredFileInfoModel;
  * @author Evgeny
  *
  */
-public class DataSubmissionWizzard {
+public class DataSubmissionWizzardBL {
 	
-	final Logger logger = LogManager.getLogger(DataSubmissionWizzard.class.getName());
+	final Logger logger = LogManager.getLogger(DataSubmissionWizzardBL.class.getName());
 	
 	/**
 	 * Stores the uploaded files into disk. Also it performs some actions depending on the file type. e.g. unzips archives.
@@ -38,13 +38,13 @@ public class DataSubmissionWizzard {
 	 * @param inputStreams the input streams of the files. 
 	 * @return the response message which will say if the upload was successful and if not what might be the reason.
 	 */
-	public AcceptedFilesResponseModel storeUploadedFiles(String sid, String uploadTimestamp, 
+	public AcceptedFilesResponse storeUploadedFiles(String sid, String uploadTimestamp, 
     		String fileType, String dbType, Map<String, InputStream> inputStreams) {
 				
 		String uploadFilesLocation = ConfigManager.getInstance().getPropertyByName(PropertyKeys.uploadRawFileLocationKey);
 		String uploadFileAbsolutePath = uploadFilesLocation + File.separator + sid; 
 		
-		AcceptedFilesResponseModel result = new AcceptedFilesResponseModel();
+		AcceptedFilesResponse result = new AcceptedFilesResponse();
 		
 		try {
 		
@@ -55,7 +55,7 @@ public class DataSubmissionWizzard {
 				if (fileInfo.isArchive()) {
 					ArrayList<IOUtilsStoredFileInfoModel> filesInfo = IOUtils.getInstance().unarchive(fileInfo.getAbsoluteFileName());
 					
-					OneUploadedItem oneItem = new OneUploadedItem();
+					OneUploadedItemViewModel oneItem = new OneUploadedItemViewModel();
 					oneItem.getFiles().addAll(filesInfo);
 					
 					result.getPayload().add(oneItem);
@@ -64,7 +64,7 @@ public class DataSubmissionWizzard {
 					ArrayList<IOUtilsStoredFileInfoModel> fileInfoArrayList = new ArrayList<IOUtilsStoredFileInfoModel>();
 					fileInfoArrayList.add(fileInfo);
 					
-					OneUploadedItem oneItem = new OneUploadedItem();
+					OneUploadedItemViewModel oneItem = new OneUploadedItemViewModel();
 					oneItem.getFiles().add(fileInfo);
 					
 					result.getPayload().add(oneItem);

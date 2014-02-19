@@ -10,10 +10,10 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import edu.pitt.sis.exp.colfusion.ConfigManager;
-import edu.pitt.sis.exp.colfusion.bll.dataSubmissionWizzard.DataSubmissionWizzard;
-import edu.pitt.sis.exp.colfusion.models.AcceptedFilesResponseModel;
-import edu.pitt.sis.exp.colfusion.models.OneUploadedItem;
+import edu.pitt.sis.exp.colfusion.bll.dataSubmissionWizzard.DataSubmissionWizzardBL;
+import edu.pitt.sis.exp.colfusion.responseModels.AcceptedFilesResponse;
 import edu.pitt.sis.exp.colfusion.tests.PropertyKeysTest;
+import edu.pitt.sis.exp.colfusion.viewmodels.OneUploadedItemViewModel;
 
 public class DataSubmissionWizzardTest extends TestCase {
 	
@@ -38,14 +38,14 @@ public class DataSubmissionWizzardTest extends TestCase {
 		inputStreams.put(testArchiveFileName, testArchiveFileIS);
 		
 		
-		DataSubmissionWizzard wizardBLL = new DataSubmissionWizzard();
-		AcceptedFilesResponseModel result = wizardBLL.storeUploadedFiles("test", "123", "fileType", "dbType", inputStreams);
+		DataSubmissionWizzardBL wizardBLL = new DataSubmissionWizzardBL();
+		AcceptedFilesResponse result = wizardBLL.storeUploadedFiles("test", "123", "fileType", "dbType", inputStreams);
 		
     	assertEquals(true, result.isSuccessful);
     	assertEquals("Files are uploaded successfully", result.message);
     	assertEquals(2, result.getPayload().size());
     	
-    	OneUploadedItem filesFromArray = result.getPayload().get(0);
+    	OneUploadedItemViewModel filesFromArray = result.getPayload().get(0);
     	
     	assertEquals(2, filesFromArray.getFiles().size());
 	}

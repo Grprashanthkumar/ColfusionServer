@@ -1,8 +1,6 @@
 package edu.pitt.sis.exp.colfusion.controllers;
 
-import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -20,35 +18,19 @@ import javax.ws.rs.core.Response.ResponseBuilder;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.codehaus.jackson.JsonNode;
-import org.codehaus.jackson.JsonParseException;
-import org.codehaus.jackson.map.JsonMappingException;
-import org.codehaus.jackson.map.ObjectMapper;
 import org.glassfish.jersey.media.multipart.FormDataBodyPart;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 
-import edu.pitt.sis.exp.colfusion.bll.dataSubmissionWizzard.DataSubmissionWizzard;
-import edu.pitt.sis.exp.colfusion.models.AcceptedFilesResponseModel;
-import edu.pitt.sis.exp.colfusion.models.GeneralResponseModel;
-import edu.pitt.sis.exp.colfusion.models.OneUploadedItem;
+import edu.pitt.sis.exp.colfusion.bll.dataSubmissionWizzard.DataSubmissionWizzardBL;
+import edu.pitt.sis.exp.colfusion.responseModels.AcceptedFilesResponse;
+import edu.pitt.sis.exp.colfusion.responseModels.GeneralResponse;
 import edu.pitt.sis.exp.colfusion.viewmodels.CreateTemplateViewModel;
 
 
 @Path("Wizard/")
-public class WizardController {
+public class WizardController extends BaseController {
 	
 	final Logger logger = LogManager.getLogger(WizardController.class.getName());
-	
-	private Response makeCORS(ResponseBuilder req) {
-	   ResponseBuilder rb = req.header("Access-Control-Allow-Origin", "*")
-	      .header("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
-
-	   //if (!"".equals(returnMethod)) {
-	      rb.header("Access-Control-Allow-Headers", "Content-Type, Accept"); //returnMethod);
-	   //}
-
-	   return rb.build();
-	}
 	
 	/**
      * Method handling HTTP GET requests. The returned object will be sent
@@ -59,9 +41,9 @@ public class WizardController {
 	@Path("test")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public GeneralResponseModel getProvenance() {
+    public GeneralResponse getProvenance() {
     	
-    	GeneralResponseModel grm = new GeneralResponseModel(); 
+    	GeneralResponse grm = new GeneralResponse(); 
     	
     	grm.isSuccessful = true;
     	grm.message = "MsgBLBL";
@@ -104,8 +86,8 @@ public class WizardController {
 		}
 		
     	//Store the files
-    	DataSubmissionWizzard wizardBLL = new DataSubmissionWizzard();
-    	AcceptedFilesResponseModel result = wizardBLL.storeUploadedFiles(sid, uploadTimestamp, fileType, dbType, inputStreams);
+    	DataSubmissionWizzardBL wizardBLL = new DataSubmissionWizzardBL();
+    	AcceptedFilesResponse result = wizardBLL.storeUploadedFiles(sid, uploadTimestamp, fileType, dbType, inputStreams);
     	
     	return makeCORS(Response.status(200).entity(result)); //.build();
     }
@@ -136,7 +118,7 @@ public class WizardController {
     @Produces(MediaType.APPLICATION_JSON)
     public Response createTemplate(CreateTemplateViewModel createTemplateViewModel) {
 		    	
-		GeneralResponseModel result = new GeneralResponseModel();
+		GeneralResponse result = new GeneralResponse();
     	result.isSuccessful = true;
     	result.message = "YEAH";
     	

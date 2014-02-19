@@ -25,7 +25,7 @@ public class SourceInfoManagerTest extends TestCase {
 	/**
 	 * Test if the Excel file from the test/resources is written to specified in the properties location.
 	 */
-	public void testWriteExcelAsInputStreamToFile() {
+	public void testFindDatasetInfoBySid() {
 			
 		SourceInfoManager sourceInfoManager = new SourceInfoManagerImpl();
 		 

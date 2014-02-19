@@ -6,7 +6,6 @@ package edu.pitt.sis.exp.colfusion.viewmodels;
 import java.util.List;
 
 import javax.xml.bind.annotation.XmlRootElement;
-import edu.pitt.sis.exp.colfusion.models.OneUploadedItem;
 
 /**
  * @author Evgeny
@@ -18,13 +17,13 @@ public class CreateTemplateViewModel {
 	
 	private String fileMode;
 	
-	private List<OneUploadedItem> fileName;
+	private List<OneUploadedItemViewModel> fileName;
 
 	public CreateTemplateViewModel() {
 		
 	}
 	
-public CreateTemplateViewModel(String sid, String fileMode, List<OneUploadedItem> fileName) {
+public CreateTemplateViewModel(String sid, String fileMode, List<OneUploadedItemViewModel> fileName) {
 		setSid(sid);
 		setFileMode(fileMode);
 		setFileName(fileName);
@@ -46,11 +45,11 @@ public CreateTemplateViewModel(String sid, String fileMode, List<OneUploadedItem
 		this.fileMode = fileMode;
 	}
 
-	public List<OneUploadedItem> getFileName() {
+	public List<OneUploadedItemViewModel> getFileName() {
 		return fileName;
 	}
 
-	public void setFileName(List<OneUploadedItem> fileName) {
+	public void setFileName(List<OneUploadedItemViewModel> fileName) {
 		this.fileName = fileName;
 	}
 	
