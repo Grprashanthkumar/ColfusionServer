@@ -3,16 +3,9 @@
  */
 package edu.pitt.sis.exp.colfusion.controllers;
 
-import java.io.InputStream;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.OPTIONS;
-import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -21,13 +14,8 @@ import javax.ws.rs.core.Response;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.glassfish.jersey.media.multipart.FormDataBodyPart;
-import org.glassfish.jersey.media.multipart.FormDataParam;
-
-import edu.pitt.sis.exp.colfusion.bll.dataSubmissionWizzard.DataSubmissionWizzardBL;
-import edu.pitt.sis.exp.colfusion.persistence.managers.SourceInfoManager;
-import edu.pitt.sis.exp.colfusion.persistence.managers.SourceInfoManagerImpl;
-import edu.pitt.sis.exp.colfusion.responseModels.AcceptedFilesResponse;
+import edu.pitt.sis.exp.colfusion.bll.StoryBL;
+import edu.pitt.sis.exp.colfusion.responseModels.StoryMetadataResponse;
 
 /**
  * @author Evgeny
@@ -44,28 +32,26 @@ public class StoryController extends BaseController {
      * @return
      */
 	@OPTIONS
-    @Path("metadata")
-    public Response acceptFileFromWizardOption(@HeaderParam("Access-Control-Request-Headers") String requestH) {
+    @Path("metadata/{sid}")
+    public Response getStoryMetadata(@HeaderParam("Access-Control-Request-Headers") String requestH) {
 		return makeCORS(Response.ok()); //, requestH);
     }
 	
 	/**
-     * Processes the form submitted from wizard step where data file is uploaded.
+     * Finds metadata for the story with provided sid.
      * 
-     * @param sid story id for which the files are submitted.
-     * @return sends back the general response with status and message.
+     * @param sid story id for which the metadata should be fetched.
+     * @return response with story metadata in the payload.
      */
 	@Path("metadata/{sid}")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response acceptFileFromWizard(@PathParam("sid") int sid) {
+    public Response getStoryMetadata(@PathParam("sid") int sid) {
     	
-		SourceInfoManager storyMgr = new SourceInfoManagerImpl();
+		StoryBL storyBL = new StoryBL();
 		
-		storyMgr.findDatasetInfoBySid(sid, true);
-		
-    	AcceptedFilesResponse result;// = wizardBLL.storeUploadedFiles(sid, uploadTimestamp, fileType, dbType, inputStreams);
+		StoryMetadataResponse result = storyBL.getStoryMetadata(sid);
     	
-    	return makeCORS(Response.status(200).entity(storyMgr)); //.build();
+    	return makeCORS(Response.status(200).entity(result)); //.build();
     }
 }
