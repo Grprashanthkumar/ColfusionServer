@@ -8,6 +8,9 @@
   <property name="hibernate.connection.url">jdbc:mysql://localhost:3306/colfusion</property>
   <property name="hibernate.connection.username">dataverse</property>
   <property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect</property>
+  
+  <property name="hibernate.connection.zeroDateTimeBehavior">convertToNull</property>
+  
   <!-- Enable Hibernate's automatic session context management -->
   <property name="current_session_context_class">thread</property>
   <!-- Display and format all executed SQL to stdout -->

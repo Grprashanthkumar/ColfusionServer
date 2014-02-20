@@ -1,6 +1,3 @@
-/**
- * 
- */
 package edu.pitt.sis.exp.colfusion.persistence.managers;
 
 import java.util.List;
@@ -11,30 +8,27 @@ import org.hibernate.HibernateException;
 import org.hibernate.NonUniqueResultException;
 
 import edu.pitt.sis.exp.colfusion.persistence.HibernateUtil;
-import edu.pitt.sis.exp.colfusion.persistence.dao.SourceInfoDAO;
-import edu.pitt.sis.exp.colfusion.persistence.dao.SourceInfoDAOImpl;
-import edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionSourceinfo;
+import edu.pitt.sis.exp.colfusion.persistence.dao.LinksDAO;
+import edu.pitt.sis.exp.colfusion.persistence.dao.LinksDAOImpl;
+import edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionLinks;
 
-/**
- * @author Evgeny
- *
- */
-public class SourceInfoManagerImpl implements SourceInfoManager {
+public class LinksManagerImpl implements LinksManager {
 
 	Logger logger = LogManager.getLogger(SourceInfoManagerImpl.class.getName());
 	
-	private SourceInfoDAO sourceInfoDAO = new SourceInfoDAOImpl();
+	private LinksDAO linksDAO = new LinksDAOImpl();
 	
 	//***************************************
 	// General manager interface
 	//***************************************
 	
+	
 	@Override
-	public void save(ColfusionSourceinfo entity) {
+	public void save(ColfusionLinks entity) {
 		try {
             HibernateUtil.beginTransaction();
             
-            sourceInfoDAO.save(entity);
+            linksDAO.save(entity);
             
             HibernateUtil.commitTransaction();
         } catch (NonUniqueResultException ex) {
@@ -45,11 +39,11 @@ public class SourceInfoManagerImpl implements SourceInfoManager {
 	}
 
 	@Override
-	public void merge(ColfusionSourceinfo entity) {
+	public void merge(ColfusionLinks entity) {
 		try {
             HibernateUtil.beginTransaction();
             
-            sourceInfoDAO.merge(entity);
+            linksDAO.merge(entity);
             
             HibernateUtil.commitTransaction();
         } catch (NonUniqueResultException ex) {
@@ -60,11 +54,11 @@ public class SourceInfoManagerImpl implements SourceInfoManager {
 	}
 
 	@Override
-	public void delete(ColfusionSourceinfo entity) {
+	public void delete(ColfusionLinks entity) {
 		try {
             HibernateUtil.beginTransaction();
             
-            sourceInfoDAO.delete(entity);
+            linksDAO.delete(entity);
             
             HibernateUtil.commitTransaction();
         } catch (NonUniqueResultException ex) {
@@ -75,12 +69,12 @@ public class SourceInfoManagerImpl implements SourceInfoManager {
 	}
 
 	@Override
-	public List<ColfusionSourceinfo> findAll() {
-		List<ColfusionSourceinfo> result = null;
+	public List<ColfusionLinks> findAll() {
+		List<ColfusionLinks> result = null;
 		try {
             HibernateUtil.beginTransaction();
             
-            result = sourceInfoDAO.findAll(ColfusionSourceinfo.class);
+            result = linksDAO.findAll(ColfusionLinks.class);
             
             HibernateUtil.commitTransaction();
         } catch (NonUniqueResultException ex) {
@@ -92,12 +86,12 @@ public class SourceInfoManagerImpl implements SourceInfoManager {
 	}
 
 	@Override
-	public ColfusionSourceinfo findByID(Integer id) {
-		ColfusionSourceinfo result = null;
+	public ColfusionLinks findByID(Integer id) {
+		ColfusionLinks result = null;
 		try {
             HibernateUtil.beginTransaction();
             
-            result = sourceInfoDAO.findByID(ColfusionSourceinfo.class, id);
+            result = linksDAO.findByID(ColfusionLinks.class, id);
             
             HibernateUtil.commitTransaction();
         } catch (NonUniqueResultException ex) {
@@ -107,46 +101,5 @@ public class SourceInfoManagerImpl implements SourceInfoManager {
         }
 		return result;		
 	}
-	
-	
-	
-	//************************************
-	// SOURCINFOMANAGER interface
-	//***********************************
 
-	@Override
-	public List<ColfusionSourceinfo> findByUserId(int userId) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public List<ColfusionSourceinfo> findBySidOrTitle(
-			String searchTerm) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public ColfusionSourceinfo findBySid(int sid, boolean includeDraft) {
-		ColfusionSourceinfo sourceinfo = null;
-        try {
-            HibernateUtil.beginTransaction();
-            
-            sourceinfo = sourceInfoDAO.findDatasetInfoBySid(sid, includeDraft);
-            
-            HibernateUtil.commitTransaction();
-        } catch (NonUniqueResultException ex) {
-            logger.error("findDatasetInfoBySid failed NonUniqueResultException", ex);
-        } catch (HibernateException ex) {
-        	logger.error("findDatasetInfoBySid failed HibernateException", ex);
-        }
-        return sourceinfo;
-	}
-
-	@Override
-	public List<ColfusionSourceinfo> findByTitle(String searchTerm) {
-		// TODO Auto-generated method stub
-		return null;
-	}
 }

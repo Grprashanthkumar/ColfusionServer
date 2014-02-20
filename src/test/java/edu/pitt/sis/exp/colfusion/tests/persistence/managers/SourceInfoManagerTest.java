@@ -29,7 +29,7 @@ public class SourceInfoManagerTest extends TestCase {
 			
 		SourceInfoManager sourceInfoManager = new SourceInfoManagerImpl();
 		 
-		ColfusionSourceinfo si = sourceInfoManager.findDatasetInfoBySid(1085, true);
+		ColfusionSourceinfo si = sourceInfoManager.findBySid(1085, true);
 		 	
 		assertEquals("1085", si.getSid().toString());
 		assertEquals("test", si.getTitle());

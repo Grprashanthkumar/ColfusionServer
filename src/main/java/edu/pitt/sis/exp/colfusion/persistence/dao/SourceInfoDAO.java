@@ -3,7 +3,6 @@
  */
 package edu.pitt.sis.exp.colfusion.persistence.dao;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 import edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionSourceinfo;
@@ -15,7 +14,7 @@ import edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionSourceinfo;
  *
  * From DatasetFinder.php.
  */
-public interface SourceInfoDAO extends GenericDAO<ColfusionSourceinfo, BigDecimal> {
+public interface SourceInfoDAO extends GenericDAO<ColfusionSourceinfo, Integer> {
 	
 	/**
 	 * 

@@ -4,7 +4,6 @@
 package edu.pitt.sis.exp.colfusion.persistence.dao;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
 import java.util.List;
 
 import org.hibernate.Query;
@@ -22,45 +21,88 @@ public abstract class GenericDAOImpl<T, ID extends Serializable> implements Gene
         return HibernateUtil.getSession();
     }
  
+    /**
+	 * Saves provided entity in the database.
+	 * 
+	 * @param entity to be saved in the database.
+	 */
     public void save(T entity) {
         Session hibernateSession = this.getSession();
         hibernateSession.saveOrUpdate(entity);
     }
  
+    /**
+	 * NOT SUREWHAT IT DOES :-)
+	 * @param entity
+	 */
     public void merge(T entity) {
         Session hibernateSession = this.getSession();
         hibernateSession.merge(entity);
     }
  
+    /**
+     * Deletes provided entity.
+     * 
+     * @param entity to be deleted from database.
+     */
     public void delete(T entity) {
         Session hibernateSession = this.getSession();
         hibernateSession.delete(entity);
     }
  
-    public List<T> findMany(Query query) {
+    /**
+     * Find all entities which satisfy provided query.
+     * 
+     * @param query to run to find the entities.
+     * @return list of found entities.
+     */
+    @SuppressWarnings("unchecked")
+	public List<T> findMany(Query query) {
         List<T> t;
         t = (List<T>) query.list();
         return t;
     }
  
-    public T findOne(Query query) {
+    /**
+     * Find only one entity.
+     * 
+     * @param query to run to find the entity.
+     * @return the found entity.
+     */
+    @SuppressWarnings("unchecked")
+	public T findOne(Query query) {
         T t;
         t = (T) query.uniqueResult();
         return t;
     }
  
-    public T findByID(Class clazz, BigDecimal id) {
+    /**
+     * Find only one entity by id.
+     * 
+     * @param clazz of entity to be found.
+     * @param id to search for.
+     * @return found entity.
+     */
+    @SuppressWarnings({ "unchecked", "rawtypes" })
+	public T findByID(Class clazz, ID id) {
         Session hibernateSession = this.getSession();
         T t = null;
         t = (T) hibernateSession.get(clazz, id);
         return t;
     }
  
-    public List findAll(Class clazz) {
+    /**
+     * Get all entities.
+     * 
+     * @param clazz of entities to be returned.
+     * @return all found entities.
+     */
+    @SuppressWarnings("unchecked")
+	public List<T> findAll(@SuppressWarnings("rawtypes") Class clazz) {
         Session hibernateSession = this.getSession();
-        List T = null;
+        List<T> result = null;
         Query query = hibernateSession.createQuery("from " + clazz.getName());
-        T = query.list();
-        return T;
+        result = query.list();
+        return result;
     }
 }

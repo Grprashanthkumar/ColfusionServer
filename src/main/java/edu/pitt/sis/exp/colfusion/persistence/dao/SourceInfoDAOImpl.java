@@ -3,7 +3,6 @@
  */
 package edu.pitt.sis.exp.colfusion.persistence.dao;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
@@ -17,7 +16,7 @@ import edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionSourceinfo;
  * @author Evgeny
  *
  */
-public class SourceInfoDAOImpl extends GenericDAOImpl<ColfusionSourceinfo, BigDecimal> implements SourceInfoDAO {
+public class SourceInfoDAOImpl extends GenericDAOImpl<ColfusionSourceinfo, Integer> implements SourceInfoDAO {
 
 	Logger logger = LogManager.getLogger(SourceInfoDAOImpl.class.getName());
 	
