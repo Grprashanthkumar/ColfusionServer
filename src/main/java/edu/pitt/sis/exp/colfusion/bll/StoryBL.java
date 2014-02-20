@@ -29,8 +29,8 @@ public class StoryBL {
 		storyMetadata.setSid(sid);
 		storyMetadata.setSource_type(storyInfo.getSourceType());
 		storyMetadata.setStatus(storyInfo.getStatus());
-		storyMetadata.setTitle("");
-		storyMetadata.setDescription("");
+		storyMetadata.setTitle("blabl");
+		storyMetadata.setDescription("blublu");
 		
 		StoryMetadataResponse result = new StoryMetadataResponse();
 		result.isSuccessful = true;
