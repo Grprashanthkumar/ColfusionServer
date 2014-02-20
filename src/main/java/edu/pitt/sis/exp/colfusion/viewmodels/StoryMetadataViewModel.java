@@ -3,6 +3,8 @@
  */
 package edu.pitt.sis.exp.colfusion.viewmodels;
 
+import java.util.Date;
+
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -17,6 +19,8 @@ public class StoryMetadataViewModel {
 	private String status;
 	private String source_type;
 	private String tags;
+	private Date dateSubmitted;
+	
 	/**
 	 * @return the sid
 	 */
@@ -88,5 +92,17 @@ public class StoryMetadataViewModel {
 	 */
 	public void setTags(String tags) {
 		this.tags = tags;
+	}
+	/**
+	 * @return the dateSubmitted
+	 */
+	public Date getDateSubmitted() {
+		return dateSubmitted;
+	}
+	/**
+	 * @param dateSubmitted the dateSubmitted to set
+	 */
+	public void setDateSubmitted(Date dateSubmitted) {
+		this.dateSubmitted = dateSubmitted;
 	}
 }

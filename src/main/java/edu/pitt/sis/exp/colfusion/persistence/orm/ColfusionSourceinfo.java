@@ -1,6 +1,6 @@
 package edu.pitt.sis.exp.colfusion.persistence.orm;
 
-// Generated Feb 17, 2014 8:18:50 PM by Hibernate Tools 3.4.0.CR1
+// Generated Feb 20, 2014 5:07:35 PM by Hibernate Tools 3.4.0.CR1
 
 import java.util.Date;
 import java.util.HashSet;
@@ -23,6 +23,7 @@ public class ColfusionSourceinfo implements java.io.Serializable {
 	private String provenance;
 	private Set colfusionSynonymsFroms = new HashSet(0);
 	private Set colfusionExecuteinfos = new HashSet(0);
+	private Set colfusionSourceinfoUsers = new HashSet(0);
 	private Set colfusionTemporaries = new HashSet(0);
 	private Set colfusionSynonymsTos = new HashSet(0);
 	private Set colfusionRelationshipsesForSid1 = new HashSet(0);
@@ -46,9 +47,10 @@ public class ColfusionSourceinfo implements java.io.Serializable {
 			String path, Date entryDate, Date lastUpdated, String status,
 			String rawDataPath, String sourceType, String provenance,
 			Set colfusionSynonymsFroms, Set colfusionExecuteinfos,
-			Set colfusionTemporaries, Set colfusionSynonymsTos,
-			Set colfusionRelationshipsesForSid1, Set colfusionDesAttachmentses,
-			Set colfusionRelationshipsesForSid2, Set colfusionDnameinfos,
+			Set colfusionSourceinfoUsers, Set colfusionTemporaries,
+			Set colfusionSynonymsTos, Set colfusionRelationshipsesForSid1,
+			Set colfusionDesAttachmentses, Set colfusionRelationshipsesForSid2,
+			Set colfusionDnameinfos,
 			ColfusionSourceinfoDb colfusionSourceinfoDb,
 			Set colfusionVisualizations) {
 		this.colfusionUsers = colfusionUsers;
@@ -62,6 +64,7 @@ public class ColfusionSourceinfo implements java.io.Serializable {
 		this.provenance = provenance;
 		this.colfusionSynonymsFroms = colfusionSynonymsFroms;
 		this.colfusionExecuteinfos = colfusionExecuteinfos;
+		this.colfusionSourceinfoUsers = colfusionSourceinfoUsers;
 		this.colfusionTemporaries = colfusionTemporaries;
 		this.colfusionSynonymsTos = colfusionSynonymsTos;
 		this.colfusionRelationshipsesForSid1 = colfusionRelationshipsesForSid1;
@@ -166,6 +169,14 @@ public class ColfusionSourceinfo implements java.io.Serializable {
 
 	public void setColfusionExecuteinfos(Set colfusionExecuteinfos) {
 		this.colfusionExecuteinfos = colfusionExecuteinfos;
+	}
+
+	public Set getColfusionSourceinfoUsers() {
+		return this.colfusionSourceinfoUsers;
+	}
+
+	public void setColfusionSourceinfoUsers(Set colfusionSourceinfoUsers) {
+		this.colfusionSourceinfoUsers = colfusionSourceinfoUsers;
 	}
 
 	public Set getColfusionTemporaries() {

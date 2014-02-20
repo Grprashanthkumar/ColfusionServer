@@ -3,32 +3,26 @@
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 <!-- Generated Feb 20, 2014 5:07:35 PM by Hibernate Tools 3.4.0.CR1 -->
 <hibernate-mapping>
-    <class name="edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionSynonymsTo" table="colfusion_synonyms_to" catalog="colfusion">
-        <composite-id name="id" class="edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionSynonymsToId">
-            <key-property name="synId" type="int">
-                <column name="syn_id" />
-            </key-property>
-            <key-property name="userId" type="int">
-                <column name="userId" />
-            </key-property>
+    <class name="edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionSourceinfoUser" table="colfusion_sourceinfo_user" catalog="colfusion">
+        <composite-id name="id" class="edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionSourceinfoUserId">
             <key-property name="sid" type="int">
                 <column name="sid" />
             </key-property>
-            <key-property name="tableName" type="string">
-                <column name="tableName" />
+            <key-property name="uid" type="int">
+                <column name="uid" />
             </key-property>
-            <key-property name="transInput" type="string">
-                <column name="transInput" />
-            </key-property>
-            <key-property name="value" type="string">
-                <column name="value" />
+            <key-property name="rid" type="int">
+                <column name="rid" />
             </key-property>
         </composite-id>
         <many-to-one name="colfusionSourceinfo" class="edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionSourceinfo" update="false" insert="false" fetch="select">
             <column name="sid" not-null="true" />
         </many-to-one>
+        <many-to-one name="colfusionUserroles" class="edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionUserroles" update="false" insert="false" fetch="select">
+            <column name="rid" not-null="true" />
+        </many-to-one>
         <many-to-one name="colfusionUsers" class="edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionUsers" update="false" insert="false" fetch="select">
-            <column name="userId" not-null="true" />
+            <column name="uid" not-null="true" />
         </many-to-one>
     </class>
 </hibernate-mapping>

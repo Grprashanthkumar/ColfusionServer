@@ -40,6 +40,7 @@
   <table-filter match-catalog="colfusion" match-name="colfusion_shares"/>
   <table-filter match-catalog="colfusion" match-name="colfusion_sourceinfo"/>
   <table-filter match-catalog="colfusion" match-name="colfusion_sourceinfo_DB"/>
+  <table-filter match-catalog="colfusion" match-name="colfusion_sourceinfo_user"/>
   <table-filter match-catalog="colfusion" match-name="colfusion_synonyms_from"/>
   <table-filter match-catalog="colfusion" match-name="colfusion_synonyms_to"/>
   <table-filter match-catalog="colfusion" match-name="colfusion_tag_cache"/>
@@ -50,6 +51,7 @@
   <table-filter match-catalog="colfusion" match-name="colfusion_trackbacks"/>
   <table-filter match-catalog="colfusion" match-name="colfusion_updates"/>
   <table-filter match-catalog="colfusion" match-name="colfusion_user_relationship_verdict"/>
+  <table-filter match-catalog="colfusion" match-name="colfusion_userroles"/>
   <table-filter match-catalog="colfusion" match-name="colfusion_users"/>
   <table-filter match-catalog="colfusion" match-name="colfusion_validation_code"/>
   <table-filter match-catalog="colfusion" match-name="colfusion_visualization"/>

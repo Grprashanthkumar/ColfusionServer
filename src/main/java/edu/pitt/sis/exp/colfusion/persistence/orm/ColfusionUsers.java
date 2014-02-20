@@ -1,6 +1,6 @@
 package edu.pitt.sis.exp.colfusion.persistence.orm;
 
-// Generated Feb 17, 2014 8:18:50 PM by Hibernate Tools 3.4.0.CR1
+// Generated Feb 20, 2014 5:07:35 PM by Hibernate Tools 3.4.0.CR1
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -51,6 +51,7 @@ public class ColfusionUsers implements java.io.Serializable {
 	private String statusFriendList;
 	private String statusExcludes;
 	private Set colfusionUserRelationshipVerdicts = new HashSet(0);
+	private Set colfusionSourceinfoUsers = new HashSet(0);
 	private Set colfusionSourceinfos = new HashSet(0);
 	private Set colfusionSynonymsFroms = new HashSet(0);
 	private Set colfusionSourceinfos_1 = new HashSet(0);
@@ -88,7 +89,8 @@ public class ColfusionUsers implements java.io.Serializable {
 			Boolean statusStory, Boolean statusComment, Boolean statusEmail,
 			Boolean statusGroup, Boolean statusAllFriends,
 			String statusFriendList, String statusExcludes,
-			Set colfusionUserRelationshipVerdicts, Set colfusionSourceinfos,
+			Set colfusionUserRelationshipVerdicts,
+			Set colfusionSourceinfoUsers, Set colfusionSourceinfos,
 			Set colfusionSynonymsFroms, Set colfusionSourceinfos_1,
 			Set colfusionDesAttachmentses, Set colfusionCanvaseses,
 			Set colfusionShareses, Set colfusionRelationshipses,
@@ -131,6 +133,7 @@ public class ColfusionUsers implements java.io.Serializable {
 		this.statusFriendList = statusFriendList;
 		this.statusExcludes = statusExcludes;
 		this.colfusionUserRelationshipVerdicts = colfusionUserRelationshipVerdicts;
+		this.colfusionSourceinfoUsers = colfusionSourceinfoUsers;
 		this.colfusionSourceinfos = colfusionSourceinfos;
 		this.colfusionSynonymsFroms = colfusionSynonymsFroms;
 		this.colfusionSourceinfos_1 = colfusionSourceinfos_1;
@@ -453,6 +456,14 @@ public class ColfusionUsers implements java.io.Serializable {
 	public void setColfusionUserRelationshipVerdicts(
 			Set colfusionUserRelationshipVerdicts) {
 		this.colfusionUserRelationshipVerdicts = colfusionUserRelationshipVerdicts;
+	}
+
+	public Set getColfusionSourceinfoUsers() {
+		return this.colfusionSourceinfoUsers;
+	}
+
+	public void setColfusionSourceinfoUsers(Set colfusionSourceinfoUsers) {
+		this.colfusionSourceinfoUsers = colfusionSourceinfoUsers;
 	}
 
 	public Set getColfusionSourceinfos() {

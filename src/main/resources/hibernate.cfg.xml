@@ -54,6 +54,7 @@
   <mapping resource="edu/pitt/sis/exp/colfusion/persistence/orm/ColfusionShares.hbm.xml"/>
   <mapping resource="edu/pitt/sis/exp/colfusion/persistence/orm/ColfusionSourceinfo.hbm.xml"/>
   <mapping resource="edu/pitt/sis/exp/colfusion/persistence/orm/ColfusionSourceinfoDb.hbm.xml"/>
+  <mapping resource="edu/pitt/sis/exp/colfusion/persistence/orm/ColfusionSourceinfoUser.hbm.xml"/>
   <mapping resource="edu/pitt/sis/exp/colfusion/persistence/orm/ColfusionSynonymsFrom.hbm.xml"/>
   <mapping resource="edu/pitt/sis/exp/colfusion/persistence/orm/ColfusionSynonymsTo.hbm.xml"/>
   <mapping resource="edu/pitt/sis/exp/colfusion/persistence/orm/ColfusionTagCache.hbm.xml"/>
@@ -64,6 +65,7 @@
   <mapping resource="edu/pitt/sis/exp/colfusion/persistence/orm/ColfusionTrackbacks.hbm.xml"/>
   <mapping resource="edu/pitt/sis/exp/colfusion/persistence/orm/ColfusionUpdates.hbm.xml"/>
   <mapping resource="edu/pitt/sis/exp/colfusion/persistence/orm/ColfusionUserRelationshipVerdict.hbm.xml"/>
+  <mapping resource="edu/pitt/sis/exp/colfusion/persistence/orm/ColfusionUserroles.hbm.xml"/>
   <mapping resource="edu/pitt/sis/exp/colfusion/persistence/orm/ColfusionUsers.hbm.xml"/>
   <mapping resource="edu/pitt/sis/exp/colfusion/persistence/orm/ColfusionValidationCode.hbm.xml"/>
   <mapping resource="edu/pitt/sis/exp/colfusion/persistence/orm/ColfusionVisualization.hbm.xml"/>

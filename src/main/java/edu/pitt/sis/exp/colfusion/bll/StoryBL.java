@@ -54,10 +54,13 @@ public class StoryBL {
 			if (link != null) {
 				storyMetadata.setTitle(link.getLinkTitle());
 				storyMetadata.setDescription(link.getLinkContent());
+				storyMetadata.setTags(link.getLinkTags());
+				storyMetadata.setDateSubmitted(link.getLinkDate());
 			}
 			else {
 				storyMetadata.setTitle("");
 				storyMetadata.setDescription("");
+				storyMetadata.setTags("");
 			}
 			
 			result.isSuccessful = true;
