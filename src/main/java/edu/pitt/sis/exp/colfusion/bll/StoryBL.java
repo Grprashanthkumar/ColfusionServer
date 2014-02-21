@@ -32,24 +32,26 @@ public class StoryBL {
 	 * @return the 
 	 */
 	public StoryMetadataResponse getStoryMetadata(int sid) {
-		SourceInfoManager storyMgr = new SourceInfoManagerImpl();
-		
-		ColfusionSourceinfo storyInfo = storyMgr.findBySid(sid,  true);
 		StoryMetadataResponse result = new StoryMetadataResponse();
 		
-		if (storyInfo == null) {
+		//Get Story info
+		SourceInfoManager storyMgr = new SourceInfoManagerImpl();
+		ColfusionSourceinfo storyInfo = storyMgr.findBySid(sid,  true);
+		
+		if (storyInfo == null) { // if store was not found, then return not success, the user should probably refresh the page.
 			result.isSuccessful = false;
 			result.message = "No story found with sid:  " + sid;
 			result.setPayload(null);
 		}
-		else {
-			LinksManager linksMgr = new LinksManagerImpl();
-			ColfusionLinks link = linksMgr.findByID(sid);
+		else { // if there is a record in the sourceinfo table, then get any available information from links table and populate viewmodel.
 			
 			StoryMetadataViewModel storyMetadata = new StoryMetadataViewModel();
 			storyMetadata.setSid(sid);
 			storyMetadata.setSource_type(storyInfo.getSourceType());
 			storyMetadata.setStatus(storyInfo.getStatus());
+			
+			LinksManager linksMgr = new LinksManagerImpl();
+			ColfusionLinks link = linksMgr.findByID(sid);
 			
 			if (link != null) {
 				storyMetadata.setTitle(link.getLinkTitle());
@@ -69,5 +71,16 @@ public class StoryBL {
 		}
 		
 		return result;
+	}
+
+	/**
+	 * Update story metadata with provided information.
+	 * 
+	 * @param metadata information to be updated.
+	 * @return response with information if the update was successful or not.
+	 */
+	public StoryMetadataResponse updateStoryMetadata(StoryMetadataViewModel metadata) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }
