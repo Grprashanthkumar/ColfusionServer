@@ -17,7 +17,7 @@ public class StoryMetadataViewModel {
 	private String title;
 	private String description;
 	private String status;
-	private String source_type;
+	private String sourceType;
 	private String tags;
 	private Date dateSubmitted;
 	private int userId;
@@ -73,14 +73,14 @@ public class StoryMetadataViewModel {
 	/**
 	 * @return the source_type
 	 */
-	public String getSource_type() {
-		return source_type;
+	public String getSourceType() {
+		return sourceType;
 	}
 	/**
 	 * @param source_type the source_type to set
 	 */
-	public void setSource_type(String source_type) {
-		this.source_type = source_type;
+	public void setSourceType(String source_type) {
+		this.sourceType = source_type;
 	}
 	/**
 	 * @return the tags

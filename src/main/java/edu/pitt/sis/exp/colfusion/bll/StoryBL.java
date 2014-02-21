@@ -44,7 +44,7 @@ public class StoryBL {
 			storyMetadata.setTitle("");
 			storyMetadata.setTags("");
 			storyMetadata.setDescription("");
-			storyMetadata.setSource_type("");
+			storyMetadata.setSourceType("database");
 			storyMetadata.setDateSubmitted(newStory.getEntryDate());
 			storyMetadata.setStatus("draft");
 			storyMetadata.setUserId(newStory.getColfusionUsers().getUserId());
@@ -84,7 +84,8 @@ public class StoryBL {
 			
 			StoryMetadataViewModel storyMetadata = new StoryMetadataViewModel();
 			storyMetadata.setSid(sid);
-			storyMetadata.setSource_type(storyInfo.getSourceType());
+			storyMetadata.setSourceType(storyInfo.getSourceType());
+			storyMetadata.setUserId(storyInfo.getColfusionUsers().getUserId());
 						
 			LinksManager linksMgr = new LinksManagerImpl();
 			ColfusionLinks link = linksMgr.findByID(sid); 

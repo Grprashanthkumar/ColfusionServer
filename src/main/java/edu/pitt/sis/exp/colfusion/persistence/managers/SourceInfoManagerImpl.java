@@ -231,7 +231,7 @@ public class SourceInfoManagerImpl implements SourceInfoManager {
             
             ColfusionUsers userCreator = usersDAO.findByID(ColfusionUsers.class, metadata.getUserId());
             
-            ColfusionSourceinfo newStoryEntity = new ColfusionSourceinfo(userCreator, metadata.getDateSubmitted(), metadata.getSource_type());
+            ColfusionSourceinfo newStoryEntity = new ColfusionSourceinfo(userCreator, metadata.getDateSubmitted(), metadata.getSourceType());
             newStoryEntity.setSid(metadata.getSid());
             newStoryEntity.setTitle(metadata.getTitle());
             newStoryEntity.setStatus(metadata.getStatus());
