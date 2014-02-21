@@ -8,9 +8,9 @@
             <column name="id" />
             <generator class="identity" />
         </id>
-        <version name="version" type="float">
+        <property name="version" type="float">
             <column name="version" precision="12" scale="0" not-null="true" />
-        </version>
+        </property>
         <property name="name" type="string">
             <column name="name" length="50" />
         </property>
