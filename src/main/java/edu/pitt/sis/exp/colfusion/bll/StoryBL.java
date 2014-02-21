@@ -41,8 +41,13 @@ public class StoryBL {
 			
 			StoryMetadataViewModel storyMetadata = new StoryMetadataViewModel();
 			storyMetadata.setSid(newStory.getSid());
+			storyMetadata.setTitle("");
+			storyMetadata.setTags("");
+			storyMetadata.setDescription("");
+			storyMetadata.setSource_type("");
 			storyMetadata.setDateSubmitted(newStory.getEntryDate());
 			storyMetadata.setStatus("draft");
+			storyMetadata.setUserId(newStory.getColfusionUsers().getUserId());
 			
 			result.isSuccessful = true;
 			result.message = "OK";

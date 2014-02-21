@@ -201,9 +201,9 @@ public class SourceInfoManagerImpl implements SourceInfoManager {
             
             ColfusionSourceinfo newStoryEntity = new ColfusionSourceinfo(userCreator, date, source_type);
             
-            Integer sid = sourceInfoDAO.save(newStoryEntity);
+            sourceInfoDAO.save(newStoryEntity);
             
-            newStoryEntity.setSid(sid);
+           // newStoryEntity.setSid(sid);
             
             HibernateUtil.commitTransaction();
             
