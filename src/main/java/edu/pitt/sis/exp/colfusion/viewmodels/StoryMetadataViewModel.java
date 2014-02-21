@@ -20,6 +20,7 @@ public class StoryMetadataViewModel {
 	private String source_type;
 	private String tags;
 	private Date dateSubmitted;
+	private int userId;
 	
 	/**
 	 * @return the sid
@@ -104,5 +105,17 @@ public class StoryMetadataViewModel {
 	 */
 	public void setDateSubmitted(Date dateSubmitted) {
 		this.dateSubmitted = dateSubmitted;
+	}
+	/**
+	 * @return the userId
+	 */
+	public int getUserId() {
+		return userId;
+	}
+	/**
+	 * @param userId the userId to set
+	 */
+	public void setUserId(int userId) {
+		this.userId = userId;
 	}
 }

@@ -22,13 +22,31 @@ public class LinksManagerImpl implements LinksManager {
 	// General manager interface
 	//***************************************
 	
-	
 	@Override
-	public void save(ColfusionLinks entity) {
+	public Integer save(ColfusionLinks entity) throws NonUniqueResultException, HibernateException {
 		try {
             HibernateUtil.beginTransaction();
             
-            linksDAO.save(entity);
+            Integer result = linksDAO.save(entity);
+            
+            HibernateUtil.commitTransaction();
+            
+            return result;
+        } catch (NonUniqueResultException ex) {
+            logger.error("save failed NonUniqueResultException", ex);
+            throw ex;
+        } catch (HibernateException ex) {
+        	logger.error("save failed HibernateException", ex);
+        	throw ex;
+        }
+	}
+	
+	@Override
+	public void saveOrUpdate(ColfusionLinks entity) {
+		try {
+            HibernateUtil.beginTransaction();
+            
+            linksDAO.saveOrUpdate(entity);
             
             HibernateUtil.commitTransaction();
         } catch (NonUniqueResultException ex) {
@@ -39,17 +57,21 @@ public class LinksManagerImpl implements LinksManager {
 	}
 
 	@Override
-	public void merge(ColfusionLinks entity) {
+	public ColfusionLinks merge(ColfusionLinks entity) throws NonUniqueResultException, HibernateException {
 		try {
             HibernateUtil.beginTransaction();
             
-            linksDAO.merge(entity);
+            ColfusionLinks result = linksDAO.merge(entity);
             
             HibernateUtil.commitTransaction();
+            
+            return result;
         } catch (NonUniqueResultException ex) {
             logger.error("merge failed NonUniqueResultException", ex);
+            throw ex;
         } catch (HibernateException ex) {
         	logger.error("merge failed HibernateException", ex);
+        	throw ex;
         }
 	}
 

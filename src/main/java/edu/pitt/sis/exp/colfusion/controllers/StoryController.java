@@ -36,7 +36,31 @@ public class StoryController extends BaseController {
      * @return
      */
 	@OPTIONS
-    @Path("metadata/{sid}")
+    @Path("metadata/new/{userId}")
+    public Response newStoryMetadata(@HeaderParam("Access-Control-Request-Headers") String requestH) {
+		return makeCORS(Response.ok()); //, requestH);
+    }
+	
+	/**
+     * Creates new story in the database.
+     * 
+     * @param userId is the id of the authors of the story.
+     * @return response with story metadata in the payload.
+     */
+	@Path("metadata/new/{userId}")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response newStoryMetadata(@PathParam("userId") int userId) {
+    	
+		StoryBL storyBL = new StoryBL();
+		
+		StoryMetadataResponse result = storyBL.createStory(userId);
+    	
+    	return makeCORS(Response.status(200).entity(result)); //.build();
+    }
+	
+	@OPTIONS
+    @Path("metadata/{sid: [0-9]+}")
     public Response getStoryMetadata(@HeaderParam("Access-Control-Request-Headers") String requestH) {
 		return makeCORS(Response.ok()); //, requestH);
     }
@@ -47,7 +71,7 @@ public class StoryController extends BaseController {
      * @param sid story id for which the metadata should be fetched.
      * @return response with story metadata in the payload.
      */
-	@Path("metadata/{sid}")
+	@Path("metadata/{sid: [0-9]+}")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response getStoryMetadata(@PathParam("sid") int sid) {
@@ -65,7 +89,7 @@ public class StoryController extends BaseController {
      * @param sid story id for which the metadata should be fetched.
      * @return response with story metadata in the payload.
      */
-	@Path("metadata/{sid}")
+	@Path("metadata/{sid: [0-9]+}")
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)

@@ -26,7 +26,18 @@ public abstract class GenericDAOImpl<T, ID extends Serializable> implements Gene
 	 * 
 	 * @param entity to be saved in the database.
 	 */
-    public void save(T entity) {
+    @SuppressWarnings("unchecked")
+	public ID save(T entity) {
+        Session hibernateSession = this.getSession();
+        return (ID) hibernateSession.save(entity);
+    }
+    
+    /**
+	 * Saves provided entity in the database.
+	 * 
+	 * @param entity to be saved in the database.
+	 */
+    public void saveOrUpdate(T entity) {
         Session hibernateSession = this.getSession();
         hibernateSession.saveOrUpdate(entity);
     }
@@ -35,9 +46,11 @@ public abstract class GenericDAOImpl<T, ID extends Serializable> implements Gene
 	 * NOT SUREWHAT IT DOES :-)
 	 * @param entity
 	 */
-    public void merge(T entity) {
+    @SuppressWarnings("unchecked")
+	public T merge(T entity) {
         Session hibernateSession = this.getSession();
-        hibernateSession.merge(entity);
+        
+		return (T) hibernateSession.merge(entity);
     }
  
     /**

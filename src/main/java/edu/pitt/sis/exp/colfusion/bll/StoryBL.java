@@ -3,6 +3,8 @@
  */
 package edu.pitt.sis.exp.colfusion.bll;
 
+import java.util.Date;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -12,6 +14,7 @@ import edu.pitt.sis.exp.colfusion.persistence.managers.SourceInfoManager;
 import edu.pitt.sis.exp.colfusion.persistence.managers.SourceInfoManagerImpl;
 import edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionLinks;
 import edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionSourceinfo;
+import edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionUsers;
 import edu.pitt.sis.exp.colfusion.responseModels.StoryMetadataResponse;
 import edu.pitt.sis.exp.colfusion.viewmodels.StoryMetadataViewModel;
 
@@ -23,6 +26,35 @@ import edu.pitt.sis.exp.colfusion.viewmodels.StoryMetadataViewModel;
 public class StoryBL {
 	
 	final Logger logger = LogManager.getLogger(StoryBL.class.getName());
+	
+	/**
+	 * Creates empty story.
+	 * @return story metadata almost empty but with auto generated sid.
+	 */
+	public StoryMetadataResponse createStory(int userId) {
+		StoryMetadataResponse result = new StoryMetadataResponse();
+		
+		try {
+			SourceInfoManager storyMgr = new SourceInfoManagerImpl();
+			
+			ColfusionSourceinfo newStory = storyMgr.newStory(userId, new Date(), "database");
+			
+			StoryMetadataViewModel storyMetadata = new StoryMetadataViewModel();
+			storyMetadata.setSid(newStory.getSid());
+			storyMetadata.setDateSubmitted(newStory.getEntryDate());
+			storyMetadata.setStatus("draft");
+			
+			result.isSuccessful = true;
+			result.message = "OK";
+			result.setPayload(storyMetadata);
+		} catch (Exception e) {
+			logger.error("createStory failed", e);
+			result.isSuccessful = false;
+			result.message = "Could not create new story. Try again later please";
+		}
+		
+		return result;
+	}
 	
 	/**
 	 * Get metadata of the a story by story sid. If sid is not found in the sourceinfo table, then it will return falst in isSuccessful. 
@@ -48,16 +80,16 @@ public class StoryBL {
 			StoryMetadataViewModel storyMetadata = new StoryMetadataViewModel();
 			storyMetadata.setSid(sid);
 			storyMetadata.setSource_type(storyInfo.getSourceType());
-			storyMetadata.setStatus(storyInfo.getStatus());
-			
+						
 			LinksManager linksMgr = new LinksManagerImpl();
-			ColfusionLinks link = linksMgr.findByID(sid);
+			ColfusionLinks link = linksMgr.findByID(sid); 
 			
 			if (link != null) {
 				storyMetadata.setTitle(link.getLinkTitle());
 				storyMetadata.setDescription(link.getLinkContent());
 				storyMetadata.setTags(link.getLinkTags());
 				storyMetadata.setDateSubmitted(link.getLinkDate());
+				storyMetadata.setStatus(storyInfo.getStatus());
 			}
 			else {
 				storyMetadata.setTitle("");
@@ -80,7 +112,22 @@ public class StoryBL {
 	 * @return response with information if the update was successful or not.
 	 */
 	public StoryMetadataResponse updateStoryMetadata(StoryMetadataViewModel metadata) {
-		// TODO Auto-generated method stub
-		return null;
+		StoryMetadataResponse result = new StoryMetadataResponse();
+		
+		try {
+			SourceInfoManager storyMgr = new SourceInfoManagerImpl();
+			//TODO, FIXME: for now I will just pass the view model, however I think view model should not got that level, the storage level could be implemented
+			// in another project and then this way would lead to cycle in project dependencies.
+			storyMgr.updateStory(metadata);
+			
+			result.isSuccessful = true;
+			result.message = "OK";
+		} catch (Exception e) {
+			logger.error("updateStoryMetadata failed", e);
+			result.isSuccessful = false;
+			result.message = "Could not update story. Please try again later.";
+		}
+		
+		return result;
 	}
 }

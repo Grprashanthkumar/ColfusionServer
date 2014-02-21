@@ -11,7 +11,7 @@ import edu.pitt.sis.exp.colfusion.viewmodels.StoryMetadataViewModel;
  *
  */
 public class StoryMetadataResponse extends GeneralResponse {
-	private StoryMetadataViewModel payload;
+	private StoryMetadataViewModel payload = new StoryMetadataViewModel();
 
 	/**
 	 * @return the payload

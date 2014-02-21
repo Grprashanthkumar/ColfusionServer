@@ -3,9 +3,11 @@
  */
 package edu.pitt.sis.exp.colfusion.persistence.managers;
 
+import java.util.Date;
 import java.util.List;
 
 import edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionSourceinfo;
+import edu.pitt.sis.exp.colfusion.viewmodels.StoryMetadataViewModel;
 
 /**
  * @author Evgeny
@@ -46,4 +48,21 @@ public interface SourceInfoManager extends GeneralManager<ColfusionSourceinfo, I
 	 * @return all found datasets which conform to the search criteria. 
 	 */
 	public List<ColfusionSourceinfo> findByTitle(String searchTerm);
+
+	/**
+	 * Creates new story with given input parameters and stores it in the database and the resulting entity has automatically generated sid.
+	 * 
+	 * @param userId is the id of the user who is creating the new story.
+	 * @param date when the new story is created.
+	 * @param source_type type of the source from which the data will be imported.
+	 * @return newly created story which is stored in the db. Has auto generated sid.
+	 */
+	public ColfusionSourceinfo newStory(int userId, Date date, String source_type);
+
+	/**
+	 * Updates both sourceinfo and links table with story metadata.
+	 * 
+	 * @param metadata the metadata to be used to update the tables in database.
+	 */
+	public void updateStory(StoryMetadataViewModel metadata);
 }

@@ -9,13 +9,21 @@ public interface GeneralManager<T, ID> {
 	 * 
 	 * @param entity to be saved in the database.
 	 */
-	public void save(T entity);
+	public ID save(T entity);
+
+	
+	/**
+	 * Saves or updates provided entity in the database.
+	 * 
+	 * @param entity to be saved in the database.
+	 */
+	public void saveOrUpdate(T entity);
 
 	/**
 	 * NOT SUREWHAT IT DOES :-)
 	 * @param entity
 	 */
-    public void merge(T entity);
+    public T merge(T entity);
 
     /**
      * Deletes provided entity.
