@@ -11,16 +11,24 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.hibernate.HibernateException;
 import org.hibernate.NonUniqueResultException;
+import org.hibernate.Query;
+import org.hibernate.type.MetaType;
 
 import edu.pitt.sis.exp.colfusion.persistence.HibernateUtil;
 import edu.pitt.sis.exp.colfusion.persistence.dao.LinksDAO;
 import edu.pitt.sis.exp.colfusion.persistence.dao.LinksDAOImpl;
 import edu.pitt.sis.exp.colfusion.persistence.dao.SourceInfoDAO;
 import edu.pitt.sis.exp.colfusion.persistence.dao.SourceInfoDAOImpl;
+import edu.pitt.sis.exp.colfusion.persistence.dao.TagsCacheDAO;
+import edu.pitt.sis.exp.colfusion.persistence.dao.TagsCacheDAOImpl;
+import edu.pitt.sis.exp.colfusion.persistence.dao.TagsDAO;
+import edu.pitt.sis.exp.colfusion.persistence.dao.TagsDAOImpl;
 import edu.pitt.sis.exp.colfusion.persistence.dao.UsersDAO;
 import edu.pitt.sis.exp.colfusion.persistence.dao.UsersDAOImpl;
 import edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionLinks;
 import edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionSourceinfo;
+import edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionTags;
+import edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionTagsId;
 import edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionUsers;
 import edu.pitt.sis.exp.colfusion.viewmodels.StoryMetadataViewModel;
 
@@ -227,22 +235,9 @@ public class SourceInfoManagerImpl implements SourceInfoManager {
 		try {
             HibernateUtil.beginTransaction();
             
-            UsersDAO usersDAO = new UsersDAOImpl();
-            
-            ColfusionUsers userCreator = usersDAO.findByID(ColfusionUsers.class, metadata.getUserId());
-            
-            ColfusionSourceinfo newStoryEntity = new ColfusionSourceinfo(userCreator, metadata.getDateSubmitted(), metadata.getSourceType());
-            newStoryEntity.setSid(metadata.getSid());
-            newStoryEntity.setTitle(metadata.getTitle());
-            newStoryEntity.setStatus(metadata.getStatus());
-            
-            sourceInfoDAO.saveOrUpdate(newStoryEntity);
-            
-            ColfusionLinks newLink = new ColfusionLinks(metadata.getSid(), metadata.getUserId(), 0, 0, 0, 0, new BigDecimal(0.0), metadata.getDateSubmitted(), metadata.getDateSubmitted(), 
-            		metadata.getDateSubmitted(), 0, 1, 0, metadata.getStatus(), 0);
-            
-            LinksDAO linksDAO = new LinksDAOImpl();
-            linksDAO.saveOrUpdate(newLink);
+            updateSourceInfo(metadata);
+            updateLink(metadata);
+            updateTags(metadata);
             
             HibernateUtil.commitTransaction();
         } catch (NonUniqueResultException ex) {
@@ -252,5 +247,51 @@ public class SourceInfoManagerImpl implements SourceInfoManager {
         	logger.error("findDatasetInfoBySid failed HibernateException", ex);
         	throw ex;
         }
+	}
+
+	private void updateSourceInfo(StoryMetadataViewModel metadata) {
+		UsersDAO usersDAO = new UsersDAOImpl();
+        
+        ColfusionUsers userCreator = usersDAO.findByID(ColfusionUsers.class, metadata.getUserId());
+        
+        ColfusionSourceinfo newStoryEntity = new ColfusionSourceinfo(userCreator, metadata.getDateSubmitted(), metadata.getSourceType());
+        newStoryEntity.setSid(metadata.getSid());
+        newStoryEntity.setTitle(metadata.getTitle());
+        newStoryEntity.setStatus(metadata.getStatus());
+        
+        sourceInfoDAO.saveOrUpdate(newStoryEntity);
+	}
+
+	private void updateLink(StoryMetadataViewModel metadata) {
+		ColfusionLinks newLink = new ColfusionLinks(metadata.getSid(), metadata.getUserId(), 0, 0, 0, 0, new BigDecimal(0.0), metadata.getDateSubmitted(), metadata.getDateSubmitted(), 
+        		metadata.getDateSubmitted(), 0, 1, 0, metadata.getStatus(), 0);
+        newLink.setLinkTitle(metadata.getTitle());
+        newLink.setLinkContent(metadata.getDescription());
+        newLink.setLinkSummary(metadata.getDescription());
+        newLink.setLinkStatus(metadata.getStatus());
+        newLink.setLinkTags(metadata.getTags());
+        newLink.setLinkTitleUrl(String.valueOf(metadata.getSid()));
+        
+        LinksDAO linksDAO = new LinksDAOImpl();
+        linksDAO.saveOrUpdate(newLink);
+	}
+
+	private void updateTags(StoryMetadataViewModel metadata) {
+		TagsDAO tagsDAO = new TagsDAOImpl();
+		
+		tagsDAO.deleteAllBySid(metadata.getSid());
+			
+		
+		if (metadata.getTags().length() > 0) {
+			String[] tagsSplit = metadata.getTags().split(",|;");
+			
+			for(String tag : tagsSplit) {
+				ColfusionTags colfusionTag = new ColfusionTags(new ColfusionTagsId(metadata.getSid(), "en", metadata.getDateSubmitted(), tag.trim()));
+				tagsDAO.saveOrUpdate(colfusionTag);
+			}
+		}
+		
+		TagsCacheDAO tagsCacheDAO = new TagsCacheDAOImpl();
+		tagsCacheDAO.deleteAll();
 	}
 }
