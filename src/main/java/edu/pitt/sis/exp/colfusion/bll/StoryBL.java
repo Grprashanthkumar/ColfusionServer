@@ -14,7 +14,6 @@ import edu.pitt.sis.exp.colfusion.persistence.managers.SourceInfoManager;
 import edu.pitt.sis.exp.colfusion.persistence.managers.SourceInfoManagerImpl;
 import edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionLinks;
 import edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionSourceinfo;
-import edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionUsers;
 import edu.pitt.sis.exp.colfusion.responseModels.StoryMetadataResponse;
 import edu.pitt.sis.exp.colfusion.viewmodels.StoryMetadataViewModel;
 

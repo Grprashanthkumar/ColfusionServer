@@ -11,9 +11,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.hibernate.HibernateException;
 import org.hibernate.NonUniqueResultException;
-import org.hibernate.Query;
-import org.hibernate.type.MetaType;
-
 import edu.pitt.sis.exp.colfusion.persistence.HibernateUtil;
 import edu.pitt.sis.exp.colfusion.persistence.dao.LinksDAO;
 import edu.pitt.sis.exp.colfusion.persistence.dao.LinksDAOImpl;
