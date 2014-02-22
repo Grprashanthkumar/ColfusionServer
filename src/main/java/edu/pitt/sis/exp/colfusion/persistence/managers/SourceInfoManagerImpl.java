@@ -20,6 +20,8 @@ import edu.pitt.sis.exp.colfusion.persistence.dao.LinksDAO;
 import edu.pitt.sis.exp.colfusion.persistence.dao.LinksDAOImpl;
 import edu.pitt.sis.exp.colfusion.persistence.dao.SourceInfoDAO;
 import edu.pitt.sis.exp.colfusion.persistence.dao.SourceInfoDAOImpl;
+import edu.pitt.sis.exp.colfusion.persistence.dao.SourceinfoUserRolesDAO;
+import edu.pitt.sis.exp.colfusion.persistence.dao.SourceinfoUserRolesDAOImpl;
 import edu.pitt.sis.exp.colfusion.persistence.dao.TagsCacheDAO;
 import edu.pitt.sis.exp.colfusion.persistence.dao.TagsCacheDAOImpl;
 import edu.pitt.sis.exp.colfusion.persistence.dao.TagsDAO;
@@ -223,12 +225,17 @@ public class SourceInfoManagerImpl implements SourceInfoManager {
             UserRolesDAO userRolesDAO = new UserRolesDAOImpl();
             // 1 is for contributor/submitter, TODO: maybe we should use enum here not hard wired value.
             ColfusionUserroles userRole = userRolesDAO.findByID(ColfusionUserroles.class, 1);
+            
+            SourceinfoUserRolesDAO sourceinfoUserRoles = new SourceinfoUserRolesDAOImpl();
+            
+            
             ColfusionSourceinfoUser colfusionSourceinfoUser = new ColfusionSourceinfoUser(new ColfusionSourceinfoUserId(sid, userCreator.getUserId(), userRole.getRoleId()), 
             														newStoryEntity, userRole, userCreator);
             
-            newStoryEntity.getColfusionSourceinfoUsers().add(colfusionSourceinfoUser);
+            sourceinfoUserRoles.save(colfusionSourceinfoUser);
             
-            sourceInfoDAO.saveOrUpdate(newStoryEntity);
+            newStoryEntity.getColfusionSourceinfoUsers().add(colfusionSourceinfoUser);
+            //sourceInfoDAO.saveOrUpdate(newStoryEntity);
             
             HibernateUtil.commitTransaction();
             
@@ -322,13 +329,16 @@ public class SourceInfoManagerImpl implements SourceInfoManager {
 	@Override
 	public Map<Integer, ColfusionUserroles> getUsersInRolesForStory(ColfusionSourceinfo newStory) {
 		
-		@SuppressWarnings("unchecked")
-		HashSet<ColfusionSourceinfoUser> userRoles = (HashSet<ColfusionSourceinfoUser>) newStory.getColfusionSourceinfoUsers();
 		Map<Integer, ColfusionUserroles> result = new HashMap<Integer, ColfusionUserroles>();
-		
-		for (ColfusionSourceinfoUser userRole : userRoles) {
-			if (!result.containsKey(userRole.getId().getUid())) {
-				result.put(userRole.getId().getUid(), userRole.getColfusionUserroles());
+		if (newStory.getColfusionSourceinfoUsers().iterator().hasNext()) {
+			
+			for ( Object userRoleObj : newStory.getColfusionSourceinfoUsers().toArray()) {
+				
+				ColfusionSourceinfoUser userRole = (ColfusionSourceinfoUser) userRoleObj;
+				
+				if (!result.containsKey(userRole.getId().getUid())) {
+					result.put(userRole.getId().getUid(), userRole.getColfusionUserroles());
+				}
 			}
 		}
 		
