@@ -5,12 +5,16 @@ package edu.pitt.sis.exp.colfusion.persistence.managers;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.hibernate.HibernateException;
 import org.hibernate.NonUniqueResultException;
+
 import edu.pitt.sis.exp.colfusion.persistence.HibernateUtil;
 import edu.pitt.sis.exp.colfusion.persistence.dao.LinksDAO;
 import edu.pitt.sis.exp.colfusion.persistence.dao.LinksDAOImpl;
@@ -20,12 +24,17 @@ import edu.pitt.sis.exp.colfusion.persistence.dao.TagsCacheDAO;
 import edu.pitt.sis.exp.colfusion.persistence.dao.TagsCacheDAOImpl;
 import edu.pitt.sis.exp.colfusion.persistence.dao.TagsDAO;
 import edu.pitt.sis.exp.colfusion.persistence.dao.TagsDAOImpl;
+import edu.pitt.sis.exp.colfusion.persistence.dao.UserRolesDAO;
+import edu.pitt.sis.exp.colfusion.persistence.dao.UserRolesDAOImpl;
 import edu.pitt.sis.exp.colfusion.persistence.dao.UsersDAO;
 import edu.pitt.sis.exp.colfusion.persistence.dao.UsersDAOImpl;
 import edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionLinks;
 import edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionSourceinfo;
+import edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionSourceinfoUser;
+import edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionSourceinfoUserId;
 import edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionTags;
 import edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionTagsId;
+import edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionUserroles;
 import edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionUsers;
 import edu.pitt.sis.exp.colfusion.viewmodels.StoryMetadataViewModel;
 
@@ -195,6 +204,7 @@ public class SourceInfoManagerImpl implements SourceInfoManager {
 	 * @param source_type type of the source from which the data will be imported.
 	 * @return newly created story which is stored in the db. Has auto generated sid.
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	public ColfusionSourceinfo newStory(int userId, Date date, String source_type) throws NonUniqueResultException, HibernateException {
 		try {
@@ -206,9 +216,19 @@ public class SourceInfoManagerImpl implements SourceInfoManager {
             
             ColfusionSourceinfo newStoryEntity = new ColfusionSourceinfo(userCreator, date, source_type);
             
-            sourceInfoDAO.save(newStoryEntity);
+            int sid = sourceInfoDAO.save(newStoryEntity);
             
-           // newStoryEntity.setSid(sid);
+            //Add user as submitter/contributer for newly created story.
+            
+            UserRolesDAO userRolesDAO = new UserRolesDAOImpl();
+            // 1 is for contributor/submitter, TODO: maybe we should use enum here not hard wired value.
+            ColfusionUserroles userRole = userRolesDAO.findByID(ColfusionUserroles.class, 1);
+            ColfusionSourceinfoUser colfusionSourceinfoUser = new ColfusionSourceinfoUser(new ColfusionSourceinfoUserId(sid, userCreator.getUserId(), userRole.getRoleId()), 
+            														newStoryEntity, userRole, userCreator);
+            
+            newStoryEntity.getColfusionSourceinfoUsers().add(colfusionSourceinfoUser);
+            
+            sourceInfoDAO.saveOrUpdate(newStoryEntity);
             
             HibernateUtil.commitTransaction();
             
@@ -249,7 +269,7 @@ public class SourceInfoManagerImpl implements SourceInfoManager {
 	private void updateSourceInfo(StoryMetadataViewModel metadata) {
 		UsersDAO usersDAO = new UsersDAOImpl();
         
-        ColfusionUsers userCreator = usersDAO.findByID(ColfusionUsers.class, metadata.getUserId());
+        ColfusionUsers userCreator = usersDAO.findByID(ColfusionUsers.class, metadata.getStorySubmitter().getUserId());
         
         ColfusionSourceinfo newStoryEntity = new ColfusionSourceinfo(userCreator, metadata.getDateSubmitted(), metadata.getSourceType());
         newStoryEntity.setSid(metadata.getSid());
@@ -260,7 +280,7 @@ public class SourceInfoManagerImpl implements SourceInfoManager {
 	}
 
 	private void updateLink(StoryMetadataViewModel metadata) {
-		ColfusionLinks newLink = new ColfusionLinks(metadata.getSid(), metadata.getUserId(), 0, 0, 0, 0, new BigDecimal(0.0), metadata.getDateSubmitted(), metadata.getDateSubmitted(), 
+		ColfusionLinks newLink = new ColfusionLinks(metadata.getSid(), metadata.getStorySubmitter().getUserId(), 0, 0, 0, 0, new BigDecimal(0.0), metadata.getDateSubmitted(), metadata.getDateSubmitted(), 
         		metadata.getDateSubmitted(), 0, 1, 0, metadata.getStatus(), 0);
         newLink.setLinkTitle(metadata.getTitle());
         newLink.setLinkContent(metadata.getDescription());
@@ -290,5 +310,28 @@ public class SourceInfoManagerImpl implements SourceInfoManager {
 		
 		TagsCacheDAO tagsCacheDAO = new TagsCacheDAOImpl();
 		tagsCacheDAO.deleteAll();
+	}
+
+	/**
+	 * Transforms referenced field ColfusionSourceinfoUsers of a given story into map where keys are user ids and values are records from StoryUserRoles table which
+	 * describes in which role each user is participating in the given story.
+	 * 
+	 * @param newStory for which the information need to be transformed.
+	 * @return the map as described in the description.
+	 */
+	@Override
+	public Map<Integer, ColfusionUserroles> getUsersInRolesForStory(ColfusionSourceinfo newStory) {
+		
+		@SuppressWarnings("unchecked")
+		HashSet<ColfusionSourceinfoUser> userRoles = (HashSet<ColfusionSourceinfoUser>) newStory.getColfusionSourceinfoUsers();
+		Map<Integer, ColfusionUserroles> result = new HashMap<Integer, ColfusionUserroles>();
+		
+		for (ColfusionSourceinfoUser userRole : userRoles) {
+			if (!result.containsKey(userRole.getId().getUid())) {
+				result.put(userRole.getId().getUid(), userRole.getColfusionUserroles());
+			}
+		}
+		
+		return result;
 	}
 }

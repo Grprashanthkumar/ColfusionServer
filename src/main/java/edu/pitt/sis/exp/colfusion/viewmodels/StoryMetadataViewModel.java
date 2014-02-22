@@ -3,6 +3,7 @@
  */
 package edu.pitt.sis.exp.colfusion.viewmodels;
 
+import java.util.ArrayList;
 import java.util.Date;
 
 import javax.xml.bind.annotation.XmlRootElement;
@@ -20,7 +21,9 @@ public class StoryMetadataViewModel {
 	private String sourceType;
 	private String tags;
 	private Date dateSubmitted;
-	private int userId;
+	
+	private StoryAuthorViewModel storySubmitter;
+	private ArrayList<StoryAuthorViewModel> storyAuthors;
 	
 	/**
 	 * @return the sid
@@ -107,15 +110,28 @@ public class StoryMetadataViewModel {
 		this.dateSubmitted = dateSubmitted;
 	}
 	/**
-	 * @return the userId
+	 * @return the storySubmitter
 	 */
-	public int getUserId() {
-		return userId;
+	public StoryAuthorViewModel getStorySubmitter() {
+		return storySubmitter;
 	}
 	/**
-	 * @param userId the userId to set
+	 * @param storySubmitter the storySubmitter to set
 	 */
-	public void setUserId(int userId) {
-		this.userId = userId;
+	public void setStorySubmitter(StoryAuthorViewModel storySubmitter) {
+		this.storySubmitter = storySubmitter;
 	}
+	/**
+	 * @return the storyAuthors
+	 */
+	public ArrayList<StoryAuthorViewModel> getStoryAuthors() {
+		return storyAuthors;
+	}
+	/**
+	 * @param storyAuthors the storyAuthors to set
+	 */
+	public void setStoryAuthors(ArrayList<StoryAuthorViewModel> storyAuthors) {
+		this.storyAuthors = storyAuthors;
+	}
+	
 }

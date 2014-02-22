@@ -5,8 +5,10 @@ package edu.pitt.sis.exp.colfusion.persistence.managers;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionSourceinfo;
+import edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionUserroles;
 import edu.pitt.sis.exp.colfusion.viewmodels.StoryMetadataViewModel;
 
 /**
@@ -65,4 +67,13 @@ public interface SourceInfoManager extends GeneralManager<ColfusionSourceinfo, I
 	 * @param metadata the metadata to be used to update the tables in database.
 	 */
 	public void updateStory(StoryMetadataViewModel metadata);
+
+	/**
+	 * Transforms referenced field ColfusionSourceinfoUsers of a given story into map where keys are user ids and values are records from StoryUserRoles table which
+	 * describes in which role each user is participating in the given story.
+	 * 
+	 * @param newStory for which the information need to be transformed.
+	 * @return the map as described in the description. They key is UserId and the value is ColfusionUserroles.
+	 */
+	public Map<Integer, ColfusionUserroles> getUsersInRolesForStory(ColfusionSourceinfo newStory);
 }
