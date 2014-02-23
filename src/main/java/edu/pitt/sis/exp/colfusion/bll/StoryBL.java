@@ -101,9 +101,8 @@ public class StoryBL {
 		
 		if (userRoles.containsKey(user.getUserId())) {
 			ColfusionUserroles userRole = userRoles.get(user.getUserId());
-			result.setStoryUserRoleId(userRole.getRoleId());
-			result.setStoryUserRoleName(userRole.getRole());
-			result.setStoryUserRoleDescription(userRole.getDescription());
+			result.setRoleId(userRole.getRoleId());
+			
 		}
 		
 		return result;

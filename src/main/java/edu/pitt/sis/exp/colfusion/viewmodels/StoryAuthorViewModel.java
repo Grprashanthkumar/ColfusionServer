@@ -16,9 +16,8 @@ public class StoryAuthorViewModel {
 	private String login;
 	private String avatarSource;
 	private BigDecimal karma;
-	private int storyUserRoleId;
-	private String storyUserRoleName;
-	private String storyUserRoleDescription;
+	private int roleId;
+	
 	/**
 	 * @return the userId
 	 */
@@ -94,37 +93,13 @@ public class StoryAuthorViewModel {
 	/**
 	 * @return the storyUserRoleId
 	 */
-	public int getStoryUserRoleId() {
-		return storyUserRoleId;
+	public int getRoleId() {
+		return roleId;
 	}
 	/**
 	 * @param storyUserRoleId the storyUserRoleId to set
 	 */
-	public void setStoryUserRoleId(int storyUserRoleId) {
-		this.storyUserRoleId = storyUserRoleId;
-	}
-	/**
-	 * @return the storyUserRoleName
-	 */
-	public String getStoryUserRoleName() {
-		return storyUserRoleName;
-	}
-	/**
-	 * @param storyUserRoleName the storyUserRoleName to set
-	 */
-	public void setStoryUserRoleName(String storyUserRoleName) {
-		this.storyUserRoleName = storyUserRoleName;
-	}
-	/**
-	 * @return the storyUserRoleDescription
-	 */
-	public String getStoryUserRoleDescription() {
-		return storyUserRoleDescription;
-	}
-	/**
-	 * @param storyUserRoleDescription the storyUserRoleDescription to set
-	 */
-	public void setStoryUserRoleDescription(String storyUserRoleDescription) {
-		this.storyUserRoleDescription = storyUserRoleDescription;
+	public void setRoleId(int roleId) {
+		this.roleId = roleId;
 	}
 }
