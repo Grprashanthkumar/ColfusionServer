@@ -12,6 +12,7 @@ import java.util.Map;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.hibernate.Hibernate;
 import org.hibernate.HibernateException;
 import org.hibernate.NonUniqueResultException;
 
@@ -147,6 +148,8 @@ public class SourceInfoManagerImpl implements SourceInfoManager {
             
             result = sourceInfoDAO.findByID(ColfusionSourceinfo.class, id);
             
+            Hibernate.initialize(result.getColfusionUsers());
+            
             HibernateUtil.commitTransaction();
         } catch (NonUniqueResultException ex) {
             logger.error("findByID failed NonUniqueResultException", ex);
@@ -182,6 +185,10 @@ public class SourceInfoManagerImpl implements SourceInfoManager {
             HibernateUtil.beginTransaction();
             
             sourceinfo = sourceInfoDAO.findDatasetInfoBySid(sid, includeDraft);
+            
+            Hibernate.initialize(sourceinfo.getColfusionUsers());
+            Hibernate.initialize(sourceinfo.getColfusionSourceinfoUsers());
+            
             
             HibernateUtil.commitTransaction();
         } catch (NonUniqueResultException ex) {
@@ -236,6 +243,8 @@ public class SourceInfoManagerImpl implements SourceInfoManager {
             
             newStoryEntity.getColfusionSourceinfoUsers().add(colfusionSourceinfoUser);
             //sourceInfoDAO.saveOrUpdate(newStoryEntity);
+            
+            Hibernate.initialize(newStoryEntity.getColfusionUsers());
             
             HibernateUtil.commitTransaction();
             
