@@ -4,6 +4,7 @@
 package edu.pitt.sis.exp.colfusion.persistence.managers;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -189,6 +190,10 @@ public class SourceInfoManagerImpl implements SourceInfoManager {
             Hibernate.initialize(sourceinfo.getColfusionUsers());
             Hibernate.initialize(sourceinfo.getColfusionSourceinfoUsers());
             
+            for (Object sourceInfoUserObj : sourceinfo.getColfusionSourceinfoUsers().toArray()) {
+    			ColfusionSourceinfoUser sourceInfoUser = (ColfusionSourceinfoUser) sourceInfoUserObj;
+    			Hibernate.initialize(sourceInfoUser.getColfusionUsers());
+    		}
             
             HibernateUtil.commitTransaction();
         } catch (NonUniqueResultException ex) {
@@ -381,6 +386,23 @@ public class SourceInfoManagerImpl implements SourceInfoManager {
 				}
 			}
 		}
+		
+		return result;
+	}
+
+	@Override
+	public List<ColfusionUsers> findStoryAuthors(ColfusionSourceinfo story) {
+		ArrayList<ColfusionUsers> result = new ArrayList<>();
+		
+		
+        
+		for (Object sourceInfoUserObj : story.getColfusionSourceinfoUsers().toArray()) {
+			ColfusionSourceinfoUser sourceInfoUser = (ColfusionSourceinfoUser) sourceInfoUserObj;
+			
+			result.add(sourceInfoUser.getColfusionUsers());
+		}
+		
+		
 		
 		return result;
 	}

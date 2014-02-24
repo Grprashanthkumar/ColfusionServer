@@ -3,11 +3,13 @@
  */
 package edu.pitt.sis.exp.colfusion.bll;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Map;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
 import edu.pitt.sis.exp.colfusion.persistence.managers.LinksManager;
 import edu.pitt.sis.exp.colfusion.persistence.managers.LinksManagerImpl;
 import edu.pitt.sis.exp.colfusion.persistence.managers.SourceInfoManager;
@@ -50,7 +52,9 @@ public class StoryBL {
 			storyMetadata.setSourceType("database");
 			storyMetadata.setDateSubmitted(newStory.getEntryDate());
 			storyMetadata.setStatus("draft");
-			storyMetadata.setStorySubmitter(makeStorySubmitterViewModel(newStory, newStory.getColfusionUsers()));
+			
+			Map<Integer, ColfusionUserroles> userRoles = storyMgr.getUsersInRolesForStory(newStory);
+			storyMetadata.setStorySubmitter(makeStorySubmitterViewModel(newStory, newStory.getColfusionUsers(), userRoles));
 			
 			result.isSuccessful = true;
 			result.message = "OK";
@@ -68,20 +72,18 @@ public class StoryBL {
 	 * Transforms {@link ColfusionUsers} user of a given {@link ColfusionSourceinfo} story into {@link StoryAuthorViewModel} model. 
 	 * @param story {@link ColfusionSourceinfo} for which to get authors information.
 	 * @param user {@link ColfusionUsers}  is the author for who we get information.
+	 * @param userRoles 
 	 * @return {@link StoryAuthorViewModel} model which has user/author information for given story.
 	 */
-	private StoryAuthorViewModel makeStorySubmitterViewModel(ColfusionSourceinfo story, ColfusionUsers user) {
+	private StoryAuthorViewModel makeStorySubmitterViewModel(ColfusionSourceinfo story, ColfusionUsers user, Map<Integer, ColfusionUserroles> userRoles) {
 		
 		StoryAuthorViewModel result = MappingUtils.getInstance().mapColfusionUserToStoryAuthorViewModel(user);
-				
-		//Getting user's role in the story and put in the view model with role details: role name, description and role id.
-		SourceInfoManager storyMgr = new SourceInfoManagerImpl();
-		Map<Integer, ColfusionUserroles> userRoles = storyMgr.getUsersInRolesForStory(story);
 		
 		if (userRoles.containsKey(user.getUserId())) {
 			ColfusionUserroles userRole = userRoles.get(user.getUserId());
 			result.setRoleId(userRole.getRoleId());		
-		}		
+		}	
+		
 		return result;
 	}
 
@@ -109,7 +111,20 @@ public class StoryBL {
 			StoryMetadataViewModel storyMetadata = new StoryMetadataViewModel();
 			storyMetadata.setSid(sid);
 			storyMetadata.setSourceType(storyInfo.getSourceType());
-			storyMetadata.setStorySubmitter(makeStorySubmitterViewModel(storyInfo, storyInfo.getColfusionUsers()));
+			
+			
+			//Getting user's role in the story and put in the view model with role details: role name, description and role id.
+			Map<Integer, ColfusionUserroles> userRoles = storyMgr.getUsersInRolesForStory(storyInfo);
+			
+			storyMetadata.setStorySubmitter(makeStorySubmitterViewModel(storyInfo, storyInfo.getColfusionUsers(), userRoles));
+			
+			ArrayList<StoryAuthorViewModel> authors = new ArrayList<StoryAuthorViewModel>();
+			ArrayList<ColfusionUsers> users = (ArrayList<ColfusionUsers>) storyMgr.findStoryAuthors(storyInfo);
+			for (ColfusionUsers author : users) {
+				authors.add(makeStorySubmitterViewModel(storyInfo, author, userRoles));
+			}
+			
+			storyMetadata.setStoryAuthors(authors);
 						
 			LinksManager linksMgr = new LinksManagerImpl();
 			ColfusionLinks link = linksMgr.findByID(sid); 

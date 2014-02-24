@@ -9,6 +9,7 @@ import java.util.Map;
 
 import edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionSourceinfo;
 import edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionUserroles;
+import edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionUsers;
 import edu.pitt.sis.exp.colfusion.viewmodels.StoryMetadataViewModel;
 
 /**
@@ -76,4 +77,12 @@ public interface SourceInfoManager extends GeneralManager<ColfusionSourceinfo, I
 	 * @return the map as described in the description. They key is UserId and the value is ColfusionUserroles.
 	 */
 	public Map<Integer, ColfusionUserroles> getUsersInRolesForStory(ColfusionSourceinfo newStory);
+
+	/**
+	 * Find all authors of type {@link ColfusionUsers} of a given story {@link ColfusionSourceinfo}.
+	 * 
+	 * @param storyInfo the story for which to find all authors.
+	 * @return the {@link List} of authors.
+	 */
+	public List<ColfusionUsers> findStoryAuthors(ColfusionSourceinfo storyInfo);
 }
