@@ -56,6 +56,14 @@ public class StoryBL {
 			Map<Integer, ColfusionUserroles> userRoles = storyMgr.getUsersInRolesForStory(newStory);
 			storyMetadata.setStorySubmitter(makeStorySubmitterViewModel(newStory, newStory.getColfusionUsers(), userRoles));
 			
+			ArrayList<StoryAuthorViewModel> authors = new ArrayList<StoryAuthorViewModel>();
+			ArrayList<ColfusionUsers> users = (ArrayList<ColfusionUsers>) storyMgr.findStoryAuthors(newStory);
+			for (ColfusionUsers author : users) {
+				authors.add(makeStorySubmitterViewModel(newStory, author, userRoles));
+			}
+			
+			storyMetadata.setStoryAuthors(authors);
+			
 			result.isSuccessful = true;
 			result.message = "OK";
 			result.setPayload(storyMetadata);
