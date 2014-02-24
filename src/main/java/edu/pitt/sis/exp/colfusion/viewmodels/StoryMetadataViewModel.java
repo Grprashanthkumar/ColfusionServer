@@ -24,14 +24,16 @@ public class StoryMetadataViewModel {
 	
 	private StoryAuthorViewModel storySubmitter;
 	private ArrayList<StoryAuthorViewModel> storyAuthors;
+	private ArrayList<StoryAuthorViewModel> removedStoryAuthors;
 	
 	public StoryMetadataViewModel() {
-		storySubmitter = new StoryAuthorViewModel();
+		this.storySubmitter = new StoryAuthorViewModel();
 		this.storyAuthors = new ArrayList<StoryAuthorViewModel>();
+		this.removedStoryAuthors = new ArrayList<>();
 	}
 	
 	public StoryMetadataViewModel(int sid, String title, String description, String status, String sourceType, String tags, Date dateSubmitted, 
-			StoryAuthorViewModel storySubmitter, ArrayList<StoryAuthorViewModel> storyAuthors) {
+			StoryAuthorViewModel storySubmitter, ArrayList<StoryAuthorViewModel> storyAuthors, ArrayList<StoryAuthorViewModel> removedStoryAuthors) {
 		setSid(sid);
 		setTitle(title);
 		setDescription(description);
@@ -41,6 +43,7 @@ public class StoryMetadataViewModel {
 		setDateSubmitted(dateSubmitted);
 		setStorySubmitter(storySubmitter);
 		setStoryAuthors(storyAuthors);
+		setRemovedStoryAuthors(removedStoryAuthors);
 	}
 	
 	/**
@@ -150,6 +153,20 @@ public class StoryMetadataViewModel {
 	 */
 	public void setStoryAuthors(ArrayList<StoryAuthorViewModel> storyAuthors) {
 		this.storyAuthors = storyAuthors;
+	}
+
+	/**
+	 * @return the removedStoryAuthors
+	 */
+	public ArrayList<StoryAuthorViewModel> getRemovedStoryAuthors() {
+		return removedStoryAuthors;
+	}
+
+	/**
+	 * @param removedStoryAuthors the removedStoryAuthors to set
+	 */
+	public void setRemovedStoryAuthors(ArrayList<StoryAuthorViewModel> removedStoryAuthors) {
+		this.removedStoryAuthors = removedStoryAuthors;
 	}
 	
 }

@@ -300,6 +300,8 @@ public class SourceInfoManagerImpl implements SourceInfoManager {
         
         sourceInfoDAO.saveOrUpdate(newStoryEntity);
         
+        
+        
         return newStoryEntity;
 	}
 	
@@ -327,8 +329,20 @@ public class SourceInfoManagerImpl implements SourceInfoManager {
 			
 			userStoryRolesDAO.saveOrUpdate(userRolesInStory);
 		}
-        
-		logger.info("finished updatingUserRolesFor story");
+		
+		for (StoryAuthorViewModel author : metadata.getRemovedStoryAuthors()) {
+			ColfusionUsers user = usersDAO.findByID(ColfusionUsers.class, author.getUserId());
+			
+			ColfusionUserroles userRole = userRolesDAO.findByID(ColfusionUserroles.class, author.getRoleId());
+			
+			ColfusionSourceinfoUserId colfusionSourceinfoUserId = new ColfusionSourceinfoUserId(addedUpdatedStory.getSid(), user.getUserId(), userRole.getRoleId());
+			
+			ColfusionSourceinfoUser userRolesInStory = new ColfusionSourceinfoUser(colfusionSourceinfoUserId, addedUpdatedStory, userRole, user);
+			
+			userStoryRolesDAO.delete(userRolesInStory);
+		}
+		
+        logger.info("finished updatingUserRolesFor story");
 	}
 
 	private void updateLink(StoryMetadataViewModel metadata) {
@@ -374,6 +388,9 @@ public class SourceInfoManagerImpl implements SourceInfoManager {
 	@Override
 	public Map<Integer, ColfusionUserroles> getUsersInRolesForStory(ColfusionSourceinfo newStory) {
 		
+		//TODO, FIXME: the key in the map should not be user id, it should be composition of userid and roleid.
+		// Right now one user can have only one role, but in database we allow one user to have several roles.
+		
 		Map<Integer, ColfusionUserroles> result = new HashMap<Integer, ColfusionUserroles>();
 		if (newStory.getColfusionSourceinfoUsers().iterator().hasNext()) {
 			
@@ -394,15 +411,11 @@ public class SourceInfoManagerImpl implements SourceInfoManager {
 	public List<ColfusionUsers> findStoryAuthors(ColfusionSourceinfo story) {
 		ArrayList<ColfusionUsers> result = new ArrayList<>();
 		
-		
-        
 		for (Object sourceInfoUserObj : story.getColfusionSourceinfoUsers().toArray()) {
 			ColfusionSourceinfoUser sourceInfoUser = (ColfusionSourceinfoUser) sourceInfoUserObj;
 			
 			result.add(sourceInfoUser.getColfusionUsers());
 		}
-		
-		
 		
 		return result;
 	}
