@@ -1,7 +1,7 @@
 /**
  * 
  */
-package edu.pitt.sis.exp.colfusion.persistence.dao;
+package edu.pitt.sis.exp.colfusion.persistence.managers;
 
 import java.util.List;
 
@@ -11,7 +11,8 @@ import edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionUsers;
  * @author Evgeny
  *
  */
-public interface UsersDAO extends GenericDAO<ColfusionUsers, Integer> {
+public interface UserManager extends GeneralManager<ColfusionUsers, Integer> {
+	
 	/**
 	 * 
 	 * Finds users who has either first or last name, or username containing searchTerm.
@@ -21,4 +22,5 @@ public interface UsersDAO extends GenericDAO<ColfusionUsers, Integer> {
 	 * @return user who satisfy search term. 
 	 */
 	public List<ColfusionUsers> lookUpUser(String searchTerm, int limit);
+	
 }

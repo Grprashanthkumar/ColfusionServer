@@ -25,6 +25,24 @@ public class StoryMetadataViewModel {
 	private StoryAuthorViewModel storySubmitter;
 	private ArrayList<StoryAuthorViewModel> storyAuthors;
 	
+	public StoryMetadataViewModel() {
+		storySubmitter = new StoryAuthorViewModel();
+		this.storyAuthors = new ArrayList<StoryAuthorViewModel>();
+	}
+	
+	public StoryMetadataViewModel(int sid, String title, String description, String status, String sourceType, String tags, Date dateSubmitted, 
+			StoryAuthorViewModel storySubmitter, ArrayList<StoryAuthorViewModel> storyAuthors) {
+		setSid(sid);
+		setTitle(title);
+		setDescription(description);
+		setStatus(status);
+		setSourceType(sourceType);
+		setTags(tags);
+		setDateSubmitted(dateSubmitted);
+		setStorySubmitter(storySubmitter);
+		setStoryAuthors(storyAuthors);
+	}
+	
 	/**
 	 * @return the sid
 	 */

@@ -4,11 +4,13 @@
 package edu.pitt.sis.exp.colfusion.viewmodels;
 
 import java.math.BigDecimal;
+import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  * @author Evgeny
  *
  */
+@XmlRootElement
 public class StoryAuthorViewModel {
 	private int userId;
 	private String firstName;
@@ -17,6 +19,20 @@ public class StoryAuthorViewModel {
 	private String avatarSource;
 	private BigDecimal karma;
 	private int roleId;
+	
+	public StoryAuthorViewModel() {
+		
+	}
+	
+	public StoryAuthorViewModel(int userId, String lastName, String login, String avatarSource, BigDecimal karma, int roleId) {
+		setUserId(userId);
+		setFirstName(firstName);
+		setLastName(lastName);
+		setLogin(login);
+		setAvatarSource(avatarSource);
+		setKarma(karma);
+		setRoleId(roleId);
+	}
 	
 	/**
 	 * @return the userId
