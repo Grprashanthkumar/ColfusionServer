@@ -321,8 +321,16 @@ public class SourceInfoManagerImpl implements SourceInfoManager {
 		for (StoryAuthorViewModel author : metadata.getStoryAuthors()) {
 			ColfusionUsers user = usersDAO.findByID(ColfusionUsers.class, author.getUserId());
 			
+			if (author.getRoleId() <= 0) {
+				//TODO:handle it better.
+				continue;
+			}
 			ColfusionUserroles userRole = userRolesDAO.findByID(ColfusionUserroles.class, author.getRoleId());
 			
+			if (userRole == null) {
+				//TODO: handle it better
+				continue;
+			}
 			ColfusionSourceinfoUserId colfusionSourceinfoUserId = new ColfusionSourceinfoUserId(addedUpdatedStory.getSid(), user.getUserId(), userRole.getRoleId());
 			
 			ColfusionSourceinfoUser userRolesInStory = new ColfusionSourceinfoUser(colfusionSourceinfoUserId, addedUpdatedStory, userRole, user);
@@ -333,8 +341,16 @@ public class SourceInfoManagerImpl implements SourceInfoManager {
 		for (StoryAuthorViewModel author : metadata.getRemovedStoryAuthors()) {
 			ColfusionUsers user = usersDAO.findByID(ColfusionUsers.class, author.getUserId());
 			
+			if (author.getRoleId() <= 0) {
+				//TODO:handle it better.
+				continue;
+			}
 			ColfusionUserroles userRole = userRolesDAO.findByID(ColfusionUserroles.class, author.getRoleId());
 			
+			if (userRole == null) {
+				//TODO: handle it better
+				continue;
+			}
 			ColfusionSourceinfoUserId colfusionSourceinfoUserId = new ColfusionSourceinfoUserId(addedUpdatedStory.getSid(), user.getUserId(), userRole.getRoleId());
 			
 			ColfusionSourceinfoUser userRolesInStory = new ColfusionSourceinfoUser(colfusionSourceinfoUserId, addedUpdatedStory, userRole, user);
