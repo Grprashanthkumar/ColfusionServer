@@ -38,6 +38,7 @@ import edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionTags;
 import edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionTagsId;
 import edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionUserroles;
 import edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionUsers;
+import edu.pitt.sis.exp.colfusion.viewmodels.StoryAuthorViewModel;
 import edu.pitt.sis.exp.colfusion.viewmodels.StoryMetadataViewModel;
 
 /**
@@ -267,7 +268,8 @@ public class SourceInfoManagerImpl implements SourceInfoManager {
 		try {
             HibernateUtil.beginTransaction();
             
-            updateSourceInfo(metadata);
+            ColfusionSourceinfo addedUpdatedStory = updateSourceInfo(metadata);
+            updateUserRoles(addedUpdatedStory, metadata);
             updateLink(metadata);
             updateTags(metadata);
             
@@ -281,7 +283,7 @@ public class SourceInfoManagerImpl implements SourceInfoManager {
         }
 	}
 
-	private void updateSourceInfo(StoryMetadataViewModel metadata) {
+	private ColfusionSourceinfo updateSourceInfo(StoryMetadataViewModel metadata) {
 		UsersDAO usersDAO = new UsersDAOImpl();
         
         ColfusionUsers userCreator = usersDAO.findByID(ColfusionUsers.class, metadata.getStorySubmitter().getUserId());
@@ -292,6 +294,36 @@ public class SourceInfoManagerImpl implements SourceInfoManager {
         newStoryEntity.setStatus(metadata.getStatus());
         
         sourceInfoDAO.saveOrUpdate(newStoryEntity);
+        
+        return newStoryEntity;
+	}
+	
+	/**
+	 * Adding or updating information about roles of users for a given dataset/story.
+	 * @param addedUpdatedStory {@link ColfusionSourceinfo} is the story for which information about user and their roles needs to be added/updated.
+	 * @param metadata {@link StoryMetadataViewModel} holds the information which need to be inserted/updated in the db.
+	 */
+	private void updateUserRoles(ColfusionSourceinfo addedUpdatedStory, StoryMetadataViewModel metadata) {
+		UsersDAO usersDAO = new UsersDAOImpl();
+		SourceinfoUserRolesDAO userStoryRolesDAO = new SourceinfoUserRolesDAOImpl();
+        UserRolesDAO userRolesDAO = new UserRolesDAOImpl();
+		
+        logger.info("started updatingUserRolesFor story");
+        
+        //TODO: add checks if user or role could be found
+		for (StoryAuthorViewModel author : metadata.getStoryAuthors()) {
+			ColfusionUsers user = usersDAO.findByID(ColfusionUsers.class, author.getUserId());
+			
+			ColfusionUserroles userRole = userRolesDAO.findByID(ColfusionUserroles.class, author.getRoleId());
+			
+			ColfusionSourceinfoUserId colfusionSourceinfoUserId = new ColfusionSourceinfoUserId(addedUpdatedStory.getSid(), user.getUserId(), userRole.getRoleId());
+			
+			ColfusionSourceinfoUser userRolesInStory = new ColfusionSourceinfoUser(colfusionSourceinfoUserId, addedUpdatedStory, userRole, user);
+			
+			userStoryRolesDAO.saveOrUpdate(userRolesInStory);
+		}
+        
+		logger.info("finished updatingUserRolesFor story");
 	}
 
 	private void updateLink(StoryMetadataViewModel metadata) {
