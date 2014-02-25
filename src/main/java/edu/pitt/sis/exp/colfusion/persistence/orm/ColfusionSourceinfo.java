@@ -1,6 +1,6 @@
 package edu.pitt.sis.exp.colfusion.persistence.orm;
 
-// Generated Feb 20, 2014 5:07:35 PM by Hibernate Tools 3.4.0.CR1
+// Generated Feb 24, 2014 10:00:48 PM by Hibernate Tools 3.4.0.CR1
 
 import java.util.Date;
 import java.util.HashSet;
@@ -31,6 +31,7 @@ public class ColfusionSourceinfo implements java.io.Serializable {
 	private Set colfusionRelationshipsesForSid2 = new HashSet(0);
 	private Set colfusionDnameinfos = new HashSet(0);
 	private ColfusionSourceinfoDb colfusionSourceinfoDb;
+	private Set colfusionSourceinfoMetadataEditHistories = new HashSet(0);
 	private Set colfusionVisualizations = new HashSet(0);
 
 	public ColfusionSourceinfo() {
@@ -52,6 +53,7 @@ public class ColfusionSourceinfo implements java.io.Serializable {
 			Set colfusionDesAttachmentses, Set colfusionRelationshipsesForSid2,
 			Set colfusionDnameinfos,
 			ColfusionSourceinfoDb colfusionSourceinfoDb,
+			Set colfusionSourceinfoMetadataEditHistories,
 			Set colfusionVisualizations) {
 		this.colfusionUsers = colfusionUsers;
 		this.title = title;
@@ -72,6 +74,7 @@ public class ColfusionSourceinfo implements java.io.Serializable {
 		this.colfusionRelationshipsesForSid2 = colfusionRelationshipsesForSid2;
 		this.colfusionDnameinfos = colfusionDnameinfos;
 		this.colfusionSourceinfoDb = colfusionSourceinfoDb;
+		this.colfusionSourceinfoMetadataEditHistories = colfusionSourceinfoMetadataEditHistories;
 		this.colfusionVisualizations = colfusionVisualizations;
 	}
 
@@ -236,6 +239,15 @@ public class ColfusionSourceinfo implements java.io.Serializable {
 	public void setColfusionSourceinfoDb(
 			ColfusionSourceinfoDb colfusionSourceinfoDb) {
 		this.colfusionSourceinfoDb = colfusionSourceinfoDb;
+	}
+
+	public Set getColfusionSourceinfoMetadataEditHistories() {
+		return this.colfusionSourceinfoMetadataEditHistories;
+	}
+
+	public void setColfusionSourceinfoMetadataEditHistories(
+			Set colfusionSourceinfoMetadataEditHistories) {
+		this.colfusionSourceinfoMetadataEditHistories = colfusionSourceinfoMetadataEditHistories;
 	}
 
 	public Set getColfusionVisualizations() {
