@@ -7,9 +7,11 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import edu.pitt.sis.exp.colfusion.persistence.managers.SourceInfoManagerImpl.HistoryItem;
 import edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionSourceinfo;
 import edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionUserroles;
 import edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionUsers;
+import edu.pitt.sis.exp.colfusion.viewmodels.StoryMetadataHistoryViewModel;
 import edu.pitt.sis.exp.colfusion.viewmodels.StoryMetadataViewModel;
 
 /**
@@ -85,4 +87,12 @@ public interface SourceInfoManager extends GeneralManager<ColfusionSourceinfo, I
 	 * @return the {@link List} of authors.
 	 */
 	public List<ColfusionUsers> findStoryAuthors(ColfusionSourceinfo storyInfo);
+
+	/**
+	 * Fetches the metadata edit history for given story and history item.
+	 * 
+	 * @param sid id of the story for which to fetch the history.
+	 * @param historyItem the history item should be one of the values of the {@link HistoryItem} provided as string.
+	 */
+	public StoryMetadataHistoryViewModel getStoryMetadataHistory(int sid, String historyItem);
 }

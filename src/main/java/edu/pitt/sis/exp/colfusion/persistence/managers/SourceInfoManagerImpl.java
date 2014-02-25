@@ -15,6 +15,7 @@ import org.apache.logging.log4j.Logger;
 import org.hibernate.Hibernate;
 import org.hibernate.HibernateException;
 import org.hibernate.NonUniqueResultException;
+import org.hibernate.Query;
 
 import edu.pitt.sis.exp.colfusion.persistence.HibernateUtil;
 import edu.pitt.sis.exp.colfusion.persistence.dao.LinksDAO;
@@ -35,13 +36,17 @@ import edu.pitt.sis.exp.colfusion.persistence.dao.UsersDAO;
 import edu.pitt.sis.exp.colfusion.persistence.dao.UsersDAOImpl;
 import edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionLinks;
 import edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionSourceinfo;
+import edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionSourceinfoMetadataEditHistory;
 import edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionSourceinfoUser;
 import edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionSourceinfoUserId;
 import edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionTags;
 import edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionTagsId;
 import edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionUserroles;
 import edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionUsers;
+import edu.pitt.sis.exp.colfusion.utils.MappingUtils;
 import edu.pitt.sis.exp.colfusion.viewmodels.StoryAuthorViewModel;
+import edu.pitt.sis.exp.colfusion.viewmodels.StoryMetadataHistoryLogRecordViewModel;
+import edu.pitt.sis.exp.colfusion.viewmodels.StoryMetadataHistoryViewModel;
 import edu.pitt.sis.exp.colfusion.viewmodels.StoryMetadataViewModel;
 
 
@@ -66,6 +71,14 @@ public class SourceInfoManagerImpl implements SourceInfoManager {
 	    
 	    public String getValue(){
 	    	return this.value;
+	    }
+	    
+	    static public boolean isMember(String enumValueToTest) {
+	    	HistoryItem[] enumValues = HistoryItem.values();
+	        for (HistoryItem enumValue : enumValues)
+	            if (enumValue.value.equals(enumValueToTest))
+	                return true;
+	        return false;
 	    }
 	};
 	
@@ -493,5 +506,49 @@ public class SourceInfoManagerImpl implements SourceInfoManager {
 		}
 		
 		return result;
+	}
+
+	@Override
+	public StoryMetadataHistoryViewModel getStoryMetadataHistory(int sid, String historyItem) {
+		try {
+            HibernateUtil.beginTransaction();
+            
+            SourceInfoMetadataEditHistoryDAO metadataHistoryDAO = new SourceInfoMetadataEditHistoryDAOImpl();
+
+            //TODO: this should be moved to hitory manager
+            String sql = "select h from ColfusionSourceinfoMetadataEditHistory h where h.colfusionSourceinfo = :sid and h.item = :item ";
+            ColfusionSourceinfo sourceInfo = sourceInfoDAO.findByID(ColfusionSourceinfo.class, sid);
+            Query query = HibernateUtil.getSession().createQuery(sql).setParameter("sid", sourceInfo).setParameter("item", historyItem);
+            ArrayList<ColfusionSourceinfoMetadataEditHistory> historyLog = (ArrayList<ColfusionSourceinfoMetadataEditHistory>) metadataHistoryDAO.findMany(query);
+            
+            StoryMetadataHistoryViewModel result = new StoryMetadataHistoryViewModel();
+            result.setHistoryItem(historyItem);
+            result.setSid(sid);
+            
+            for (ColfusionSourceinfoMetadataEditHistory historyRecord : historyLog) {
+            	Hibernate.initialize(historyRecord.getColfusionUsers());
+            	StoryAuthorViewModel author = MappingUtils.getInstance().mapColfusionUserToStoryAuthorViewModel(historyRecord.getColfusionUsers());
+            	
+            	StoryMetadataHistoryLogRecordViewModel historyRecordViewModel = new StoryMetadataHistoryLogRecordViewModel();
+            	historyRecordViewModel.setHid(historyRecord.getHid());
+            	historyRecordViewModel.setItem(historyRecord.getItem());
+            	historyRecordViewModel.setItemValue(historyRecord.getItemValue());
+            	historyRecordViewModel.setReason(historyRecord.getReason());
+            	historyRecordViewModel.setWhenSaved(historyRecord.getWhenSaved());
+            	historyRecordViewModel.setAuthor(author);
+            	
+            	result.getHistoryLogRecords().add(historyRecordViewModel);
+            }
+            
+            HibernateUtil.commitTransaction();
+            
+            return result;
+        } catch (NonUniqueResultException ex) {
+            logger.error("findDatasetInfoBySid failed NonUniqueResultException", ex);
+            throw ex;
+        } catch (HibernateException ex) {
+        	logger.error("findDatasetInfoBySid failed HibernateException", ex);
+        	throw ex;
+        }
 	}
 }

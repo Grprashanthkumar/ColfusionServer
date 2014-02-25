@@ -18,6 +18,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import edu.pitt.sis.exp.colfusion.bll.StoryBL;
+import edu.pitt.sis.exp.colfusion.responseModels.StoryMetadataHistoryResponse;
 import edu.pitt.sis.exp.colfusion.responseModels.StoryMetadataResponse;
 import edu.pitt.sis.exp.colfusion.viewmodels.StoryMetadataViewModel;
 
@@ -98,6 +99,30 @@ public class StoryController extends BaseController {
 		StoryBL storyBL = new StoryBL();
 		
 		StoryMetadataResponse result = storyBL.updateStoryMetadata(metadata);
+    	
+    	return makeCORS(Response.status(200).entity(result)); //.build();
+    }
+	
+	@OPTIONS
+    @Path("metadata/{sid: [0-9]+}/history/{historyItem}")
+    public Response getStoryMetadataHistory(@HeaderParam("Access-Control-Request-Headers") String requestH) {
+		return makeCORS(Response.ok()); //, requestH);
+    }
+	
+	/**
+     * Finds metadata for the story with provided sid.
+     * 
+     * @param sid story id for which the metadata should be fetched.
+     * @return response with story metadata in the payload.
+     */
+	@Path("metadata/{sid: [0-9]+}/history/{historyItem}")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getStoryMetadataHistory(@PathParam("sid") int sid, @PathParam("historyItem") String historyItem) {
+    	
+		StoryBL storyBL = new StoryBL();
+		
+		StoryMetadataHistoryResponse result = storyBL.getStoryMetadataHistory(sid, historyItem);
     	
     	return makeCORS(Response.status(200).entity(result)); //.build();
     }

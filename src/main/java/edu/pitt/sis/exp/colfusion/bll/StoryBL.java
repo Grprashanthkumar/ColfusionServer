@@ -14,13 +14,16 @@ import edu.pitt.sis.exp.colfusion.persistence.managers.LinksManager;
 import edu.pitt.sis.exp.colfusion.persistence.managers.LinksManagerImpl;
 import edu.pitt.sis.exp.colfusion.persistence.managers.SourceInfoManager;
 import edu.pitt.sis.exp.colfusion.persistence.managers.SourceInfoManagerImpl;
+import edu.pitt.sis.exp.colfusion.persistence.managers.SourceInfoManagerImpl.HistoryItem;
 import edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionLinks;
 import edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionSourceinfo;
 import edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionUserroles;
 import edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionUsers;
+import edu.pitt.sis.exp.colfusion.responseModels.StoryMetadataHistoryResponse;
 import edu.pitt.sis.exp.colfusion.responseModels.StoryMetadataResponse;
 import edu.pitt.sis.exp.colfusion.utils.MappingUtils;
 import edu.pitt.sis.exp.colfusion.viewmodels.StoryAuthorViewModel;
+import edu.pitt.sis.exp.colfusion.viewmodels.StoryMetadataHistoryViewModel;
 import edu.pitt.sis.exp.colfusion.viewmodels.StoryMetadataViewModel;
 
 
@@ -179,6 +182,36 @@ public class StoryBL {
 			logger.error("updateStoryMetadata failed", e);
 			result.isSuccessful = false;
 			result.message = "Could not update story. Please try again later.";
+		}
+		
+		return result;
+	}
+
+	public StoryMetadataHistoryResponse getStoryMetadataHistory(int sid, String historyItem) {
+		StoryMetadataHistoryResponse result = new StoryMetadataHistoryResponse();
+		
+		try {
+			SourceInfoManager storyMgr = new SourceInfoManagerImpl();
+			//TODO, FIXME: for now I will just pass the view model, however I think view model should not got that level, the storage level could be implemented
+			// in another project and then this way would lead to cycle in project dependencies.
+			
+			if (!HistoryItem.isMember(historyItem)) {
+				result.isSuccessful = false;
+				result.message = "The history item is not valid";	
+				logger.info(String.format("getStoryMetadataHistory provided history item %s is not valid for story %d", historyItem, sid));
+			}
+			else {
+			
+				StoryMetadataHistoryViewModel storyMedataEdit = storyMgr.getStoryMetadataHistory(sid, historyItem);
+				
+				result.setPayload(storyMedataEdit);
+				result.isSuccessful = true;
+				result.message = "OK";
+			}
+		} catch (Exception e) {
+			logger.error(String.format("getStoryMetadataHistory failed for %d sid and %s history item", sid, historyItem), e);
+			result.isSuccessful = false;
+			result.message = "Could not fetch history for the story. Please try again later.";
 		}
 		
 		return result;
