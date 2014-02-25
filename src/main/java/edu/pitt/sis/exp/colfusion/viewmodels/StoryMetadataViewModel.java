@@ -15,6 +15,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 public class StoryMetadataViewModel {
 	private int sid;
+	private int userId;
 	private String title;
 	private String description;
 	private String status;
@@ -32,9 +33,10 @@ public class StoryMetadataViewModel {
 		this.removedStoryAuthors = new ArrayList<>();
 	}
 	
-	public StoryMetadataViewModel(int sid, String title, String description, String status, String sourceType, String tags, Date dateSubmitted, 
+	public StoryMetadataViewModel(int sid, int userId, String title, String description, String status, String sourceType, String tags, Date dateSubmitted, 
 			StoryAuthorViewModel storySubmitter, ArrayList<StoryAuthorViewModel> storyAuthors, ArrayList<StoryAuthorViewModel> removedStoryAuthors) {
 		setSid(sid);
+		setUserId(userId);
 		setTitle(title);
 		setDescription(description);
 		setStatus(status);
@@ -167,6 +169,20 @@ public class StoryMetadataViewModel {
 	 */
 	public void setRemovedStoryAuthors(ArrayList<StoryAuthorViewModel> removedStoryAuthors) {
 		this.removedStoryAuthors = removedStoryAuthors;
+	}
+
+	/**
+	 * @return the userId
+	 */
+	public int getUserId() {
+		return userId;
+	}
+
+	/**
+	 * @param userId the userId to set
+	 */
+	public void setUserId(int userId) {
+		this.userId = userId;
 	}
 	
 }

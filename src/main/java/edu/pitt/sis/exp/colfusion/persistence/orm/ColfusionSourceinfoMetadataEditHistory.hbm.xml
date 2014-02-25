@@ -1,12 +1,12 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
-<!-- Generated Feb 24, 2014 10:00:48 PM by Hibernate Tools 3.4.0.CR1 -->
+<!-- Generated Feb 25, 2014 9:55:27 AM by Hibernate Tools 3.4.0.CR1 -->
 <hibernate-mapping>
     <class name="edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionSourceinfoMetadataEditHistory" table="colfusion_sourceinfo_metadata_edit_history" catalog="colfusion">
-        <id name="hid" type="string">
-            <column name="hid" length="45" />
-            <generator class="assigned" />
+        <id name="hid" type="java.lang.Integer">
+            <column name="hid" />
+            <generator class="identity" />
         </id>
         <many-to-one name="colfusionSourceinfo" class="edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionSourceinfo" fetch="select">
             <column name="sid" not-null="true">
@@ -18,8 +18,8 @@
                 <comment>userid who made edit</comment>
             </column>
         </many-to-one>
-        <property name="when" type="timestamp">
-            <column name="when" length="19" not-null="true">
+        <property name="whenSaved" type="timestamp">
+            <column name="whenSaved" length="19" not-null="true">
                 <comment>when the edit was done</comment>
             </column>
         </property>
@@ -29,8 +29,8 @@
         <property name="reason" type="string">
             <column name="reason" length="555" />
         </property>
-        <property name="value" type="string">
-            <column name="value" length="65535" not-null="true" />
+        <property name="itemValue" type="string">
+            <column name="itemValue" length="65535" not-null="true" />
         </property>
     </class>
 </hibernate-mapping>

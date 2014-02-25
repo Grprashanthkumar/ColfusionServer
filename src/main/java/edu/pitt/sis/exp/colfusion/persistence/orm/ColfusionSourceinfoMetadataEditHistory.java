@@ -1,6 +1,6 @@
 package edu.pitt.sis.exp.colfusion.persistence.orm;
 
-// Generated Feb 24, 2014 10:00:48 PM by Hibernate Tools 3.4.0.CR1
+// Generated Feb 25, 2014 9:55:27 AM by Hibernate Tools 3.4.0.CR1
 
 import java.util.Date;
 
@@ -10,46 +10,45 @@ import java.util.Date;
 public class ColfusionSourceinfoMetadataEditHistory implements
 		java.io.Serializable {
 
-	private String hid;
+	private Integer hid;
 	private ColfusionSourceinfo colfusionSourceinfo;
 	private ColfusionUsers colfusionUsers;
-	private Date when;
+	private Date whenSaved;
 	private String item;
 	private String reason;
-	private String value;
+	private String itemValue;
 
 	public ColfusionSourceinfoMetadataEditHistory() {
 	}
 
-	public ColfusionSourceinfoMetadataEditHistory(String hid,
+	public ColfusionSourceinfoMetadataEditHistory(
 			ColfusionSourceinfo colfusionSourceinfo,
-			ColfusionUsers colfusionUsers, Date when, String item, String value) {
-		this.hid = hid;
+			ColfusionUsers colfusionUsers, Date whenSaved, String item,
+			String itemValue) {
 		this.colfusionSourceinfo = colfusionSourceinfo;
 		this.colfusionUsers = colfusionUsers;
-		this.when = when;
+		this.whenSaved = whenSaved;
 		this.item = item;
-		this.value = value;
+		this.itemValue = itemValue;
 	}
 
-	public ColfusionSourceinfoMetadataEditHistory(String hid,
+	public ColfusionSourceinfoMetadataEditHistory(
 			ColfusionSourceinfo colfusionSourceinfo,
-			ColfusionUsers colfusionUsers, Date when, String item,
-			String reason, String value) {
-		this.hid = hid;
+			ColfusionUsers colfusionUsers, Date whenSaved, String item,
+			String reason, String itemValue) {
 		this.colfusionSourceinfo = colfusionSourceinfo;
 		this.colfusionUsers = colfusionUsers;
-		this.when = when;
+		this.whenSaved = whenSaved;
 		this.item = item;
 		this.reason = reason;
-		this.value = value;
+		this.itemValue = itemValue;
 	}
 
-	public String getHid() {
+	public Integer getHid() {
 		return this.hid;
 	}
 
-	public void setHid(String hid) {
+	public void setHid(Integer hid) {
 		this.hid = hid;
 	}
 
@@ -69,12 +68,12 @@ public class ColfusionSourceinfoMetadataEditHistory implements
 		this.colfusionUsers = colfusionUsers;
 	}
 
-	public Date getWhen() {
-		return this.when;
+	public Date getWhenSaved() {
+		return this.whenSaved;
 	}
 
-	public void setWhen(Date when) {
-		this.when = when;
+	public void setWhenSaved(Date whenSaved) {
+		this.whenSaved = whenSaved;
 	}
 
 	public String getItem() {
@@ -93,12 +92,12 @@ public class ColfusionSourceinfoMetadataEditHistory implements
 		this.reason = reason;
 	}
 
-	public String getValue() {
-		return this.value;
+	public String getItemValue() {
+		return this.itemValue;
 	}
 
-	public void setValue(String value) {
-		this.value = value;
+	public void setItemValue(String itemValue) {
+		this.itemValue = itemValue;
 	}
 
 }

@@ -21,6 +21,8 @@ import edu.pitt.sis.exp.colfusion.persistence.dao.LinksDAO;
 import edu.pitt.sis.exp.colfusion.persistence.dao.LinksDAOImpl;
 import edu.pitt.sis.exp.colfusion.persistence.dao.SourceInfoDAO;
 import edu.pitt.sis.exp.colfusion.persistence.dao.SourceInfoDAOImpl;
+import edu.pitt.sis.exp.colfusion.persistence.dao.SourceInfoMetadataEditHistoryDAO;
+import edu.pitt.sis.exp.colfusion.persistence.dao.SourceInfoMetadataEditHistoryDAOImpl;
 import edu.pitt.sis.exp.colfusion.persistence.dao.SourceinfoUserRolesDAO;
 import edu.pitt.sis.exp.colfusion.persistence.dao.SourceinfoUserRolesDAOImpl;
 import edu.pitt.sis.exp.colfusion.persistence.dao.TagsCacheDAO;
@@ -42,6 +44,7 @@ import edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionUsers;
 import edu.pitt.sis.exp.colfusion.viewmodels.StoryAuthorViewModel;
 import edu.pitt.sis.exp.colfusion.viewmodels.StoryMetadataViewModel;
 
+
 /**
  * @author Evgeny
  *
@@ -51,6 +54,20 @@ public class SourceInfoManagerImpl implements SourceInfoManager {
 	Logger logger = LogManager.getLogger(SourceInfoManagerImpl.class.getName());
 	
 	private SourceInfoDAO sourceInfoDAO = new SourceInfoDAOImpl();
+	
+	public enum HistoryItem {
+	    TITLE("title"), DESCRIPTION("description"), TAGS("tags"), STATUS("status");
+	    
+	    private String value;
+
+	    private HistoryItem(String value) {
+	            this.value = value;
+	    }
+	    
+	    public String getValue(){
+	    	return this.value;
+	    }
+	};
 	
 	//***************************************
 	// General manager interface
@@ -298,12 +315,52 @@ public class SourceInfoManagerImpl implements SourceInfoManager {
         newStoryEntity.setTitle(metadata.getTitle());
         newStoryEntity.setStatus(metadata.getStatus());
         
-        sourceInfoDAO.saveOrUpdate(newStoryEntity);
-        
-        
+        handleHistoryEdits(newStoryEntity, metadata.getUserId());
+        sourceInfoDAO.merge(newStoryEntity);
         
         return newStoryEntity;
 	}
+	
+	//TODO: should we move the next two methods to other class? together with enum?
+	/**
+	 * Checks if new instance of a record of sourceinfo has title and status difference from the one stored in the database already.
+	 * If they do differ, then old value is copied into history of edits table before replaced by new value.
+	 * 
+	 * @param newStory new instance of the sourceinfo record possibly updated by user during edit operation.
+	 * @param userId id of the user who did edit (note, it is not the submitter, it is id of the user who was logged in and performed the edit).
+	 */
+	private void handleHistoryEdits(ColfusionSourceinfo newStory, int userId) {
+		SourceInfoMetadataEditHistoryDAO editHistorDAO = new SourceInfoMetadataEditHistoryDAOImpl();
+		
+		ColfusionSourceinfo oldStory = sourceInfoDAO.findByID(ColfusionSourceinfo.class, newStory.getSid());
+		
+		String oldValue = (oldStory == null) ? null : oldStory.getTitle();
+		editHistorDAO.saveHistoryIfChanged(newStory.getSid(), userId, oldValue, newStory.getTitle(), HistoryItem.TITLE,  "");
+		
+		oldValue = (oldStory == null) ? null : oldStory.getStatus();
+		editHistorDAO.saveHistoryIfChanged(newStory.getSid(), userId, oldValue, newStory.getStatus(), HistoryItem.STATUS,  "");
+	}
+	
+	/**
+	 * Checks if new instance of a record of links has content/description and tags difference from the one stored in the database already.
+	 * If they do differ, then old value is copied into history of edits table before replaced by new value.
+	 * 
+	 * @param newLink new instance of the links record possibly updated by user during edit operation.
+	 * @param userId id of the user who did edit (note, it is not the submitter, it is id of the user who was logged in and performed the edit).
+	 */
+	private void handleHistoryEdits(ColfusionLinks newLink, int userId) {
+		SourceInfoMetadataEditHistoryDAO editHistorDAO = new SourceInfoMetadataEditHistoryDAOImpl();
+		
+		LinksDAO linksDAO = new LinksDAOImpl();
+		ColfusionLinks oldLink = linksDAO.findByID(ColfusionLinks.class, newLink.getLinkId());
+		
+		String oldValue = (oldLink == null) ? null : oldLink.getLinkContent();
+		editHistorDAO.saveHistoryIfChanged(newLink.getLinkId(), userId, oldValue, newLink.getLinkContent(), HistoryItem.DESCRIPTION,  "");
+		
+		oldValue = (oldLink == null) ? null : oldLink.getLinkTags();
+		editHistorDAO.saveHistoryIfChanged(newLink.getLinkId(), userId, oldValue, newLink.getLinkTags(), HistoryItem.TAGS,  "");
+	}
+	
 	
 	/**
 	 * Adding or updating information about roles of users for a given dataset/story.
@@ -371,8 +428,10 @@ public class SourceInfoManagerImpl implements SourceInfoManager {
         newLink.setLinkTags(metadata.getTags());
         newLink.setLinkTitleUrl(String.valueOf(metadata.getSid()));
         
+        handleHistoryEdits(newLink, metadata.getUserId());
+        
         LinksDAO linksDAO = new LinksDAOImpl();
-        linksDAO.saveOrUpdate(newLink);
+        linksDAO.merge(newLink);
 	}
 
 	private void updateTags(StoryMetadataViewModel metadata) {
