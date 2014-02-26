@@ -23,7 +23,7 @@ public class CreateTemplateViewModel {
 		
 	}
 	
-public CreateTemplateViewModel(String sid, String fileMode, List<OneUploadedItemViewModel> fileName) {
+	public CreateTemplateViewModel(String sid, String fileMode, List<OneUploadedItemViewModel> fileName) {
 		setSid(sid);
 		setFileMode(fileMode);
 		setFileName(fileName);
