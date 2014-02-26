@@ -3,6 +3,8 @@
  */
 package edu.pitt.sis.exp.colfusion.viewmodels;
 
+import java.util.ArrayList;
+
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -15,16 +17,20 @@ public class WorksheetViewModel {
 	private int headerRow;
 	private String startColumn;
 	private int numberOfRows;
+	private int indexInTheFile;
+	private ArrayList<DatasetVariableViewModel> variables;
 	
 	public WorksheetViewModel() {
-		
+		variables = new ArrayList<>();
 	}
 	
-	public WorksheetViewModel(String sheetName, int headerRow, String startColumn, int numberOfRows) {
+	public WorksheetViewModel(String sheetName, int headerRow, String startColumn, int numberOfRows, int indexInTheFile, ArrayList<DatasetVariableViewModel> variables) {
 		setSheetName(sheetName);
 		setHeaderRow(headerRow);
 		setStartColumn(startColumn);
 		setNumberOfRows(numberOfRows);
+		setIndexInTheFile(indexInTheFile);
+		setVariables(variables);
 	}
 
 	/**
@@ -42,6 +48,8 @@ public class WorksheetViewModel {
 	}
 
 	/**
+	 * One based row index.
+	 * 
 	 * @return the headerRow
 	 */
 	public int getHeaderRow() {
@@ -81,5 +89,33 @@ public class WorksheetViewModel {
 	 */
 	public void setNumberOfRows(int numberOfRows) {
 		this.numberOfRows = numberOfRows;
+	}
+
+	/**
+	 * @return the indexInTheFile
+	 */
+	public int getIndexInTheFile() {
+		return indexInTheFile;
+	}
+
+	/**
+	 * @param indexInTheFile the indexInTheFile to set
+	 */
+	public void setIndexInTheFile(int indexInTheFile) {
+		this.indexInTheFile = indexInTheFile;
+	}
+
+	/**
+	 * @return the variables
+	 */
+	public ArrayList<DatasetVariableViewModel> getVariables() {
+		return variables;
+	}
+
+	/**
+	 * @param variables the variables to set
+	 */
+	public void setVariables(ArrayList<DatasetVariableViewModel> variables) {
+		this.variables = variables;
 	}
 }

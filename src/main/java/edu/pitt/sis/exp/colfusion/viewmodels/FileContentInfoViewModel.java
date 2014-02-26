@@ -16,15 +16,17 @@ public class FileContentInfoViewModel {
 	
 	private String extension;
 	private String fileName;
+	private String fileAbsoluteName;
 	private ArrayList<WorksheetViewModel> worksheets;
 	
 	public FileContentInfoViewModel() {
 		setWorksheets(new ArrayList<WorksheetViewModel>());
 	}
 	
-	public FileContentInfoViewModel(String extension, String fileName, ArrayList<WorksheetViewModel> worksheets) {
+	public FileContentInfoViewModel(String extension, String fileName, String fileAbsoluteName, ArrayList<WorksheetViewModel> worksheets) {
 		setExtension(extension);
 		setFileName(fileName);
+		setFileAbsoluteName(fileAbsoluteName);
 		setWorksheets(worksheets);
 	}
 
@@ -68,5 +70,19 @@ public class FileContentInfoViewModel {
 	 */
 	public void setWorksheets(ArrayList<WorksheetViewModel> worksheets) {
 		this.worksheets = worksheets;
+	}
+
+	/**
+	 * @return the fileAbsoluteName
+	 */
+	public String getFileAbsoluteName() {
+		return fileAbsoluteName;
+	}
+
+	/**
+	 * @param fileAbsoluteName the fileAbsoluteName to set
+	 */
+	public void setFileAbsoluteName(String fileAbsoluteName) {
+		this.fileAbsoluteName = fileAbsoluteName;
 	}
 }

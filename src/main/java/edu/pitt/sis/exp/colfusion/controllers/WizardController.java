@@ -188,7 +188,7 @@ public class WizardController extends BaseController {
 		    	
 		DataSubmissionWizzardBL wizardBLL = new DataSubmissionWizzardBL();
 		
-		FilesVariablesAndRecomendationsViewModel result = wizardBLL.getFilesVariablesAndRecomendations(filesWithSelectedSheets);
+		FileContentInfoReponse result = wizardBLL.getFilesVariablesAndRecomendations(filesWithSelectedSheets);
 		
     	return makeCORS(Response.status(200).entity(result)); //.build();
     }

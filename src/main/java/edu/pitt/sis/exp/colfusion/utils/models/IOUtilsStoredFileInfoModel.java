@@ -4,6 +4,8 @@ import java.io.Serializable;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
+
+//TODO: merge with FileContentInfoViewModel model
 /**
  * The class holds some information of the files which were successfully stored on the disk.
  * 

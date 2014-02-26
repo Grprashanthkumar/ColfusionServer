@@ -1,32 +1,26 @@
 package edu.pitt.sis.exp.colfusion.bll.dataSubmissionWizzard;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.compress.archivers.ArchiveException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.apache.poi.POIXMLException;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.poifs.filesystem.POIFSFileSystem;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import edu.pitt.sis.exp.colfusion.ConfigManager;
 import edu.pitt.sis.exp.colfusion.PropertyKeys;
+import edu.pitt.sis.exp.colfusion.importers.ExcelImporter;
 import edu.pitt.sis.exp.colfusion.responseModels.AcceptedFilesResponse;
 import edu.pitt.sis.exp.colfusion.responseModels.FileContentInfoReponse;
-import edu.pitt.sis.exp.colfusion.responseModels.FilesVariablesAndRecomendationsResponse;
 import edu.pitt.sis.exp.colfusion.utils.IOUtils;
 import edu.pitt.sis.exp.colfusion.utils.models.IOUtilsStoredFileInfoModel;
 import edu.pitt.sis.exp.colfusion.viewmodels.CreateTemplateViewModel;
+import edu.pitt.sis.exp.colfusion.viewmodels.DatasetVariableViewModel;
 import edu.pitt.sis.exp.colfusion.viewmodels.FileContentInfoViewModel;
 import edu.pitt.sis.exp.colfusion.viewmodels.OneUploadedItemViewModel;
 import edu.pitt.sis.exp.colfusion.viewmodels.WorksheetViewModel;
@@ -122,6 +116,7 @@ public class DataSubmissionWizzardBL {
 				
 				oneFileContentInfo.setExtension(fileModel.getFileExtension());
 				oneFileContentInfo.setFileName(fileModel.getFileName());
+				oneFileContentInfo.setFileAbsoluteName(fileModel.getAbsoluteFileName());
 				
 				//TODO move types of extensions in to enum
 				if (fileModel.getFileExtension().equals("csv")) {
@@ -132,7 +127,8 @@ public class DataSubmissionWizzardBL {
 					oneFileContentInfo.getWorksheets().add(worksheet);
 				}
 				else if (fileModel.getFileExtension().equals("xls") || fileModel.getFileExtension().equals("xlsx")) {
-					oneFileContentInfo.getWorksheets().addAll(getSheetsFromExcel(fileModel));
+					ExcelImporter excelImporter = new ExcelImporter();
+					oneFileContentInfo.getWorksheets().addAll(excelImporter.getSheetsFromExcel(fileModel));
 				}
 				
 				result.getPayload().add(oneFileContentInfo);
@@ -150,54 +146,28 @@ public class DataSubmissionWizzardBL {
 		return result;
 	}
 
-	private Collection<WorksheetViewModel> getSheetsFromExcel(IOUtilsStoredFileInfoModel fileModel) throws IOException, IllegalArgumentException, POIXMLException {
-		try {
-	    	ArrayList<WorksheetViewModel> result = new ArrayList<>();
-			
-	        File file = new File(fileModel.getAbsoluteFileName());
-	        InputStream is = new FileInputStream(file);
-	        boolean xmlBased = "xlsx".equals(fileModel.getFileExtension());
-	        try {
-	            Workbook wb = xmlBased ?
-	                    new XSSFWorkbook(is) :
-	                        new HSSFWorkbook(new POIFSFileSystem(is));
 	
-	            int sheetCount = wb.getNumberOfSheets();
-	            
-	            for (int i = 0; i < sheetCount; i++) {
-	                Sheet sheet = wb.getSheetAt(i);
-	                int rows = sheet.getLastRowNum() - sheet.getFirstRowNum() + 1;
-	
-	                WorksheetViewModel worksheet = new WorksheetViewModel();
-	                worksheet.setSheetName(sheet.getSheetName());
-	                worksheet.setNumberOfRows(rows);
-	                worksheet.setHeaderRow(sheet.getFirstRowNum() +1);
-	                worksheet.setStartColumn("A");
-	                result.add(worksheet); 
-	            }
-	        } finally {
-	            is.close();
-	        }
-	        
-	        return result;
-                           
-        } catch (IOException e) {
-            logger.error("Error getting sheet data for Excel file", e);
-            throw e;
-        } catch (IllegalArgumentException e) {
-            logger.error("Error getting sheet data for Excel file (only Excel 97 & later supported)", e);
-            throw e;
-        } catch (POIXMLException e) {
-            logger.error("Error getting sheet data for Excel file - invalid XML", e);
-            throw e;
-        }
-		
-	}
 
-	public FilesVariablesAndRecomendationsResponse getFilesVariablesAndRecomendations(List<FileContentInfoViewModel> filesWithSelectedSheets) {
-		FilesVariablesAndRecomendationsResponse result = new FilesVariablesAndRecomendationsResponse();
+	public FileContentInfoReponse getFilesVariablesAndRecomendations(List<FileContentInfoViewModel> filesWithSelectedSheets) {
+		FileContentInfoReponse result = new FileContentInfoReponse();
 		
 		try {
+			
+			ExcelImporter excelImporter = new ExcelImporter();
+			
+			for (FileContentInfoViewModel oneFile : filesWithSelectedSheets) {
+				HashMap<String, ArrayList<DatasetVariableViewModel>> variablesForAllSelectedSheetsInFile = excelImporter.readHeaderRow(oneFile);
+				
+				for (WorksheetViewModel worksheet : oneFile.getWorksheets()) {
+					if (variablesForAllSelectedSheetsInFile.containsKey(worksheet.getSheetName())) {
+						worksheet.setVariables(variablesForAllSelectedSheetsInFile.get(worksheet.getSheetName()));
+					}
+					
+				}
+				
+			}
+			
+			result.setPayload((ArrayList<FileContentInfoViewModel>)filesWithSelectedSheets);
 			
 			result.isSuccessful = true;
 			result.message = "OK";			
