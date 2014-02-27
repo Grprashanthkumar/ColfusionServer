@@ -210,6 +210,7 @@ public class ExcelImporter {
         	return null;
         
         result.setOriginalName(value.toString());
+        result.setChosenName(value.toString());
         
 		return result;
 	}
