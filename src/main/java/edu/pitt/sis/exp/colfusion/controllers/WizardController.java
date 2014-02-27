@@ -184,11 +184,12 @@ public class WizardController extends BaseController {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
+	//TODO: this need to be changed. it should accept the source type and source settings as a JSON object, then that object will be passed to source importer which will know how to process it.
     public Response getFilesVariablesAndNameRecommendations(List<FileContentInfoViewModel> filesWithSelectedSheets) {
 		    	
-		DataSubmissionWizzardBL wizardBLL = new DataSubmissionWizzardBL();
+	DataSubmissionWizzardBL wizardBLL = new DataSubmissionWizzardBL();
 		
-		FileContentInfoReponse result = wizardBLL.getFilesVariablesAndRecomendations(filesWithSelectedSheets);
+	FileContentInfoReponse result = wizardBLL.getFilesVariablesAndRecomendations(filesWithSelectedSheets);
 		
     	return makeCORS(Response.status(200).entity(result)); //.build();
     }
