@@ -34,6 +34,7 @@ import edu.pitt.sis.exp.colfusion.responseModels.FileContentInfoReponse;
 import edu.pitt.sis.exp.colfusion.responseModels.GeneralResponse;
 import edu.pitt.sis.exp.colfusion.viewmodels.CreateTemplateViewModel;
 import edu.pitt.sis.exp.colfusion.viewmodels.FileContentInfoViewModel;
+import edu.pitt.sis.exp.colfusion.viewmodels.FilesContentInfoViewModel;
 
 
 @Path("Wizard/")
@@ -192,7 +193,8 @@ public class WizardController extends BaseController {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
 	//TODO: this need to be changed. it should accept the source type and source settings as a JSON object, then that object will be passed to source importer which will know how to process it.
-    public Response getFilesVariablesAndNameRecommendations(List<FileContentInfoViewModel> filesWithSelectedSheets) {
+    //TODO: change input param type to {@link FilesContentInfoViewModel} first.
+	public Response getFilesVariablesAndNameRecommendations(List<FileContentInfoViewModel> filesWithSelectedSheets) {
 		    	
 	DataSubmissionWizzardBL wizardBLL = new DataSubmissionWizzardBL();
 		
@@ -226,11 +228,11 @@ public class WizardController extends BaseController {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
 	//TODO: this need to be changed. it should accept the source type and source settings as a JSON object, then that object will be passed to source importer which will know how to process it.
-    public Response putDataMatchingStepData(List<FileContentInfoViewModel> dataMatchingStepData) {
+    public Response putDataMatchingStepData(FilesContentInfoViewModel dataMatchingStepData) {
 		    	
 		DataSubmissionWizzardBL wizardBLL = new DataSubmissionWizzardBL();
 					
-		FileContentInfoReponse result = wizardBLL.getFilesVariablesAndRecomendations(dataMatchingStepData);
+		FileContentInfoReponse result = wizardBLL.saveVariablesMetadata(dataMatchingStepData);
 		
     	return makeCORS(Response.status(200).entity(result)); //.build();
     }

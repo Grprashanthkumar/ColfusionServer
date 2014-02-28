@@ -22,6 +22,7 @@ import edu.pitt.sis.exp.colfusion.utils.models.IOUtilsStoredFileInfoModel;
 import edu.pitt.sis.exp.colfusion.viewmodels.CreateTemplateViewModel;
 import edu.pitt.sis.exp.colfusion.viewmodels.DatasetVariableViewModel;
 import edu.pitt.sis.exp.colfusion.viewmodels.FileContentInfoViewModel;
+import edu.pitt.sis.exp.colfusion.viewmodels.FilesContentInfoViewModel;
 import edu.pitt.sis.exp.colfusion.viewmodels.OneUploadedItemViewModel;
 import edu.pitt.sis.exp.colfusion.viewmodels.WorksheetViewModel;
 
@@ -168,6 +169,32 @@ public class DataSubmissionWizzardBL {
 			}
 			
 			result.setPayload((ArrayList<FileContentInfoViewModel>)filesWithSelectedSheets);
+			
+			result.isSuccessful = true;
+			result.message = "OK";			
+			
+		} catch (Exception e) {
+			logger.error("getFilesContentInfo failed!", e);
+			
+			result.isSuccessful = false;
+			result.message = "There seems to be an error, try later.";
+		}
+		
+		return result;
+	}
+
+	/**
+	 * Accepts information about several files includes several worksheets in any of them. Gets the metadata of each variable and stores in the 
+	 * database in the dnameinfo table and columnTable info. 
+	 * @param dataMatchingStepData {@link List} list of files info {@link FileContentInfoViewModel}
+	 * @return {@link FileContentInfoReponse} with success or error message no payload.
+	 */
+	public FileContentInfoReponse saveVariablesMetadata(FilesContentInfoViewModel filesInfo) {
+		FileContentInfoReponse result = new FileContentInfoReponse();
+		
+		try {
+			
+			result.setPayload(null);
 			
 			result.isSuccessful = true;
 			result.message = "OK";			
