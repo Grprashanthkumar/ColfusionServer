@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
-<!-- Generated Feb 25, 2014 9:55:27 AM by Hibernate Tools 3.4.0.CR1 -->
+<!-- Generated Feb 28, 2014 2:44:20 PM by Hibernate Tools 3.4.0.CR1 -->
 <hibernate-mapping>
     <class name="edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionNotifications" table="colfusion_notifications" catalog="colfusion">
         <id name="ntfId" type="java.lang.Integer">

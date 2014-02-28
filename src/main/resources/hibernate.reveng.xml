@@ -11,8 +11,8 @@
   <table-filter match-catalog="colfusion" match-name="colfusion_comments"/>
   <table-filter match-catalog="colfusion" match-name="colfusion_config"/>
   <table-filter match-catalog="colfusion" match-name="colfusion_des_attachments"/>
-  <table-filter match-catalog="colfusion" match-name="colfusion_dname_meta_data"/>
   <table-filter match-catalog="colfusion" match-name="colfusion_dnameinfo"/>
+  <table-filter match-catalog="colfusion" match-name="colfusion_dnameinfo_metadata_edit_history"/>
   <table-filter match-catalog="colfusion" match-name="colfusion_executeinfo"/>
   <table-filter match-catalog="colfusion" match-name="colfusion_formulas"/>
   <table-filter match-catalog="colfusion" match-name="colfusion_friends"/>

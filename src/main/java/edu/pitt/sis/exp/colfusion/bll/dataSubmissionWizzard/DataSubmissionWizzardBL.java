@@ -15,6 +15,8 @@ import org.apache.logging.log4j.Logger;
 import edu.pitt.sis.exp.colfusion.ConfigManager;
 import edu.pitt.sis.exp.colfusion.PropertyKeys;
 import edu.pitt.sis.exp.colfusion.importers.ExcelImporter;
+import edu.pitt.sis.exp.colfusion.persistence.managers.DNameInfoManager;
+import edu.pitt.sis.exp.colfusion.persistence.managers.DNameInfoManagerImpl;
 import edu.pitt.sis.exp.colfusion.responseModels.AcceptedFilesResponse;
 import edu.pitt.sis.exp.colfusion.responseModels.FileContentInfoReponse;
 import edu.pitt.sis.exp.colfusion.utils.IOUtils;
@@ -193,6 +195,17 @@ public class DataSubmissionWizzardBL {
 		FileContentInfoReponse result = new FileContentInfoReponse();
 		
 		try {
+			
+			DNameInfoManager dNameInfoMgr = new DNameInfoManagerImpl();
+			
+			for (FileContentInfoViewModel file : filesInfo.getFiles()) {
+				
+				String tableNamePrefix = file.getWorksheets().size() > 1 ? file.getFileName() + " - " : "";
+				
+				for (WorksheetViewModel worksheet : file.getWorksheets()) {
+					dNameInfoMgr.createOrUpdateSheetMetadata(worksheet, tableNamePrefix, filesInfo.getSid(), filesInfo.getUserId());
+				}
+			}
 			
 			result.setPayload(null);
 			

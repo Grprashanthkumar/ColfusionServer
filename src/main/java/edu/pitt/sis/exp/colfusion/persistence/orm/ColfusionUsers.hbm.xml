@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
-<!-- Generated Feb 25, 2014 9:55:27 AM by Hibernate Tools 3.4.0.CR1 -->
+<!-- Generated Feb 28, 2014 2:44:20 PM by Hibernate Tools 3.4.0.CR1 -->
 <hibernate-mapping>
     <class name="edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionUsers" table="colfusion_users" catalog="colfusion">
         <id name="userId" type="java.lang.Integer">
@@ -119,6 +119,38 @@
         <property name="statusExcludes" type="string">
             <column name="status_excludes" length="65535" />
         </property>
+        <set name="colfusionSourceinfoUsers" table="colfusion_sourceinfo_user" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="uid" not-null="true" />
+            </key>
+            <one-to-many class="edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionSourceinfoUser" />
+        </set>
+        <set name="colfusionDnameinfoMetadataEditHistories" table="colfusion_dnameinfo_metadata_edit_history" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="uid" not-null="true">
+                    <comment>userid who made edit</comment>
+                </column>
+            </key>
+            <one-to-many class="edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionDnameinfoMetadataEditHistory" />
+        </set>
+        <set name="colfusionCanvaseses" table="colfusion_canvases" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="user_id" />
+            </key>
+            <one-to-many class="edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionCanvases" />
+        </set>
+        <set name="colfusionShareses" table="colfusion_shares" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="user_id" />
+            </key>
+            <one-to-many class="edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionShares" />
+        </set>
+        <set name="colfusionNotificationses" table="colfusion_notifications" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="sender_id" />
+            </key>
+            <one-to-many class="edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionNotifications" />
+        </set>
         <set name="colfusionSourceinfoMetadataEditHistories" table="colfusion_sourceinfo_metadata_edit_history" inverse="true" lazy="true" fetch="select">
             <key>
                 <column name="uid" not-null="true">
@@ -133,13 +165,13 @@
             </key>
             <one-to-many class="edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionUserRelationshipVerdict" />
         </set>
-        <set name="colfusionSourceinfoUsers" table="colfusion_sourceinfo_user" inverse="true" lazy="true" fetch="select">
-            <key>
-                <column name="uid" not-null="true" />
-            </key>
-            <one-to-many class="edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionSourceinfoUser" />
-        </set>
         <set name="colfusionSourceinfos" table="colfusion_sourceinfo" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="UserId" not-null="true" />
+            </key>
+            <one-to-many class="edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionSourceinfo" />
+        </set>
+        <set name="colfusionSourceinfos_1" table="colfusion_sourceinfo" inverse="true" lazy="true" fetch="select">
             <key>
                 <column name="UserId" not-null="true" />
             </key>
@@ -151,29 +183,11 @@
             </key>
             <one-to-many class="edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionSynonymsFrom" />
         </set>
-        <set name="colfusionSourceinfos_1" table="colfusion_sourceinfo" inverse="true" lazy="true" fetch="select">
-            <key>
-                <column name="UserId" not-null="true" />
-            </key>
-            <one-to-many class="edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionSourceinfo" />
-        </set>
         <set name="colfusionDesAttachmentses" table="colfusion_des_attachments" inverse="true" lazy="true" fetch="select">
             <key>
                 <column name="UserId" not-null="true" />
             </key>
             <one-to-many class="edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionDesAttachments" />
-        </set>
-        <set name="colfusionCanvaseses" table="colfusion_canvases" inverse="true" lazy="true" fetch="select">
-            <key>
-                <column name="user_id" />
-            </key>
-            <one-to-many class="edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionCanvases" />
-        </set>
-        <set name="colfusionShareses" table="colfusion_shares" inverse="true" lazy="true" fetch="select">
-            <key>
-                <column name="user_id" />
-            </key>
-            <one-to-many class="edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionShares" />
         </set>
         <set name="colfusionRelationshipses" table="colfusion_relationships" inverse="true" lazy="true" fetch="select">
             <key>
@@ -186,12 +200,6 @@
                 <column name="userId" not-null="true" />
             </key>
             <one-to-many class="edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionSynonymsTo" />
-        </set>
-        <set name="colfusionNotificationses" table="colfusion_notifications" inverse="true" lazy="true" fetch="select">
-            <key>
-                <column name="sender_id" />
-            </key>
-            <one-to-many class="edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionNotifications" />
         </set>
     </class>
 </hibernate-mapping>

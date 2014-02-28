@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
-<!-- Generated Feb 25, 2014 9:55:27 AM by Hibernate Tools 3.4.0.CR1 -->
+<!-- Generated Feb 28, 2014 2:44:20 PM by Hibernate Tools 3.4.0.CR1 -->
 <hibernate-mapping>
     <class name="edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionDnameinfo" table="colfusion_dnameinfo" catalog="colfusion">
         <id name="cid" type="java.lang.Integer">
@@ -19,6 +19,9 @@
         </property>
         <property name="dnameValueUnit" type="string">
             <column name="dname_value_unit" length="40" />
+        </property>
+        <property name="dnameValueFormat" type="string">
+            <column name="dname_value_format" length="45" />
         </property>
         <property name="dnameValueDescription" type="string">
             <column name="dname_value_description" length="100" />
@@ -41,11 +44,13 @@
         <property name="missingValue" type="string">
             <column name="missing_value" />
         </property>
-        <set name="colfusionDnameMetaDatas" table="colfusion_dname_meta_data" inverse="true" lazy="true" fetch="select">
+        <set name="colfusionDnameinfoMetadataEditHistories" table="colfusion_dnameinfo_metadata_edit_history" inverse="true" lazy="true" fetch="select">
             <key>
-                <column name="cid" not-null="true" />
+                <column name="cid" not-null="true">
+                    <comment>column id</comment>
+                </column>
             </key>
-            <one-to-many class="edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionDnameMetaData" />
+            <one-to-many class="edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionDnameinfoMetadataEditHistory" />
         </set>
         <one-to-one name="colfusionColumnTableInfo" class="edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionColumnTableInfo"></one-to-one>
     </class>

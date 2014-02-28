@@ -11,27 +11,45 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 @XmlRootElement
 public class DatasetVariableViewModel {
+	private int cid;
 	private String originalName;
 	private String chosenName;
 	private String description;
 	private String variableMeasuringUnit;
 	private String variableValueType;
 	private String variableValueFormat;
+	private String missingValue;
 	private boolean checked;
 	
 	public DatasetVariableViewModel() {
-		
+		cid = 0;
 	}
 	
-	public DatasetVariableViewModel(String originalName, String chosenName, String description, String variableMeasuringUnit, String variableValueType, String variableValueFormat,
-			boolean checked) {
+	public DatasetVariableViewModel(int cid, String originalName, String chosenName, String description, String variableMeasuringUnit, String variableValueType, String variableValueFormat,
+			String missingValue, boolean checked) {
+		setCid(cid);
 		setChosenName(chosenName);
 		setDescription(description);
 		setVariableValueFormat(variableValueFormat);
 		setOriginalName(originalName);
 		setVariableMeasuringUnit(variableMeasuringUnit);
 		setVariableValueType(variableValueType);
+		setMissingValue(missingValue);
 		setChecked(checked);
+	}
+
+	/**
+	 * @return the cid
+	 */
+	public int getCid() {
+		return cid;
+	}
+
+	/**
+	 * @param cid the cid to set
+	 */
+	public void setCid(int cid) {
+		this.cid = cid;
 	}
 
 	/**
@@ -130,5 +148,19 @@ public class DatasetVariableViewModel {
 	 */
 	public void setChecked(boolean checked) {
 		this.checked = checked;
+	}
+
+	/**
+	 * @return the missingValue
+	 */
+	public String getMissingValue() {
+		return missingValue;
+	}
+
+	/**
+	 * @param missingValue the missingValue to set
+	 */
+	public void setMissingValue(String missingValue) {
+		this.missingValue = missingValue;
 	}
 }

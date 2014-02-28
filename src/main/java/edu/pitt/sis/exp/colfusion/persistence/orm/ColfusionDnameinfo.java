@@ -1,6 +1,6 @@
 package edu.pitt.sis.exp.colfusion.persistence.orm;
 
-// Generated Feb 25, 2014 9:55:27 AM by Hibernate Tools 3.4.0.CR1
+// Generated Feb 28, 2014 2:44:19 PM by Hibernate Tools 3.4.0.CR1
 
 import java.util.HashSet;
 import java.util.Set;
@@ -15,12 +15,13 @@ public class ColfusionDnameinfo implements java.io.Serializable {
 	private String dnameChosen;
 	private String dnameValueType;
 	private String dnameValueUnit;
+	private String dnameValueFormat;
 	private String dnameValueDescription;
 	private String dnameOriginalName;
 	private boolean isConstant;
 	private String constantValue;
 	private String missingValue;
-	private Set colfusionDnameMetaDatas = new HashSet(0);
+	private Set colfusionDnameinfoMetadataEditHistories = new HashSet(0);
 	private ColfusionColumnTableInfo colfusionColumnTableInfo;
 
 	public ColfusionDnameinfo() {
@@ -36,20 +37,21 @@ public class ColfusionDnameinfo implements java.io.Serializable {
 
 	public ColfusionDnameinfo(ColfusionSourceinfo colfusionSourceinfo,
 			String dnameChosen, String dnameValueType, String dnameValueUnit,
-			String dnameValueDescription, String dnameOriginalName,
-			boolean isConstant, String constantValue, String missingValue,
-			Set colfusionDnameMetaDatas,
+			String dnameValueFormat, String dnameValueDescription,
+			String dnameOriginalName, boolean isConstant, String constantValue,
+			String missingValue, Set colfusionDnameinfoMetadataEditHistories,
 			ColfusionColumnTableInfo colfusionColumnTableInfo) {
 		this.colfusionSourceinfo = colfusionSourceinfo;
 		this.dnameChosen = dnameChosen;
 		this.dnameValueType = dnameValueType;
 		this.dnameValueUnit = dnameValueUnit;
+		this.dnameValueFormat = dnameValueFormat;
 		this.dnameValueDescription = dnameValueDescription;
 		this.dnameOriginalName = dnameOriginalName;
 		this.isConstant = isConstant;
 		this.constantValue = constantValue;
 		this.missingValue = missingValue;
-		this.colfusionDnameMetaDatas = colfusionDnameMetaDatas;
+		this.colfusionDnameinfoMetadataEditHistories = colfusionDnameinfoMetadataEditHistories;
 		this.colfusionColumnTableInfo = colfusionColumnTableInfo;
 	}
 
@@ -93,6 +95,14 @@ public class ColfusionDnameinfo implements java.io.Serializable {
 		this.dnameValueUnit = dnameValueUnit;
 	}
 
+	public String getDnameValueFormat() {
+		return this.dnameValueFormat;
+	}
+
+	public void setDnameValueFormat(String dnameValueFormat) {
+		this.dnameValueFormat = dnameValueFormat;
+	}
+
 	public String getDnameValueDescription() {
 		return this.dnameValueDescription;
 	}
@@ -133,12 +143,13 @@ public class ColfusionDnameinfo implements java.io.Serializable {
 		this.missingValue = missingValue;
 	}
 
-	public Set getColfusionDnameMetaDatas() {
-		return this.colfusionDnameMetaDatas;
+	public Set getColfusionDnameinfoMetadataEditHistories() {
+		return this.colfusionDnameinfoMetadataEditHistories;
 	}
 
-	public void setColfusionDnameMetaDatas(Set colfusionDnameMetaDatas) {
-		this.colfusionDnameMetaDatas = colfusionDnameMetaDatas;
+	public void setColfusionDnameinfoMetadataEditHistories(
+			Set colfusionDnameinfoMetadataEditHistories) {
+		this.colfusionDnameinfoMetadataEditHistories = colfusionDnameinfoMetadataEditHistories;
 	}
 
 	public ColfusionColumnTableInfo getColfusionColumnTableInfo() {

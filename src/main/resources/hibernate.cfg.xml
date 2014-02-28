@@ -26,7 +26,7 @@
   <mapping resource="edu/pitt/sis/exp/colfusion/persistence/orm/ColfusionConfig.hbm.xml"/>
   <mapping resource="edu/pitt/sis/exp/colfusion/persistence/orm/ColfusionDesAttachments.hbm.xml"/>
   <mapping resource="edu/pitt/sis/exp/colfusion/persistence/orm/ColfusionDnameinfo.hbm.xml"/>
-  <mapping resource="edu/pitt/sis/exp/colfusion/persistence/orm/ColfusionDnameMetaData.hbm.xml"/>
+  <mapping resource="edu/pitt/sis/exp/colfusion/persistence/orm/ColfusionDnameinfoMetadataEditHistory.hbm.xml"/>
   <mapping resource="edu/pitt/sis/exp/colfusion/persistence/orm/ColfusionExecuteinfo.hbm.xml"/>
   <mapping resource="edu/pitt/sis/exp/colfusion/persistence/orm/ColfusionFormulas.hbm.xml"/>
   <mapping resource="edu/pitt/sis/exp/colfusion/persistence/orm/ColfusionFriends.hbm.xml"/>
