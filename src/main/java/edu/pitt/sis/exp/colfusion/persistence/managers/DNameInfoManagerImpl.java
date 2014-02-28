@@ -347,7 +347,7 @@ public class DNameInfoManagerImpl implements DNameInfoManager {
             
             ColumnTableInfoDAO columnTableInfoDAO = new ColumnTableInfoDAOImpl();
             
-            columnTableInfoDAO.merge(columnTableInfo);
+            columnTableInfoDAO.saveOrUpdate(columnTableInfo);
             
             HibernateUtil.commitTransaction();
         } catch (NonUniqueResultException ex) {
