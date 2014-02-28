@@ -186,16 +186,16 @@ public class ExcelImporter {
         if (cellType == org.apache.poi.ss.usermodel.Cell.CELL_TYPE_BOOLEAN) {
             value = cell.getBooleanCellValue();
             //TODO: the types should be enums, not hardwired strings.
-            result.setValueType("boolean");
+            result.setVariableValueType("boolean");
         } else if (cellType == org.apache.poi.ss.usermodel.Cell.CELL_TYPE_NUMERIC) {
             double d = cell.getNumericCellValue();
             
             if (HSSFDateUtil.isCellDateFormatted(cell)) {
                 value = HSSFDateUtil.getJavaDate(d);
-                result.setValueType("date");
+                result.setVariableValueType("date");
             } else {
                 value = d;
-                result.setValueType("number");
+                result.setVariableValueType("number");
             }
         } else {
             String text = cell.getStringCellValue();
@@ -203,7 +203,7 @@ public class ExcelImporter {
                 value = text;
             }
             
-            result.setValueType("text");
+            result.setVariableValueType("text");
         }
         
         if (value == null)

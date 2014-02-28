@@ -14,21 +14,24 @@ public class DatasetVariableViewModel {
 	private String originalName;
 	private String chosenName;
 	private String description;
-	private String valueUnit;
-	private String valueType;
-	private String valueFormat;
+	private String variableMeasuringUnit;
+	private String variableValueType;
+	private String variableValueFormat;
+	private boolean checked;
 	
 	public DatasetVariableViewModel() {
 		
 	}
 	
-	public DatasetVariableViewModel(String originalName, String chosenName, String description, String valueUnit, String valueType, String valueFormat) {
+	public DatasetVariableViewModel(String originalName, String chosenName, String description, String variableMeasuringUnit, String variableValueType, String variableValueFormat,
+			boolean checked) {
 		setChosenName(chosenName);
 		setDescription(description);
-		setFormat(valueFormat);
+		setVariableValueFormat(variableValueFormat);
 		setOriginalName(originalName);
-		setUnit(valueUnit);
-		setValueType(valueType);
+		setVariableMeasuringUnit(variableMeasuringUnit);
+		setVariableValueType(variableValueType);
+		setChecked(checked);
 	}
 
 	/**
@@ -76,42 +79,56 @@ public class DatasetVariableViewModel {
 	/**
 	 * @return the unit
 	 */
-	public String getUnit() {
-		return valueUnit;
+	public String getVariableMeasuringUnit() {
+		return variableMeasuringUnit;
 	}
 
 	/**
 	 * @param unit the unit to set
 	 */
-	public void setUnit(String valueUnit) {
-		this.valueUnit = valueUnit;
+	public void setVariableMeasuringUnit(String variableMeasuringUnit) {
+		this.variableMeasuringUnit = variableMeasuringUnit;
 	}
 
 	/**
 	 * @return the valueType
 	 */
-	public String getValueType() {
-		return valueType;
+	public String getVariableValueType() {
+		return variableValueType;
 	}
 
 	/**
 	 * @param valueType the valueType to set
 	 */
-	public void setValueType(String valueType) {
-		this.valueType = valueType;
+	public void setVariableValueType(String valueType) {
+		this.variableValueType = valueType;
 	}
 
 	/**
 	 * @return the format
 	 */
-	public String getFormat() {
-		return valueFormat;
+	public String getVariableValueFormat() {
+		return variableValueFormat;
 	}
 
 	/**
 	 * @param format the format to set
 	 */
-	public void setFormat(String valueFormat) {
-		this.valueFormat = valueFormat;
+	public void setVariableValueFormat(String valueFormat) {
+		this.variableValueFormat = valueFormat;
+	}
+
+	/**
+	 * @return the checked
+	 */
+	public boolean isChecked() {
+		return checked;
+	}
+
+	/**
+	 * @param checked the checked to set
+	 */
+	public void setChecked(boolean checked) {
+		this.checked = checked;
 	}
 }

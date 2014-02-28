@@ -1,5 +1,6 @@
 package edu.pitt.sis.exp.colfusion.controllers;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -12,12 +13,18 @@ import javax.ws.rs.HeaderParam;
 import javax.ws.rs.OPTIONS;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.xml.ws.spi.http.HttpContext;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.codehaus.jackson.JsonNode;
+import org.codehaus.jackson.JsonProcessingException;
+import org.codehaus.jackson.map.ObjectMapper;
 import org.glassfish.jersey.media.multipart.FormDataBodyPart;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 
@@ -190,6 +197,75 @@ public class WizardController extends BaseController {
 	DataSubmissionWizzardBL wizardBLL = new DataSubmissionWizzardBL();
 		
 	FileContentInfoReponse result = wizardBLL.getFilesVariablesAndRecomendations(filesWithSelectedSheets);
+		
+    	return makeCORS(Response.status(200).entity(result)); //.build();
+    }
+	
+	/**
+     * Because we do cross domain AJAX calls, we need to use CORS. Actually it worked for me from simple form, but didn't work from file upload.
+     * @param requestH
+     * @return
+     */
+	@OPTIONS
+    @Path("putDataMatchingStepData")
+    public Response putDataMatchingStepDataOption(@HeaderParam("Access-Control-Request-Headers") String requestH) {
+		return makeCORS(Response.ok()); //, requestH);
+    }
+	
+	/**
+     * Retreive variable names from each file and try to guess data type for each of them. Also contains recommended variables names.
+     * 
+     * @param sid story id for which the template need to be created.
+     * @param fileMode the mode specifying how several files should be processed. Could Append or Separately.
+     * @param fileNames the information about uploaded files.
+     * 
+     * @return sends back the general response with status and message.
+     */
+	@Path("putDataMatchingStepData")
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+	//TODO: this need to be changed. it should accept the source type and source settings as a JSON object, then that object will be passed to source importer which will know how to process it.
+    public Response putDataMatchingStepData(List<FileContentInfoViewModel> dataMatchingStepData) {
+		    	
+		DataSubmissionWizzardBL wizardBLL = new DataSubmissionWizzardBL();
+					
+		FileContentInfoReponse result = wizardBLL.getFilesVariablesAndRecomendations(dataMatchingStepData);
+		
+    	return makeCORS(Response.status(200).entity(result)); //.build();
+    }
+	
+	/**
+     * Because we do cross domain AJAX calls, we need to use CORS. Actually it worked for me from simple form, but didn't work from file upload.
+     * @param requestH
+     * @return
+     */
+	@OPTIONS
+    @Path("triggerDataLoad/{sid}")
+    public Response triggerDataLoad(@HeaderParam("Access-Control-Request-Headers") String requestH) {
+		return makeCORS(Response.ok()); //, requestH);
+    }
+	
+	/**
+     * Retreive variable names from each file and try to guess data type for each of them. Also contains recommended variables names.
+     * 
+     * @param sid story id for which the template need to be created.
+     * @param fileMode the mode specifying how several files should be processed. Could Append or Separately.
+     * @param fileNames the information about uploaded files.
+     * 
+     * @return sends back the general response with status and message.
+     */
+	@Path("triggerDataLoad/{sid}")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+	//TODO: this need to be changed. it should accept the source type and source settings as a JSON object, then that object will be passed to source importer which will know how to process it.
+    public Response triggerDataLoad(@PathParam("sid") int sid) {
+		    	
+		GeneralResponse result = new GeneralResponse();
+		result.isSuccessful = true;
+		result.message = "OK" + sid;
+		
+		//FileContentInfoReponse result = wizardBLL.getFilesVariablesAndRecomendations(dataMatchingStepData);
 		
     	return makeCORS(Response.status(200).entity(result)); //.build();
     }
