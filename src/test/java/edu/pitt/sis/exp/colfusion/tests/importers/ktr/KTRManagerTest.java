@@ -7,8 +7,12 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.xpath.XPathExpressionException;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.xml.sax.SAXException;
 
 import edu.pitt.sis.exp.colfusion.ConfigManager;
 import edu.pitt.sis.exp.colfusion.importers.ktr.KTRManager;
@@ -30,9 +34,9 @@ public class KTRManagerTest extends TestCase {
 	
 	public void testCreateKTR() {
 		
-		KTRManager ktrManager = new KTRManager();
-		
 		int sid = 1163;
+		
+		KTRManager ktrManager = new KTRManager(sid);
 		
 		FileContentInfoViewModel fileContentInfoViewModel = new FileContentInfoViewModel();
 		
@@ -76,9 +80,21 @@ public class KTRManagerTest extends TestCase {
 		
 		
 		try {
-			ktrManager.createTemplate(fileContentInfoViewModel, sid);
+			ktrManager.createTemplate(fileContentInfoViewModel);
 		} catch (IOException e) {
 			logger.error("testCreateKTR failed!", e);
+		} catch (ParserConfigurationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SAXException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (XPathExpressionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 }

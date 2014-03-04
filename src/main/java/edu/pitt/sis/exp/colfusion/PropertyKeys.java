@@ -30,4 +30,96 @@ public class PropertyKeys {
 	 * Key for the property of ktr template file location for transforming excel to database 
 	 */
 	public static String excelToDatabaseKTRTemplate = "excel-to-database_KTR_Template";
+
+	
+	/**
+	 * Target FileToDB database is the database where the data should actually be loaded. Currently only one target database is used.
+	 * 
+	 * DatabaseName is the name of the database where the data should be loaded.
+	 */
+	public static String targetFileToDBDatabase_DatabaseNamePrefix = "targetFileToDBDatabase_DatabaseNamePrefix";
+
+	/**
+	 * Target FileToDB database is the database where the data should actually be loaded. Currently only one target database is used.
+	 * 
+	 * UserName is the name user which need to be used to connect to the database.
+	 */
+	public static String targetFileToDBDatabase_UserName = "targetFileToDBDatabase_UserName";
+
+	/**
+	 * Target FileToDB database is the database where the data should actually be loaded. Currently only one target database is used.
+	 * 
+	 * Password is the password which need to be used to connect to the database.
+	 */
+	public static String targetFileToDBDatabase_Password = "targetFileToDBDatabase_Password";
+
+	/**
+	 * Target FileToDB database is the database where the data should actually be loaded. Currently only one target database is used.
+	 * 
+	 * Server is the URL of the server on which the database is running.
+	 */
+	public static String targetFileToDBDatabase_Server = "targetFileToDBDatabase_Server";
+
+	/**
+	 * Target FileToDB database is the database where the data should actually be loaded. Currently only one target database is used.
+	 * 
+	 * Port is the port of the server on which the database is running.
+	 */
+	public static String targetFileToDBDatabase_Port = "targetFileToDBDatabase_Port";
+
+	/**
+	 * Target FileToDB database is the database where the data should actually be loaded. Currently only one target database is used.
+	 * 
+	 * Type is the database vendor, e.g. MySQL, MSSQL, etc.
+	 */
+	public static String targetFileToDBDatabase_Type = "targetFileToDBDatabase_Type";
+	
+	
+	
+	
+	/**
+	 * Logging database is the database where the data should actually be loaded. Currently only one target database is used.
+	 * 
+	 * DatabaseName is the name of the database where the data should be loaded.
+	 */
+	public static String logginDatabase_DatabaseNamePrefix = "logginDatabase_DatabaseNamePrefix";
+
+	/**
+	 * Logging database is the database where the data should actually be loaded. Currently only one target database is used.
+	 * 
+	 * UserName is the name user which need to be used to connect to the database.
+	 */
+	public static String logginDatabase_UserName = "logginDatabase_UserName";
+
+	/**
+	 * Logging database is the database where the data should actually be loaded. Currently only one target database is used.
+	 * 
+	 * Password is the password which need to be used to connect to the database.
+	 */
+	public static String logginDatabase_Password = "logginDatabase_Password";
+
+	/**
+	 * Logging database is the database where the data should actually be loaded. Currently only one target database is used.
+	 * 
+	 * Server is the URL of the server on which the database is running.
+	 */
+	public static String logginDatabase_Server = "logginDatabase_Server";
+
+	/**
+	 * Logging database is the database where the data should actually be loaded. Currently only one target database is used.
+	 * 
+	 * Port is the port of the server on which the database is running.
+	 */
+	public static String logginDatabase_Port = "logginDatabase_Port";
+
+	/**
+	 * Logging database is the database where the data should actually be loaded. Currently only one target database is used.
+	 * 
+	 * Type is the database vendor, e.g. MySQL, MSSQL, etc.
+	 */
+	public static String logginDatabase_Type = "logginDatabase_Type";
+	
+	
+	
+	
 }

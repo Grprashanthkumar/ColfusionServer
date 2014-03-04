@@ -9,6 +9,10 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+
 import org.apache.commons.compress.archivers.ArchiveException;
 import org.apache.commons.compress.archivers.ArchiveInputStream;
 import org.apache.commons.compress.archivers.ArchiveStreamFactory;
@@ -16,6 +20,9 @@ import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.w3c.dom.Document;
+import org.xml.sax.SAXException;
+
 import edu.pitt.sis.exp.colfusion.utils.models.IOUtilsStoredFileInfoModel;
 
 /**
@@ -224,5 +231,27 @@ public class IOUtils {
 		File archiveFile = new File(absoluteFileName);
 
 		return unarchive(absoluteFileName, archiveFile.getParent());
+	}
+	
+	/**
+	 * Parses given XML document.
+	 * 
+	 * @param ablsoluteXMLDocumentPath the absolute path of the XML document thatneed to be parsed.
+	 * @return the {@link Document} parsed document.
+	 * @throws ParserConfigurationException
+	 * @throws SAXException
+	 * @throws IOException
+	 */
+	public Document readXMLDocument(String ablsoluteXMLDocumentPath) throws ParserConfigurationException, SAXException, IOException {
+		
+		logger.info(String.format("readXMLDocument: Starting to read XML document %s", ablsoluteXMLDocumentPath));
+		
+		DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
+		DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
+		Document doc = docBuilder.parse(ablsoluteXMLDocumentPath);
+		
+		logger.info(String.format("readXMLDocument: Done to read XML document %s", ablsoluteXMLDocumentPath));
+		
+		return doc;
 	}
 }
