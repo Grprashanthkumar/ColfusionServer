@@ -1,5 +1,6 @@
 package edu.pitt.sis.exp.colfusion.tests.utils;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
@@ -101,6 +102,27 @@ public class IOUtilsTest extends TestCase {
 		} catch (ArchiveException e) {
 			
 			logger.error("testWriteTarGzArchiveAsInputStremToFile failed!", e);
+		}
+	}
+	
+	public void testCopyFileContentOnKTRTemplates() {
+		String testKTRBaseDirLocation = configManager.getPropertyByName(PropertyKeysTest.testKtrFielsBaseLocation);
+		
+		String fileToCopyName = configManager.getPropertyByName(PropertyKeysTest.testCsvToDatabaseKTRTemplate);
+		String fileToCopyLocation = Thread.currentThread().getContextClassLoader().getResource(fileToCopyName).getFile();
+		
+		try {
+			IOUtilsStoredFileInfoModel result =  IOUtils.getInstance().copyFileContent(fileToCopyLocation, testKTRBaseDirLocation + File.separator + 
+					"testSid",	"testCopiedFile");
+			
+			File originalFile = new File(fileToCopyLocation);
+		
+			File copiedFile = new File(result.getAbsoluteFileName());
+			
+			assertEquals(originalFile.length(), copiedFile.length());
+			
+		} catch (Exception e) {
+			logger.error("testCopyFileContentOnKTRTemplates failed!", e);
 		}
 	}
 

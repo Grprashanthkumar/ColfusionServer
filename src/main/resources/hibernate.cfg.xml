@@ -55,6 +55,7 @@
   <mapping resource="edu/pitt/sis/exp/colfusion/persistence/orm/ColfusionSourceinfo.hbm.xml"/>
   <mapping resource="edu/pitt/sis/exp/colfusion/persistence/orm/ColfusionSourceinfoDb.hbm.xml"/>
   <mapping resource="edu/pitt/sis/exp/colfusion/persistence/orm/ColfusionSourceinfoMetadataEditHistory.hbm.xml"/>
+  <mapping resource="edu/pitt/sis/exp/colfusion/persistence/orm/ColfusionSourceinfoTableKtr.hbm.xml"/>
   <mapping resource="edu/pitt/sis/exp/colfusion/persistence/orm/ColfusionSourceinfoUser.hbm.xml"/>
   <mapping resource="edu/pitt/sis/exp/colfusion/persistence/orm/ColfusionSynonymsFrom.hbm.xml"/>
   <mapping resource="edu/pitt/sis/exp/colfusion/persistence/orm/ColfusionSynonymsTo.hbm.xml"/>

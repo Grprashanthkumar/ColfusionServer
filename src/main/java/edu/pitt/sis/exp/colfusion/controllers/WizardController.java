@@ -232,7 +232,11 @@ public class WizardController extends BaseController {
 		    	
 		DataSubmissionWizzardBL wizardBLL = new DataSubmissionWizzardBL();
 					
-		FileContentInfoReponse result = wizardBLL.saveVariablesMetadata(dataMatchingStepData);
+		GeneralResponse result = wizardBLL.saveVariablesMetadata(dataMatchingStepData);
+		
+		if (result.isSuccessful) {
+			result = wizardBLL.generateKTR(dataMatchingStepData);
+		}
 		
     	return makeCORS(Response.status(200).entity(result)); //.build();
     }
@@ -263,11 +267,9 @@ public class WizardController extends BaseController {
 	//TODO: this need to be changed. it should accept the source type and source settings as a JSON object, then that object will be passed to source importer which will know how to process it.
     public Response triggerDataLoad(@PathParam("sid") int sid) {
 		    	
-		GeneralResponse result = new GeneralResponse();
-		result.isSuccessful = true;
-		result.message = "OK" + sid;
+		DataSubmissionWizzardBL wizardBLL = new DataSubmissionWizzardBL();
 		
-		//FileContentInfoReponse result = wizardBLL.getFilesVariablesAndRecomendations(dataMatchingStepData);
+		GeneralResponse result = wizardBLL.triggerKTRExecution(sid);
 		
     	return makeCORS(Response.status(200).entity(result)); //.build();
     }

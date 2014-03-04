@@ -1,6 +1,6 @@
 package edu.pitt.sis.exp.colfusion.persistence.orm;
 
-// Generated Feb 28, 2014 2:44:19 PM by Hibernate Tools 3.4.0.CR1
+// Generated Feb 28, 2014 5:25:41 PM by Hibernate Tools 3.4.0.CR1
 
 import java.util.Date;
 import java.util.HashSet;
@@ -26,6 +26,7 @@ public class ColfusionSourceinfo implements java.io.Serializable {
 	private Set colfusionSourceinfoUsers = new HashSet(0);
 	private Set colfusionTemporaries = new HashSet(0);
 	private Set colfusionSynonymsTos = new HashSet(0);
+	private Set colfusionSourceinfoTableKtrs = new HashSet(0);
 	private Set colfusionRelationshipsesForSid1 = new HashSet(0);
 	private Set colfusionDesAttachmentses = new HashSet(0);
 	private Set colfusionRelationshipsesForSid2 = new HashSet(0);
@@ -49,9 +50,9 @@ public class ColfusionSourceinfo implements java.io.Serializable {
 			String rawDataPath, String sourceType, String provenance,
 			Set colfusionSynonymsFroms, Set colfusionExecuteinfos,
 			Set colfusionSourceinfoUsers, Set colfusionTemporaries,
-			Set colfusionSynonymsTos, Set colfusionRelationshipsesForSid1,
-			Set colfusionDesAttachmentses, Set colfusionRelationshipsesForSid2,
-			Set colfusionDnameinfos,
+			Set colfusionSynonymsTos, Set colfusionSourceinfoTableKtrs,
+			Set colfusionRelationshipsesForSid1, Set colfusionDesAttachmentses,
+			Set colfusionRelationshipsesForSid2, Set colfusionDnameinfos,
 			ColfusionSourceinfoDb colfusionSourceinfoDb,
 			Set colfusionSourceinfoMetadataEditHistories,
 			Set colfusionVisualizations) {
@@ -69,6 +70,7 @@ public class ColfusionSourceinfo implements java.io.Serializable {
 		this.colfusionSourceinfoUsers = colfusionSourceinfoUsers;
 		this.colfusionTemporaries = colfusionTemporaries;
 		this.colfusionSynonymsTos = colfusionSynonymsTos;
+		this.colfusionSourceinfoTableKtrs = colfusionSourceinfoTableKtrs;
 		this.colfusionRelationshipsesForSid1 = colfusionRelationshipsesForSid1;
 		this.colfusionDesAttachmentses = colfusionDesAttachmentses;
 		this.colfusionRelationshipsesForSid2 = colfusionRelationshipsesForSid2;
@@ -196,6 +198,14 @@ public class ColfusionSourceinfo implements java.io.Serializable {
 
 	public void setColfusionSynonymsTos(Set colfusionSynonymsTos) {
 		this.colfusionSynonymsTos = colfusionSynonymsTos;
+	}
+
+	public Set getColfusionSourceinfoTableKtrs() {
+		return this.colfusionSourceinfoTableKtrs;
+	}
+
+	public void setColfusionSourceinfoTableKtrs(Set colfusionSourceinfoTableKtrs) {
+		this.colfusionSourceinfoTableKtrs = colfusionSourceinfoTableKtrs;
 	}
 
 	public Set getColfusionRelationshipsesForSid1() {

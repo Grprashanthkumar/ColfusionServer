@@ -41,6 +41,7 @@
   <table-filter match-catalog="colfusion" match-name="colfusion_sourceinfo"/>
   <table-filter match-catalog="colfusion" match-name="colfusion_sourceinfo_DB"/>
   <table-filter match-catalog="colfusion" match-name="colfusion_sourceinfo_metadata_edit_history"/>
+  <table-filter match-catalog="colfusion" match-name="colfusion_sourceinfo_table_ktr"/>
   <table-filter match-catalog="colfusion" match-name="colfusion_sourceinfo_user"/>
   <table-filter match-catalog="colfusion" match-name="colfusion_synonyms_from"/>
   <table-filter match-catalog="colfusion" match-name="colfusion_synonyms_to"/>

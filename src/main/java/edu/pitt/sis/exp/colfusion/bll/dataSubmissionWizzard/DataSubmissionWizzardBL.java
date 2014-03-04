@@ -19,6 +19,7 @@ import edu.pitt.sis.exp.colfusion.persistence.managers.DNameInfoManager;
 import edu.pitt.sis.exp.colfusion.persistence.managers.DNameInfoManagerImpl;
 import edu.pitt.sis.exp.colfusion.responseModels.AcceptedFilesResponse;
 import edu.pitt.sis.exp.colfusion.responseModels.FileContentInfoReponse;
+import edu.pitt.sis.exp.colfusion.responseModels.GeneralResponse;
 import edu.pitt.sis.exp.colfusion.utils.IOUtils;
 import edu.pitt.sis.exp.colfusion.utils.models.IOUtilsStoredFileInfoModel;
 import edu.pitt.sis.exp.colfusion.viewmodels.CreateTemplateViewModel;
@@ -121,6 +122,13 @@ public class DataSubmissionWizzardBL {
 				oneFileContentInfo.setFileName(fileModel.getFileName());
 				oneFileContentInfo.setFileAbsoluteName(fileModel.getAbsoluteFileName());
 				
+				String[] otherFiles = new String[oneItem.getFiles().size() - 1];
+				for (int i = 1; i < oneItem.getFiles().size(); i++) {
+					otherFiles[i - 1] = oneItem.getFiles().get(i).getAbsoluteFileName();
+				}
+				
+				oneFileContentInfo.setOtherFilesAbsoluteNames(otherFiles);
+				
 				//TODO move types of extensions in to enum
 				if (fileModel.getFileExtension().equals("csv")) {
 					WorksheetViewModel worksheet = new WorksheetViewModel();
@@ -191,7 +199,7 @@ public class DataSubmissionWizzardBL {
 	 * @param dataMatchingStepData {@link List} list of files info {@link FileContentInfoViewModel}
 	 * @return {@link FileContentInfoReponse} with success or error message no payload.
 	 */
-	public FileContentInfoReponse saveVariablesMetadata(FilesContentInfoViewModel filesInfo) {
+	public GeneralResponse saveVariablesMetadata(FilesContentInfoViewModel filesInfo) {
 		FileContentInfoReponse result = new FileContentInfoReponse();
 		
 		try {
@@ -207,8 +215,6 @@ public class DataSubmissionWizzardBL {
 				}
 			}
 			
-			result.setPayload(null);
-			
 			result.isSuccessful = true;
 			result.message = "OK";			
 			
@@ -220,5 +226,15 @@ public class DataSubmissionWizzardBL {
 		}
 		
 		return result;
+	}
+
+	public GeneralResponse generateKTR(FilesContentInfoViewModel dataMatchingStepData) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+	public GeneralResponse triggerKTRExecution(int sid) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

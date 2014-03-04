@@ -17,16 +17,21 @@ public class FileContentInfoViewModel {
 	private String extension;
 	private String fileName;
 	private String fileAbsoluteName;
+	//TODO: FIXME: again using hacks, I think we need to sit down and think about architecture first...
+	//Anyway this field will be used for cases when people submit archives, the list of other files which need to be process except the first one will be here in this array
+	//Assumption is that the settings for the first file will be applied for all files in the archive.
+	private String[] otherFilesAbsoluteNames;
 	private ArrayList<WorksheetViewModel> worksheets;
 	
 	public FileContentInfoViewModel() {
 		setWorksheets(new ArrayList<WorksheetViewModel>());
 	}
 	
-	public FileContentInfoViewModel(String extension, String fileName, String fileAbsoluteName, ArrayList<WorksheetViewModel> worksheets) {
+	public FileContentInfoViewModel(String extension, String fileName, String fileAbsoluteName, String[] otherFilesAbsoluteNames, ArrayList<WorksheetViewModel> worksheets) {
 		setExtension(extension);
 		setFileName(fileName);
 		setFileAbsoluteName(fileAbsoluteName);
+		setOtherFilesAbsoluteNames(otherFilesAbsoluteNames);
 		setWorksheets(worksheets);
 	}
 
@@ -84,5 +89,19 @@ public class FileContentInfoViewModel {
 	 */
 	public void setFileAbsoluteName(String fileAbsoluteName) {
 		this.fileAbsoluteName = fileAbsoluteName;
+	}
+
+	/**
+	 * @return the otherFilesAbsoluteNames
+	 */
+	public String[] getOtherFilesAbsoluteNames() {
+		return otherFilesAbsoluteNames;
+	}
+
+	/**
+	 * @param otherFilesAbsoluteNames the otherFilesAbsoluteNames to set
+	 */
+	public void setOtherFilesAbsoluteNames(String[] otherFilesAbsoluteNames) {
+		this.otherFilesAbsoluteNames = otherFilesAbsoluteNames;
 	}
 }
