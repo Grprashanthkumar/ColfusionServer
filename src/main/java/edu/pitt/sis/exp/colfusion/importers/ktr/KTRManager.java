@@ -20,6 +20,7 @@ import javax.xml.xpath.XPathFactory;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.poi.hssf.util.CellReference;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -87,7 +88,7 @@ public class KTRManager {
 			
 			//TODO uncomment saveKTRFileLocationToDB(sid, tableName, copiedKTRFileInfo.getAbsoluteFileName());
 			
-			fillKTRFile(copiedKTRFileInfo.getAbsoluteFileName(), filesAbsoluteNames, worksheet);
+			fillKTRFile(copiedKTRFileInfo.getAbsoluteFileName(), file.getExtension(), filesAbsoluteNames, worksheet);
 		}		
 	}
 
@@ -99,11 +100,15 @@ public class KTRManager {
 	 * @param worksheet - what sheet to import.
 	 * @throws Exception 
 	 */
-	private void fillKTRFile(String ktrAbsoluteName, ArrayList<String> filesAbsoluteNames, WorksheetViewModel worksheet) 
+	private void fillKTRFile(String ktrAbsoluteName, String dataFileExtension, ArrayList<String> filesAbsoluteNames, WorksheetViewModel worksheet) 
 			throws Exception {
 		Document ktrDocument = IOUtils.getInstance().readXMLDocument(ktrAbsoluteName);
 		
 		ktrDocumentChangeConnection(ktrDocument);
+		
+		if (!dataFileExtension.equals("csv")) {
+			ktrDocumentAddSheets(ktrDocument, worksheet);
+		}
 		
 		// write the content into xml file
 		TransformerFactory transformerFactory = TransformerFactory.newInstance();
@@ -113,6 +118,52 @@ public class KTRManager {
 		transformer.transform(source, result);
 	}
 
+	/**
+	 * Adds info from to extract from the excel file.
+	 * @param ktrDocument the KTR as XML document parsed in memory.
+	 * @param worksheet the sheet info.
+	 * @throws Exception
+	 */
+	private void ktrDocumentAddSheets(Document ktrDocument, WorksheetViewModel worksheet) throws Exception {
+		//XPath to get connection node for the database to load data to
+		String expression = "/transformation/step[name = 'Excel Input File']/sheets";
+		
+		XPath xPath =  XPathFactory.newInstance().newXPath();
+		NodeList excelStepSheetsTag = (NodeList) xPath.compile(expression).evaluate(ktrDocument, XPathConstants.NODESET);
+		
+		if (excelStepSheetsTag.getLength() == 0) {
+			logger.error(String.format("ktrDocumentAddSheets failed, no excel/Step/Sheets tag for the connection to the database"));
+			
+			throw new Exception("ktrDocumentAddSheets failed, no excel/Step/Sheets tag for the connection to the database");
+		}
+		
+		Node excelStepSheetsNode = (Node) excelStepSheetsTag.item(0);
+		
+		Element sheetTag = ktrDocument.createElement("sheet");;
+		Element sheetNameTag = ktrDocument.createElement("name");
+		sheetNameTag.appendChild(ktrDocument.createTextNode(worksheet.getSheetName()));
+		
+		Element sheetStartRowTag = ktrDocument.createElement("startrow");
+		sheetStartRowTag.appendChild(ktrDocument.createTextNode(String.valueOf(worksheet.getHeaderRow() - 1)));
+		
+		Element sheetStartColumnTag = ktrDocument.createElement("startcol");
+		// Converting Column Letter to Number index.
+		String columnIndexAsStr = String.valueOf(CellReference.convertColStringToIndex(worksheet.getStartColumn()));
+		sheetStartColumnTag.appendChild(ktrDocument.createTextNode(columnIndexAsStr));
+		 
+		
+		sheetTag.appendChild(sheetNameTag);
+		sheetTag.appendChild(sheetStartRowTag);
+		sheetTag.appendChild(sheetStartColumnTag);
+		
+		excelStepSheetsNode.appendChild(sheetTag);
+	}
+
+	/**
+	 * Changes the dummy connection in the KTR template to the connection info in the settings file where the data and logging should be saved.
+	 * @param ktrDocument KTR as XML document parsed in memory.
+	 * @throws Exception
+	 */
 	private void ktrDocumentChangeConnection(Document ktrDocument) throws Exception {
 		
 		//XPath to get connection node for the database to load data to
@@ -160,7 +211,18 @@ public class KTRManager {
 		
 	}
 	
-	private void setConnectionNode(Node connectionNode, String databaseNamePrefix, String userName, String password, String server, String port, String type) {
+	//TODO this can actually be generalized by using map
+	/**
+	 * Actually modifies XML document (loaded in memory) node with provided info.
+	 * @param connectionNode the XML node which need to be modified.
+	 * @param databaseName the name of the database to set (target for data and logging data).
+	 * @param userName user name which will be used to connect to database.
+	 * @param password which will be used to connect to the database
+	 * @param server URL of the server where database is running.
+	 * @param port on which database is listening.
+	 * @param type the vendor of the database, e.g. MySQL.
+	 */
+	private void setConnectionNode(Node connectionNode, String databaseName, String userName, String password, String server, String port, String type) {
 		//TODO there must be a better way to do that
 		NodeList childNodes = connectionNode.getChildNodes();
 		for (int i = 0; i < childNodes.getLength(); i++)
@@ -170,7 +232,7 @@ public class KTRManager {
 		        continue;
 
 		    if (child.getNodeName().equals("database"))
-		        child.getFirstChild().setNodeValue(databaseNamePrefix);
+		        child.getFirstChild().setNodeValue(databaseName);
 		    else if (child.getNodeName().equals("username"))
 		        child.getFirstChild().setNodeValue(userName);
 		    else if (child.getNodeName().equals("password"))
