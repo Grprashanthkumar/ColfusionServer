@@ -21,6 +21,7 @@ import javax.xml.xpath.XPathFactory;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.poi.hssf.util.CellReference;
+import org.eclipse.persistence.exceptions.XMLConversionException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -118,6 +119,8 @@ public class KTRManager {
 		ktrDocumentAddTableNateIntoTargetSchemaStep(ktrDocument, tableName);
 		ktrDocumentAddVariablesIntoTargetSchemaStep(ktrDocument, worksheet.getVariables());
 		
+		ktrDocumentChangeTransformationName(ktrDocument, String.valueOf(getSid()));
+		
 		// write the content into xml file
 		TransformerFactory transformerFactory = TransformerFactory.newInstance();
 		Transformer transformer = transformerFactory.newTransformer();
@@ -126,6 +129,51 @@ public class KTRManager {
 		transformer.transform(source, result);
 	}
 
+	/**
+	 * Set the transformation name of the given KTR document to a given name.
+	 * @param ktrDocument the document in which to set transformation name.
+	 * @param transformationName the name to set.
+	 * @throws Exception
+	 */
+	private void ktrDocumentChangeTransformationName(Document ktrDocument, String transformationName) throws Exception {
+		logger.info("starting change transformation name in the KTR document");
+ 		
+ 		//XPath to get fields node to populate with selected variables
+ 		String expression = "/transformation/info/name";
+ 		
+ 		XPath xPath =  XPathFactory.newInstance().newXPath();
+ 		NodeList nameTag = (NodeList) xPath.compile(expression).evaluate(ktrDocument, XPathConstants.NODESET);
+ 		
+ 		if (nameTag.getLength() == 0) {
+ 			logger.error(String.format("nameTag failed, no /transformation/info/name tag "));
+ 			
+ 			throw new Exception("nameTag failed, no /transformation/info/name tag");
+ 		}
+ 		
+ 		Node nameNode = (Node) nameTag.item(0);
+ 		
+ 		removeAllChildNodes(nameNode);
+ 		
+ 		nameNode.appendChild(ktrDocument.createTextNode(transformationName));
+ 		
+ 		logger.info("finished change transformation name in the KTR document");
+         
+		
+	}
+
+	/**
+	 * Removes all child nodes from the given node of the XML {@link Document}
+	 * @param node parent node from which the children should be deleted.
+	 */
+	public void removeAllChildNodes(Node node) 
+    {
+		NodeList children = node.getChildNodes();
+		
+		for (int i = children.getLength() - 1; i >= 0; i--) {
+			node.removeChild(children.item(i));
+		}
+    }
+	
 	/**
 	 * Adds table tag into KTR file into Target Schema step with name of the table in the database where the data should be imported.
 	 * 
