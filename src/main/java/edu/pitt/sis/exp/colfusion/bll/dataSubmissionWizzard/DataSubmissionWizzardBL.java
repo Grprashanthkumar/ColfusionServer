@@ -11,10 +11,12 @@ import java.util.Map;
 import org.apache.commons.compress.archivers.ArchiveException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.xmlbeans.impl.regex.REUtil;
 
 import edu.pitt.sis.exp.colfusion.ConfigManager;
 import edu.pitt.sis.exp.colfusion.PropertyKeys;
 import edu.pitt.sis.exp.colfusion.importers.ExcelImporter;
+import edu.pitt.sis.exp.colfusion.importers.ktr.KTRManager;
 import edu.pitt.sis.exp.colfusion.persistence.managers.DNameInfoManager;
 import edu.pitt.sis.exp.colfusion.persistence.managers.DNameInfoManagerImpl;
 import edu.pitt.sis.exp.colfusion.responseModels.AcceptedFilesResponse;
@@ -229,12 +231,34 @@ public class DataSubmissionWizzardBL {
 		return result;
 	}
 
+	/**
+	 * Creates a KTR file for each file.
+	 * @param dataMatchingStepData
+	 * @return
+	 */
 	public GeneralResponse generateKTR(FilesContentInfoViewModel dataMatchingStepData) {
 		
+		GeneralResponse result = new GeneralResponse();
+		result.isSuccessful = true;
+		result.message = "OK";
 		
+		KTRManager ktrManager = new KTRManager(dataMatchingStepData.getSid());
 		
-		// TODO Auto-generated method stub
-		return null;
+		for(FileContentInfoViewModel file : dataMatchingStepData.getFiles()) {
+			try {
+				ktrManager.createTemplate(file);
+			} catch (Exception e) {
+				
+				String msg = String.format("create ktr failed for %s file", file.getFileName());
+				
+				logger.error(msg, e);
+				result.message += "\n" + msg;
+				
+				result.isSuccessful = false;
+			}
+		}
+		
+		return result;
 	}
 	
 	public GeneralResponse triggerKTRExecution(int sid) {
