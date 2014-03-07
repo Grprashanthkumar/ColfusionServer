@@ -89,7 +89,7 @@ public class KTRManager {
 			
 			//TODO uncomment saveKTRFileLocationToDB(sid, tableName, copiedKTRFileInfo.getAbsoluteFileName());
 			
-			fillKTRFile(copiedKTRFileInfo.getAbsoluteFileName(), file.getExtension(), filesAbsoluteNames, worksheet);
+			fillKTRFile(copiedKTRFileInfo.getAbsoluteFileName(), file.getExtension(), filesAbsoluteNames, worksheet, tableName);
 		}		
 	}
 
@@ -99,9 +99,11 @@ public class KTRManager {
 	 * @param ktrAbsoluteName the absolute KTR file location.
 	 * @param filesAbsoluteNames the names of the files from which to read the data (ALl files must have the same structure).
 	 * @param worksheet - what sheet to import.
+	 * @param tableName the name of the table into which the data from the worksheet will be imported.
 	 * @throws Exception 
 	 */
-	private void fillKTRFile(String ktrAbsoluteName, String dataFileExtension, ArrayList<String> filesAbsoluteNames, WorksheetViewModel worksheet) 
+	private void fillKTRFile(String ktrAbsoluteName, String dataFileExtension, ArrayList<String> filesAbsoluteNames, WorksheetViewModel worksheet, 
+			String tableName) 
 			throws Exception {
 		Document ktrDocument = IOUtils.getInstance().readXMLDocument(ktrAbsoluteName);
 		
@@ -112,7 +114,9 @@ public class KTRManager {
 		}
 		
 		ktrDocumentAddFiles(ktrDocument, filesAbsoluteNames);
-		ktrDocumentAddVariables(ktrDocument, dataFileExtension, worksheet.getVariables());
+		ktrDocumentAddVariablesIntoInputInputSourceStep(ktrDocument, dataFileExtension, worksheet.getVariables());
+		ktrDocumentAddTableNateIntoTargetSchemaStep(ktrDocument, tableName);
+		ktrDocumentAddVariablesIntoTargetSchemaStep(ktrDocument, worksheet.getVariables());
 		
 		// write the content into xml file
 		TransformerFactory transformerFactory = TransformerFactory.newInstance();
@@ -123,15 +127,94 @@ public class KTRManager {
 	}
 
 	/**
-	 * Populates fields tag with variables information.
+	 * Adds table tag into KTR file into Target Schema step with name of the table in the database where the data should be imported.
+	 * 
+	 * @param ktrDocument KTR document as XML in memory.
+	 * @param tableName the name of the table.
+	 * @throws Exception
+	 */
+	private void ktrDocumentAddTableNateIntoTargetSchemaStep(Document ktrDocument, String tableName) throws Exception {
+		logger.info("starting add table name into KTR document into Target Schema step");
+		
+		//XPath to get fields node to populate with selected variables
+		String expression = "/transformation/step[name = 'Target Schema']";
+		
+		XPath xPath =  XPathFactory.newInstance().newXPath();
+		NodeList stepTag = (NodeList) xPath.compile(expression).evaluate(ktrDocument, XPathConstants.NODESET);
+		
+		if (stepTag.getLength() == 0) {
+			logger.error(String.format("fieldsTag failed, no /transformation/step[name = 'Target Schema'] tag "));
+			
+			throw new Exception("fieldsTag failed, no /transformation/step[name = 'Target Schema'] tag");
+		}
+		
+		Node stepNode = (Node) stepTag.item(0);
+		
+		Element table = ktrDocument.createElement("table");
+		table.appendChild(ktrDocument.createTextNode(tableName));
+
+		stepNode.appendChild(table);
+		
+		logger.info("finished add table name into KTR document into TargetSchema step");
+	}
+
+	/**
+	 * 
+	 * Populates fields tag in the Target Schema step with variables information.
+	 * @param ktrDocument KTR document as XML in memory.
+	 * @param variables the info about variables
+	 * @throws Exception
+	 */
+	private void ktrDocumentAddVariablesIntoTargetSchemaStep(Document ktrDocument, ArrayList<DatasetVariableViewModel> variables) throws Exception {
+		logger.info("starting add variables into KTR document into Target Schema step");
+		
+		//XPath to get fields node to populate with selected variables
+		String expression = "/transformation/step[name = 'Target Schema']/fields";
+		
+		XPath xPath =  XPathFactory.newInstance().newXPath();
+		NodeList fieldsTag = (NodeList) xPath.compile(expression).evaluate(ktrDocument, XPathConstants.NODESET);
+		
+		if (fieldsTag.getLength() == 0) {
+			logger.error(String.format("fieldsTag failed, no /transformation/step[name = 'Target Schema']/fields tag "));
+			
+			throw new Exception("fieldsTag failed, no /transformation/step[name = 'Target Schema']/fields tag");
+		}
+		
+		Node fieldsNode = (Node) fieldsTag.item(0);
+		
+		for(DatasetVariableViewModel variable : variables) {
+			
+			if (!variable.isChecked()) { //Add only those variables that user selected.
+				continue;
+			}
+			
+			Element field = ktrDocument.createElement("field");
+			
+			Element columnName = ktrDocument.createElement("column_name");
+			columnName.appendChild(ktrDocument.createTextNode(variable.getOriginalName()));
+
+			Element streamName = ktrDocument.createElement("stream_name");
+			streamName.appendChild(ktrDocument.createTextNode(variable.getOriginalName()));
+
+			field.appendChild(columnName);
+			field.appendChild(streamName);
+				
+			fieldsNode.appendChild(field);
+		}
+		
+		logger.info("finished add variables into KTR document into TargetSchema step");
+	}
+
+	/**
+	 * Populates fields tag in the InputSource tag with variables information.
 	 * @param ktrDocument KTR document as XML in memory.
 	 * @param dataFileExtension extension of the data file.
 	 * @param variables the info about variables
 	 * @throws Exception
 	 */
-	private void ktrDocumentAddVariables(Document ktrDocument, String dataFileExtension, ArrayList<DatasetVariableViewModel> variables) throws Exception {
+	private void ktrDocumentAddVariablesIntoInputInputSourceStep(Document ktrDocument, String dataFileExtension, ArrayList<DatasetVariableViewModel> variables) throws Exception {
 		
-		logger.info("starting add variables into KTR document");
+		logger.info("starting add variables into KTR document into Input Source step");
 		
 		//TODO: the CSV type as a string is not good, should be an enum.
 		String stepName = dataFileExtension.equals("csv") ? "CSV file input" : "Excel Input File";
@@ -197,7 +280,7 @@ public class KTRManager {
 			fieldsNode.appendChild(field);
 		}
 		
-		logger.info("finished add variables into KTR document");
+		logger.info("finished add variables into KTR document into InputSource step");
 	}
 
 	/**

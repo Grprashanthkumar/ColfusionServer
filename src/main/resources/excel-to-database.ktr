@@ -246,7 +246,6 @@
            </partitioning>
     <connection>colfusion.exp.sis.pitt.edu</connection>
     <schema/>
-    <table>colfusion_temporary</table>
     <commit>1000</commit>
     <truncate>N</truncate>
     <ignore_errors>N</ignore_errors>
