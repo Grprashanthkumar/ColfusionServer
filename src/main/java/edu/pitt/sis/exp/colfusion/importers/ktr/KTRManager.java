@@ -38,6 +38,7 @@ import edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionSourceinfoTableKtr;
 import edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionSourceinfoTableKtrId;
 import edu.pitt.sis.exp.colfusion.utils.IOUtils;
 import edu.pitt.sis.exp.colfusion.utils.models.IOUtilsStoredFileInfoModel;
+import edu.pitt.sis.exp.colfusion.viewmodels.DatasetVariableViewModel;
 import edu.pitt.sis.exp.colfusion.viewmodels.FileContentInfoViewModel;
 import edu.pitt.sis.exp.colfusion.viewmodels.WorksheetViewModel;
 
@@ -110,12 +111,122 @@ public class KTRManager {
 			ktrDocumentAddSheets(ktrDocument, worksheet);
 		}
 		
+		ktrDocumentAddFiles(ktrDocument, filesAbsoluteNames);
+		ktrDocumentAddVariables(ktrDocument, dataFileExtension, worksheet.getVariables());
+		
 		// write the content into xml file
 		TransformerFactory transformerFactory = TransformerFactory.newInstance();
 		Transformer transformer = transformerFactory.newTransformer();
 		DOMSource source = new DOMSource(ktrDocument);
 		StreamResult result = new StreamResult(new File(ktrAbsoluteName));
 		transformer.transform(source, result);
+	}
+
+	/**
+	 * Populates fields tag with variables information.
+	 * @param ktrDocument KTR document as XML in memory.
+	 * @param dataFileExtension extension of the data file.
+	 * @param variables the info about variables
+	 * @throws Exception
+	 */
+	private void ktrDocumentAddVariables(Document ktrDocument, String dataFileExtension, ArrayList<DatasetVariableViewModel> variables) throws Exception {
+		
+		logger.info("starting add variables into KTR document");
+		
+		//TODO: the CSV type as a string is not good, should be an enum.
+		String stepName = dataFileExtension.equals("csv") ? "CSV file input" : "Excel Input File";
+		
+		//XPath to get fields node to populate with selected variables
+		String expression = String.format("/transformation/step[name = '%s']/fields", stepName);
+		
+		XPath xPath =  XPathFactory.newInstance().newXPath();
+		NodeList fieldsTag = (NodeList) xPath.compile(expression).evaluate(ktrDocument, XPathConstants.NODESET);
+		
+		if (fieldsTag.getLength() == 0) {
+			logger.error(String.format("fieldsTag failed, no /trasformation/step/fields tag "));
+			
+			throw new Exception("fieldsTag failed, no /trasformation/step/fields tag");
+		}
+		
+		Node fieldsNode = (Node) fieldsTag.item(0);
+		
+		for(DatasetVariableViewModel variable : variables) {
+			
+			if (!variable.isChecked()) {
+				continue;
+			}
+			
+			Element field = ktrDocument.createElement("field");
+			
+			Element name = ktrDocument.createElement("name");
+			name.appendChild(ktrDocument.createTextNode(variable.getOriginalName()));
+
+			Element type = ktrDocument.createElement("type");
+			type.appendChild(ktrDocument.createTextNode("String"));
+			
+			Element length = ktrDocument.createElement("length");
+			length.appendChild(ktrDocument.createTextNode("-1"));
+			
+			Element precision = ktrDocument.createElement("precision");
+			precision.appendChild(ktrDocument.createTextNode("-1"));
+			
+			Element trimType = ktrDocument.createElement("trim_type");
+			trimType.appendChild(ktrDocument.createTextNode("both"));
+			
+			Element repeat = ktrDocument.createElement("repeat");
+			repeat.appendChild(ktrDocument.createTextNode("N"));
+			
+			field.appendChild(name);
+			field.appendChild(type);
+			field.appendChild(length);
+			field.appendChild(precision);
+			field.appendChild(trimType);
+			field.appendChild(repeat);
+			
+			//TODO get the enum of possible types, don't compare with string.
+			if (variable.getVariableValueType() == "INT") {
+				Element format = ktrDocument.createElement("format");
+				format.appendChild(ktrDocument.createTextNode("0.##############;-0.##############"));
+				field.appendChild(format);
+            }
+           
+			Element streamName = ktrDocument.createElement("stream_name");
+			streamName.appendChild(ktrDocument.createTextNode(variable.getOriginalName()));
+			field.appendChild(streamName);
+				
+			fieldsNode.appendChild(field);
+		}
+		
+		logger.info("finished add variables into KTR document");
+	}
+
+	/**
+	 * 
+	 * @param ktrDocument
+	 * @param filesAbsoluteNames
+	 * @throws Exception
+	 */
+	private void ktrDocumentAddFiles(Document ktrDocument, ArrayList<String> filesAbsoluteNames) throws Exception {
+		//XPath to get connection node for the database to load data to
+		String expression = "/transformation/step[name = 'Excel Input File']/file";
+		
+		XPath xPath =  XPathFactory.newInstance().newXPath();
+		NodeList fileTag = (NodeList) xPath.compile(expression).evaluate(ktrDocument, XPathConstants.NODESET);
+		
+		if (fileTag.getLength() == 0) {
+			logger.error(String.format("fileTag failed, no /trasformation/step/file tag for the connection to the database"));
+			
+			throw new Exception("fileTag failed, no /trasformation/step/file tag for the connection to the database");
+		}
+		
+		Node fileNode = (Node) fileTag.item(0);
+		
+		for(String fileName : filesAbsoluteNames) {
+			Element name = ktrDocument.createElement("name");
+			name.appendChild(ktrDocument.createTextNode(fileName));
+			
+			fileNode.appendChild(name);
+		}
 	}
 
 	/**
