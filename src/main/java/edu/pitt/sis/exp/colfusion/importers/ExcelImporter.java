@@ -11,6 +11,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.poi.POIXMLException;
@@ -31,10 +32,11 @@ import edu.pitt.sis.exp.colfusion.viewmodels.WorksheetViewModel;
  *
  */
 //TODO: maybe make it as Singleton
-public class ExcelImporter {
+public class ExcelImporter implements Importer {
 	final Logger logger = LogManager.getLogger(ExcelImporter.class.getName());
 	
-	public Collection<WorksheetViewModel> getSheetsFromExcel(IOUtilsStoredFileInfoModel fileModel) throws IOException, IllegalArgumentException, POIXMLException {
+	@Override
+	public Collection<WorksheetViewModel> getTables(IOUtilsStoredFileInfoModel fileModel) throws IOException, IllegalArgumentException, POIXMLException {
 		try {
 	    	ArrayList<WorksheetViewModel> result = new ArrayList<>();
 			
@@ -79,7 +81,8 @@ public class ExcelImporter {
 		
 	}
 	
-	public HashMap<String, ArrayList<DatasetVariableViewModel>> readHeaderRow(FileContentInfoViewModel fileAndSheetsInfo) throws Exception {
+	@Override
+	public HashMap<String, ArrayList<DatasetVariableViewModel>> readVariables(FileContentInfoViewModel fileAndSheetsInfo) throws Exception {
 		
 		try {
 			HashMap<String, ArrayList<DatasetVariableViewModel>> result = new HashMap<>();

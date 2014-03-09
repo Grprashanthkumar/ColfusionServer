@@ -16,6 +16,9 @@ import org.apache.xmlbeans.impl.regex.REUtil;
 import edu.pitt.sis.exp.colfusion.ConfigManager;
 import edu.pitt.sis.exp.colfusion.PropertyKeys;
 import edu.pitt.sis.exp.colfusion.importers.ExcelImporter;
+import edu.pitt.sis.exp.colfusion.importers.Importer;
+import edu.pitt.sis.exp.colfusion.importers.ImporterFactory;
+import edu.pitt.sis.exp.colfusion.importers.ImporterType;
 import edu.pitt.sis.exp.colfusion.importers.ktr.KTRManager;
 import edu.pitt.sis.exp.colfusion.persistence.managers.DNameInfoManager;
 import edu.pitt.sis.exp.colfusion.persistence.managers.DNameInfoManagerImpl;
@@ -105,6 +108,11 @@ public class DataSubmissionWizzardBL {
 		return result;		
 	}
 
+	/**
+	 * Gets sheets/tables information from submitted files.
+	 * @param createTemplateViewModel is the model which describes uploaded files.
+	 * @return the response which has file content info in the payload field.
+	 */
 	public FileContentInfoReponse getFilesContentInfo(CreateTemplateViewModel createTemplateViewModel) {
 		FileContentInfoReponse result = new FileContentInfoReponse();
 		
@@ -131,18 +139,10 @@ public class DataSubmissionWizzardBL {
 				
 				oneFileContentInfo.setOtherFilesAbsoluteNames(otherFiles);
 				
-				//TODO move types of extensions in to enum
-				if (fileModel.getFileExtension().equals("csv")) {
-					WorksheetViewModel worksheet = new WorksheetViewModel();
-					worksheet.setSheetName("Worksheet");
-					worksheet.setHeaderRow(1);
-		            worksheet.setStartColumn("A");
-					oneFileContentInfo.getWorksheets().add(worksheet);
-				}
-				else if (fileModel.getFileExtension().equals("xls") || fileModel.getFileExtension().equals("xlsx")) {
-					ExcelImporter excelImporter = new ExcelImporter();
-					oneFileContentInfo.getWorksheets().addAll(excelImporter.getSheetsFromExcel(fileModel));
-				}
+				ImporterType importerType = ImporterType.getImporterType(fileModel.getFileExtension());
+			
+				Importer importer = ImporterFactory.getImporter(importerType);
+				oneFileContentInfo.getWorksheets().addAll(importer.getTables(fileModel));
 				
 				result.getPayload().add(oneFileContentInfo);
 				result.isSuccessful = true;
@@ -160,24 +160,30 @@ public class DataSubmissionWizzardBL {
 	}
 
 	
-
+	/**
+	 * Gets variables from selected sheets/tables.
+	 * 
+	 * @param filesWithSelectedSheets info about files with selected sheets/tables.
+	 * @return response which has in payload into about variables from selected sheets/tables.
+	 */
 	public FileContentInfoReponse getFilesVariablesAndRecomendations(List<FileContentInfoViewModel> filesWithSelectedSheets) {
 		FileContentInfoReponse result = new FileContentInfoReponse();
 		
 		try {
-			
-			ExcelImporter excelImporter = new ExcelImporter();
-			
+					
 			for (FileContentInfoViewModel oneFile : filesWithSelectedSheets) {
-				HashMap<String, ArrayList<DatasetVariableViewModel>> variablesForAllSelectedSheetsInFile = excelImporter.readHeaderRow(oneFile);
+				
+				ImporterType importerType = ImporterType.getImporterType(oneFile.getExtension());
+				
+				Importer importer = ImporterFactory.getImporter(importerType);
+				
+				HashMap<String, ArrayList<DatasetVariableViewModel>> variablesForAllSelectedSheetsInFile = importer.readVariables(oneFile);
 				
 				for (WorksheetViewModel worksheet : oneFile.getWorksheets()) {
 					if (variablesForAllSelectedSheetsInFile.containsKey(worksheet.getSheetName())) {
 						worksheet.setVariables(variablesForAllSelectedSheetsInFile.get(worksheet.getSheetName()));
-					}
-					
-				}
-				
+					}			
+				}		
 			}
 			
 			result.setPayload((ArrayList<FileContentInfoViewModel>)filesWithSelectedSheets);
