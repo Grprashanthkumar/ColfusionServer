@@ -22,6 +22,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.poi.hssf.util.CellReference;
 import org.eclipse.persistence.exceptions.XMLConversionException;
+import org.eclipse.persistence.internal.sessions.factories.model.sequencing.XMLFileSequenceConfig;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -114,7 +115,7 @@ public class KTRManager {
 			ktrDocumentAddSheets(ktrDocument, worksheet);
 		}
 		
-		ktrDocumentAddFiles(ktrDocument, filesAbsoluteNames);
+		ktrDocumentAddFiles(ktrDocument, dataFileExtension, filesAbsoluteNames);
 		ktrDocumentAddVariablesIntoInputInputSourceStep(ktrDocument, dataFileExtension, worksheet.getVariables());
 		ktrDocumentAddTableNateIntoTargetSchemaStep(ktrDocument, tableName);
 		ktrDocumentAddVariablesIntoTargetSchemaStep(ktrDocument, worksheet.getVariables());
@@ -209,6 +210,7 @@ public class KTRManager {
 	/**
 	 * 
 	 * Populates fields tag in the Target Schema step with variables information.
+	 * 
 	 * @param ktrDocument KTR document as XML in memory.
 	 * @param variables the info about variables
 	 * @throws Exception
@@ -255,6 +257,7 @@ public class KTRManager {
 
 	/**
 	 * Populates fields tag in the InputSource tag with variables information.
+	 * 
 	 * @param ktrDocument KTR document as XML in memory.
 	 * @param dataFileExtension extension of the data file.
 	 * @param variables the info about variables
@@ -332,22 +335,27 @@ public class KTRManager {
 	}
 
 	/**
+	 * Add absolute names for files which need to be processed.
 	 * 
-	 * @param ktrDocument
-	 * @param filesAbsoluteNames
+	 * @param ktrDocument the KTR file as XML file in memory.
+	 * @param filesAbsoluteNames the extension of the data file without dot.
 	 * @throws Exception
 	 */
-	private void ktrDocumentAddFiles(Document ktrDocument, ArrayList<String> filesAbsoluteNames) throws Exception {
-		//XPath to get connection node for the database to load data to
-		String expression = "/transformation/step[name = 'Excel Input File']/file";
+	private void ktrDocumentAddFiles(Document ktrDocument, String dataFileExtension, ArrayList<String> filesAbsoluteNames) throws Exception {
+		
+		//TODO: the CSV type as a string is not good, should be an enum.
+		String stepName = dataFileExtension.equals("csv") ? "CSV file input" : "Excel Input File";
+		
+		//XPath to get fields node to populate with selected variables
+		String expression = String.format("/transformation/step[name = '%s']/file", stepName);
 		
 		XPath xPath =  XPathFactory.newInstance().newXPath();
 		NodeList fileTag = (NodeList) xPath.compile(expression).evaluate(ktrDocument, XPathConstants.NODESET);
 		
 		if (fileTag.getLength() == 0) {
-			logger.error(String.format("fileTag failed, no /trasformation/step/file tag for the connection to the database"));
+			logger.error(String.format("fileTag failed, no /trasformation/step/file tag "));
 			
-			throw new Exception("fileTag failed, no /trasformation/step/file tag for the connection to the database");
+			throw new Exception("fileTag failed, no /trasformation/step/file tag");
 		}
 		
 		Node fileNode = (Node) fileTag.item(0);
