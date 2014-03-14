@@ -7,6 +7,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import edu.pitt.sis.exp.colfusion.importers.utils.DataSourceTypes;
 import edu.pitt.sis.exp.colfusion.persistence.managers.SourceInfoManagerImpl.HistoryItem;
 import edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionSourceinfo;
 import edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionUserroles;
@@ -62,7 +63,7 @@ public interface SourceInfoManager extends GeneralManager<ColfusionSourceinfo, I
 	 * @param source_type type of the source from which the data will be imported.
 	 * @return newly created story which is stored in the db. Has auto generated sid.
 	 */
-	public ColfusionSourceinfo newStory(int userId, Date date, String source_type);
+	public ColfusionSourceinfo newStory(int userId, Date date, DataSourceTypes source_type);
 
 	/**
 	 * Updates both sourceinfo and links table with story metadata.
@@ -95,4 +96,11 @@ public interface SourceInfoManager extends GeneralManager<ColfusionSourceinfo, I
 	 * @param historyItem the history item should be one of the values of the {@link HistoryItem} provided as string.
 	 */
 	public StoryMetadataHistoryViewModel getStoryMetadataHistory(int sid, String historyItem);
+
+	/**
+	 * Fetches the story type field from the sourceinfo record by sid.
+	 * @param sid id of the story.
+	 * @return the type of the source.
+	 */
+	public DataSourceTypes getStorySourceType(int sid) throws Exception;
 }

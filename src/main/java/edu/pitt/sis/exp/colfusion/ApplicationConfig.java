@@ -20,6 +20,7 @@ public class ApplicationConfig extends Application {
         resources.add(WizardController.class);
         resources.add(StoryController.class);
         resources.add(UserController.class);
+        resources.add(MyResource.class);
 
         // Add additional features such as support for Multipart.
         resources.add(MultiPartFeature.class);

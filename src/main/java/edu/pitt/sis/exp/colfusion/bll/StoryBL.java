@@ -10,6 +10,7 @@ import java.util.Map;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import edu.pitt.sis.exp.colfusion.importers.utils.DataSourceTypes;
 import edu.pitt.sis.exp.colfusion.persistence.managers.LinksManager;
 import edu.pitt.sis.exp.colfusion.persistence.managers.LinksManagerImpl;
 import edu.pitt.sis.exp.colfusion.persistence.managers.SourceInfoManager;
@@ -45,14 +46,14 @@ public class StoryBL {
 		try {
 			SourceInfoManager storyMgr = new SourceInfoManagerImpl();
 			
-			ColfusionSourceinfo newStory = storyMgr.newStory(userId, new Date(), "database");
+			ColfusionSourceinfo newStory = storyMgr.newStory(userId, new Date(), DataSourceTypes.DATA_FILE);
 			
 			StoryMetadataViewModel storyMetadata = new StoryMetadataViewModel();
 			storyMetadata.setSid(newStory.getSid());
 			storyMetadata.setTitle("");
 			storyMetadata.setTags("");
 			storyMetadata.setDescription("");
-			storyMetadata.setSourceType("database");
+			storyMetadata.setSourceType(DataSourceTypes.DATA_FILE.getValue());
 			storyMetadata.setDateSubmitted(newStory.getEntryDate());
 			storyMetadata.setStatus("draft");
 			

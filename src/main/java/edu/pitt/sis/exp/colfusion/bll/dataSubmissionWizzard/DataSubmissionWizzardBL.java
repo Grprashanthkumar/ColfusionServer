@@ -20,8 +20,11 @@ import edu.pitt.sis.exp.colfusion.importers.Importer;
 import edu.pitt.sis.exp.colfusion.importers.ImporterFactory;
 import edu.pitt.sis.exp.colfusion.importers.ImporterType;
 import edu.pitt.sis.exp.colfusion.importers.ktr.KTRManager;
+import edu.pitt.sis.exp.colfusion.importers.utils.DataSourceTypes;
 import edu.pitt.sis.exp.colfusion.persistence.managers.DNameInfoManager;
 import edu.pitt.sis.exp.colfusion.persistence.managers.DNameInfoManagerImpl;
+import edu.pitt.sis.exp.colfusion.persistence.managers.SourceInfoManager;
+import edu.pitt.sis.exp.colfusion.persistence.managers.SourceInfoManagerImpl;
 import edu.pitt.sis.exp.colfusion.responseModels.AcceptedFilesResponse;
 import edu.pitt.sis.exp.colfusion.responseModels.FileContentInfoReponse;
 import edu.pitt.sis.exp.colfusion.responseModels.GeneralResponse;
@@ -238,7 +241,7 @@ public class DataSubmissionWizzardBL {
 	}
 
 	/**
-	 * Creates a KTR file for each file.
+	 * Creates a KTR file for each file. 
 	 * @param dataMatchingStepData
 	 * @return
 	 */
@@ -267,8 +270,29 @@ public class DataSubmissionWizzardBL {
 		return result;
 	}
 	
-	public GeneralResponse triggerKTRExecution(int sid) {
-		// TODO Auto-generated method stub
-		return null;
+	/**
+	 * Triggers background execution of the ETL job: e.g. either running KTR execution or importing data from database dump file.
+	 * @param sid
+	 * @return
+	 */
+	public GeneralResponse triggerDataLoadExecution(int sid) {
+		GeneralResponse result = new GeneralResponse();
+		
+		result.isSuccessful = true;
+		result.message = "OK";
+		
+		//TODO: make catch more granular
+		try {
+			
+			SourceInfoManager storyMng = new SourceInfoManagerImpl();
+			
+			DataSourceTypes sourceType = storyMng.getStorySourceType(sid);
+			
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		
+		
+		return result;
 	}
 }

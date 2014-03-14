@@ -1,9 +1,13 @@
 package edu.pitt.sis.exp.colfusion;
 
+import java.util.Date;
+
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+
+import edu.pitt.sis.exp.colfusion.process.ProcessManager;
 
 /**
  * Root resource (exposed at "myresource" path)
@@ -20,6 +24,8 @@ public class MyResource {
     @GET
     @Produces(MediaType.TEXT_PLAIN)
     public String getIt() {
-        return "Got it!";
+        ProcessManager.getInstance().setTestValue(new Date().toString());
+    	
+    	return ProcessManager.getInstance().getTestValue();
     }
 }

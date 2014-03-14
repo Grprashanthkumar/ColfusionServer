@@ -269,7 +269,7 @@ public class WizardController extends BaseController {
 		    	
 		DataSubmissionWizzardBL wizardBLL = new DataSubmissionWizzardBL();
 		
-		GeneralResponse result = wizardBLL.triggerKTRExecution(sid);
+		GeneralResponse result = wizardBLL.triggerDataLoadExecution(sid);
 		
     	return makeCORS(Response.status(200).entity(result)); //.build();
     }

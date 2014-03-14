@@ -17,6 +17,7 @@ import org.hibernate.HibernateException;
 import org.hibernate.NonUniqueResultException;
 import org.hibernate.Query;
 
+import edu.pitt.sis.exp.colfusion.importers.utils.DataSourceTypes;
 import edu.pitt.sis.exp.colfusion.persistence.HibernateUtil;
 import edu.pitt.sis.exp.colfusion.persistence.dao.LinksDAO;
 import edu.pitt.sis.exp.colfusion.persistence.dao.LinksDAOImpl;
@@ -250,7 +251,7 @@ public class SourceInfoManagerImpl implements SourceInfoManager {
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
-	public ColfusionSourceinfo newStory(int userId, Date date, String source_type) throws NonUniqueResultException, HibernateException {
+	public ColfusionSourceinfo newStory(int userId, Date date, DataSourceTypes source_type) throws NonUniqueResultException, HibernateException {
 		try {
             HibernateUtil.beginTransaction();
             
@@ -258,7 +259,7 @@ public class SourceInfoManagerImpl implements SourceInfoManager {
             
             ColfusionUsers userCreator = usersDAO.findByID(ColfusionUsers.class, userId);
             
-            ColfusionSourceinfo newStoryEntity = new ColfusionSourceinfo(userCreator, date, source_type);
+            ColfusionSourceinfo newStoryEntity = new ColfusionSourceinfo(userCreator, date, source_type.getValue());
             
             int sid = sourceInfoDAO.save(newStoryEntity);
             
@@ -550,5 +551,20 @@ public class SourceInfoManagerImpl implements SourceInfoManager {
         	logger.error("findDatasetInfoBySid failed HibernateException", ex);
         	throw ex;
         }
+	}
+
+	@Override
+	public DataSourceTypes getStorySourceType(int sid) throws Exception {
+		ColfusionSourceinfo story = this.findByID(sid);
+		
+		if (story != null) {
+			return DataSourceTypes.fromString(story.getSourceType());
+		}
+		else {
+			logger.error(String.format("getStorySourceType failed: Story with %d sid not found", sid));
+			
+			//TODO: create custom exception StoryNotFound
+			throw new Exception(String.format("Story with %d sid not found", sid));
+		}
 	}
 }
