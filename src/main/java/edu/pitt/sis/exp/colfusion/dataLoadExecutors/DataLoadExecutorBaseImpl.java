@@ -3,7 +3,12 @@
  */
 package edu.pitt.sis.exp.colfusion.dataLoadExecutors;
 
+import edu.pitt.sis.exp.colfusion.persistence.managers.SourceInfoManager;
+import edu.pitt.sis.exp.colfusion.persistence.managers.SourceInfoManagerImpl;
+import edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionSourceinfo;
+import edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionSourceinfoDb;
 import edu.pitt.sis.exp.colfusion.process.ProcessBase;
+import edu.pitt.sis.exp.colfusion.viewmodels.StoryTargetDB;
 
 /**
  * All executors should inherit from this class and run this class execute method as the first instruction in their execute method.
@@ -21,6 +26,17 @@ public abstract class DataLoadExecutorBaseImpl extends ProcessBase implements Da
 
 	}
 
+	/**
+	 * Updates/inserts record about target database (the database where the data should be loaded).
+	 * 
+	 * @param sourceDBInfo the info about target database.
+	 * @throws Exception 
+	 */
+	public void updateSourceDBInfo(StoryTargetDB sourceDBInfo) throws Exception {
+		SourceInfoManager storyMgr = new SourceInfoManagerImpl();
+		
+		storyMgr.saveOrUpdateSourceInfoDB(sourceDBInfo);
+	}
 	
 	public void setSid(int sid) {
 		this.sid = sid;

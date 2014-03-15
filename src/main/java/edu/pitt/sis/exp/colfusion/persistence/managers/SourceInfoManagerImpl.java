@@ -23,8 +23,12 @@ import edu.pitt.sis.exp.colfusion.persistence.dao.LinksDAO;
 import edu.pitt.sis.exp.colfusion.persistence.dao.LinksDAOImpl;
 import edu.pitt.sis.exp.colfusion.persistence.dao.SourceInfoDAO;
 import edu.pitt.sis.exp.colfusion.persistence.dao.SourceInfoDAOImpl;
+import edu.pitt.sis.exp.colfusion.persistence.dao.SourceInfoDBDAO;
+import edu.pitt.sis.exp.colfusion.persistence.dao.SourceInfoDBDAOImpl;
 import edu.pitt.sis.exp.colfusion.persistence.dao.SourceInfoMetadataEditHistoryDAO;
 import edu.pitt.sis.exp.colfusion.persistence.dao.SourceInfoMetadataEditHistoryDAOImpl;
+import edu.pitt.sis.exp.colfusion.persistence.dao.SourceInfoTableKTRDAO;
+import edu.pitt.sis.exp.colfusion.persistence.dao.SourceInfoTableKTRDAOImpl;
 import edu.pitt.sis.exp.colfusion.persistence.dao.SourceinfoUserRolesDAO;
 import edu.pitt.sis.exp.colfusion.persistence.dao.SourceinfoUserRolesDAOImpl;
 import edu.pitt.sis.exp.colfusion.persistence.dao.TagsCacheDAO;
@@ -37,7 +41,9 @@ import edu.pitt.sis.exp.colfusion.persistence.dao.UsersDAO;
 import edu.pitt.sis.exp.colfusion.persistence.dao.UsersDAOImpl;
 import edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionLinks;
 import edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionSourceinfo;
+import edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionSourceinfoDb;
 import edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionSourceinfoMetadataEditHistory;
+import edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionSourceinfoTableKtr;
 import edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionSourceinfoUser;
 import edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionSourceinfoUserId;
 import edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionTags;
@@ -49,6 +55,7 @@ import edu.pitt.sis.exp.colfusion.viewmodels.StoryAuthorViewModel;
 import edu.pitt.sis.exp.colfusion.viewmodels.StoryMetadataHistoryLogRecordViewModel;
 import edu.pitt.sis.exp.colfusion.viewmodels.StoryMetadataHistoryViewModel;
 import edu.pitt.sis.exp.colfusion.viewmodels.StoryMetadataViewModel;
+import edu.pitt.sis.exp.colfusion.viewmodels.StoryTargetDB;
 
 
 /**
@@ -566,5 +573,117 @@ public class SourceInfoManagerImpl implements SourceInfoManager {
 			//TODO: create custom exception StoryNotFound
 			throw new Exception(String.format("Story with %d sid not found", sid));
 		}
+	}
+
+	
+	
+	@Override
+	public void saveOrUpdateSourceInfoDB(StoryTargetDB sourceDBInfo) throws Exception {
+		try {
+            HibernateUtil.beginTransaction();
+            
+            ColfusionSourceinfo story = sourceInfoDAO.findByID(ColfusionSourceinfo.class, sourceDBInfo.getSid());
+            
+            if (story == null) {
+            	logger.error(String.format("saveOrUpdateSourceInfoDB failed: could not find story with %d sid", sourceDBInfo.getSid()));
+            	
+            	throw new Exception(String.format("saveOrUpdateSourceInfoDB failed: could not find story with %d sid", sourceDBInfo.getSid()));
+            }
+            
+            ColfusionSourceinfoDb storyDB = null;
+            
+            if (story.getColfusionSourceinfoDb() == null) {
+            	storyDB = new ColfusionSourceinfoDb(story, 
+            			sourceDBInfo.getServerAddress(), sourceDBInfo.getPort(), sourceDBInfo.getUserName(), sourceDBInfo.getPassword(),
+            			sourceDBInfo.getDatabaseName(), sourceDBInfo.getDriver(), sourceDBInfo.getIsLocal(), sourceDBInfo.getLinkedServerName());
+            }
+            else {
+            	storyDB = story.getColfusionSourceinfoDb();
+            	storyDB.setServerAddress(sourceDBInfo.getServerAddress());
+            	storyDB.setPort(sourceDBInfo.getPort());
+            	storyDB.setUserName(sourceDBInfo.getUserName());
+            	storyDB.setPassword(sourceDBInfo.getPassword());
+            	storyDB.setSourceDatabase(sourceDBInfo.getDatabaseName());
+            	storyDB.setDriver(sourceDBInfo.getDriver());
+            	storyDB.setIsLocal(sourceDBInfo.getIsLocal());
+            	storyDB.setLinkedServerName(sourceDBInfo.getLinkedServerName());
+            }
+            
+            story.setSid(sourceDBInfo.getSid());
+            
+            SourceInfoDBDAO sourceInfoDBDAO = new SourceInfoDBDAOImpl();
+            
+            sourceInfoDBDAO.saveOrUpdate(storyDB);
+            
+            HibernateUtil.commitTransaction();
+        } catch (NonUniqueResultException ex) {
+            logger.error("findDatasetInfoBySid failed NonUniqueResultException", ex);
+            throw ex;
+        } catch (HibernateException ex) {
+        	logger.error("findDatasetInfoBySid failed HibernateException", ex);
+        	throw ex;
+        }
+	}
+
+	//TODO: add tests
+	@Override
+	public ArrayList<String> getStoryKTRLocations(int sid) {
+		try {
+            HibernateUtil.beginTransaction();
+            
+            SourceInfoTableKTRDAO sourceTableKTRDAO = new SourceInfoTableKTRDAOImpl();
+            
+            ArrayList<ColfusionSourceinfoTableKtr> sourceTableKTRs = sourceTableKTRDAO.getKTRLocationsBySid(sid);
+            
+            ArrayList<String> result = new ArrayList<>();
+            
+            for(ColfusionSourceinfoTableKtr sourceTableKTR : sourceTableKTRs) {
+            	result.add(sourceTableKTR.getPathToKtrfile());
+            }
+            
+            HibernateUtil.commitTransaction();
+            
+            return result;
+		
+        } catch (NonUniqueResultException ex) {
+            logger.error("findDatasetInfoBySid failed NonUniqueResultException", ex);
+            throw ex;
+        } catch (HibernateException ex) {
+        	logger.error("findDatasetInfoBySid failed HibernateException", ex);
+        	throw ex;
+        }		
+	}
+
+	@Override
+	public StoryTargetDB getStorySourceInfoDB(int sid) {
+		try {
+            HibernateUtil.beginTransaction();
+            
+            SourceInfoDBDAO sourceInfoDBDAO = new SourceInfoDBDAOImpl();
+            
+            ColfusionSourceinfoDb sourceinfoDB = sourceInfoDBDAO.findByID(ColfusionSourceinfoDb.class, sid);
+            
+            StoryTargetDB result = new StoryTargetDB();
+            result.setDatabaseName(sourceinfoDB.getSourceDatabase());
+            result.setDriver(sourceinfoDB.getDriver());
+            result.setIsLocal(sourceinfoDB.getIsLocal());
+            result.setLinkedServerName(sourceinfoDB.getLinkedServerName());
+            result.setPassword(sourceinfoDB.getPassword());
+            result.setPort(sourceinfoDB.getPort());
+            result.setServerAddress(sourceinfoDB.getServerAddress());
+            result.setUserName(sourceinfoDB.getUserName());
+            result.setSid(sourceinfoDB.getSid());
+            
+            HibernateUtil.commitTransaction();
+            
+            return result;
+		
+        } catch (NonUniqueResultException ex) {
+            logger.error("findDatasetInfoBySid failed NonUniqueResultException", ex);
+            throw ex;
+        } catch (HibernateException ex) {
+        	logger.error("findDatasetInfoBySid failed HibernateException", ex);
+        	throw ex;
+        }	
 	}
 }

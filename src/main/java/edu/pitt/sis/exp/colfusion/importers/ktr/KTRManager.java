@@ -7,22 +7,19 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
-import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.poi.hssf.util.CellReference;
-import org.eclipse.persistence.exceptions.XMLConversionException;
-import org.eclipse.persistence.internal.sessions.factories.model.sequencing.XMLFileSequenceConfig;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -39,9 +36,11 @@ import edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionSourceinfo;
 import edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionSourceinfoTableKtr;
 import edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionSourceinfoTableKtrId;
 import edu.pitt.sis.exp.colfusion.utils.IOUtils;
+import edu.pitt.sis.exp.colfusion.utils.StoryUtils;
 import edu.pitt.sis.exp.colfusion.utils.models.IOUtilsStoredFileInfoModel;
 import edu.pitt.sis.exp.colfusion.viewmodels.DatasetVariableViewModel;
 import edu.pitt.sis.exp.colfusion.viewmodels.FileContentInfoViewModel;
+import edu.pitt.sis.exp.colfusion.viewmodels.StoryTargetDB;
 import edu.pitt.sis.exp.colfusion.viewmodels.WorksheetViewModel;
 
 /**
@@ -54,6 +53,10 @@ public class KTRManager {
 	final Logger logger = LogManager.getLogger(KTRManager.class.getName());
 	
 	private int sid;
+	
+	private Document ktrDocument;
+
+	private String ktrAbsoluteName;
 	
 	public KTRManager(int sid) {
 		setSid(sid);
@@ -107,21 +110,34 @@ public class KTRManager {
 	private void fillKTRFile(String ktrAbsoluteName, String dataFileExtension, ArrayList<String> filesAbsoluteNames, WorksheetViewModel worksheet, 
 			String tableName) 
 			throws Exception {
-		Document ktrDocument = IOUtils.getInstance().readXMLDocument(ktrAbsoluteName);
 		
-		ktrDocumentChangeConnection(ktrDocument);
-		
-		if (!dataFileExtension.equals("csv")) {
-			ktrDocumentAddSheets(ktrDocument, worksheet);
+		if (ktrDocument == null) {
+			loadKTR(ktrAbsoluteName);
 		}
 		
-		ktrDocumentAddFiles(ktrDocument, dataFileExtension, filesAbsoluteNames);
-		ktrDocumentAddVariablesIntoInputInputSourceStep(ktrDocument, dataFileExtension, worksheet.getVariables());
-		ktrDocumentAddTableNateIntoTargetSchemaStep(ktrDocument, tableName);
-		ktrDocumentAddVariablesIntoTargetSchemaStep(ktrDocument, worksheet.getVariables());
+		ktrDocumentChangeConnection();
 		
-		ktrDocumentChangeTransformationName(ktrDocument, String.valueOf(getSid()));
+		if (!dataFileExtension.equals("csv")) {
+			ktrDocumentAddSheets(worksheet);
+		}
 		
+		ktrDocumentAddFiles(dataFileExtension, filesAbsoluteNames);
+		ktrDocumentAddVariablesIntoInputInputSourceStep(dataFileExtension, worksheet.getVariables());
+		ktrDocumentAddTableNateIntoTargetSchemaStep(tableName);
+		ktrDocumentAddVariablesIntoTargetSchemaStep(worksheet.getVariables());
+		
+		ktrDocumentChangeTransformationName(String.valueOf(getSid()));
+		
+		saveKTRFile();
+	}
+
+	/**
+	 * Saves the KTR document from memory to file.
+	 * 
+	 * @param ktrAbsoluteName the absolute file name where to save KTR document.
+	 * @throws TransformerException
+	 */
+	private void saveKTRFile() throws TransformerException {
 		// write the content into xml file
 		TransformerFactory transformerFactory = TransformerFactory.newInstance();
 		Transformer transformer = transformerFactory.newTransformer();
@@ -129,14 +145,13 @@ public class KTRManager {
 		StreamResult result = new StreamResult(new File(ktrAbsoluteName));
 		transformer.transform(source, result);
 	}
-
+	
 	/**
 	 * Set the transformation name of the given KTR document to a given name.
-	 * @param ktrDocument the document in which to set transformation name.
 	 * @param transformationName the name to set.
 	 * @throws Exception
 	 */
-	private void ktrDocumentChangeTransformationName(Document ktrDocument, String transformationName) throws Exception {
+	private void ktrDocumentChangeTransformationName(String transformationName) throws Exception {
 		logger.info("starting change transformation name in the KTR document");
  		
  		//XPath to get fields node to populate with selected variables
@@ -178,11 +193,10 @@ public class KTRManager {
 	/**
 	 * Adds table tag into KTR file into Target Schema step with name of the table in the database where the data should be imported.
 	 * 
-	 * @param ktrDocument KTR document as XML in memory.
 	 * @param tableName the name of the table.
 	 * @throws Exception
 	 */
-	private void ktrDocumentAddTableNateIntoTargetSchemaStep(Document ktrDocument, String tableName) throws Exception {
+	private void ktrDocumentAddTableNateIntoTargetSchemaStep(String tableName) throws Exception {
 		logger.info("starting add table name into KTR document into Target Schema step");
 		
 		//XPath to get fields node to populate with selected variables
@@ -211,11 +225,10 @@ public class KTRManager {
 	 * 
 	 * Populates fields tag in the Target Schema step with variables information.
 	 * 
-	 * @param ktrDocument KTR document as XML in memory.
 	 * @param variables the info about variables
 	 * @throws Exception
 	 */
-	private void ktrDocumentAddVariablesIntoTargetSchemaStep(Document ktrDocument, ArrayList<DatasetVariableViewModel> variables) throws Exception {
+	private void ktrDocumentAddVariablesIntoTargetSchemaStep(ArrayList<DatasetVariableViewModel> variables) throws Exception {
 		logger.info("starting add variables into KTR document into Target Schema step");
 		
 		//XPath to get fields node to populate with selected variables
@@ -258,12 +271,11 @@ public class KTRManager {
 	/**
 	 * Populates fields tag in the InputSource tag with variables information.
 	 * 
-	 * @param ktrDocument KTR document as XML in memory.
 	 * @param dataFileExtension extension of the data file.
 	 * @param variables the info about variables
 	 * @throws Exception
 	 */
-	private void ktrDocumentAddVariablesIntoInputInputSourceStep(Document ktrDocument, String dataFileExtension, ArrayList<DatasetVariableViewModel> variables) throws Exception {
+	private void ktrDocumentAddVariablesIntoInputInputSourceStep(String dataFileExtension, ArrayList<DatasetVariableViewModel> variables) throws Exception {
 		
 		logger.info("starting add variables into KTR document into Input Source step");
 		
@@ -337,11 +349,10 @@ public class KTRManager {
 	/**
 	 * Add absolute names for files which need to be processed.
 	 * 
-	 * @param ktrDocument the KTR file as XML file in memory.
 	 * @param filesAbsoluteNames the extension of the data file without dot.
 	 * @throws Exception
 	 */
-	private void ktrDocumentAddFiles(Document ktrDocument, String dataFileExtension, ArrayList<String> filesAbsoluteNames) throws Exception {
+	private void ktrDocumentAddFiles(String dataFileExtension, ArrayList<String> filesAbsoluteNames) throws Exception {
 		
 		//TODO: the CSV type as a string is not good, should be an enum.
 		String stepName = dataFileExtension.equals("csv") ? "CSV file input" : "Excel Input File";
@@ -370,11 +381,10 @@ public class KTRManager {
 
 	/**
 	 * Adds info from to extract from the excel file.
-	 * @param ktrDocument the KTR as XML document parsed in memory.
 	 * @param worksheet the sheet info.
 	 * @throws Exception
 	 */
-	private void ktrDocumentAddSheets(Document ktrDocument, WorksheetViewModel worksheet) throws Exception {
+	private void ktrDocumentAddSheets(WorksheetViewModel worksheet) throws Exception {
 		//XPath to get connection node for the database to load data to
 		String expression = "/transformation/step[name = 'Excel Input File']/sheets";
 		
@@ -411,10 +421,9 @@ public class KTRManager {
 
 	/**
 	 * Changes the dummy connection in the KTR template to the connection info in the settings file where the data and logging should be saved.
-	 * @param ktrDocument KTR as XML document parsed in memory.
 	 * @throws Exception
 	 */
-	private void ktrDocumentChangeConnection(Document ktrDocument) throws Exception {
+	private void ktrDocumentChangeConnection() throws Exception {
 		
 		//XPath to get connection node for the database to load data to
 		String expression = "/transformation/connection[name = 'colfusion.exp.sis.pitt.edu']";
@@ -430,12 +439,14 @@ public class KTRManager {
 	
 		Node connectionNode = (Node) connectionTag.item(0);
 		
-		setConnectionNode(connectionNode, ConfigManager.getInstance().getPropertyByName(PropertyKeys.targetFileToDBDatabase_DatabaseNamePrefix) + sid,
-				ConfigManager.getInstance().getPropertyByName(PropertyKeys.targetFileToDBDatabase_UserName),
-				ConfigManager.getInstance().getPropertyByName(PropertyKeys.targetFileToDBDatabase_Password),
-				ConfigManager.getInstance().getPropertyByName(PropertyKeys.targetFileToDBDatabase_Server),
-				ConfigManager.getInstance().getPropertyByName(PropertyKeys.targetFileToDBDatabase_Port),
-				ConfigManager.getInstance().getPropertyByName(PropertyKeys.targetFileToDBDatabase_Type));
+		ConfigManager configManager = ConfigManager.getInstance();
+		
+		setConnectionNode(connectionNode, configManager.getPropertyByName(PropertyKeys.targetFileToDBDatabase_DatabaseNamePrefix) + sid,
+				configManager.getPropertyByName(PropertyKeys.targetFileToDBDatabase_UserName),
+				configManager.getPropertyByName(PropertyKeys.targetFileToDBDatabase_Password),
+				configManager.getPropertyByName(PropertyKeys.targetFileToDBDatabase_Server),
+				configManager.getPropertyByName(PropertyKeys.targetFileToDBDatabase_Port),
+				configManager.getPropertyByName(PropertyKeys.targetFileToDBDatabase_Type));
 		
 			
 		//XPath to get connection for logging database
@@ -452,13 +463,54 @@ public class KTRManager {
 	
 		connectionNode = (Node) connectionTag.item(0);
 		
-		setConnectionNode(connectionNode, ConfigManager.getInstance().getPropertyByName(PropertyKeys.logginDatabase_DatabaseNamePrefix),
-				ConfigManager.getInstance().getPropertyByName(PropertyKeys.logginDatabase_UserName),
-				ConfigManager.getInstance().getPropertyByName(PropertyKeys.logginDatabase_Password),
-				ConfigManager.getInstance().getPropertyByName(PropertyKeys.logginDatabase_Server),
-				ConfigManager.getInstance().getPropertyByName(PropertyKeys.logginDatabase_Port),
-				ConfigManager.getInstance().getPropertyByName(PropertyKeys.logginDatabase_Type));
+		setConnectionNode(connectionNode, configManager.getPropertyByName(PropertyKeys.logginDatabase_DatabaseNamePrefix),
+				configManager.getPropertyByName(PropertyKeys.logginDatabase_UserName),
+				configManager.getPropertyByName(PropertyKeys.logginDatabase_Password),
+				configManager.getPropertyByName(PropertyKeys.logginDatabase_Server),
+				configManager.getPropertyByName(PropertyKeys.logginDatabase_Port),
+				configManager.getPropertyByName(PropertyKeys.logginDatabase_Type));
 		
+	}
+	
+	/**
+	 * Updates connection tag for the target db with provided info. KTR file is supposed to be loaded at this time already.
+	 * The updated file is saved to the disk.
+	 * 
+	 * @param databaseName the name of the database to set (target for data and logging data).
+	 * @param userName user name which will be used to connect to database.
+	 * @param password which will be used to connect to the database
+	 * @param server URL of the server where database is running.
+	 * @param port on which database is listening.
+	 * @param type the vendor of the database, e.g. MySQL.
+	 * @throws Exception
+	 */
+	public void updateTargetDBConnectionInfo(String databaseName, String userName, String password, String server, String port, 
+			String type) throws Exception{
+		
+		if (ktrDocument == null) {
+			//TODO: create appropriate exception.
+			
+			logger.error(String.format("updateTargetDBConnectionInfo failed: ktrDocument is now loaded for %d sid", sid));
+			throw new Exception(String.format("updateTargetDBConnectionInfo failed: ktrDocument is now loaded for %d sid", sid));
+		}
+		
+		//XPath to get connection node for the database to load data to
+		String expression = "/transformation/connection[name = 'colfusion.exp.sis.pitt.edu']";
+		 
+		XPath xPath =  XPathFactory.newInstance().newXPath();
+		NodeList connectionTag = (NodeList) xPath.compile(expression).evaluate(ktrDocument, XPathConstants.NODESET);
+		
+		if (connectionTag.getLength() == 0) {
+			logger.error(String.format("updateTargetDBConnectionInfo failed, no connection tag for the connection to the database"));
+			
+			throw new Exception("updateTargetDBConnectionInfo failed, no connection tag for the connection to the database");
+		}
+	
+		Node connectionNode = (Node) connectionTag.item(0);
+		
+		setConnectionNode(connectionNode, databaseName, userName, password, server, port, type);
+		
+		saveKTRFile();
 	}
 	
 	//TODO this can actually be generalized by using map
@@ -472,7 +524,8 @@ public class KTRManager {
 	 * @param port on which database is listening.
 	 * @param type the vendor of the database, e.g. MySQL.
 	 */
-	private void setConnectionNode(Node connectionNode, String databaseName, String userName, String password, String server, String port, String type) {
+	private void setConnectionNode(Node connectionNode, String databaseName, String userName, String password, String server, String port, 
+			String type) {
 		//TODO there must be a better way to do that
 		NodeList childNodes = connectionNode.getChildNodes();
 		for (int i = 0; i < childNodes.getLength(); i++)
@@ -498,6 +551,7 @@ public class KTRManager {
 
 	/**
 	 * Saved location of the KTR file which is used for loading data from a worksheet into db table.
+	 * 
 	 * @param sid id of the story.
 	 * @param tableName name of the sheet/table.
 	 * @param ktrAbsoluteFileName absolute location of the KTR file.
@@ -556,5 +610,74 @@ public class KTRManager {
 	 */
 	public void setSid(int sid) {
 		this.sid = sid;
+	}
+
+	/**
+	 * Loads KTR file specified as absolute path into memory and keeps it in the private variable.
+	 * @param ktrLocation the absolute file location.
+	 * @throws IOException 
+	 * @throws SAXException 
+	 * @throws ParserConfigurationException 
+	 */
+	public void loadKTR(String ktrLocation) throws ParserConfigurationException, SAXException, IOException {
+		ktrDocument = IOUtils.getInstance().readXMLDocument(ktrLocation);		
+		this.ktrAbsoluteName = ktrLocation;
+	}
+
+	/**
+	 * Reads the target database connection information.
+	 * 
+	 * @return the info about target database.
+	 * @throws Exception 
+	 */
+	public StoryTargetDB readTargetDatabaseInfo() throws Exception {
+		
+		if (ktrDocument == null) {
+			//TODO: create appropriate exception.
+			
+			logger.error(String.format("readTargetDatabaseInfo failed: ktrDocument is now loaded for %d sid", sid));
+			throw new Exception(String.format("readTargetDatabaseInfo failed: ktrDocument is now loaded for %d sid", sid));
+		}
+		
+		//XPath to get connection node for the database to load data to
+		String expression = "/transformation/connection[name = 'colfusion.exp.sis.pitt.edu']";
+		 
+		XPath xPath =  XPathFactory.newInstance().newXPath();
+		NodeList connectionTag = (NodeList) xPath.compile(expression).evaluate(ktrDocument, XPathConstants.NODESET);
+		
+		if (connectionTag.getLength() == 0) {
+			logger.error(String.format("ktrDocumentChangeConnection failed, no connection tag for the connection to the database"));
+			
+			throw new Exception("ktrDocumentChangeConnection failed, no connection tag for the connection to the database");
+		}
+	
+		Node connectionNode = (Node) connectionTag.item(0);
+		
+		StoryTargetDB result = new StoryTargetDB();
+		
+		if (connectionNode.getNodeType() == Node.ELEMENT_NODE) {
+			Element connectionElement = (Element) connectionNode;
+			
+			result.setSid(sid);
+			//TODO: maybe we need to check if the findByTagName return one tag or not
+			result.setDatabaseName(connectionElement.getElementsByTagName("database").item(0).getFirstChild().getNodeValue());
+			result.setDriver(connectionElement.getElementsByTagName("type").item(0).getFirstChild().getNodeValue());
+			result.setPassword(connectionElement.getElementsByTagName("password").item(0).getFirstChild().getNodeValue());
+			result.setPort(Integer.valueOf(connectionElement.getElementsByTagName("port").item(0).getFirstChild().getNodeValue()));
+			result.setServerAddress(connectionElement.getElementsByTagName("server").item(0).getFirstChild().getNodeValue());
+			result.setUserName(connectionElement.getElementsByTagName("username").item(0).getFirstChild().getNodeValue());
+			
+			result.setIsLocal(1);
+			result.setLinkedServerName(StoryUtils.generateLinkedServerName(sid));
+		}
+		else {
+			
+			//TODO:handle it better
+			logger.error(String.format("ktrDocumentChangeConnection failed, no connection tag for the connection to the database"));
+			
+			throw new Exception("ktrDocumentChangeConnection failed, no connection tag for the connection to the database");
+		}
+			
+		return result;
 	}
 }

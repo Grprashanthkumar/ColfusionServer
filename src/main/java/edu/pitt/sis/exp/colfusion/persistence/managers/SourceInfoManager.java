@@ -3,6 +3,7 @@
  */
 package edu.pitt.sis.exp.colfusion.persistence.managers;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -14,6 +15,7 @@ import edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionUserroles;
 import edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionUsers;
 import edu.pitt.sis.exp.colfusion.viewmodels.StoryMetadataHistoryViewModel;
 import edu.pitt.sis.exp.colfusion.viewmodels.StoryMetadataViewModel;
+import edu.pitt.sis.exp.colfusion.viewmodels.StoryTargetDB;
 
 /**
  * @author Evgeny
@@ -103,4 +105,26 @@ public interface SourceInfoManager extends GeneralManager<ColfusionSourceinfo, I
 	 * @return the type of the source.
 	 */
 	public DataSourceTypes getStorySourceType(int sid) throws Exception;
+	
+	/**
+	 * Adds or updates record about target database for a story. The linked server is also created or updated.
+	 * 
+	 * @param sourceDBInfo the info about the target database.
+	 */
+	public void saveOrUpdateSourceInfoDB(StoryTargetDB sourceDBInfo) throws Exception;
+
+	/**
+	 * Get locations of KTR files associated with a given sourceinfo record;
+	 * @param sid is of the sourceinfo record/story.
+	 * @return locations of KTRs files associated with the story.
+	 */
+	public ArrayList<String> getStoryKTRLocations(int sid);
+
+	/**
+	 * Return info about target database connection for given story.
+	 * 
+	 * @param sid is of the story.
+	 * @return the target database info.
+	 */
+	public StoryTargetDB getStorySourceInfoDB(int sid);
 }

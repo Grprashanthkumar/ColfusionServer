@@ -3,6 +3,9 @@
  */
 package edu.pitt.sis.exp.colfusion.importers.utils;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 /**
  * This enumerator describes the types of the data sources. The values should correspond to the values written in the 
  * source_type field in the sourceinfo table.
@@ -13,6 +16,8 @@ package edu.pitt.sis.exp.colfusion.importers.utils;
 public enum DataSourceTypes {
 	DATA_FILE("data file"), DUMP_FILE("dump file"), EXTERNAL_DATABASE("external database");
     
+	private static Logger logger = LogManager.getLogger(DataSourceTypes.class.getName());
+	
     private String value;
 
     private DataSourceTypes(String value) {
@@ -45,6 +50,7 @@ public enum DataSourceTypes {
           }
         }
         
+        logger.error("No constant with text " + text + " found");
         throw new IllegalArgumentException("No constant with text " + text + " found");
       }
 }

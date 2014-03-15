@@ -24,8 +24,8 @@ public class MyResource {
     @GET
     @Produces(MediaType.TEXT_PLAIN)
     public String getIt() {
-        ProcessManager.getInstance().setTestValue(new Date().toString());
+        //ProcessManager.getInstance().setTestValue(new Date().toString());
     	
-    	return ProcessManager.getInstance().getTestValue();
+    	return "";//ProcessManager.getInstance().getTestValue();
     }
 }

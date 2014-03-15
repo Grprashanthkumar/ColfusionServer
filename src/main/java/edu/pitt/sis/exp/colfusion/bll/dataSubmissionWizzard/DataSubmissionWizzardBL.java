@@ -15,6 +15,8 @@ import org.apache.xmlbeans.impl.regex.REUtil;
 
 import edu.pitt.sis.exp.colfusion.ConfigManager;
 import edu.pitt.sis.exp.colfusion.PropertyKeys;
+import edu.pitt.sis.exp.colfusion.dataLoadExecutors.DataLoadExecutor;
+import edu.pitt.sis.exp.colfusion.dataLoadExecutors.DataLoadExecutorFactory;
 import edu.pitt.sis.exp.colfusion.importers.ExcelImporter;
 import edu.pitt.sis.exp.colfusion.importers.Importer;
 import edu.pitt.sis.exp.colfusion.importers.ImporterFactory;
@@ -25,6 +27,7 @@ import edu.pitt.sis.exp.colfusion.persistence.managers.DNameInfoManager;
 import edu.pitt.sis.exp.colfusion.persistence.managers.DNameInfoManagerImpl;
 import edu.pitt.sis.exp.colfusion.persistence.managers.SourceInfoManager;
 import edu.pitt.sis.exp.colfusion.persistence.managers.SourceInfoManagerImpl;
+import edu.pitt.sis.exp.colfusion.process.ProcessManager;
 import edu.pitt.sis.exp.colfusion.responseModels.AcceptedFilesResponse;
 import edu.pitt.sis.exp.colfusion.responseModels.FileContentInfoReponse;
 import edu.pitt.sis.exp.colfusion.responseModels.GeneralResponse;
@@ -288,8 +291,17 @@ public class DataSubmissionWizzardBL {
 			
 			DataSourceTypes sourceType = storyMng.getStorySourceType(sid);
 			
+			DataLoadExecutor executor = DataLoadExecutorFactory.getDataLoadExecutor(sourceType);
+			
+			executor.setSid(sid);
+			
+			ProcessManager.getInstance().queueProcess(executor);
+			
 		} catch (Exception e) {
-			// TODO: handle exception
+			result.isSuccessful = false;
+			result.message = "Couldn't trigger KTR execution";
+			
+			logger.error("triggerDataLoadExecution failed: Couldn't trigger KTR execution for " + sid);
 		}
 		
 		

@@ -10,7 +10,7 @@ package edu.pitt.sis.exp.colfusion.dataLoadExecutors;
  * @author Evgeny
  *
  */
-public interface DataLoadExecutor {
+public interface DataLoadExecutor extends edu.pitt.sis.exp.colfusion.process.Process {
 	
 	/**
 	 * Performs the data load execution.
@@ -19,5 +19,7 @@ public interface DataLoadExecutor {
 	 */
 	void execute();
 	
+	public void setSid(int sid);
 	
+	public int getSid();
 }
