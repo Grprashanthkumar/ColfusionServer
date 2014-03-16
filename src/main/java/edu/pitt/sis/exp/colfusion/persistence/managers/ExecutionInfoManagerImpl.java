@@ -11,35 +11,30 @@ import org.hibernate.HibernateException;
 import org.hibernate.NonUniqueResultException;
 
 import edu.pitt.sis.exp.colfusion.persistence.HibernateUtil;
-import edu.pitt.sis.exp.colfusion.persistence.dao.SourceInfoTableKTRDAO;
-import edu.pitt.sis.exp.colfusion.persistence.dao.SourceInfoTableKTRDAOImpl;
-import edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionSourceinfoTableKtr;
-import edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionSourceinfoTableKtrId;
+import edu.pitt.sis.exp.colfusion.persistence.dao.ExecutionInfoDAO;
+import edu.pitt.sis.exp.colfusion.persistence.dao.ExecutionInfoDAOImpl;
+import edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionExecuteinfo;
 
 /**
  * @author Evgeny
  *
  */
-public class SourceInfoTableKTRManagerImpl implements SourceInfoTableKTRManager {
+public class ExecutionInfoManagerImpl implements ExecutionInfoManager {
 
-	Logger logger = LogManager.getLogger(SourceInfoTableKTRManagerImpl.class.getName());
+	Logger logger = LogManager.getLogger(ExecutionInfoManagerImpl.class.getName());
 	
-	private SourceInfoTableKTRDAO sourceInfoTableKTRDAO  = new SourceInfoTableKTRDAOImpl();
+	private ExecutionInfoDAO executionInfoDAO = new ExecutionInfoDAOImpl();
 	
 	//***************************************
 	// General manager interface
 	//***************************************
 	
-	
-	/* (non-Javadoc)
-	 * @see edu.pitt.sis.exp.colfusion.persistence.managers.GeneralManager#save(java.lang.Object)
-	 */
 	@Override
-	public ColfusionSourceinfoTableKtrId save(ColfusionSourceinfoTableKtr entity) {
+	public Integer save(ColfusionExecuteinfo entity) {
 		try {
             HibernateUtil.beginTransaction();
             
-            ColfusionSourceinfoTableKtrId result = sourceInfoTableKTRDAO.save(entity);
+            Integer result = executionInfoDAO.save(entity);
             
             HibernateUtil.commitTransaction();
             
@@ -53,15 +48,12 @@ public class SourceInfoTableKTRManagerImpl implements SourceInfoTableKTRManager 
         }
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.pitt.sis.exp.colfusion.persistence.managers.GeneralManager#saveOrUpdate(java.lang.Object)
-	 */
 	@Override
-	public void saveOrUpdate(ColfusionSourceinfoTableKtr entity) {
+	public void saveOrUpdate(ColfusionExecuteinfo entity) {
 		try {
             HibernateUtil.beginTransaction();
             
-            sourceInfoTableKTRDAO.saveOrUpdate(entity);
+            executionInfoDAO.saveOrUpdate(entity);
             
             HibernateUtil.commitTransaction();
         } catch (NonUniqueResultException ex) {
@@ -71,15 +63,12 @@ public class SourceInfoTableKTRManagerImpl implements SourceInfoTableKTRManager 
         }
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.pitt.sis.exp.colfusion.persistence.managers.GeneralManager#merge(java.lang.Object)
-	 */
 	@Override
-	public ColfusionSourceinfoTableKtr merge(ColfusionSourceinfoTableKtr entity) {
+	public ColfusionExecuteinfo merge(ColfusionExecuteinfo entity) {
 		try {
             HibernateUtil.beginTransaction();
             
-            ColfusionSourceinfoTableKtr result = sourceInfoTableKTRDAO.merge(entity);
+            ColfusionExecuteinfo result = executionInfoDAO.merge(entity);
             
             HibernateUtil.commitTransaction();
             
@@ -93,15 +82,12 @@ public class SourceInfoTableKTRManagerImpl implements SourceInfoTableKTRManager 
         }
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.pitt.sis.exp.colfusion.persistence.managers.GeneralManager#delete(java.lang.Object)
-	 */
 	@Override
-	public void delete(ColfusionSourceinfoTableKtr entity) {
+	public void delete(ColfusionExecuteinfo entity) {
 		try {
             HibernateUtil.beginTransaction();
             
-            sourceInfoTableKTRDAO.delete(entity);
+            executionInfoDAO.delete(entity);
             
             HibernateUtil.commitTransaction();
         } catch (NonUniqueResultException ex) {
@@ -111,16 +97,13 @@ public class SourceInfoTableKTRManagerImpl implements SourceInfoTableKTRManager 
         }
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.pitt.sis.exp.colfusion.persistence.managers.GeneralManager#findAll()
-	 */
 	@Override
-	public List<ColfusionSourceinfoTableKtr> findAll() {
-		List<ColfusionSourceinfoTableKtr> result = null;
+	public List<ColfusionExecuteinfo> findAll() {
+		List<ColfusionExecuteinfo> result = null;
 		try {
             HibernateUtil.beginTransaction();
             
-            result = sourceInfoTableKTRDAO.findAll(ColfusionSourceinfoTableKtr.class);
+            result = executionInfoDAO.findAll(ColfusionExecuteinfo.class);
             
             HibernateUtil.commitTransaction();
         } catch (NonUniqueResultException ex) {
@@ -131,16 +114,13 @@ public class SourceInfoTableKTRManagerImpl implements SourceInfoTableKTRManager 
 		return result;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.pitt.sis.exp.colfusion.persistence.managers.GeneralManager#findByID(java.lang.Object)
-	 */
 	@Override
-	public ColfusionSourceinfoTableKtr findByID(ColfusionSourceinfoTableKtrId id) {
-		ColfusionSourceinfoTableKtr result = null;
+	public ColfusionExecuteinfo findByID(Integer id) {
+		ColfusionExecuteinfo result = null;
 		try {
             HibernateUtil.beginTransaction();
             
-            result = sourceInfoTableKTRDAO.findByID(ColfusionSourceinfoTableKtr.class, id);
+            result = executionInfoDAO.findByID(ColfusionExecuteinfo.class, id);
             
             HibernateUtil.commitTransaction();
         } catch (NonUniqueResultException ex) {
@@ -148,7 +128,7 @@ public class SourceInfoTableKTRManagerImpl implements SourceInfoTableKTRManager 
         } catch (HibernateException ex) {
         	logger.error("findByID failed HibernateException", ex);
         }
-		return result;	
+		return result;		
 	}
 
 }

@@ -33,6 +33,8 @@ public class DataLoadExecutorKTRImpl extends DataLoadExecutorBaseImpl implements
 		
 		boolean firstKtr = true;
 		
+		
+		
 		for(String ktrLocation : ktrLocations) {
 			
 			if (firstKtr) {
@@ -48,8 +50,9 @@ public class DataLoadExecutorKTRImpl extends DataLoadExecutorBaseImpl implements
 					this._manager.onFailedProcess(this, e);
 					return;
 				}
-				
-			}		
+			}
+			
+			
 		}
 	}
 

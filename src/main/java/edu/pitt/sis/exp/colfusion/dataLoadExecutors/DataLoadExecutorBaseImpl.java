@@ -5,8 +5,6 @@ package edu.pitt.sis.exp.colfusion.dataLoadExecutors;
 
 import edu.pitt.sis.exp.colfusion.persistence.managers.SourceInfoManager;
 import edu.pitt.sis.exp.colfusion.persistence.managers.SourceInfoManagerImpl;
-import edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionSourceinfo;
-import edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionSourceinfoDb;
 import edu.pitt.sis.exp.colfusion.process.ProcessBase;
 import edu.pitt.sis.exp.colfusion.viewmodels.StoryTargetDB;
 

@@ -11,13 +11,10 @@ import java.util.Map;
 import org.apache.commons.compress.archivers.ArchiveException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.apache.xmlbeans.impl.regex.REUtil;
-
 import edu.pitt.sis.exp.colfusion.ConfigManager;
 import edu.pitt.sis.exp.colfusion.PropertyKeys;
 import edu.pitt.sis.exp.colfusion.dataLoadExecutors.DataLoadExecutor;
 import edu.pitt.sis.exp.colfusion.dataLoadExecutors.DataLoadExecutorFactory;
-import edu.pitt.sis.exp.colfusion.importers.ExcelImporter;
 import edu.pitt.sis.exp.colfusion.importers.Importer;
 import edu.pitt.sis.exp.colfusion.importers.ImporterFactory;
 import edu.pitt.sis.exp.colfusion.importers.ImporterType;
