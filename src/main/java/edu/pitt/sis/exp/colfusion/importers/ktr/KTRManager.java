@@ -117,6 +117,7 @@ public class KTRManager {
 		
 		ktrDocumentChangeConnection();
 		
+		//TODO: don't use string, use enum
 		if (!dataFileExtension.equals("csv")) {
 			ktrDocumentAddSheets(worksheet);
 		}
@@ -126,7 +127,7 @@ public class KTRManager {
 		ktrDocumentAddTableNateIntoTargetSchemaStep(tableName);
 		ktrDocumentAddVariablesIntoTargetSchemaStep(worksheet.getVariables());
 		
-		ktrDocumentChangeTransformationName(String.valueOf(getSid()));
+		ktrDocumentChangeTransformationName(String.format("%d_%s", getSid(), tableName));
 		
 		saveKTRFile();
 	}
