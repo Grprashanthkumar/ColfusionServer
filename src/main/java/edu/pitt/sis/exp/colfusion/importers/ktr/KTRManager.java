@@ -92,7 +92,7 @@ public class KTRManager {
 			
 			IOUtilsStoredFileInfoModel copiedKTRFileInfo = createKTRFileFromTemplate(sid, file.getExtension(), tableName);  
 			
-			//TODO uncomment saveKTRFileLocationToDB(sid, tableName, copiedKTRFileInfo.getAbsoluteFileName());
+			saveKTRFileLocationToDB(sid, tableName, copiedKTRFileInfo.getAbsoluteFileName());
 			
 			fillKTRFile(copiedKTRFileInfo.getAbsoluteFileName(), file.getExtension(), filesAbsoluteNames, worksheet, tableName);
 		}		
@@ -567,7 +567,7 @@ public class KTRManager {
 		ColfusionSourceinfoTableKtr sourceInfoTableKTR = new ColfusionSourceinfoTableKtr(sourceInfoTableKTRId, sourceInfo, 
 				ktrAbsoluteFileName);
 		
-		sourceInfoTableKTRManager.save(sourceInfoTableKTR);
+		sourceInfoTableKTRManager.saveOrUpdate(sourceInfoTableKTR);
 	}
 
 	/**
