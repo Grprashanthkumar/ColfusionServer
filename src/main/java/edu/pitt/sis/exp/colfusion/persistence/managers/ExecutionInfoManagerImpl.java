@@ -280,7 +280,7 @@ public class ExecutionInfoManagerImpl implements ExecutionInfoManager {
             String log = executionInfo.getLog();
             
             //TODO:maybe there is more efficient way to do that, e.g. see StringBuilder.
-            log += String.format("\n at %s: \n \t\t %s \n", new Date().toString(), logValueToAppend);
+            log += String.format("\n at %s: \n \t %s \n", new Date().toString(), logValueToAppend);
             
             executionInfo.setLog(log);
             
