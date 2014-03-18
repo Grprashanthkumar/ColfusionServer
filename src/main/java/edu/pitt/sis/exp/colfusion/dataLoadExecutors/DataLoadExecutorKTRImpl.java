@@ -74,10 +74,6 @@ public class DataLoadExecutorKTRImpl extends DataLoadExecutorBaseImpl implements
 			
 			changeTransformationName(executionInfoMgr, executionLogId, ktrManager, ktrLocation, String.valueOf(executionLogId));
 			
-			//The transformation  should be have name that corresponds to the execution info id because execution info record needs to be updated with success or failure.
-			// The update is performed via triggers in the db.
-			ktrManager.changeTransformaitonName(String.valueOf(executionLogId));
-			
 			if (firstKtr) {
 				
 				//If there are several files, there will be several KTR files accosted with one sid, however they all will be associated whit one target database
@@ -191,6 +187,8 @@ public class DataLoadExecutorKTRImpl extends DataLoadExecutorBaseImpl implements
 			executionInfoMgr.appendLog(executionLogId, String.format("Starting to change the name for the KTR file located at %s. "
 					+ "The new name is: %s", ktrLocation, transformationName));
 			
+			//The transformation  should be have name that corresponds to the execution info id because execution info record needs to be updated with success or failure.
+			// The update is performed via triggers in the db.
 			ktrManager.changeTransformaitonName(transformationName);
 			
 			executionInfoMgr.appendLog(executionLogId, String.format("Finished to change the name for the KTR file located at %s", ktrLocation));

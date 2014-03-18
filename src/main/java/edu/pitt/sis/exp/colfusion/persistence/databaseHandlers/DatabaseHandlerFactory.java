@@ -16,7 +16,7 @@ public class DatabaseHandlerFactory {
 	public static DatabaseHandlerBase getDatabaseHandler(String host, int port, String user, String password, String database, 
 			DatabaseHanderType databaseHanderType) throws Exception {
 		switch (databaseHanderType) {
-		case MSSQL:
+		case MYSQL:
 			return new MySQLDatabaseHandler(host, port, user, password, database, databaseHanderType);
 			
 		default:
