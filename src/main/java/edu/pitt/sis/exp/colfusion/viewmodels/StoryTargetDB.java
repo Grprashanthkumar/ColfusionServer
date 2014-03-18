@@ -39,8 +39,7 @@ public class StoryTargetDB {
 		setDatabaseName(databaseName);
 		setDriver(driver);
 		setIsLocal(isLocal);
-		setLinkedServerName(linkedServerName);
-		
+		setLinkedServerName(linkedServerName);	
 	}
 	
 	/**

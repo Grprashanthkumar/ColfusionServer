@@ -173,9 +173,7 @@ public class KTRManager {
  		
  		nameNode.appendChild(ktrDocument.createTextNode(transformationName));
  		
- 		logger.info("finished change transformation name in the KTR document");
-         
-		
+ 		logger.info("finished change transformation name in the KTR document");		
 	}
 
 	/**
@@ -730,5 +728,26 @@ public class KTRManager {
 			
 			throw new Exception("getTableName failed, no /transformation/step[name = 'Target Schema'] tag or found tag is wrong nodetype");
 		}
+	}
+
+	/**
+	 * Updates the name tag of the transformation.
+	 * The KTR file should be loaded before this call.
+	 * 
+	 * @param transformationName the name to set.
+	 * @throws Exception 
+	 */
+	public void changeTransformaitonName(String transformationName) throws Exception {
+		
+		if (ktrDocument == null) {
+			//TODO: create appropriate exception.
+			
+			logger.error(String.format("changeTransformaitonName failed: for %s name", transformationName));
+			throw new Exception(String.format("changeTransformaitonName failed: for %s name", transformationName));
+		}
+		
+		ktrDocumentChangeTransformationName(transformationName);
+		
+		saveKTRFile();
 	}
 }

@@ -8,7 +8,7 @@ package edu.pitt.sis.exp.colfusion.dataLoadExecutors;
  *
  */
 public enum DataLoadExecutionStatus {
-	IN_PROGRESS("in progress"), FAILED("failed"), SUCCESS("sucess");
+	IN_PROGRESS("in progress"), FAILED("error"), SUCCESS("sucess");
     
 
     private String value;

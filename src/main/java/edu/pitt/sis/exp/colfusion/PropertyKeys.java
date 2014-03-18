@@ -120,6 +120,12 @@ public class PropertyKeys {
 	public static String logginDatabase_Type = "logginDatabase_Type";
 	
 	
-	
-	
+	/**
+	 * Carte Server URL to use for KTR transformation execution.
+	 */
+	public static String carteServerURL = "carteServerURL";
+	public static String carteServer = "carteServer";
+	public static String cartePort = "cartePort";
+	public static String carteUser = "carteUser";
+	public static String cartePassword = "cartePassword";
 }

@@ -37,7 +37,7 @@ public class DataLoadExecutorFactoryTest  extends TestCase {
 
 		int alterValue = rand.nextInt(50) + 1;
 		
-		alterKTR(sid, alterValue);
+		//alterKTR(sid, alterValue);
 		
 		try {
 			
