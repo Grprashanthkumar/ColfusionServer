@@ -6,6 +6,8 @@ package edu.pitt.sis.exp.colfusion.importers.ktr;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.Transformer;
@@ -489,8 +491,8 @@ public class KTRManager {
 		if (ktrDocument == null) {
 			//TODO: create appropriate exception.
 			
-			logger.error(String.format("updateTargetDBConnectionInfo failed: ktrDocument is now loaded for %d sid", sid));
-			throw new Exception(String.format("updateTargetDBConnectionInfo failed: ktrDocument is now loaded for %d sid", sid));
+			logger.error(String.format("updateTargetDBConnectionInfo failed: ktrDocument is not loaded for %d sid", sid));
+			throw new Exception(String.format("updateTargetDBConnectionInfo failed: ktrDocument is not loaded for %d sid", sid));
 		}
 		
 		//XPath to get connection node for the database to load data to
@@ -634,8 +636,8 @@ public class KTRManager {
 		if (ktrDocument == null) {
 			//TODO: create appropriate exception.
 			
-			logger.error(String.format("readTargetDatabaseInfo failed: ktrDocument is now loaded for %d sid", sid));
-			throw new Exception(String.format("readTargetDatabaseInfo failed: ktrDocument is now loaded for %d sid", sid));
+			logger.error(String.format("readTargetDatabaseInfo failed: ktrDocument is not loaded for %d sid", sid));
+			throw new Exception(String.format("readTargetDatabaseInfo failed: ktrDocument is not loaded for %d sid", sid));
 		}
 		
 		//XPath to get connection node for the database to load data to
@@ -691,8 +693,8 @@ public class KTRManager {
 		if (ktrDocument == null) {
 			//TODO: create appropriate exception.
 			
-			logger.error(String.format("getTableName failed: ktrDocument is now loaded for %d sid", sid));
-			throw new Exception(String.format("getTableName failed: ktrDocument is now loaded for %d sid", sid));
+			logger.error(String.format("getTableName failed: ktrDocument is not loaded for %d sid", sid));
+			throw new Exception(String.format("getTableName failed: ktrDocument is not loaded for %d sid", sid));
 		}
 		
 		//XPath to get connection node for the database to load data to
@@ -749,5 +751,36 @@ public class KTRManager {
 		ktrDocumentChangeTransformationName(transformationName);
 		
 		saveKTRFile();
+	}
+
+	public List<String> getTargetTableColumns() throws Exception {
+		// TODO we can actually get the columns from the column metadata table in the db.
+		
+		if (ktrDocument == null) {
+			//TODO: create appropriate exception.
+			
+			logger.error(String.format("getTargetTableColumns failed: ktrDocument is not loaded for %d sid", sid));
+			throw new Exception(String.format("getTargetTableColumns failed: ktrDocument is not loaded for %d sid", sid));
+		}
+		
+		//XPath to get connection node for the database to load data to
+		String expression = "/transformation/step[name = 'Target Schema']/fields/field/column_name";
+		 
+		XPath xPath =  XPathFactory.newInstance().newXPath();
+		NodeList columnNames = (NodeList) xPath.compile(expression).evaluate(ktrDocument, XPathConstants.NODESET);
+		
+		if (columnNames.getLength() == 0) {
+			logger.error(String.format("getTargetTableColumns failed, no /transformation/step[name = 'Target Schema']/fields/field/column_name tag"));
+			
+			throw new Exception("getTargetTableColumns failed, no /transformation/step[name = 'Target Schema']/fields/field/column_name tag");
+		}
+	
+		ArrayList<String> result = new ArrayList<>();
+		for (int i = 0; i < columnNames.getLength(); i++) {
+			result.add(columnNames.item(i).getFirstChild().getNodeValue());
+		}
+		
+		return result;
+		
 	}
 }

@@ -85,7 +85,7 @@ public class DataLoadExecutorKTRImpl extends DataLoadExecutorBaseImpl implements
 				firstKtr = false;
 			}
 		
-			createTargetTable(executionInfoMgr, executionLogId, databaseHandlerBase, ktrManager.getTableName());
+			createTargetTable(executionInfoMgr, executionLogId, databaseHandlerBase, ktrManager);
 			
 			String command = getPentahoCarteURL(executionInfoMgr, executionLogId, ktrManager, ktrLocation);
 			
@@ -97,13 +97,13 @@ public class DataLoadExecutorKTRImpl extends DataLoadExecutorBaseImpl implements
 		}
 	}
 
-	private void createTargetTable(ExecutionInfoManager executionInfoMgr, int executionLogId, DatabaseHandlerBase databaseHandlerBase, String tableName) 
+	private void createTargetTable(ExecutionInfoManager executionInfoMgr, int executionLogId, DatabaseHandlerBase databaseHandlerBase, KTRManager ktrManager) 
 			throws Exception {		
-		executionInfoMgr.appendLog(executionLogId, String.format("Starting to create target table %s", tableName));
+		executionInfoMgr.appendLog(executionLogId, String.format("Starting to create target table %s", ktrManager));
 		
-		databaseHandlerBase.createTableIfNotExist(tableName);
+		databaseHandlerBase.createTableIfNotExist(ktrManager.getTableName(), ktrManager.getTargetTableColumns());
 		
-		executionInfoMgr.appendLog(executionLogId, String.format("Finished to create target table %s", tableName));
+		executionInfoMgr.appendLog(executionLogId, String.format("Finished to create target table %s", ktrManager));
 	}
 
 	private DatabaseHandlerBase createTargetDatabase(ExecutionInfoManager executionInfoMgr, int executionLogId, StoryTargetDB targetDBConnectionInfo) 

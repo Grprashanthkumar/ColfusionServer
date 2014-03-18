@@ -3,6 +3,8 @@
  */
 package edu.pitt.sis.exp.colfusion.persistence.databaseHandlers;
 
+import java.util.List;
+
 /**
  * @author Evgeny
  *
@@ -23,7 +25,7 @@ public class MySQLDatabaseHandler extends DatabaseHandlerBase {
 	}
 
 	@Override
-	public void createTableIfNotExist(String tableName) {
+	public void createTableIfNotExist(String tableName, List<String> variables) {
 		// TODO Auto-generated method stub
 		
 	}

@@ -3,6 +3,8 @@
  */
 package edu.pitt.sis.exp.colfusion.persistence.databaseHandlers;
 
+import java.util.List;
+
 /**
  * @author Evgeny
  *
@@ -100,7 +102,8 @@ public abstract class DatabaseHandlerBase {
 	/**
 	 * Creates a table where the data should be loaded.
 	 * @param tableName the name of the table to create.
+	 * @param variables the list of columns.
 	 */
-	public abstract void createTableIfNotExist(String tableName);
+	public abstract void createTableIfNotExist(String tableName, List<String> variables);
 	
 }
