@@ -151,4 +151,14 @@ public class StoryTargetDB {
 	public void setLinkedServerName(String linkedServerName) {
 		this.linkedServerName = linkedServerName;
 	}
+	
+	@Override
+	public String toString() {
+		
+		//TODO: see if JSON serialization could be used here. Because if add more fieds to the class, we would need to update it.
+		String result =  String.format("\n sid: %d,\n severAddress: %s,\n port: %d,\n userName: %s,\n password: %s,\n databaseName: %s,\n driver: %s,\n "
+				+ "isLocal:%d,\n linkedServerName:%s", sid, serverAddress, port, userName, password, databaseName, driver, isLocal, linkedServerName);
+	
+		return result;
+	}
 }

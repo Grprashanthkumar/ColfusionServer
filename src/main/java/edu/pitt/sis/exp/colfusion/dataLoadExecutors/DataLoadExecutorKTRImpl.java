@@ -66,9 +66,13 @@ public class DataLoadExecutorKTRImpl extends DataLoadExecutorBaseImpl implements
 					
 					executionInfoMgr.appendLog(executionLogId, String.format("Finished reading traget database info from the KTR file located at %s", ktrLocation));
 					
-					
+					executionInfoMgr.appendLog(executionLogId, String.format("Starting to update sourceintoDB record with target database conneciton info fetched form the ktr file %s. "
+							+ "Here is what connection info is: %s ", ktrLocation, sourceDBInfo.toString()));
 					
 					super.updateSourceDBInfo(sourceDBInfo);
+					
+					executionInfoMgr.appendLog(executionLogId, "Finished update sourceintoDB record with target database conneciton info");
+					
 					firstKtr = false;
 				} catch (Exception e) {
 					//TODO: add logger if needed here, or maybe all exceptions should be logged by process manager
