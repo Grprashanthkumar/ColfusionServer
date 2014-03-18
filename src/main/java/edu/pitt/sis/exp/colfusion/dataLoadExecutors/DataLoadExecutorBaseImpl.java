@@ -19,7 +19,7 @@ public abstract class DataLoadExecutorBaseImpl extends ProcessBase implements Da
 	protected int sid;
 	
 	@Override
-	public void execute() {
+	public void execute() throws Exception {
 		// TODO add insert into sourceinfoDB table and linked servers.
 
 	}

@@ -17,7 +17,7 @@ public interface DataLoadExecutor extends edu.pitt.sis.exp.colfusion.process.Pro
 	 * 
 	 * @param sid
 	 */
-	void execute();
+	void execute() throws Exception;
 	
 	public void setSid(int sid);
 	

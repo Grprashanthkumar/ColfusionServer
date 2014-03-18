@@ -43,7 +43,7 @@ public abstract class GenericDAOImpl<T, ID extends Serializable> implements Gene
     }
  
     /**
-	 * NOT SUREWHAT IT DOES :-)
+	 * 
 	 * @param entity
 	 */
     @SuppressWarnings("unchecked")

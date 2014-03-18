@@ -9,11 +9,13 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.hibernate.HibernateException;
 import org.hibernate.NonUniqueResultException;
+import org.hibernate.Query;
 
 import edu.pitt.sis.exp.colfusion.persistence.HibernateUtil;
 import edu.pitt.sis.exp.colfusion.persistence.dao.ExecutionInfoDAO;
 import edu.pitt.sis.exp.colfusion.persistence.dao.ExecutionInfoDAOImpl;
 import edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionExecuteinfo;
+import edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionSourceinfo;
 
 /**
  * @author Evgeny
@@ -129,6 +131,73 @@ public class ExecutionInfoManagerImpl implements ExecutionInfoManager {
         	logger.error("findByID failed HibernateException", ex);
         }
 		return result;		
+	}
+
+	//***************************************
+	// Custom methods
+	//***************************************
+	
+	@Override
+	public int getExecutionLogId(int sid, String tableName) throws Exception {
+	
+		logger.info(String.format("Started getExecutionLogId for %d sid and %s table. Checking if executioninfo record already exists", sid, tableName));
+		
+		String sql = "SELECT ex FROM ColfusionExecuteinfo as ex WHERE ex.colfusionSourceinfo.sid = :sid AND ex.tableName = :tableName";
+
+		Query query = HibernateUtil.getSession().createQuery(sql).setParameter("sid", sid).setParameter("tableName", String.format("'%s'", tableName));
+		
+		//TODO: the findOne should be good here because there should be only one record for given pair of sid and table name, however it is not 
+		//restricted on the db level, so at least for now I used findMany.
+		List<ColfusionExecuteinfo> executeInfoRecords = executionInfoDAO.findMany(query);
+		
+		if (executeInfoRecords == null) {
+			
+			logger.error(String.format("getExecutionLogId failedL: the resul of the query is null. Here is the query: %s", query.getQueryString()));
+			
+			//TODO:handle better.
+			throw new Exception(String.format("getExecutionLogId failedL: the resul of the query is null. Here is the query: %s", query.getQueryString()));
+		}
+		
+		if (executeInfoRecords.size() == 0) {
+			
+			logger.info(String.format("getExecutionLogId for %d sid and %s table: Not Found any execution info records - so creating one", sid, tableName));
+			
+			return getNewExecutionLogId(sid, tableName);
+		}
+		else {
+			//TODO: the table should not have more than one record for a given pair of sid and table name, however it is not restricted on the db level
+			// so and maybe our code is bad, so we need to check if there is more than one record and do something with it.
+			
+			logger.info(String.format("getExecutionLogId for %d sid and %s table: Found %d execution info records - use the first one", sid, tableName, executeInfoRecords.size()));
+			
+			return executeInfoRecords.get(0).getEid();
+		}
+	}
+
+
+	/**
+	 * Inserts a new records into executioninfo table.
+	 * @param sid the id of the story associated with the log record.
+	 * @param tableName the table name associated with the log record.
+	 * @return the id of the executioninfo record (logid).
+	 * @throws Exception 
+	 */
+	private int getNewExecutionLogId(int sid, String tableName) throws Exception {
+		
+		//TODO: this will run separate transaction to find sid, maybe we need to run it together within one tracsaction, need to test and see.
+		SourceInfoManager storyMgr = new SourceInfoManagerImpl();
+		ColfusionSourceinfo story = storyMgr.findByID(sid);
+		
+		if (story == null) {
+			logger.error(String.format("getNewExecutionLogId failedL: the story is null for %d", sid));
+			
+			//TODO:handle better.
+			throw new Exception(String.format("getNewExecutionLogId failedL: the story is null for %d", sid));
+		}
+		
+		ColfusionExecuteinfo newExecutionInfoRecord = new ColfusionExecuteinfo(story, tableName);
+		
+		return save(newExecutionInfoRecord);
 	}
 
 }

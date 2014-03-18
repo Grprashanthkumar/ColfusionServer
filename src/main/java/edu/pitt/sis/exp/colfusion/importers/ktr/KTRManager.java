@@ -681,4 +681,54 @@ public class KTRManager {
 			
 		return result;
 	}
+
+	/**
+	 * Gets the table name from the target database step (the table where the data should be loaded).
+	 * 
+	 * The KTR file should be loaded into memory before calling this function (call loadKTR).
+	 * @return the table name.
+	 * @throws Exception 
+	 */
+	public String getTableName() throws Exception {
+		if (ktrDocument == null) {
+			//TODO: create appropriate exception.
+			
+			logger.error(String.format("getTableName failed: ktrDocument is now loaded for %d sid", sid));
+			throw new Exception(String.format("getTableName failed: ktrDocument is now loaded for %d sid", sid));
+		}
+		
+		//XPath to get connection node for the database to load data to
+		String expression = "/transformation/step[name = 'Target Schema']";
+		 
+		XPath xPath =  XPathFactory.newInstance().newXPath();
+		NodeList targetSchemaStep = (NodeList) xPath.compile(expression).evaluate(ktrDocument, XPathConstants.NODESET);
+		
+		if (targetSchemaStep.getLength() == 0) {
+			logger.error(String.format("getTableName failed, no /transformation/step[name = 'Target Schema'] tag"));
+			
+			throw new Exception("getTableName failed, no /transformation/step[name = 'Target Schema'] tag");
+		}
+	
+		Node targetSchemaStepNode = (Node) targetSchemaStep.item(0);
+		
+		if (targetSchemaStepNode.getNodeType() == Node.ELEMENT_NODE) {
+			Element targetSchemaStepElement = (Element) targetSchemaStepNode;
+			
+			try {
+				return targetSchemaStepElement.getElementsByTagName("table").item(0).getFirstChild().getNodeValue();
+			} catch (Exception e) {
+				//TODO:handle it better
+				logger.error(String.format("getTableName failed, could not read table name"), e);
+				
+				throw new Exception("getTableName failed, could not read table name");
+			}
+		}
+		else {
+			
+			//TODO:handle it better
+			logger.error(String.format("getTableName failed, no /transformation/step[name = 'Target Schema'] tag or found tag is wrong nodetype"));
+			
+			throw new Exception("getTableName failed, no /transformation/step[name = 'Target Schema'] tag or found tag is wrong nodetype");
+		}
+	}
 }
