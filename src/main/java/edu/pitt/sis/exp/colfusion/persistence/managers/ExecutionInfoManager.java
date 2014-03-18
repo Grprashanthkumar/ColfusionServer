@@ -3,6 +3,7 @@
  */
 package edu.pitt.sis.exp.colfusion.persistence.managers;
 
+import edu.pitt.sis.exp.colfusion.dataLoadExecutors.DataLoadExecutionStatus;
 import edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionExecuteinfo;
 
 /**
@@ -29,10 +30,10 @@ public interface ExecutionInfoManager extends GeneralManager<ColfusionExecuteinf
 	 * Updates status attribute with a given value for a specific execution info record.
 	 * 
 	 * @param executionLogId the eid of the the execution info record for which ot update the status attribute.
-	 * @param statusValue the value to set.
+	 * @param dataLoadExecutionStatus the value to set.
 	 * @throws Exception 
 	 */
-	void updateStatus(int executionLogId, String statusValue) throws Exception;
+	void updateStatus(int executionLogId, DataLoadExecutionStatus dataLoadExecutionStatus) throws Exception;
 
 	/**
 	 * Appends provided string value to the log attribute in the execution info table for the record identified by provided executionInfoId value.

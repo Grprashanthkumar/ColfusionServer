@@ -51,39 +51,43 @@ public class DataLoadExecutorKTRImpl extends DataLoadExecutorBaseImpl implements
 			
 			int executionLogId = executionInfoMgr.getExecutionLogId(sid, ktrManager.getTableName());
 			
-			executionInfoMgr.updateStatus(executionLogId, "in progress");
+			executionInfoMgr.updateStatus(executionLogId, DataLoadExecutionStatus.IN_PROGRESS);
 			
 			if (firstKtr) {
 				
 				//If there are several files, there will be several KTR files accosted with one sid, however they all will be associated whit one target database
 				//therefore we need only one KTR file to extract and save target database connection info.
 				
-				try {
-					
-					executionInfoMgr.appendLog(executionLogId, String.format("Starting to read traget database info from the KTR file located at %s", ktrLocation));
-					
-					StoryTargetDB sourceDBInfo = ktrManager.readTargetDatabaseInfo();
-					
-					executionInfoMgr.appendLog(executionLogId, String.format("Finished reading traget database info from the KTR file located at %s", ktrLocation));
-					
-					executionInfoMgr.appendLog(executionLogId, String.format("Starting to update sourceintoDB record with target database conneciton info fetched form the ktr file %s. "
-							+ "Here is what connection info is: %s ", ktrLocation, sourceDBInfo.toString()));
-					
-					super.updateSourceDBInfo(sourceDBInfo);
-					
-					executionInfoMgr.appendLog(executionLogId, "Finished update sourceintoDB record with target database conneciton info");
-					
-					firstKtr = false;
-				} catch (Exception e) {
-					//TODO: add logger if needed here, or maybe all exceptions should be logged by process manager
-					
-					this._manager.onFailedProcess(this, e);
-					return;
-				}
+				updateTargetDatabaseConnectionInfo(executionInfoMgr, executionLogId, ktrManager, ktrLocation);
+				
+				firstKtr = false;
 			}
 			
-			
+			executionInfoMgr.updateStatus(executionLogId, DataLoadExecutionStatus.SUCCESS);
 		}
+	}
+
+	private void updateTargetDatabaseConnectionInfo(ExecutionInfoManager executionInfoMgr, int executionLogId, KTRManager ktrManager, String ktrLocation) throws Exception {
+		try {
+			executionInfoMgr.appendLog(executionLogId, String.format("Starting to read traget database info from the KTR file located at %s", ktrLocation));
+			
+			StoryTargetDB sourceDBInfo = ktrManager.readTargetDatabaseInfo();
+			
+			executionInfoMgr.appendLog(executionLogId, String.format("Finished reading traget database info from the KTR file located at %s", ktrLocation));
+			
+			executionInfoMgr.appendLog(executionLogId, String.format("Starting to update sourceintoDB record with target database conneciton info fetched form the ktr file %s. "
+					+ "Here is what connection info is: %s ", ktrLocation, sourceDBInfo.toString()));
+			
+			super.updateSourceDBInfo(sourceDBInfo);
+			
+			executionInfoMgr.appendLog(executionLogId, "Finished update sourceintoDB record with target database conneciton info");
+		} catch (Exception e) {
+			
+			executionInfoMgr.updateStatus(executionLogId, DataLoadExecutionStatus.FAILED);
+			
+			throw e;
+		}
+		
 	}
 
 	@Override
@@ -91,13 +95,13 @@ public class DataLoadExecutorKTRImpl extends DataLoadExecutorBaseImpl implements
 		
 		try {
 			execute();
+			
+			this._manager.onDoneProcess(this);
 		} catch (Exception e) {
 			//TODO: add logger if needed here, or maybe all exceptions should be logged by process manager
 			
 			this._manager.onFailedProcess(this, e);
 		}	
-		
-		this._manager.onDoneProcess(this);
 	}
 
 	@Override

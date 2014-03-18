@@ -12,6 +12,7 @@ import org.hibernate.HibernateException;
 import org.hibernate.NonUniqueResultException;
 import org.hibernate.Query;
 
+import edu.pitt.sis.exp.colfusion.dataLoadExecutors.DataLoadExecutionStatus;
 import edu.pitt.sis.exp.colfusion.persistence.HibernateUtil;
 import edu.pitt.sis.exp.colfusion.persistence.dao.ExecutionInfoDAO;
 import edu.pitt.sis.exp.colfusion.persistence.dao.ExecutionInfoDAOImpl;
@@ -234,7 +235,7 @@ public class ExecutionInfoManagerImpl implements ExecutionInfoManager {
 	}
 
 	@Override
-	public void updateStatus(int executionLogId, String statusValue) throws Exception {
+	public void updateStatus(int executionLogId, DataLoadExecutionStatus statusValue) throws Exception {
 		try {
             HibernateUtil.beginTransaction();
             
@@ -247,7 +248,7 @@ public class ExecutionInfoManagerImpl implements ExecutionInfoManager {
             	throw new Exception(String.format("updateStatus failed: could not find execution info record by given id %d", executionLogId));
             }
             
-            executionInfo.setStatus(statusValue);
+            executionInfo.setStatus(statusValue.getValue());
             
             executionInfoDAO.saveOrUpdate(executionInfo);
    
