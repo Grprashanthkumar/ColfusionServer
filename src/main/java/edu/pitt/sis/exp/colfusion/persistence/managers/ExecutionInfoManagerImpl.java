@@ -3,6 +3,7 @@
  */
 package edu.pitt.sis.exp.colfusion.persistence.managers;
 
+import java.util.Date;
 import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
@@ -14,6 +15,8 @@ import org.hibernate.Query;
 import edu.pitt.sis.exp.colfusion.persistence.HibernateUtil;
 import edu.pitt.sis.exp.colfusion.persistence.dao.ExecutionInfoDAO;
 import edu.pitt.sis.exp.colfusion.persistence.dao.ExecutionInfoDAOImpl;
+import edu.pitt.sis.exp.colfusion.persistence.dao.SourceInfoDAO;
+import edu.pitt.sis.exp.colfusion.persistence.dao.SourceInfoDAOImpl;
 import edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionExecuteinfo;
 import edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionSourceinfo;
 
@@ -178,9 +181,12 @@ public class ExecutionInfoManagerImpl implements ExecutionInfoManager {
 		try {
             HibernateUtil.beginTransaction();
             
-            String sql = "SELECT ex FROM ColfusionExecuteinfo as ex WHERE ex.colfusionSourceinfo.sid = :sid AND ex.tableName = :tableName";
+            SourceInfoDAO storyDAO = new SourceInfoDAOImpl();
+            ColfusionSourceinfo story = storyDAO.findByID(ColfusionSourceinfo.class, sid); //TODO:might need to check for null.
+            
+            String sql = "SELECT ex FROM ColfusionExecuteinfo as ex WHERE ex.colfusionSourceinfo = :sid AND ex.tableName = :tableName";
 
-    		Query query = HibernateUtil.getSession().createQuery(sql).setParameter("sid", sid).setParameter("tableName", String.format("'%s'", tableName));
+    		Query query = HibernateUtil.getSession().createQuery(sql).setParameter("sid", story).setParameter("tableName", tableName);
     		
     		//TODO: the findOne should be good here because there should be only one record for given pair of sid and table name, however it is not 
     		//restricted on the db level, so at least for now I used findMany.
@@ -209,20 +215,87 @@ public class ExecutionInfoManagerImpl implements ExecutionInfoManager {
 	 */
 	private int getNewExecutionLogId(int sid, String tableName) throws Exception {
 		
-		//TODO: this will run separate transaction to find sid, maybe we need to run it together within one tracsaction, need to test and see.
+		//TODO: this will run separate transaction to find sid, maybe we need to run it together within one transaction, need to test and see.
 		SourceInfoManager storyMgr = new SourceInfoManagerImpl();
 		ColfusionSourceinfo story = storyMgr.findByID(sid);
 		
 		if (story == null) {
-			logger.error(String.format("getNewExecutionLogId failedL: the story is null for %d", sid));
+			logger.error(String.format("getNewExecutionLogId failed: the story is null for %d", sid));
 			
 			//TODO:handle better.
-			throw new Exception(String.format("getNewExecutionLogId failedL: the story is null for %d", sid));
+			throw new Exception(String.format("getNewExecutionLogId failed: the story is null for %d", sid));
 		}
 		
 		ColfusionExecuteinfo newExecutionInfoRecord = new ColfusionExecuteinfo(story, tableName);
+		newExecutionInfoRecord.setTimeStart(new Date());
+		newExecutionInfoRecord.setLog("");
 		
 		return save(newExecutionInfoRecord);
+	}
+
+	@Override
+	public void updateStatus(int executionLogId, String statusValue) throws Exception {
+		try {
+            HibernateUtil.beginTransaction();
+            
+            ColfusionExecuteinfo executionInfo = executionInfoDAO.findByID(ColfusionExecuteinfo.class, executionLogId);
+            
+            if (executionInfo == null) {
+            	logger.error(String.format("updateStatus failed: could not find execution info record by given id %d", executionLogId));
+            	
+            	//TODO: handle better
+            	throw new Exception(String.format("updateStatus failed: could not find execution info record by given id %d", executionLogId));
+            }
+            
+            executionInfo.setStatus(statusValue);
+            
+            executionInfoDAO.saveOrUpdate(executionInfo);
+   
+            HibernateUtil.commitTransaction();           
+        } catch (NonUniqueResultException ex) {
+            logger.error("updateStatus failed NonUniqueResultException", ex);
+            
+            throw ex;
+        } catch (HibernateException ex) {
+        	logger.error("updateStatus failed HibernateException", ex);
+        	
+        	throw ex;
+        }
+	}
+
+	@Override
+	public void appendLog(int executionLogId, String logValueToAppend) throws Exception {
+		try {
+            HibernateUtil.beginTransaction();
+            
+            ColfusionExecuteinfo executionInfo = executionInfoDAO.findByID(ColfusionExecuteinfo.class, executionLogId);
+            
+            if (executionInfo == null) {
+            	logger.error(String.format("appendLog failed: could not find execution info record by given id %d", executionLogId));
+            	
+            	//TODO: handle better
+            	throw new Exception(String.format("appendLog failed: could not find execution info record by given id %d", executionLogId));
+            }
+            
+            String log = executionInfo.getLog();
+            
+            //TODO:maybe there is more efficient way to do that, e.g. see StringBuilder.
+            log += String.format("\n at %s: \n \t\t %s \n", new Date().toString(), logValueToAppend);
+            
+            executionInfo.setLog(log);
+            
+            executionInfoDAO.saveOrUpdate(executionInfo);
+   
+            HibernateUtil.commitTransaction();           
+        } catch (NonUniqueResultException ex) {
+            logger.error("appendLog failed NonUniqueResultException", ex);
+            
+            throw ex;
+        } catch (HibernateException ex) {
+        	logger.error("appendLog failed HibernateException", ex);
+        	
+        	throw ex;
+        }
 	}
 
 }

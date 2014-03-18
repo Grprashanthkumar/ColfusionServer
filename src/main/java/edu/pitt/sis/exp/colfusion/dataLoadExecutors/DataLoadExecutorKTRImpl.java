@@ -51,13 +51,23 @@ public class DataLoadExecutorKTRImpl extends DataLoadExecutorBaseImpl implements
 			
 			int executionLogId = executionInfoMgr.getExecutionLogId(sid, ktrManager.getTableName());
 			
+			executionInfoMgr.updateStatus(executionLogId, "in progress");
+			
 			if (firstKtr) {
 				
 				//If there are several files, there will be several KTR files accosted with one sid, however they all will be associated whit one target database
 				//therefore we need only one KTR file to extract and save target database connection info.
 				
 				try {
+					
+					executionInfoMgr.appendLog(executionLogId, String.format("Starting to read traget database info from the KTR file located at %s", ktrLocation));
+					
 					StoryTargetDB sourceDBInfo = ktrManager.readTargetDatabaseInfo();
+					
+					executionInfoMgr.appendLog(executionLogId, String.format("Finished reading traget database info from the KTR file located at %s", ktrLocation));
+					
+					
+					
 					super.updateSourceDBInfo(sourceDBInfo);
 					firstKtr = false;
 				} catch (Exception e) {

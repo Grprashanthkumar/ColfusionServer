@@ -25,4 +25,20 @@ public interface ExecutionInfoManager extends GeneralManager<ColfusionExecuteinf
 	 */
 	int getExecutionLogId(int sid, String tableName) throws Exception;
 
+	/**
+	 * Updates status attribute with a given value for a specific execution info record.
+	 * 
+	 * @param executionLogId the eid of the the execution info record for which ot update the status attribute.
+	 * @param statusValue the value to set.
+	 * @throws Exception 
+	 */
+	void updateStatus(int executionLogId, String statusValue) throws Exception;
+
+	/**
+	 * Appends provided string value to the log attribute in the execution info table for the record identified by provided executionInfoId value.
+	 * @param executionLogId the id (eid) of the record to update.
+	 * @param logValueToAppend is the value to append.
+	 */
+	void appendLog(int executionLogId, String logValueToAppend) throws Exception;
+
 }
