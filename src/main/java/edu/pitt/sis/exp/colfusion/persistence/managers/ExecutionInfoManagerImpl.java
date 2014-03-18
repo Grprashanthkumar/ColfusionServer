@@ -142,20 +142,14 @@ public class ExecutionInfoManagerImpl implements ExecutionInfoManager {
 	
 		logger.info(String.format("Started getExecutionLogId for %d sid and %s table. Checking if executioninfo record already exists", sid, tableName));
 		
-		String sql = "SELECT ex FROM ColfusionExecuteinfo as ex WHERE ex.colfusionSourceinfo.sid = :sid AND ex.tableName = :tableName";
-
-		Query query = HibernateUtil.getSession().createQuery(sql).setParameter("sid", sid).setParameter("tableName", String.format("'%s'", tableName));
-		
-		//TODO: the findOne should be good here because there should be only one record for given pair of sid and table name, however it is not 
-		//restricted on the db level, so at least for now I used findMany.
-		List<ColfusionExecuteinfo> executeInfoRecords = executionInfoDAO.findMany(query);
+		List<ColfusionExecuteinfo> executeInfoRecords = getExistingExecutionLogId(sid, tableName);
 		
 		if (executeInfoRecords == null) {
 			
-			logger.error(String.format("getExecutionLogId failedL: the resul of the query is null. Here is the query: %s", query.getQueryString()));
+			logger.error(String.format("getExecutionLogId failed: the resul of the query is null sid %d sid and %s table name", sid, tableName));
 			
 			//TODO:handle better.
-			throw new Exception(String.format("getExecutionLogId failedL: the resul of the query is null. Here is the query: %s", query.getQueryString()));
+			throw new Exception(String.format("getExecutionLogId failed: the resul of the query is null sid %d sid and %s table name", sid, tableName));
 		}
 		
 		if (executeInfoRecords.size() == 0) {
@@ -174,6 +168,37 @@ public class ExecutionInfoManagerImpl implements ExecutionInfoManager {
 		}
 	}
 
+	/**
+	 * Finds list of existing execution info records for given sid and table name. 
+	 * @param sid is the id of the story.
+	 * @param tableName is the table name.
+	 * @return list of executioninfo records {@link ColfusionExecuteinfo}.
+	 */
+	private List<ColfusionExecuteinfo> getExistingExecutionLogId(int sid, String tableName) {
+		try {
+            HibernateUtil.beginTransaction();
+            
+            String sql = "SELECT ex FROM ColfusionExecuteinfo as ex WHERE ex.colfusionSourceinfo.sid = :sid AND ex.tableName = :tableName";
+
+    		Query query = HibernateUtil.getSession().createQuery(sql).setParameter("sid", sid).setParameter("tableName", String.format("'%s'", tableName));
+    		
+    		//TODO: the findOne should be good here because there should be only one record for given pair of sid and table name, however it is not 
+    		//restricted on the db level, so at least for now I used findMany.
+    		List<ColfusionExecuteinfo> executeInfoRecords = executionInfoDAO.findMany(query);
+            
+            HibernateUtil.commitTransaction();
+            
+            return executeInfoRecords;
+        } catch (NonUniqueResultException ex) {
+            logger.error("getExistingExecutionLogId failed NonUniqueResultException", ex);
+            
+            throw ex;
+        } catch (HibernateException ex) {
+        	logger.error("getExistingExecutionLogId failed HibernateException", ex);
+        	
+        	throw ex;
+        }
+	}
 
 	/**
 	 * Inserts a new records into executioninfo table.

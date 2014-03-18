@@ -15,12 +15,14 @@ import org.apache.logging.log4j.Logger;
 import org.xml.sax.SAXException;
 
 import edu.pitt.sis.exp.colfusion.ConfigManager;
+import edu.pitt.sis.exp.colfusion.PropertyKeys;
 import edu.pitt.sis.exp.colfusion.importers.ktr.KTRManager;
+import edu.pitt.sis.exp.colfusion.persistence.managers.SourceInfoManager;
+import edu.pitt.sis.exp.colfusion.persistence.managers.SourceInfoManagerImpl;
 import edu.pitt.sis.exp.colfusion.tests.PropertyKeysTest;
-import edu.pitt.sis.exp.colfusion.utils.IOUtils;
-import edu.pitt.sis.exp.colfusion.utils.models.IOUtilsStoredFileInfoModel;
 import edu.pitt.sis.exp.colfusion.viewmodels.DatasetVariableViewModel;
 import edu.pitt.sis.exp.colfusion.viewmodels.FileContentInfoViewModel;
+import edu.pitt.sis.exp.colfusion.viewmodels.StoryTargetDB;
 import edu.pitt.sis.exp.colfusion.viewmodels.WorksheetViewModel;
 import junit.framework.TestCase;
 
@@ -81,6 +83,29 @@ public class KTRManagerTest extends TestCase {
 		
 		try {
 			ktrManager.createTemplate(fileContentInfoViewModel);
+			
+			SourceInfoManager storyMgr = new SourceInfoManagerImpl();
+			ArrayList<String> ktrLocations = storyMgr.getStoryKTRLocations(sid);
+			
+			assertEquals(1, ktrLocations.size());
+			
+			ktrManager = new KTRManager(sid);
+			ktrManager.loadKTR(ktrLocations.get(0));
+			
+			assertEquals("Sheet1", ktrManager.getTableName());
+			
+			StoryTargetDB dbInfo = ktrManager.readTargetDatabaseInfo();
+			
+			String dbNameExpected = configManager.getPropertyByName(PropertyKeys.targetFileToDBDatabase_DatabaseNamePrefix) + sid;
+			String dbNameActual =  dbInfo.getDatabaseName();
+			
+			assertEquals(dbNameExpected, dbNameActual);
+			assertEquals(configManager.getPropertyByName(PropertyKeys.targetFileToDBDatabase_Type), dbInfo.getDriver());
+			assertEquals(configManager.getPropertyByName(PropertyKeys.targetFileToDBDatabase_Password), dbInfo.getPassword());
+			assertEquals(configManager.getPropertyByName(PropertyKeys.targetFileToDBDatabase_Port), String.valueOf(dbInfo.getPort()));
+			assertEquals(configManager.getPropertyByName(PropertyKeys.targetFileToDBDatabase_Server), dbInfo.getServerAddress());
+			assertEquals(configManager.getPropertyByName(PropertyKeys.targetFileToDBDatabase_UserName), dbInfo.getUserName());
+			
 		} catch (IOException e) {
 			logger.error("testCreateKTR failed!", e);
 		} catch (ParserConfigurationException e) {

@@ -63,7 +63,7 @@ public class KTRManager {
 	}
 	
 	/**
-	 * Create a ktr file from the template file, and populate the ktr file with information from the {@link FileContentInfoViewModel} information.
+	 * Create KTR(s) file from the template file (one ktr file for one worksheet), and populate the ktr file with information from the {@link FileContentInfoViewModel} information.
 	 * The function should be called for each file separately. As the result a new ktr file will be created for each sheet in the file.
 	 * 
 	 * If the otherFiles field is not empty, then those files should have exactly the same structure as the main file. The ktr template will then 
