@@ -6,7 +6,6 @@ package edu.pitt.sis.exp.colfusion.importers.ktr;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import javax.xml.parsers.ParserConfigurationException;

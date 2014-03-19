@@ -3,7 +3,13 @@
  */
 package edu.pitt.sis.exp.colfusion.persistence.databaseHandlers;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 import java.util.List;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * @author Evgeny
@@ -17,8 +23,17 @@ public abstract class DatabaseHandlerBase {
     private String database;
     private DatabaseHanderType databaseHanderType;
     
+    protected Connection connection;
+    
+    Logger logger = LogManager.getLogger(DatabaseHandlerBase.class.getName());
+    
     public DatabaseHandlerBase(String host, int port, String user, String password, String database, DatabaseHanderType databaseHanderType) {
-    	
+    	setHost(host);
+    	setPort(port);
+    	setUser(user);
+    	setPassword(password);
+    	setDatabase(database);
+    	setDatabaseHanderType(databaseHanderType);
     }
     
 	/**
@@ -95,6 +110,30 @@ public abstract class DatabaseHandlerBase {
 	}
     
 	/**
+	 * Initializes the connection.
+	 * @return the connection.
+	 * @throws SQLException
+	 */
+	protected void openConnection(String connectionString) throws SQLException {
+		try {
+			connection = DriverManager.getConnection(connectionString, getUser(), getPassword());
+			
+		} catch (SQLException e) {
+			
+			logger.error("getConnection failed in MySQLDatabaseHandler", e);
+			throw e;
+		} 
+	}
+	
+	/**
+	 * Closes the connection.
+	 * @throws SQLException 
+	 */
+	public void close() throws SQLException {
+		connection.close();
+	}
+	
+	/**
      * Create a database for given name if it doesn't exists yet.
      */
 	public abstract void createDatabaseIfNotExist();
@@ -105,5 +144,7 @@ public abstract class DatabaseHandlerBase {
 	 * @param variables the list of columns.
 	 */
 	public abstract void createTableIfNotExist(String tableName, List<String> variables);
+	
+	
 	
 }
