@@ -80,12 +80,27 @@ public class DataLoadExecutorKTRImpl extends DataLoadExecutorBaseImpl implements
 				//therefore we need only one KTR file to extract and save target database connection info.
 				
 				targetDBConnectionInfo = updateTargetDatabaseConnectionInfo(executionInfoMgr, executionLogId, ktrManager, ktrLocation);
-				databaseHandlerBase = createTargetDatabase(executionInfoMgr, executionLogId, targetDBConnectionInfo);
+				try {
+					databaseHandlerBase = createTargetDatabase(executionInfoMgr, executionLogId, targetDBConnectionInfo);
+				} catch (Exception e) {
+					throw e;
+				}
+				finally {
+					databaseHandlerBase.close();
+				}
+				
 				
 				firstKtr = false;
 			}
 		
-			createTargetTable(executionInfoMgr, executionLogId, databaseHandlerBase, ktrManager);
+			try {
+				createTargetTable(executionInfoMgr, executionLogId, databaseHandlerBase, ktrManager);
+			} catch (Exception e) {
+				throw e;
+			}
+			finally {
+				databaseHandlerBase.close();
+			}
 			
 			String command = getPentahoCarteURL(executionInfoMgr, executionLogId, ktrManager, ktrLocation);
 			
@@ -94,16 +109,22 @@ public class DataLoadExecutorKTRImpl extends DataLoadExecutorBaseImpl implements
 			//NOTE: Cannot say it is successful at this point, because the KTR transformation might be still running.
 			//What happens is the following: the database has triggers on pentaho log_transformation table which updates execution info table.
 			//executionInfoMgr.updateStatus(executionLogId, DataLoadExecutionStatus.SUCCESS);
+			
+			executionInfoMgr.appendLog(executionLogId, "Finished Execute method, not the ktr is probably being execution by the carte server. "
+					+ "The DataLoadExecutorKTRImpl proces is however done.");
 		}
 	}
 
 	private void createTargetTable(ExecutionInfoManager executionInfoMgr, int executionLogId, DatabaseHandlerBase databaseHandlerBase, KTRManager ktrManager) 
 			throws Exception {		
-		executionInfoMgr.appendLog(executionLogId, String.format("Starting to create target table %s", ktrManager));
 		
-		databaseHandlerBase.createTableIfNotExist(ktrManager.getTableName(), ktrManager.getTargetTableColumns());
+		String tableName = ktrManager.getTableName();
 		
-		executionInfoMgr.appendLog(executionLogId, String.format("Finished to create target table %s", ktrManager));
+		executionInfoMgr.appendLog(executionLogId, String.format("Starting to create target table %s", tableName));
+		
+		databaseHandlerBase.createTableIfNotExist(tableName, ktrManager.getTargetTableColumns());
+		
+		executionInfoMgr.appendLog(executionLogId, String.format("Finished to create target table %s", tableName));
 	}
 
 	private DatabaseHandlerBase createTargetDatabase(ExecutionInfoManager executionInfoMgr, int executionLogId, StoryTargetDB targetDBConnectionInfo) 
