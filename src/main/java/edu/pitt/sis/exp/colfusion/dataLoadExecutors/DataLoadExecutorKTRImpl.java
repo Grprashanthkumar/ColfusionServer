@@ -111,10 +111,10 @@ public class DataLoadExecutorKTRImpl extends DataLoadExecutorBaseImpl implements
 		executionInfoMgr.appendLog(executionLogId, "Starting to create target database");
 		
 		DatabaseHandlerBase databaseHandlerBase = DatabaseHandlerFactory.getDatabaseHandler(targetDBConnectionInfo.getServerAddress(), targetDBConnectionInfo.getPort(), 
-				targetDBConnectionInfo.getUserName(), targetDBConnectionInfo.getPassword(), targetDBConnectionInfo.getDatabaseName(), 
+				targetDBConnectionInfo.getUserName(), targetDBConnectionInfo.getPassword(), "", 
 				DatabaseHanderType.fromString(targetDBConnectionInfo.getDriver()));
 		
-		databaseHandlerBase.createDatabaseIfNotExist();
+		databaseHandlerBase.createDatabaseIfNotExist(targetDBConnectionInfo.getDatabaseName());
 		
 		executionInfoMgr.appendLog(executionLogId, "Finished to create target database");
 		

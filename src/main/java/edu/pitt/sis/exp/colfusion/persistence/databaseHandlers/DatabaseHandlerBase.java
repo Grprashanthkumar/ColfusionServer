@@ -130,13 +130,33 @@ public abstract class DatabaseHandlerBase {
 	 * @throws SQLException 
 	 */
 	public void close() throws SQLException {
-		connection.close();
+		if (connection != null) {
+			try { 
+				connection.close(); 
+			} 
+			catch (SQLException ignore) {
+				logger.error("close failed ", ignore);
+			}
+		}
 	}
 	
 	/**
-     * Create a database for given name if it doesn't exists yet.
+	 * Creates a connection string and return it.
+	 * @return connection string.
+	 */
+	public abstract String getConnectionString();
+	
+	/**
+     * Create a database for given name if it doesn't exist yet. In both cases connection is updated to use the database.
+	 * @throws SQLException 
      */
-	public abstract void createDatabaseIfNotExist();
+	public abstract void createDatabaseIfNotExist(String databaseName) throws SQLException;
+	
+	/**
+     * Delete a database for given name if it exists yet. 
+	 * @throws SQLException 
+     */
+	public abstract void deleteDatabaseIfNotExist(String databaseName) throws SQLException;
 
 	/**
 	 * Creates a table where the data should be loaded.
