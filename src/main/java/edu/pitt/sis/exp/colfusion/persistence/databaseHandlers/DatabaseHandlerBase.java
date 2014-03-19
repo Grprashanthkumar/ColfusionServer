@@ -148,22 +148,26 @@ public abstract class DatabaseHandlerBase {
 	
 	/**
      * Create a database for given name if it doesn't exist yet. In both cases connection is updated to use the database.
+     * @return if execution was successful.
 	 * @throws SQLException 
      */
-	public abstract void createDatabaseIfNotExist(String databaseName) throws SQLException;
+	public abstract boolean createDatabaseIfNotExist(String databaseName) throws SQLException;
 	
 	/**
      * Delete a database for given name if it exists yet. 
+     * @return if execution was successful.
 	 * @throws SQLException 
      */
-	public abstract void deleteDatabaseIfNotExist(String databaseName) throws SQLException;
+	public abstract boolean deleteDatabaseIfNotExist(String databaseName) throws SQLException;
 
 	/**
 	 * Creates a table where the data should be loaded.
 	 * @param tableName the name of the table to create.
 	 * @param variables the list of columns.
+	 * @return if execution was successful.
+	 * @throws SQLException 
 	 */
-	public abstract void createTableIfNotExist(String tableName, List<String> variables);
+	public abstract boolean createTableIfNotExist(String tableName, List<String> variables) throws SQLException;
 	
 	
 	

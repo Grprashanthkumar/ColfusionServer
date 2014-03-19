@@ -51,12 +51,12 @@ public class MySQLDatabaseHandler extends DatabaseHandlerBase {
 	}
 	
 	@Override
-	public void createDatabaseIfNotExist(String databaseName) throws SQLException {
+	public boolean createDatabaseIfNotExist(String databaseName) throws SQLException {
 		Statement statement = null;
 		
 		try {
 			statement = connection.createStatement();
-			
+			//TODO: is SQL injection possible here? because we just put database name without any checks and the database name can come from user (or not?)
 			String sql = String.format("CREATE DATABASE IF NOT EXISTS `%s`", databaseName);
 			
 			statement.executeUpdate(sql);
@@ -66,6 +66,8 @@ public class MySQLDatabaseHandler extends DatabaseHandlerBase {
 			setDatabase(databaseName);
 			
 			openConnection(getConnectionString());
+			
+			return true;
 		} catch (SQLException e) {
 			logger.error(String.format("createDatabaseIfNotExist failed for %s", databaseName));
 			throw e;
@@ -82,18 +84,53 @@ public class MySQLDatabaseHandler extends DatabaseHandlerBase {
 	}
 
 	@Override
-	public void createTableIfNotExist(String tableName, List<String> variables) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void deleteDatabaseIfNotExist(String databaseName) throws SQLException {
+	public boolean createTableIfNotExist(String tableName, List<String> variables) throws SQLException {
 		Statement statement = null;
 		
 		try {
 			statement = connection.createStatement();
+			//TODO: is SQL injection possible here? because we just put database name without any checks and the database name can come from user (or not?)
 			
+			StringBuilder sqlBuilder = new StringBuilder();
+			
+			sqlBuilder.append(String.format("CREATE TABLE IF NOT EXISTS `%s` (", tableName));
+			
+			for (int i = 0; i < variables.size(); i++) {
+				//FIXME: for now all columns are TEXT, actually we could use the info provided by user about each column
+				
+				if (i == variables.size() - 1) { // The difference is in the last character: comma or parenthesis.
+					sqlBuilder.append(String.format("`%s` TEXT)", variables.get(i)));
+				}
+				else {
+					sqlBuilder.append(String.format("`%s` TEXT,", variables.get(i)));
+				}
+			}
+			
+			statement.executeUpdate(sqlBuilder.toString());
+			
+			return true;
+		} catch (SQLException e) {
+			logger.error(String.format("createTableIfNotExist failed for %s", tableName));
+			throw e;
+		}
+		finally {
+			if (statement != null) {
+				try { 
+					statement.close(); 
+				} 
+				catch (SQLException ignore) {				
+				}
+			}
+		}
+	}
+
+	@Override
+	public boolean deleteDatabaseIfNotExist(String databaseName) throws SQLException {
+		Statement statement = null;
+		
+		try {
+			statement = connection.createStatement();
+			//TODO: is SQL injection possible here? because we just put database name without any checks and the database name can come from user (or not?)
 			String sql = String.format("DROP DATABASE IF EXISTS `%s`", databaseName);
 			
 			statement.executeUpdate(sql);
@@ -103,6 +140,8 @@ public class MySQLDatabaseHandler extends DatabaseHandlerBase {
 			setDatabase("");
 			
 			openConnection(getConnectionString());
+			
+			return true;
 		} catch (SQLException e) {
 			logger.error(String.format("createDatabaseIfNotExist failed for %s", databaseName));
 			throw e;
