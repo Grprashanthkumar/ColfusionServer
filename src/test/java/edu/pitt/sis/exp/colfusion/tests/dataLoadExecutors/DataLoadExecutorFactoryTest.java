@@ -60,22 +60,22 @@ public class DataLoadExecutorFactoryTest  extends TestCase {
 			
 			ConfigManager configManager = ConfigManager.getInstance();
 			
-			assertEquals(configManager.getPropertyByName(PropertyKeys.targetFileToDBDatabase_DatabaseNamePrefix) + sid + alterValue, 
+			assertEquals(configManager.getPropertyByName(PropertyKeys.targetFileToDBDatabase_DatabaseNamePrefix) + sid, // + alterValue
 					storyTargetDB.getDatabaseName());
 			
-			assertEquals(configManager.getPropertyByName(PropertyKeys.targetFileToDBDatabase_UserName) + alterValue, 
+			assertEquals(configManager.getPropertyByName(PropertyKeys.targetFileToDBDatabase_UserName), // + alterValue
 					storyTargetDB.getUserName());
 			
-			assertEquals(configManager.getPropertyByName(PropertyKeys.targetFileToDBDatabase_Password) + alterValue, 
+			assertEquals(configManager.getPropertyByName(PropertyKeys.targetFileToDBDatabase_Password), // + alterValue
 					storyTargetDB.getPassword());
 			
-			assertEquals(configManager.getPropertyByName(PropertyKeys.targetFileToDBDatabase_Server) + alterValue, 
+			assertEquals(configManager.getPropertyByName(PropertyKeys.targetFileToDBDatabase_Server), // + alterValue 
 					storyTargetDB.getServerAddress());
 			
-			assertEquals(configManager.getPropertyByName(PropertyKeys.targetFileToDBDatabase_Port) + alterValue, 
+			assertEquals(configManager.getPropertyByName(PropertyKeys.targetFileToDBDatabase_Port), // + alterValue 
 					String.valueOf(storyTargetDB.getPort()));
 			
-			assertEquals(configManager.getPropertyByName(PropertyKeys.targetFileToDBDatabase_Type) + alterValue, 
+			assertEquals(configManager.getPropertyByName(PropertyKeys.targetFileToDBDatabase_Type), // + alterValue 
 					storyTargetDB.getDriver());
 			
 			assertEquals(sid, 
