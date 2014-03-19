@@ -3,6 +3,8 @@
  */
 package edu.pitt.sis.exp.colfusion.dataLoadExecutors;
 
+import edu.pitt.sis.exp.colfusion.persistence.databaseHandlers.LinkedServerHandler;
+import edu.pitt.sis.exp.colfusion.persistence.managers.ExecutionInfoManager;
 import edu.pitt.sis.exp.colfusion.persistence.managers.SourceInfoManager;
 import edu.pitt.sis.exp.colfusion.persistence.managers.SourceInfoManagerImpl;
 import edu.pitt.sis.exp.colfusion.process.ProcessBase;
@@ -19,21 +21,53 @@ public abstract class DataLoadExecutorBaseImpl extends ProcessBase implements Da
 	protected int sid;
 	
 	@Override
-	public void execute() throws Exception {
-		// TODO add insert into sourceinfoDB table and linked servers.
-
-	}
+	public abstract void execute() throws Exception;
 
 	/**
 	 * Updates/inserts record about target database (the database where the data should be loaded).
+	 * @param executionLogId 
+	 * @param executionInfoMgr 
 	 * 
 	 * @param sourceDBInfo the info about target database.
 	 * @throws Exception 
 	 */
-	public void updateSourceDBInfo(StoryTargetDB sourceDBInfo) throws Exception {
+	protected void updateSourceDBInfo(ExecutionInfoManager executionInfoMgr, int executionLogId, StoryTargetDB sourceDBInfo) throws Exception {
+		
+		executionInfoMgr.appendLog(executionLogId, String.format("Starting to update sourceintoDB record with target database conneciton info : %s ", 
+				sourceDBInfo.toString()));
+		
 		SourceInfoManager storyMgr = new SourceInfoManagerImpl();
 		
 		storyMgr.saveOrUpdateSourceInfoDB(sourceDBInfo);
+		
+		executionInfoMgr.appendLog(executionLogId, "Finished update sourceintoDB record with target database conneciton info");
+	}
+	
+	/**
+	 * Creates or updates Linked server for the given target database.
+	 * @param executionInfoMgr execution info manager that will be used to log the progress/log message.
+	 * @param executionLogId the id of the execution info record where log should be recorded.
+	 * @param sourceDBInfo target database connection info.
+	 * @throws Exception
+	 */
+	protected void updateLinkedServer(ExecutionInfoManager executionInfoMgr, int executionLogId, StoryTargetDB sourceDBInfo) throws Exception {
+		
+		executionInfoMgr.appendLog(executionLogId, String.format("Starting to update Linked Server with target database conneciton info : %s ", 
+				sourceDBInfo.toString()));
+		
+		LinkedServerHandler linkedServerHandler = null;
+		
+		try {
+			linkedServerHandler = new LinkedServerHandler(sourceDBInfo);
+			
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		finally {
+			linkedServerHandler.close();
+		}
+				
+		executionInfoMgr.appendLog(executionLogId, "Finished update Linked Server with target database conneciton info");
 	}
 	
 	public void setSid(int sid) {

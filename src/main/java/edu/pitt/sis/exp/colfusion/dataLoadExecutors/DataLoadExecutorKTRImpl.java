@@ -80,6 +80,7 @@ public class DataLoadExecutorKTRImpl extends DataLoadExecutorBaseImpl implements
 				//therefore we need only one KTR file to extract and save target database connection info.
 				
 				targetDBConnectionInfo = updateTargetDatabaseConnectionInfo(executionInfoMgr, executionLogId, ktrManager, ktrLocation);
+				updateLinkedServerInfo(executionInfoMgr, executionLogId, targetDBConnectionInfo);
 				try {
 					databaseHandlerBase = createTargetDatabase(executionInfoMgr, executionLogId, targetDBConnectionInfo);
 				} catch (Exception e) {
@@ -88,7 +89,6 @@ public class DataLoadExecutorKTRImpl extends DataLoadExecutorBaseImpl implements
 				finally {
 					databaseHandlerBase.close();
 				}
-				
 				
 				firstKtr = false;
 			}
@@ -228,12 +228,7 @@ public class DataLoadExecutorKTRImpl extends DataLoadExecutorBaseImpl implements
 			
 			executionInfoMgr.appendLog(executionLogId, String.format("Finished reading traget database info from the KTR file located at %s", ktrLocation));
 			
-			executionInfoMgr.appendLog(executionLogId, String.format("Starting to update sourceintoDB record with target database conneciton info fetched form the ktr file %s. "
-					+ "Here is what connection info is: %s ", ktrLocation, sourceDBInfo.toString()));
-			
-			super.updateSourceDBInfo(sourceDBInfo);
-			
-			executionInfoMgr.appendLog(executionLogId, "Finished update sourceintoDB record with target database conneciton info");
+			super.updateSourceDBInfo(executionInfoMgr, executionLogId, sourceDBInfo);
 			
 			return sourceDBInfo;
 		} catch (Exception e) {
@@ -241,8 +236,27 @@ public class DataLoadExecutorKTRImpl extends DataLoadExecutorBaseImpl implements
 			executionInfoMgr.updateStatus(executionLogId, DataLoadExecutionStatus.FAILED);
 			
 			throw e;
-		}
-		
+		}	
+	}
+	
+	/**
+	 * Creates or updates Linked server for the given target database.
+	 * @param executionInfoMgr execution info manager that will be used to log the progress/log message.
+	 * @param executionLogId the id of the execution info record where log should be recorded.
+	 * @param sourceDBInfo target database connection info.
+	 * @throws Exception
+	 */
+	private void updateLinkedServerInfo(ExecutionInfoManager executionInfoMgr, int executionLogId, StoryTargetDB sourceDBInfo) throws Exception {
+		try {
+			
+			super.updateLinkedServer(executionInfoMgr, executionLogId, sourceDBInfo);
+			
+		} catch (Exception e) {
+			
+			executionInfoMgr.updateStatus(executionLogId, DataLoadExecutionStatus.FAILED);
+			
+			throw e;
+		}		
 	}
 
 	@Override

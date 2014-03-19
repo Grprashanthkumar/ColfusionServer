@@ -11,7 +11,7 @@ import org.apache.logging.log4j.Logger;
  *
  */
 public enum DatabaseHanderType {
-	MYSQL("mysql"), MSSQL("mssql"), POSTGRESQL("postgresql");
+	MYSQL("mysql"), MSSQL("mssql"), POSTGRESQL("postgresql"), LINKEDSERVER("linked server");
     
 	private static Logger logger = LogManager.getLogger(DatabaseHanderType.class.getName());
 	
