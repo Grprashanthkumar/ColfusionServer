@@ -128,4 +128,19 @@ public class PropertyKeys {
 	public static String cartePort = "cartePort";
 	public static String carteUser = "carteUser";
 	public static String cartePassword = "cartePassword";
+	
+	
+	
+	
+	
+	
+	public static String linkedServerDatabaseName = "linkedServerDatabaseName";
+	public static String linkedServerUserName = "linkedServerUserName";
+	public static String linkedServerPassword = "linkedServerPassword";
+	public static String linkedServerServer = "linkedServerServer";
+	public static String linkedServerPort = "linkedServerPort";
+	
+	
+	public static String linkedServerColFusionHost = "linkedServerColFusionHost";
+	
 }

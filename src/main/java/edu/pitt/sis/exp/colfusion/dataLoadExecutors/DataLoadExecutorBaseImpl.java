@@ -3,6 +3,8 @@
  */
 package edu.pitt.sis.exp.colfusion.dataLoadExecutors;
 
+import edu.pitt.sis.exp.colfusion.ConfigManager;
+import edu.pitt.sis.exp.colfusion.PropertyKeys;
 import edu.pitt.sis.exp.colfusion.persistence.databaseHandlers.LinkedServerHandler;
 import edu.pitt.sis.exp.colfusion.persistence.managers.ExecutionInfoManager;
 import edu.pitt.sis.exp.colfusion.persistence.managers.SourceInfoManager;
@@ -58,7 +60,17 @@ public abstract class DataLoadExecutorBaseImpl extends ProcessBase implements Da
 		LinkedServerHandler linkedServerHandler = null;
 		
 		try {
-			linkedServerHandler = new LinkedServerHandler(sourceDBInfo);
+			
+			ConfigManager configManager = ConfigManager.getInstance();
+			
+			linkedServerHandler = new LinkedServerHandler(configManager.getPropertyByName(PropertyKeys.linkedServerServer), 
+					Integer.valueOf(configManager.getPropertyByName(PropertyKeys.linkedServerPort)), 
+					configManager.getPropertyByName(PropertyKeys.linkedServerUserName), 
+					configManager.getPropertyByName(PropertyKeys.linkedServerPassword), 
+					configManager.getPropertyByName(PropertyKeys.linkedServerDatabaseName),
+					executionInfoMgr, executionLogId);
+			
+			linkedServerHandler.addOrUpdateLinkedServer(sourceDBInfo);
 			
 		} catch (Exception e) {
 			// TODO: handle exception
