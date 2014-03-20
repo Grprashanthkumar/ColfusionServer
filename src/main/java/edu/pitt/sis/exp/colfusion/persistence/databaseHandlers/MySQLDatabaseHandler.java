@@ -10,6 +10,8 @@ import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import edu.pitt.sis.exp.colfusion.persistence.managers.ExecutionInfoManager;
+
 /**
  * @author Evgeny
  *
@@ -26,17 +28,22 @@ public class MySQLDatabaseHandler extends DatabaseHandlerBase {
 	 * @param password the password of the user.
 	 * @param database the database name which should be used. This parameter can be empty string if the database is doesn't exist yet.
 	 * @param databaseHanderType the type of the database (vendor).
-	 * @throws ClassNotFoundException
-	 * @throws SQLException
+	 * @throws Exception 
 	 */
 	public MySQLDatabaseHandler(String host, int port, String user,
 			String password, String database,
-			DatabaseHanderType databaseHanderType) throws ClassNotFoundException, SQLException {
-		super(host, port, user, password, database, databaseHanderType);
+			DatabaseHanderType databaseHanderType,
+			ExecutionInfoManager executionInfoMgr, int executionLogId) throws Exception {
+		super(host, port, user, password, database, databaseHanderType, executionInfoMgr, executionLogId);
 		
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
 		} catch (ClassNotFoundException e) {
+			
+			if (executionInfoMgr != null) {
+				executionInfoMgr.appendLog(executionLogId, String.format("[ERROR] MySQLDatabaseHandler failed: Could not load MySQL JDBC driver. Error: %s", 
+					 e.toString()));
+			}
 			
 			logger.error("MySQLDatabaseHandler failed: Could not load MySQL JDBC driver", e);
 			throw e;
@@ -51,13 +58,15 @@ public class MySQLDatabaseHandler extends DatabaseHandlerBase {
 	}
 	
 	@Override
-	public boolean createDatabaseIfNotExist(String databaseName) throws SQLException {
+	public boolean createDatabaseIfNotExist(String databaseName) throws Exception {
 		Statement statement = null;
+		
+		String sql = "";
 		
 		try {
 			statement = connection.createStatement();
 			//TODO: is SQL injection possible here? because we just put database name without any checks and the database name can come from user (or not?)
-			String sql = String.format("CREATE DATABASE IF NOT EXISTS `%s`", databaseName);
+			sql = String.format("CREATE DATABASE IF NOT EXISTS `%s`", databaseName);
 			
 			statement.executeUpdate(sql);
 			
@@ -69,6 +78,12 @@ public class MySQLDatabaseHandler extends DatabaseHandlerBase {
 			
 			return true;
 		} catch (SQLException e) {
+			
+			if (executionInfoMgr != null) {
+				executionInfoMgr.appendLog(executionLogId, String.format("[ERROR] createTableIfNotExist failed for database %s when executing this query %s. Error: %s", 
+					databaseName, sql, e.toString()));
+			}
+			
 			logger.error(String.format("createDatabaseIfNotExist failed for %s", databaseName));
 			throw e;
 		}
@@ -84,8 +99,10 @@ public class MySQLDatabaseHandler extends DatabaseHandlerBase {
 	}
 
 	@Override
-	public boolean createTableIfNotExist(String tableName, List<String> variables) throws SQLException {
+	public boolean createTableIfNotExist(String tableName, List<String> variables) throws Exception {
 		Statement statement = null;
+		
+		String sql = "";
 		
 		try {
 			statement = connection.createStatement();
@@ -106,11 +123,19 @@ public class MySQLDatabaseHandler extends DatabaseHandlerBase {
 				}
 			}
 			
-			statement.executeUpdate(sqlBuilder.toString());
+			sql = sqlBuilder.toString();
+			
+			statement.executeUpdate(sql);
 			
 			return true;
 		} catch (SQLException e) {
-			logger.error(String.format("createTableIfNotExist failed for %s", tableName));
+			
+			if (executionInfoMgr != null) {
+				executionInfoMgr.appendLog(executionLogId, String.format("[ERROR] createTableIfNotExist failed for table %s when executing this query %s. Error: %s", 
+					tableName, sql, e.toString()));
+			}
+			
+			logger.error(String.format("createTableIfNotExist failed for %s. Error Message:", tableName, e.toString()));
 			throw e;
 		}
 		finally {
@@ -125,13 +150,15 @@ public class MySQLDatabaseHandler extends DatabaseHandlerBase {
 	}
 
 	@Override
-	public boolean deleteDatabaseIfNotExist(String databaseName) throws SQLException {
+	public boolean deleteDatabaseIfNotExist(String databaseName) throws Exception {
 		Statement statement = null;
+		
+		String sql = "";
 		
 		try {
 			statement = connection.createStatement();
 			//TODO: is SQL injection possible here? because we just put database name without any checks and the database name can come from user (or not?)
-			String sql = String.format("DROP DATABASE IF EXISTS `%s`", databaseName);
+			sql = String.format("DROP DATABASE IF EXISTS `%s`", databaseName);
 			
 			statement.executeUpdate(sql);
 			
@@ -143,6 +170,12 @@ public class MySQLDatabaseHandler extends DatabaseHandlerBase {
 			
 			return true;
 		} catch (SQLException e) {
+			
+			if (executionInfoMgr != null) {
+				executionInfoMgr.appendLog(executionLogId, String.format("[ERROR] deleteDatabaseIfNotExist failed for database %s when executing this query %s. Error: %s", 
+					databaseName, sql, e.toString()));
+			}
+			
 			logger.error(String.format("createDatabaseIfNotExist failed for %s", databaseName));
 			throw e;
 		}

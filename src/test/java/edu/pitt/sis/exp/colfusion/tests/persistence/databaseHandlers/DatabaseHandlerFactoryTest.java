@@ -36,13 +36,13 @@ public class DatabaseHandlerFactoryTest extends TestCase {
 					Integer.valueOf(configManager.getPropertyByName(PropertyKeysTest.testTargetFileToDBDatabase_Port)), 
 					configManager.getPropertyByName(PropertyKeysTest.testTargetFileToDBDatabase_UserName), 
 					configManager.getPropertyByName(PropertyKeysTest.testTargetFileToDBDatabase_Password), 
-					"", DatabaseHanderType.MYSQL);
+					"", DatabaseHanderType.MYSQL, null, 0);
 			
 			dbHandler2 = DatabaseHandlerFactory.getDatabaseHandler(configManager.getPropertyByName(PropertyKeysTest.testTargetFileToDBDatabase_Server), 
 					Integer.valueOf(configManager.getPropertyByName(PropertyKeysTest.testTargetFileToDBDatabase_Port)), 
 					configManager.getPropertyByName(PropertyKeysTest.testTargetFileToDBDatabase_UserName), 
 					configManager.getPropertyByName(PropertyKeysTest.testTargetFileToDBDatabase_Password), 
-					"", DatabaseHanderType.MYSQL);
+					"", DatabaseHanderType.MYSQL, null, 0);
 			
 		} catch (NumberFormatException e) {
 			// TODO Auto-generated catch block
@@ -85,7 +85,7 @@ public class DatabaseHandlerFactoryTest extends TestCase {
 					Integer.valueOf(configManager.getPropertyByName(PropertyKeysTest.testTargetFileToDBDatabase_Port)), 
 					configManager.getPropertyByName(PropertyKeysTest.testTargetFileToDBDatabase_UserName), 
 					configManager.getPropertyByName(PropertyKeysTest.testTargetFileToDBDatabase_Password), 
-					"", DatabaseHanderType.MYSQL);
+					"", DatabaseHanderType.MYSQL, null, 0);
 			
 			//Should not fail even though the database does not exist yet.
 			dbHandler1.deleteDatabaseIfNotExist(configManager.getPropertyByName(PropertyKeysTest.testTargetFileToDBDatabase_DatabaseNamePrefix));
@@ -130,7 +130,7 @@ public class DatabaseHandlerFactoryTest extends TestCase {
 					Integer.valueOf(configManager.getPropertyByName(PropertyKeysTest.testTargetFileToDBDatabase_Port)), 
 					configManager.getPropertyByName(PropertyKeysTest.testTargetFileToDBDatabase_UserName), 
 					configManager.getPropertyByName(PropertyKeysTest.testTargetFileToDBDatabase_Password), 
-					"", DatabaseHanderType.MYSQL);
+					"", DatabaseHanderType.MYSQL, null, 0);
 			
 			
 			dbHandler1.createDatabaseIfNotExist(configManager.getPropertyByName(PropertyKeysTest.testTargetFileToDBDatabase_DatabaseNamePrefix));

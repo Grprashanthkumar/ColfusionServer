@@ -55,7 +55,9 @@ public class LinkedServerHandler {
 			Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
 		} catch (ClassNotFoundException e) {
 			
-			executionInfoMgr.appendLog(executionLogId, String.format("MySQLDatabaseHandler failed: Could not load MS SQL JDBC driver. %s", e.toString()));
+			if (executionInfoMgr != null) {
+				executionInfoMgr.appendLog(executionLogId, String.format("[ERROR] MySQLDatabaseHandler failed: Could not load MS SQL JDBC driver. %s", e.toString()));
+			}
 			
 			logger.error("MySQLDatabaseHandler failed: Could not load MS SQL JDBC driver", e);
 			throw e;
@@ -145,8 +147,10 @@ public class LinkedServerHandler {
 			
 		} catch (SQLException e) {
 			
-			executionInfoMgr.appendLog(executionLogId, String.format("openConnection failed: Could not get connection. "
+			if (executionInfoMgr != null) {
+				executionInfoMgr.appendLog(executionLogId, String.format("[ERROR] openConnection failed: Could not get connection. "
 					+ "Connection string: %s. User: %s. Password: %s. Error message: %s", connectionString, getUser(), getPassword(), e.toString()));
+			}
 			
 			logger.error("getConnection failed in LinkedServerHandler", e);
 			throw e;
@@ -190,8 +194,10 @@ public class LinkedServerHandler {
 			}
 		} catch (Exception e) {
 			
-			executionInfoMgr.appendLog(executionLogId, String.format("addOrUpdateLinkedServer failed. "
+			if (executionInfoMgr != null) {
+				executionInfoMgr.appendLog(executionLogId, String.format("[ERROR] addOrUpdateLinkedServer failed. "
 					+ "Target database: %s. Error message: %s", sourceDBInfo.toString(), e.toString()));
+			}
 			
 			throw e;
 		}
@@ -212,8 +218,10 @@ public class LinkedServerHandler {
 			statement.executeUpdate(sql);
 		} catch (SQLException e) {
 			
-			executionInfoMgr.appendLog(executionLogId, String.format("addLinkedServerLogin failed when execution this query: "
+			if (executionInfoMgr != null) {
+				executionInfoMgr.appendLog(executionLogId, String.format("[ERROR] addLinkedServerLogin failed when execution this query: "
 					+ "Qeury: %s. Error message: %s", sql, e.toString()));
+			}
 			
 			logger.error(String.format("addLinkedServerLogin failed when execution this query: %s", sql));
 			throw e;
@@ -240,8 +248,10 @@ public class LinkedServerHandler {
 			return true;
 		} catch (SQLException e) {
 			
-			executionInfoMgr.appendLog(executionLogId, String.format("addLinkedServer failed when execution this query: "
+			if (executionInfoMgr != null) {
+				executionInfoMgr.appendLog(executionLogId, String.format("[ERROR] addLinkedServer failed when execution this query: "
 					+ "Qeury: %s. Error message: %s", sql, e.toString()));
+			}
 			
 			logger.error(String.format("addLinkedServer failed when execution this query: %s", sql));
 			throw e;
@@ -284,8 +294,10 @@ public class LinkedServerHandler {
 				
 			default:
 				
-				executionInfoMgr.appendLog(executionLogId, String.format("DatabaseHandler type not found in prepareAddLinkedServerSQLString. Driver: %s ",
+				if (executionInfoMgr != null) {
+					executionInfoMgr.appendLog(executionLogId, String.format("[ERROR] DatabaseHandler type not found in prepareAddLinkedServerSQLString. Driver: %s ",
 						vendor));
+				}
 				
 				logger.error("DatabaseHandler type not found in addOrUpdateLinkedServer", vendor);
 				
@@ -311,8 +323,10 @@ public class LinkedServerHandler {
 			statement.executeUpdate(sql);
 		} catch (SQLException e) {
 			
-			executionInfoMgr.appendLog(executionLogId, String.format("dropLinkedServerIfExists failed when trying to drop %s linked server by executing this query: %s",
+			if (executionInfoMgr != null) {
+				executionInfoMgr.appendLog(executionLogId, String.format("[ERROR] dropLinkedServerIfExists failed when trying to drop %s linked server by executing this query: %s",
 					linkedServerName, sql));
+			}
 			
 			logger.error(String.format("dropLinkedServerIfExists failed for %s", linkedServerName));
 			throw e;

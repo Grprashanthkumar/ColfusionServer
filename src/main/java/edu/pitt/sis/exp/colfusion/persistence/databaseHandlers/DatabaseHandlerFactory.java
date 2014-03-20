@@ -6,6 +6,8 @@ package edu.pitt.sis.exp.colfusion.persistence.databaseHandlers;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import edu.pitt.sis.exp.colfusion.persistence.managers.ExecutionInfoManager;
+
 /**
  * @author Evgeny
  *
@@ -25,12 +27,16 @@ public class DatabaseHandlerFactory {
 	 * @throws Exception
 	 */
 	public static DatabaseHandlerBase getDatabaseHandler(String host, int port, String user, String password, String database, 
-			DatabaseHanderType databaseHanderType) throws Exception {
+			DatabaseHanderType databaseHanderType, ExecutionInfoManager executionInfoMgr, int executionLogId) throws Exception {
 		switch (databaseHanderType) {
 		case MYSQL:
-			return new MySQLDatabaseHandler(host, port, user, password, database, databaseHanderType);
+			return new MySQLDatabaseHandler(host, port, user, password, database, databaseHanderType, executionInfoMgr, executionLogId);
 			
 		default:
+			
+			if (executionInfoMgr != null) {
+				executionInfoMgr.appendLog(executionLogId, String.format("[ERROR] getDatabaseHandler failed: DatabaseHandler type not found for %s", databaseHanderType.getValue()));
+			}
 			
 			logger.error("DatabaseHandler type not found", databaseHanderType);
 			

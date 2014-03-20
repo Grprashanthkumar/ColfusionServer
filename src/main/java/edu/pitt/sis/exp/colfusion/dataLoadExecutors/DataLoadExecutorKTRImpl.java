@@ -80,15 +80,19 @@ public class DataLoadExecutorKTRImpl extends DataLoadExecutorBaseImpl implements
 				//therefore we need only one KTR file to extract and save target database connection info.
 				
 				targetDBConnectionInfo = updateTargetDatabaseConnectionInfo(executionInfoMgr, executionLogId, ktrManager, ktrLocation);
-				updateLinkedServerInfo(executionInfoMgr, executionLogId, targetDBConnectionInfo);
+				
 				try {
 					databaseHandlerBase = createTargetDatabase(executionInfoMgr, executionLogId, targetDBConnectionInfo);
 				} catch (Exception e) {
+					
+					executionInfoMgr.appendLog(executionLogId, String.format("createTargetDatabase failed for %s. Error message: %s", targetDBConnectionInfo, e.toString()));
+					
+					databaseHandlerBase.close();
+					
 					throw e;
 				}
-				finally {
-					databaseHandlerBase.close();
-				}
+				
+				updateLinkedServerInfo(executionInfoMgr, executionLogId, targetDBConnectionInfo);
 				
 				firstKtr = false;
 			}
@@ -96,6 +100,7 @@ public class DataLoadExecutorKTRImpl extends DataLoadExecutorBaseImpl implements
 			try {
 				createTargetTable(executionInfoMgr, executionLogId, databaseHandlerBase, ktrManager);
 			} catch (Exception e) {
+				executionInfoMgr.appendLog(executionLogId, String.format("createTargetTable failed for %s. Error message: %s", targetDBConnectionInfo, e.toString()));
 				throw e;
 			}
 			finally {
@@ -133,7 +138,8 @@ public class DataLoadExecutorKTRImpl extends DataLoadExecutorBaseImpl implements
 		
 		DatabaseHandlerBase databaseHandlerBase = DatabaseHandlerFactory.getDatabaseHandler(targetDBConnectionInfo.getServerAddress(), targetDBConnectionInfo.getPort(), 
 				targetDBConnectionInfo.getUserName(), targetDBConnectionInfo.getPassword(), "", 
-				DatabaseHanderType.fromString(targetDBConnectionInfo.getDriver()));
+				DatabaseHanderType.fromString(targetDBConnectionInfo.getDriver()),
+				executionInfoMgr, executionLogId);
 		
 		databaseHandlerBase.createDatabaseIfNotExist(targetDBConnectionInfo.getDatabaseName());
 		

@@ -11,6 +11,8 @@ import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import edu.pitt.sis.exp.colfusion.persistence.managers.ExecutionInfoManager;
+
 /**
  * @author Evgeny
  *
@@ -25,15 +27,22 @@ public abstract class DatabaseHandlerBase {
     
     protected Connection connection;
     
+    protected ExecutionInfoManager executionInfoMgr; 
+    protected int executionLogId;
+    
     Logger logger = LogManager.getLogger(DatabaseHandlerBase.class.getName());
     
-    public DatabaseHandlerBase(String host, int port, String user, String password, String database, DatabaseHanderType databaseHanderType) {
+    public DatabaseHandlerBase(String host, int port, String user, String password, String database, DatabaseHanderType databaseHanderType,
+    		ExecutionInfoManager executionInfoMgr, int executionLogId) {
     	setHost(host);
     	setPort(port);
     	setUser(user);
     	setPassword(password);
     	setDatabase(database);
     	setDatabaseHanderType(databaseHanderType);
+    	
+    	this.executionInfoMgr = executionInfoMgr;
+    	this.executionLogId = executionLogId;
     }
     
 	/**
@@ -112,13 +121,17 @@ public abstract class DatabaseHandlerBase {
 	/**
 	 * Initializes the connection.
 	 * @return the connection.
-	 * @throws SQLException
+	 * @throws Exception 
 	 */
-	protected void openConnection(String connectionString) throws SQLException {
+	protected void openConnection(String connectionString) throws Exception {
 		try {
 			connection = DriverManager.getConnection(connectionString, getUser(), getPassword());
 			
 		} catch (SQLException e) {
+			
+			if (executionInfoMgr != null) {
+				executionInfoMgr.appendLog(executionLogId, String.format("[ERROR] openConnection failed. Error: %s", e.toString()));
+			}
 			
 			logger.error("getConnection failed in MySQLDatabaseHandler", e);
 			throw e;
@@ -150,15 +163,17 @@ public abstract class DatabaseHandlerBase {
      * Create a database for given name if it doesn't exist yet. In both cases connection is updated to use the database.
      * @return if execution was successful.
 	 * @throws SQLException 
+	 * @throws Exception 
      */
-	public abstract boolean createDatabaseIfNotExist(String databaseName) throws SQLException;
+	public abstract boolean createDatabaseIfNotExist(String databaseName) throws SQLException, Exception;
 	
 	/**
      * Delete a database for given name if it exists yet. 
      * @return if execution was successful.
 	 * @throws SQLException 
+	 * @throws Exception 
      */
-	public abstract boolean deleteDatabaseIfNotExist(String databaseName) throws SQLException;
+	public abstract boolean deleteDatabaseIfNotExist(String databaseName) throws SQLException, Exception;
 
 	/**
 	 * Creates a table where the data should be loaded.
@@ -166,8 +181,9 @@ public abstract class DatabaseHandlerBase {
 	 * @param variables the list of columns.
 	 * @return if execution was successful.
 	 * @throws SQLException 
+	 * @throws Exception 
 	 */
-	public abstract boolean createTableIfNotExist(String tableName, List<String> variables) throws SQLException;
+	public abstract boolean createTableIfNotExist(String tableName, List<String> variables) throws SQLException, Exception;
 	
 	
 	
