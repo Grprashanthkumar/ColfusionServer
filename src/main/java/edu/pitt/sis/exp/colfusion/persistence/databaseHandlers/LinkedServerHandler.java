@@ -203,6 +203,11 @@ public class LinkedServerHandler {
 		}
 	}
 
+	/**
+	 * Add Linked Server Login (remote (target database) username and password) to the linked sever.
+	 * @param sourceDBInfo has info of the target database and linked sever name.
+	 * @throws Exception
+	 */
 	private void addLinkedServerLogin(StoryTargetDB sourceDBInfo) throws Exception {
 		
 		Statement statement = null;
@@ -237,6 +242,12 @@ public class LinkedServerHandler {
 		}
 	}
 
+	/**
+	 * Executes provided SQL query to add linked server.
+	 * @param sql the query to execute which will add a new linked server.
+	 * @return true if query execution was successful.
+	 * @throws Exception
+	 */
 	private boolean addLinkedServer(String sql) throws Exception {
 		Statement statement = null;
 		
@@ -267,6 +278,12 @@ public class LinkedServerHandler {
 		}
 	}
 
+	/**
+	 * Constructs SQL query to add linked server.
+	 * @param sourceDBInfo the information about target database including linked server name.
+	 * @return the SQL query.
+	 * @throws Exception
+	 */
 	private String prepareAddLinkedServerSQLString(StoryTargetDB sourceDBInfo) throws Exception {
 		DatabaseHanderType vendor = DatabaseHanderType.fromString(sourceDBInfo.getDriver());
 		
@@ -309,6 +326,11 @@ public class LinkedServerHandler {
 				sourceDBInfo.getLinkedServerName(), srvproduct, provider, provstr);
 	}
 
+	/**
+	 * Drops linked server if one exists with the same name like provided.
+	 * @param linkedServerName the name of linked server to drop.
+	 * @throws Exception
+	 */
 	private void dropLinkedServerIfExists(String linkedServerName) throws Exception {
 		Statement statement = null;
 		

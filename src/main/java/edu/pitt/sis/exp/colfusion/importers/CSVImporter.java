@@ -4,6 +4,7 @@
 package edu.pitt.sis.exp.colfusion.importers;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.LineNumberReader;
@@ -15,13 +16,12 @@ import java.util.HashMap;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.apache.poi.ss.usermodel.Sheet;
-
-import sun.util.logging.resources.logging;
 import au.com.bytecode.opencsv.CSVParser;
 import edu.pitt.sis.exp.colfusion.utils.models.IOUtilsStoredFileInfoModel;
 import edu.pitt.sis.exp.colfusion.viewmodels.DatasetVariableViewModel;
 import edu.pitt.sis.exp.colfusion.viewmodels.FileContentInfoViewModel;
+import edu.pitt.sis.exp.colfusion.viewmodels.PreviewFileViewModel;
+import edu.pitt.sis.exp.colfusion.viewmodels.WorksheetDataViewModel;
 import edu.pitt.sis.exp.colfusion.viewmodels.WorksheetViewModel;
 
 /**
@@ -54,32 +54,8 @@ public class CSVImporter implements Importer {
     		throw new Exception("CSV file must have exacly one sheet specified in the model");
     	}
 		
-		Reader reader = new FileReader(new File(fileAndSheetsInfo.getFileAbsoluteName()));
-		
-		final LineNumberReader lnReader = new LineNumberReader(reader);
-		
-		String line = lnReader.readLine();
-		
-		if (line == null) {
-			logger.error("readVariables for CSV importer fialed, no line read, is file empty?");
-			
-			throw new Exception("no line read, is file empty?");
-		}
-    	
-		HashMap<String, ArrayList<DatasetVariableViewModel>> result = new HashMap<>();
-		
-		//TODO: the separator should be passed from UI as parameter.
-		char sep = ',';
-		
-		final CSVParser parser = new CSVParser(
-	            sep,
-	            CSVParser.DEFAULT_QUOTE_CHARACTER,
-	            (char) 0, // we don't want escape processing
-	            false,
-	            CSVParser.DEFAULT_IGNORE_LEADING_WHITESPACE);
-		
-		ArrayList<String> headerRowAr = getCells(line, parser, lnReader);
-    	
+		String[] headerRowAr = readOneLine(fileAndSheetsInfo.getFileAbsoluteName(), 0);
+	
     	if (headerRowAr != null) {
     		
     		ArrayList<DatasetVariableViewModel> oneSheetResult = new ArrayList<>();
@@ -97,14 +73,84 @@ public class CSVImporter implements Importer {
             	}
     		}
             
+    		HashMap<String, ArrayList<DatasetVariableViewModel>> result = new HashMap<>();
             result.put(fileAndSheetsInfo.getWorksheets().get(0).getSheetName(), oneSheetResult);
+            return result;
         }
     	else {
     		logger.error("readVariables in CSV importer failed: could not read header row");
     		
     		throw new Exception("readVariables in CSV importer failed: could not read header row");
-    	}
-
+    	}		
+	}
+	
+	/**
+	 * Read a specified line from given file.
+	 * @param fileAbsoluteName the absolute path of the file to read from.
+	 * @param lineNumber the line number which to read.
+	 * @return array of values from the read line.
+	 * @throws Exception
+	 */
+	private String[] readOneLine(String fileAbsoluteName, int lineNumber) throws Exception {
+		
+		ArrayList<String[]> result = readLinesFromTo(fileAbsoluteName, lineNumber, lineNumber);
+		
+		if (result == null) {
+			logger.error(String.format("readOneLine failed. Got null result from readLinesFromTo. File name: %s. Line number: %d", fileAbsoluteName, lineNumber));
+			
+			throw new Exception(String.format("readOneLine failed. Got null result from readLinesFromTo. File name: %s. Line number: %d", fileAbsoluteName, lineNumber));
+		}
+		
+		if (result.size() == 0) {
+			return new String[0];
+		}
+		
+		return result.get(0);
+	}
+	
+	/**
+	 * Read a range of lines from given file.
+	 * @param fileAbsoluteName the absolute path of the file to read from.
+	 * @param startLine the line to start reading from.
+	 * @param endLine the line number to stop finish at.
+	 * @return array of values from the read line.
+	 * @throws IOException
+	 */
+	private ArrayList<String[]> readLinesFromTo(String fileAbsoluteName, int startLine, int endLine) throws IOException  {
+		Reader reader = new FileReader(new File(fileAbsoluteName));
+		
+		final LineNumberReader lnReader = new LineNumberReader(reader);
+		
+		//TODO: the separator should be passed from UI as parameter.
+		char sep = ',';
+		
+		final CSVParser parser = new CSVParser(
+	            sep,
+	            CSVParser.DEFAULT_QUOTE_CHARACTER,
+	            (char) 0, // we don't want escape processing
+	            false,
+	            CSVParser.DEFAULT_IGNORE_LEADING_WHITESPACE);
+		
+		lnReader.setLineNumber(startLine);
+		
+		 ArrayList<String[]> result = new ArrayList<>();
+		
+		for (int i = startLine; i < endLine; i++) {
+			String line = lnReader.readLine();
+			
+			if (line == null) {
+				logger.info(String.format("readLinesFromTo got null line at possition %d. ", i));
+				break;
+			}
+			
+			ArrayList<String> lineValues = getCells(line, parser, lnReader);
+			
+			//TODO: not sure if this is the best implementation
+			result.add(lineValues.toArray(new String[lineValues.size()]));
+		}
+		
+		lnReader.close();
+		
 		return result;
 	}
 	
@@ -128,7 +174,25 @@ public class CSVImporter implements Importer {
 	            cells.addAll(Arrays.asList(tokens));
 	        }
 	        return cells;
-	    } 
-	
+	    }
 
+	@Override
+	public ArrayList<WorksheetDataViewModel> readWorksheetData(PreviewFileViewModel previewFileViewModel) throws FileNotFoundException, IOException {
+		
+		ArrayList<WorksheetDataViewModel> result = new ArrayList<WorksheetDataViewModel>();
+		
+		int startRow = previewFileViewModel.getPreviewRowsPerPage() * (previewFileViewModel.getPreviewPage() - 1);
+		int endRow = startRow + previewFileViewModel.getPreviewRowsPerPage();
+		
+		ArrayList<String[]> data = readLinesFromTo(previewFileViewModel.getFileAbsoluteName(), startRow, endRow);
+		        
+        WorksheetDataViewModel worksheetDataViewModel = new WorksheetDataViewModel();
+        worksheetDataViewModel.setWorksheetName(previewFileViewModel.getFileName());
+       
+        worksheetDataViewModel.setWorksheetData(data);
+        
+        result.add(worksheetDataViewModel);
+		
+        return result;
+	} 
 }

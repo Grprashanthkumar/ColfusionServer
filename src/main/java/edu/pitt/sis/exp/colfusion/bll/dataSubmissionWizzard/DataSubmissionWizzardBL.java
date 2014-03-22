@@ -1,6 +1,7 @@
 package edu.pitt.sis.exp.colfusion.bll.dataSubmissionWizzard;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -9,8 +10,10 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.compress.archivers.ArchiveException;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
 import edu.pitt.sis.exp.colfusion.ConfigManager;
 import edu.pitt.sis.exp.colfusion.PropertyKeys;
 import edu.pitt.sis.exp.colfusion.dataLoadExecutors.DataLoadExecutor;
@@ -28,6 +31,8 @@ import edu.pitt.sis.exp.colfusion.process.ProcessManager;
 import edu.pitt.sis.exp.colfusion.responseModels.AcceptedFilesResponse;
 import edu.pitt.sis.exp.colfusion.responseModels.FileContentInfoReponse;
 import edu.pitt.sis.exp.colfusion.responseModels.GeneralResponse;
+import edu.pitt.sis.exp.colfusion.responseModels.OneNumberResponse;
+import edu.pitt.sis.exp.colfusion.responseModels.PreviewFileResponse;
 import edu.pitt.sis.exp.colfusion.utils.IOUtils;
 import edu.pitt.sis.exp.colfusion.utils.models.IOUtilsStoredFileInfoModel;
 import edu.pitt.sis.exp.colfusion.viewmodels.CreateTemplateViewModel;
@@ -35,6 +40,7 @@ import edu.pitt.sis.exp.colfusion.viewmodels.DatasetVariableViewModel;
 import edu.pitt.sis.exp.colfusion.viewmodels.FileContentInfoViewModel;
 import edu.pitt.sis.exp.colfusion.viewmodels.FilesContentInfoViewModel;
 import edu.pitt.sis.exp.colfusion.viewmodels.OneUploadedItemViewModel;
+import edu.pitt.sis.exp.colfusion.viewmodels.PreviewFileViewModel;
 import edu.pitt.sis.exp.colfusion.viewmodels.WorksheetViewModel;
 
 
@@ -301,6 +307,73 @@ public class DataSubmissionWizzardBL {
 			logger.error("triggerDataLoadExecution failed: Couldn't trigger KTR execution for " + sid);
 		}
 		
+		
+		return result;
+	}
+
+	/**
+	 * Read a range of rows from all sheets/tables in given file. The rage is specified by the number of rows to read and the page number.
+	 * 
+	 * @param previewFileViewModel has info about the data file and row rages.
+	 * @return the {@link PreviewFileResponse} response in which payload is the data read from the file.
+	 */
+	public PreviewFileResponse getDataPreviewFromFiles(PreviewFileViewModel previewFileViewModel) {
+		
+		PreviewFileResponse result = new PreviewFileResponse();
+		result.isSuccessful = false;
+		
+		ImporterType importerType = ImporterType.getImporterType(FilenameUtils.getExtension(previewFileViewModel.getFileAbsoluteName()));
+		Importer importer = null;
+		try {
+			importer = ImporterFactory.getImporter(importerType);
+		} catch (Exception e) {
+			logger.error(String.format("getDataPreviewFromFiles failed for %s", previewFileViewModel.toString()), e);
+			
+			result.message = String.format("Couldn't read data from %s file.", previewFileViewModel.getFileName());
+			
+			return result;
+		}
+		
+		if (importer == null) {
+			logger.error(String.format("getDataPreviewFromFiles failed for %s. The imported is null.", previewFileViewModel.toString()));
+			
+			result.message = String.format("Couldn't read data from %s file.", previewFileViewModel.getFileName());
+			
+			return result;
+		}
+		
+		try {
+			previewFileViewModel.setWorksheetsData(importer.readWorksheetData(previewFileViewModel));
+		} catch (FileNotFoundException e) {
+			logger.error(String.format("getDataPreviewFromFiles failed for %s. File not found.", previewFileViewModel.toString()), e);
+			
+			result.message = String.format("Couldn't read data from %s file. Could not find the file to read from.", previewFileViewModel.getFileName());
+			
+			return result;
+		} catch (IOException e) {
+			logger.error(String.format("getDataPreviewFromFiles failed for %s. File not found.", previewFileViewModel.toString()), e);
+			
+			result.message = String.format("Couldn't read data from %s file.", previewFileViewModel.getFileName());
+			
+			return result;
+		}
+		
+		result.isSuccessful = true;
+		result.setPayload(previewFileViewModel);
+		
+		return result;
+	}
+
+	
+	public OneNumberResponse estimateDataPreviewFromFile(PreviewFileViewModel previewFileViewModel) {
+		
+		OneNumberResponse result = new OneNumberResponse();
+		
+		result.isSuccessful = true;
+		result.message = "OK";
+		
+		//TODO: implement
+		result.setPayload(1000);
 		
 		return result;
 	}

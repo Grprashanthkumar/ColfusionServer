@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 
+import org.apache.commons.io.FilenameUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.poi.POIXMLException;
@@ -25,6 +26,8 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import edu.pitt.sis.exp.colfusion.utils.models.IOUtilsStoredFileInfoModel;
 import edu.pitt.sis.exp.colfusion.viewmodels.DatasetVariableViewModel;
 import edu.pitt.sis.exp.colfusion.viewmodels.FileContentInfoViewModel;
+import edu.pitt.sis.exp.colfusion.viewmodels.PreviewFileViewModel;
+import edu.pitt.sis.exp.colfusion.viewmodels.WorksheetDataViewModel;
 import edu.pitt.sis.exp.colfusion.viewmodels.WorksheetViewModel;
 
 /**
@@ -168,6 +171,7 @@ public class ExcelImporter implements Importer {
 	 * @return
 	 * 
 	 */
+	//TODO: change method to return cell value and type, not the dataset view model.
 	private DatasetVariableViewModel extractVariableCell(org.apache.poi.ss.usermodel.Cell cell) {
 		DatasetVariableViewModel result = new DatasetVariableViewModel();
 		
@@ -213,5 +217,64 @@ public class ExcelImporter implements Importer {
         result.setChosenName(value.toString());
         
 		return result;
+	}
+
+	@Override
+	public ArrayList<WorksheetDataViewModel> readWorksheetData(PreviewFileViewModel previewFileViewModel) throws IOException {
+		
+		ArrayList<WorksheetDataViewModel> result = new ArrayList<WorksheetDataViewModel>();
+		
+		int startRow = previewFileViewModel.getPreviewRowsPerPage() * (previewFileViewModel.getPreviewPage() - 1);
+		int endRow = startRow + previewFileViewModel.getPreviewRowsPerPage();
+		
+		File file = new File(previewFileViewModel.getFileAbsoluteName());
+        InputStream is = new FileInputStream(file);
+        boolean xmlBased = "xlsx".equals(FilenameUtils.getExtension(previewFileViewModel.getFileAbsoluteName()));
+        try {
+            Workbook wb = xmlBased ?
+                    new XSSFWorkbook(is) :
+                        new HSSFWorkbook(new POIFSFileSystem(is));
+
+            int sheetCount = wb.getNumberOfSheets();
+            
+            for (int i = 0; i < sheetCount; i++) {
+            	Sheet sheet = wb.getSheetAt(i);
+                int rows = sheet.getLastRowNum();
+                
+                WorksheetDataViewModel worksheetDataViewModel = new WorksheetDataViewModel();
+                worksheetDataViewModel.setWorksheetName(sheet.getSheetName());
+                
+                ArrayList<String[]> worksheetData = new ArrayList<>(); 
+                
+                for (int j = startRow; j < endRow && j < rows ; j++) {
+                	
+                	org.apache.poi.ss.usermodel.Row row = sheet.getRow(j);
+                	
+                	short lastCell = row.getLastCellNum();
+                	
+                	String[] rowCells = new String[lastCell];
+                	
+                	for (int k = 0; k <  lastCell; k++) {
+                		
+                		org.apache.poi.ss.usermodel.Cell sourceCell = row.getCell(k);
+                		
+                		DatasetVariableViewModel datasetVariable = extractVariableCell(sourceCell);
+                		
+                		rowCells[k] = datasetVariable.getOriginalName();
+					}
+                	
+                	worksheetData.add(rowCells);
+				}
+               
+                worksheetDataViewModel.setWorksheetData(worksheetData);
+                
+                result.add(worksheetDataViewModel);
+			}
+        }
+        finally {
+        	is.close();
+        }
+		
+        return result;
 	}
 }

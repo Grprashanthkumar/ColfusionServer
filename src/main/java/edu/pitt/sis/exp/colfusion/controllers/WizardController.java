@@ -1,6 +1,5 @@
 package edu.pitt.sis.exp.colfusion.controllers;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -15,16 +14,11 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import javax.xml.ws.spi.http.HttpContext;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.codehaus.jackson.JsonNode;
-import org.codehaus.jackson.JsonProcessingException;
-import org.codehaus.jackson.map.ObjectMapper;
 import org.glassfish.jersey.media.multipart.FormDataBodyPart;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 
@@ -32,9 +26,12 @@ import edu.pitt.sis.exp.colfusion.bll.dataSubmissionWizzard.DataSubmissionWizzar
 import edu.pitt.sis.exp.colfusion.responseModels.AcceptedFilesResponse;
 import edu.pitt.sis.exp.colfusion.responseModels.FileContentInfoReponse;
 import edu.pitt.sis.exp.colfusion.responseModels.GeneralResponse;
+import edu.pitt.sis.exp.colfusion.responseModels.OneNumberResponse;
+import edu.pitt.sis.exp.colfusion.responseModels.PreviewFileResponse;
 import edu.pitt.sis.exp.colfusion.viewmodels.CreateTemplateViewModel;
 import edu.pitt.sis.exp.colfusion.viewmodels.FileContentInfoViewModel;
 import edu.pitt.sis.exp.colfusion.viewmodels.FilesContentInfoViewModel;
+import edu.pitt.sis.exp.colfusion.viewmodels.PreviewFileViewModel;
 
 
 @Path("Wizard/")
@@ -274,4 +271,69 @@ public class WizardController extends BaseController {
     	return makeCORS(Response.status(200).entity(result)); //.build();
     }
 	
+	/**
+     * Because we do cross domain AJAX calls, we need to use CORS. Actually it worked for me from simple form, but didn't work from file upload.
+     * @param requestH
+     * @return
+     */
+	@OPTIONS
+    @Path("getDataPreviewFromFile")
+    public Response getDataPreviewFromFile(@HeaderParam("Access-Control-Request-Headers") String requestH) {
+		return makeCORS(Response.ok()); //, requestH);
+    }
+	
+	/**
+     * Retreive variable names from each file and try to guess data type for each of them. Also contains recommended variables names.
+     * 
+     * @param sid story id for which the template need to be created.
+     * @param fileMode the mode specifying how several files should be processed. Could Append or Separately.
+     * @param fileNames the information about uploaded files.
+     * 
+     * @return sends back the general response with status and message.
+     */
+	@Path("getDataPreviewFromFile")
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+	public Response getDataPreviewFromFile(PreviewFileViewModel previewFileViewModel) {
+		    	
+		DataSubmissionWizzardBL wizardBLL = new DataSubmissionWizzardBL();
+		
+		PreviewFileResponse result = wizardBLL.getDataPreviewFromFiles(previewFileViewModel);
+		
+    	return makeCORS(Response.status(200).entity(result)); //.build();
+    }
+	
+	/**
+     * Because we do cross domain AJAX calls, we need to use CORS. Actually it worked for me from simple form, but didn't work from file upload.
+     * @param requestH
+     * @return
+     */
+	@OPTIONS
+    @Path("estimateDataPreviewFromFile")
+    public Response estimateDataPreviewFromFile(@HeaderParam("Access-Control-Request-Headers") String requestH) {
+		return makeCORS(Response.ok()); //, requestH);
+    }
+	
+	/**
+     * Retreive variable names from each file and try to guess data type for each of them. Also contains recommended variables names.
+     * 
+     * @param sid story id for which the template need to be created.
+     * @param fileMode the mode specifying how several files should be processed. Could Append or Separately.
+     * @param fileNames the information about uploaded files.
+     * 
+     * @return sends back the general response with status and message.
+     */
+	@Path("estimateDataPreviewFromFile")
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+	public Response estimateDataPreviewFromFile(PreviewFileViewModel previewFileViewModel) {
+		    	
+		DataSubmissionWizzardBL wizardBLL = new DataSubmissionWizzardBL();
+		
+		OneNumberResponse result = wizardBLL.estimateDataPreviewFromFile(previewFileViewModel);
+		
+    	return makeCORS(Response.status(200).entity(result)); //.build();
+    }
 }

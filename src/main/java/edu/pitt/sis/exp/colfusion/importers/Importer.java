@@ -3,6 +3,8 @@
  */
 package edu.pitt.sis.exp.colfusion.importers;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -10,6 +12,8 @@ import java.util.HashMap;
 import edu.pitt.sis.exp.colfusion.utils.models.IOUtilsStoredFileInfoModel;
 import edu.pitt.sis.exp.colfusion.viewmodels.DatasetVariableViewModel;
 import edu.pitt.sis.exp.colfusion.viewmodels.FileContentInfoViewModel;
+import edu.pitt.sis.exp.colfusion.viewmodels.PreviewFileViewModel;
+import edu.pitt.sis.exp.colfusion.viewmodels.WorksheetDataViewModel;
 import edu.pitt.sis.exp.colfusion.viewmodels.WorksheetViewModel;
 
 /**
@@ -38,4 +42,15 @@ public interface Importer {
 	 * @throws Exception
 	 */
 	public HashMap<String, ArrayList<DatasetVariableViewModel>> readVariables(FileContentInfoViewModel fileAndSheetsInfo) throws Exception;
+
+
+	/**
+	 * Read a range of rows from all sheets/tables in given file. The rage is specified by the number of rows to read and the page number.
+	 * 
+	 * @param previewFileViewModel has info about the data file and row rages.
+	 * @return data for each sheet.
+	 * @throws FileNotFoundException 
+	 * @throws IOException 
+	 */
+	public ArrayList<WorksheetDataViewModel> readWorksheetData(PreviewFileViewModel previewFileViewModel) throws FileNotFoundException, IOException;
 }
