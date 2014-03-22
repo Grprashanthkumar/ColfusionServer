@@ -16,7 +16,9 @@ public class PropertyKeysTest {
 	public static String test = "test";
 	
 	public static String testExcelFileNameInResourceFolder = "testExcelFileNameInResourceFolder";
-
+	
+	public static String testCSVFileNameInResourceFolder = "testCSVFileNameInResourceFolder";
+	
 	public static String testUploadRawFilesBaseLocation = "testUploadRawFilesBaseLocation";
 	
 	public static String testTarGzArchiveFileNameInResourceFolder = "testTarGzArchiveFileNameInResourceFolder";

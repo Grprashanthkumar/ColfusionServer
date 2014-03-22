@@ -35,7 +35,7 @@ public class CSVImporter implements Importer {
 	@Override
 	public Collection<WorksheetViewModel> getTables(IOUtilsStoredFileInfoModel fileModel) throws Exception {
 		WorksheetViewModel worksheet = new WorksheetViewModel();
-		worksheet.setSheetName("Worksheet");
+		worksheet.setSheetName(fileModel.getFileName());
 		worksheet.setHeaderRow(1);
         worksheet.setStartColumn("A");
         
@@ -131,16 +131,20 @@ public class CSVImporter implements Importer {
 	            false,
 	            CSVParser.DEFAULT_IGNORE_LEADING_WHITESPACE);
 		
-		lnReader.setLineNumber(startLine);
+		
 		
 		 ArrayList<String[]> result = new ArrayList<>();
 		
-		for (int i = startLine; i < endLine; i++) {
+		for (int i = 0; i <= endLine; i++) {
 			String line = lnReader.readLine();
 			
 			if (line == null) {
 				logger.info(String.format("readLinesFromTo got null line at possition %d. ", i));
 				break;
+			}
+			
+			if (i < startLine) {
+				continue;
 			}
 			
 			ArrayList<String> lineValues = getCells(line, parser, lnReader);

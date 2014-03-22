@@ -7,6 +7,8 @@ import java.util.ArrayList;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+
 /**
  * @author Evgeny
  *
@@ -117,5 +119,10 @@ public class WorksheetViewModel {
 	 */
 	public void setVariables(ArrayList<DatasetVariableViewModel> variables) {
 		this.variables = variables;
+	}
+	
+	@Override
+	public String toString() {
+		return ReflectionToStringBuilder.toString(this);
 	}
 }

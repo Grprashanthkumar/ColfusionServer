@@ -230,7 +230,7 @@ public class ExcelImporter implements Importer {
 		File file = new File(previewFileViewModel.getFileAbsoluteName());
         InputStream is = new FileInputStream(file);
         boolean xmlBased = "xlsx".equals(FilenameUtils.getExtension(previewFileViewModel.getFileAbsoluteName()));
-        try {
+        try { //TODO:add catch
             Workbook wb = xmlBased ?
                     new XSSFWorkbook(is) :
                         new HSSFWorkbook(new POIFSFileSystem(is));
@@ -246,7 +246,7 @@ public class ExcelImporter implements Importer {
                 
                 ArrayList<String[]> worksheetData = new ArrayList<>(); 
                 
-                for (int j = startRow; j < endRow && j < rows ; j++) {
+                for (int j = startRow; j <= endRow && j <= rows ; j++) {
                 	
                 	org.apache.poi.ss.usermodel.Row row = sheet.getRow(j);
                 	
@@ -254,7 +254,7 @@ public class ExcelImporter implements Importer {
                 	
                 	String[] rowCells = new String[lastCell];
                 	
-                	for (int k = 0; k <  lastCell; k++) {
+                	for (int k = 0; k < lastCell; k++) {
                 		
                 		org.apache.poi.ss.usermodel.Cell sourceCell = row.getCell(k);
                 		
