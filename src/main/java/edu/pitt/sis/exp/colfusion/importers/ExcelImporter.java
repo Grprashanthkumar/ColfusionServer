@@ -27,6 +27,7 @@ import edu.pitt.sis.exp.colfusion.utils.models.IOUtilsStoredFileInfoModel;
 import edu.pitt.sis.exp.colfusion.viewmodels.DatasetVariableViewModel;
 import edu.pitt.sis.exp.colfusion.viewmodels.FileContentInfoViewModel;
 import edu.pitt.sis.exp.colfusion.viewmodels.PreviewFileViewModel;
+import edu.pitt.sis.exp.colfusion.viewmodels.WorksheetDataRowViewModel;
 import edu.pitt.sis.exp.colfusion.viewmodels.WorksheetDataViewModel;
 import edu.pitt.sis.exp.colfusion.viewmodels.WorksheetViewModel;
 
@@ -244,7 +245,7 @@ public class ExcelImporter implements Importer {
                 WorksheetDataViewModel worksheetDataViewModel = new WorksheetDataViewModel();
                 worksheetDataViewModel.setWorksheetName(sheet.getSheetName());
                 
-                ArrayList<String[]> worksheetData = new ArrayList<>(); 
+                ArrayList<WorksheetDataRowViewModel> worksheetData = new ArrayList<>(); 
                 
                 for (int j = startRow; j <= endRow && j <= rows ; j++) {
                 	
@@ -252,7 +253,7 @@ public class ExcelImporter implements Importer {
                 	
                 	short lastCell = row.getLastCellNum();
                 	
-                	String[] rowCells = new String[lastCell];
+                	WorksheetDataRowViewModel rowCells = new WorksheetDataRowViewModel();
                 	
                 	for (int k = 0; k < lastCell; k++) {
                 		
@@ -260,9 +261,9 @@ public class ExcelImporter implements Importer {
                 		
                 		DatasetVariableViewModel datasetVariable = extractVariableCell(sourceCell);
                 		
-                		rowCells[k] = datasetVariable.getOriginalName();
+                		rowCells.getWorksheetDataRow().add(datasetVariable.getOriginalName());
 					}
-                	
+          	
                 	worksheetData.add(rowCells);
 				}
                

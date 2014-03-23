@@ -317,7 +317,7 @@ public class DataSubmissionWizzardBL {
 	 * @param previewFileViewModel has info about the data file and row rages.
 	 * @return the {@link PreviewFileResponse} response in which payload is the data read from the file.
 	 */
-	public PreviewFileResponse getDataPreviewFromFiles(PreviewFileViewModel previewFileViewModel) {
+	public PreviewFileResponse getDataPreviewFromFile(PreviewFileViewModel previewFileViewModel) {
 		
 		PreviewFileResponse result = new PreviewFileResponse();
 		result.isSuccessful = false;

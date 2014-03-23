@@ -299,7 +299,7 @@ public class WizardController extends BaseController {
 		    	
 		DataSubmissionWizzardBL wizardBLL = new DataSubmissionWizzardBL();
 		
-		PreviewFileResponse result = wizardBLL.getDataPreviewFromFiles(previewFileViewModel);
+		PreviewFileResponse result = wizardBLL.getDataPreviewFromFile(previewFileViewModel);
 		
     	return makeCORS(Response.status(200).entity(result)); //.build();
     }

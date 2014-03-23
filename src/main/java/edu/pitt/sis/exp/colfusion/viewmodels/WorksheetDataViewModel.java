@@ -16,13 +16,13 @@ public class WorksheetDataViewModel {
 
 	private String worksheetName;
 	
-	private ArrayList<String[]> worksheetData;
+	private ArrayList<WorksheetDataRowViewModel> worksheetData;
 	
 	public WorksheetDataViewModel() {
-		setWorksheetData(new ArrayList<String[]>());
+		setWorksheetData(new ArrayList<WorksheetDataRowViewModel>());
 	}
 	
-	public WorksheetDataViewModel(String worksheetName, ArrayList<String[]> worksheetData) {
+	public WorksheetDataViewModel(String worksheetName, ArrayList<WorksheetDataRowViewModel> worksheetData) {
 		setWorksheetName(worksheetName);
 		setWorksheetData(worksheetData);
 	}
@@ -44,14 +44,14 @@ public class WorksheetDataViewModel {
 	/**
 	 * @return the worksheetData
 	 */
-	public ArrayList<String[]> getWorksheetData() {
+	public ArrayList<WorksheetDataRowViewModel> getWorksheetData() {
 		return worksheetData;
 	}
 
 	/**
 	 * @param worksheetData the worksheetData to set
 	 */
-	public void setWorksheetData(ArrayList<String[]> worksheetData) {
+	public void setWorksheetData(ArrayList<WorksheetDataRowViewModel> worksheetData) {
 		this.worksheetData = worksheetData;
 	}
 	

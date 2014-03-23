@@ -16,11 +16,13 @@ import java.util.HashMap;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
 import au.com.bytecode.opencsv.CSVParser;
 import edu.pitt.sis.exp.colfusion.utils.models.IOUtilsStoredFileInfoModel;
 import edu.pitt.sis.exp.colfusion.viewmodels.DatasetVariableViewModel;
 import edu.pitt.sis.exp.colfusion.viewmodels.FileContentInfoViewModel;
 import edu.pitt.sis.exp.colfusion.viewmodels.PreviewFileViewModel;
+import edu.pitt.sis.exp.colfusion.viewmodels.WorksheetDataRowViewModel;
 import edu.pitt.sis.exp.colfusion.viewmodels.WorksheetDataViewModel;
 import edu.pitt.sis.exp.colfusion.viewmodels.WorksheetViewModel;
 
@@ -93,7 +95,7 @@ public class CSVImporter implements Importer {
 	 */
 	private String[] readOneLine(String fileAbsoluteName, int lineNumber) throws Exception {
 		
-		ArrayList<String[]> result = readLinesFromTo(fileAbsoluteName, lineNumber, lineNumber);
+		ArrayList<WorksheetDataRowViewModel> result = readLinesFromTo(fileAbsoluteName, lineNumber, lineNumber);
 		
 		if (result == null) {
 			logger.error(String.format("readOneLine failed. Got null result from readLinesFromTo. File name: %s. Line number: %d", fileAbsoluteName, lineNumber));
@@ -105,7 +107,7 @@ public class CSVImporter implements Importer {
 			return new String[0];
 		}
 		
-		return result.get(0);
+		return result.get(0).getWorksheetDataRow().toArray(new String[result.get(0).getWorksheetDataRow().size()]);
 	}
 	
 	/**
@@ -116,7 +118,7 @@ public class CSVImporter implements Importer {
 	 * @return array of values from the read line.
 	 * @throws IOException
 	 */
-	private ArrayList<String[]> readLinesFromTo(String fileAbsoluteName, int startLine, int endLine) throws IOException  {
+	private ArrayList<WorksheetDataRowViewModel> readLinesFromTo(String fileAbsoluteName, int startLine, int endLine) throws IOException  {
 		Reader reader = new FileReader(new File(fileAbsoluteName));
 		
 		final LineNumberReader lnReader = new LineNumberReader(reader);
@@ -133,7 +135,7 @@ public class CSVImporter implements Importer {
 		
 		
 		
-		 ArrayList<String[]> result = new ArrayList<>();
+		 ArrayList<WorksheetDataRowViewModel> result = new ArrayList<>();
 		
 		for (int i = 0; i <= endLine; i++) {
 			String line = lnReader.readLine();
@@ -147,10 +149,10 @@ public class CSVImporter implements Importer {
 				continue;
 			}
 			
-			ArrayList<String> lineValues = getCells(line, parser, lnReader);
+			WorksheetDataRowViewModel lineValues = new WorksheetDataRowViewModel(getCells(line, parser, lnReader));
 			
 			//TODO: not sure if this is the best implementation
-			result.add(lineValues.toArray(new String[lineValues.size()]));
+			result.add(lineValues);
 		}
 		
 		lnReader.close();
@@ -188,7 +190,7 @@ public class CSVImporter implements Importer {
 		int startRow = previewFileViewModel.getPreviewRowsPerPage() * (previewFileViewModel.getPreviewPage() - 1);
 		int endRow = startRow + previewFileViewModel.getPreviewRowsPerPage();
 		
-		ArrayList<String[]> data = readLinesFromTo(previewFileViewModel.getFileAbsoluteName(), startRow, endRow);
+		ArrayList<WorksheetDataRowViewModel> data = readLinesFromTo(previewFileViewModel.getFileAbsoluteName(), startRow, endRow);
 		        
         WorksheetDataViewModel worksheetDataViewModel = new WorksheetDataViewModel();
         worksheetDataViewModel.setWorksheetName(previewFileViewModel.getFileName());
