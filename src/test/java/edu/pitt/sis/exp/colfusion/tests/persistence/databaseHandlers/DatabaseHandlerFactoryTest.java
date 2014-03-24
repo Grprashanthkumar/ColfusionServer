@@ -88,7 +88,7 @@ public class DatabaseHandlerFactoryTest extends TestCase {
 					"", DatabaseHanderType.MYSQL, null, 0);
 			
 			//Should not fail even though the database does not exist yet.
-			dbHandler1.deleteDatabaseIfNotExist(configManager.getPropertyByName(PropertyKeysTest.testTargetFileToDBDatabase_DatabaseNamePrefix));
+			dbHandler1.deleteDatabaseIfExists(configManager.getPropertyByName(PropertyKeysTest.testTargetFileToDBDatabase_DatabaseNamePrefix));
 			
 			
 			dbHandler1.createDatabaseIfNotExist(configManager.getPropertyByName(PropertyKeysTest.testTargetFileToDBDatabase_DatabaseNamePrefix));
@@ -96,7 +96,7 @@ public class DatabaseHandlerFactoryTest extends TestCase {
 			// Should not fail even though the database already exists.
 			dbHandler1.createDatabaseIfNotExist(configManager.getPropertyByName(PropertyKeysTest.testTargetFileToDBDatabase_DatabaseNamePrefix));
 			
-			dbHandler1.deleteDatabaseIfNotExist(configManager.getPropertyByName(PropertyKeysTest.testTargetFileToDBDatabase_DatabaseNamePrefix));
+			dbHandler1.deleteDatabaseIfExists(configManager.getPropertyByName(PropertyKeysTest.testTargetFileToDBDatabase_DatabaseNamePrefix));
 			
 		} catch (NumberFormatException e) {
 			// TODO Auto-generated catch block
@@ -142,7 +142,7 @@ public class DatabaseHandlerFactoryTest extends TestCase {
 						
 			dbHandler1.createTableIfNotExist(tableName, variables);
 			
-			dbHandler1.deleteDatabaseIfNotExist(configManager.getPropertyByName(PropertyKeysTest.testTargetFileToDBDatabase_DatabaseNamePrefix));
+			dbHandler1.deleteDatabaseIfExists(configManager.getPropertyByName(PropertyKeysTest.testTargetFileToDBDatabase_DatabaseNamePrefix));
 			
 		} catch (NumberFormatException e) {
 			// TODO Auto-generated catch block

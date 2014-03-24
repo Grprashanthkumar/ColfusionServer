@@ -27,6 +27,9 @@ import edu.pitt.sis.exp.colfusion.persistence.managers.UserManagerImpl;
 import edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionSourceinfo;
 import edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionUsers;
 import edu.pitt.sis.exp.colfusion.tests.PropertyKeysTest;
+import edu.pitt.sis.exp.colfusion.tests.Utils;
+import edu.pitt.sis.exp.colfusion.tests.bll.dataSubmissionWizard.DataSubmissionWizzardTest;
+import edu.pitt.sis.exp.colfusion.utils.IOUtils;
 import edu.pitt.sis.exp.colfusion.viewmodels.DatasetVariableViewModel;
 import edu.pitt.sis.exp.colfusion.viewmodels.FileContentInfoViewModel;
 import edu.pitt.sis.exp.colfusion.viewmodels.StoryTargetDB;
@@ -58,7 +61,12 @@ public class KTRManagerTest extends TestCase {
 		FileContentInfoViewModel fileContentInfoViewModel = new FileContentInfoViewModel();
 		
 		String textExcelFileName = configManager.getPropertyByName(PropertyKeysTest.testExcelFileNameInResourceFolder);
-		String textExcelFileNameLocation = Thread.currentThread().getContextClassLoader().getResource(textExcelFileName).getFile();
+		//This depends on the fact that the file is already copied to the uplaod_row_data folder.
+		
+		String uploadFilesLocation = IOUtils.getInstance().getAbsolutePathInColfutionRoot(ConfigManager.getInstance().getPropertyByName(PropertyKeys.uploadRawFileLocationKey));
+		String uploadFileAbsolutePath = uploadFilesLocation + File.separator + sid; 
+		
+		String textExcelFileNameLocation =  uploadFileAbsolutePath + File.separator + textExcelFileName;//Thread.currentThread().getContextClassLoader().getResource(textExcelFileName).getFile();
 		
 		File testFile = new File(textExcelFileNameLocation);
 		
@@ -137,51 +145,14 @@ public class KTRManagerTest extends TestCase {
 			e.printStackTrace();
 		}
 	}
-
-	private int  prepareDatabase() throws Exception {
-		// TODO the same code is used in the KTRManagerTest, should be probably moved to somewhere like TestUtils
+	
+	private int prepareDatabase() throws Exception {
+		int sid = Utils.getTestSid();
 		
-		SourceInfoManager storyMgr = new SourceInfoManagerImpl();
-		List<ColfusionSourceinfo> stories = storyMgr.findByTitle(ConfigManager.getInstance().getPropertyByName(PropertyKeysTest.testStoryTitle), 1);
+		//TODO: again depend on other test, BAD.
+		DataSubmissionWizzardTest dataSubmissionTest = new DataSubmissionWizzardTest();
+		dataSubmissionTest.testStoreUploadedFiles();
 		
-		ColfusionSourceinfo story = null;
-		
-		if (stories.size() == 0 || stories.get(0) == null) {
-			
-			UserManager userMgr = new UserManagerImpl();
-			
-			List<ColfusionUsers> users = userMgr.lookUpUser(ConfigManager.getInstance().getPropertyByName(PropertyKeysTest.testUserLogin), 1);
-			ColfusionUsers user = null;
-			
-			if (users.size() == 0 || users.get(0) == null) {
-				user = new ColfusionUsers(new Date(), new Date(),
-						new Date(), new Date(), new Date(), true);
-				
-				user.setUserLogin(ConfigManager.getInstance().getPropertyByName(PropertyKeysTest.testUserLogin));
-				
-				userMgr.save(user);
-				
-				userMgr.saveOrUpdate(user);
-			}
-			else {
-				user = users.get(0);
-			}
-			
-			story = storyMgr.newStory(user.getUserId(), new Date(), DataSourceTypes.DATA_FILE);
-			story.setTitle(ConfigManager.getInstance().getPropertyByName(PropertyKeysTest.testStoryTitle));
-			storyMgr.saveOrUpdate(story);
-		}
-		else {
-			story = stories.get(0);
-			
-			if (DataSourceTypes.fromString(story.getSourceType()) != DataSourceTypes.DATA_FILE) {
-				story.setSourceType(DataSourceTypes.DATA_FILE.getValue());
-				
-				storyMgr.saveOrUpdate(story);
-			}
-		}
-		
-				
-		return story.getSid();
+		return sid;
 	}
 }

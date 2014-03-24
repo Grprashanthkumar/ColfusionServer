@@ -3,6 +3,8 @@
  */
 package edu.pitt.sis.exp.colfusion.process;
 
+import java.util.List;
+
 /**
  * @author Evgeny
  *
@@ -15,4 +17,8 @@ public interface Process extends Runnable {
     
     abstract public void startPerforming(ProcessManager manager);
     abstract public void cancel();
+    
+    public ProcessManager getManager();
+    
+    public List<Exception> getExceptions();
 }

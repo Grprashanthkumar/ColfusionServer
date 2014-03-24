@@ -25,7 +25,7 @@ public class IOUtilsTest extends TestCase {
 	 */
 	public void testWriteExcelAsInputStreamToFile() {
 			
-		String testFileUploadDir = configManager.getPropertyByName(PropertyKeysTest.testUploadRawFilesBaseLocation);
+		String testFileUploadDir = IOUtils.getInstance().getAbsolutePathInColfutionRoot(configManager.getPropertyByName(PropertyKeysTest.testUploadRawFilesBaseLocation));
 	
 		String testEcelFileName = configManager.getPropertyByName(PropertyKeysTest.testExcelFileNameInResourceFolder);
 		
@@ -53,7 +53,7 @@ public class IOUtilsTest extends TestCase {
 	 * Test if the TarGz Archive file from the test/resources is written to specified in the properties location.
 	 */
 	public void testWriteTarGzArchiveAsInputStremToFile() {
-		String testFileUploadDir = configManager.getPropertyByName(PropertyKeysTest.testUploadRawFilesBaseLocation);
+		String testFileUploadDir = IOUtils.getInstance().getAbsolutePathInColfutionRoot(configManager.getPropertyByName(PropertyKeysTest.testUploadRawFilesBaseLocation));
 		
 		String testFileName = configManager.getPropertyByName(PropertyKeysTest.testTarGzArchiveFileNameInResourceFolder);
 		
@@ -81,7 +81,7 @@ public class IOUtilsTest extends TestCase {
 	 * Test unarchival of a zip archive
 	 */
 	public void testUnarchive() {
-		String testFileUploadDir = configManager.getPropertyByName(PropertyKeysTest.testUploadRawFilesBaseLocation);
+		String testFileUploadDir = IOUtils.getInstance().getAbsolutePathInColfutionRoot(configManager.getPropertyByName(PropertyKeysTest.testUploadRawFilesBaseLocation));
 		
 		String testFileName = configManager.getPropertyByName(PropertyKeysTest.testZipArchive);
 		
@@ -106,7 +106,7 @@ public class IOUtilsTest extends TestCase {
 	}
 	
 	public void testCopyFileContentOnKTRTemplates() {
-		String testKTRBaseDirLocation = configManager.getPropertyByName(PropertyKeysTest.testKtrFielsBaseLocation);
+		String testKTRBaseDirLocation = IOUtils.getInstance().getAbsolutePathInColfutionRoot(configManager.getPropertyByName(PropertyKeysTest.testKtrFielsBaseLocation));
 		
 		String fileToCopyName = configManager.getPropertyByName(PropertyKeysTest.testCsvToDatabaseKTRTemplate);
 		String fileToCopyLocation = Thread.currentThread().getContextClassLoader().getResource(fileToCopyName).getFile();

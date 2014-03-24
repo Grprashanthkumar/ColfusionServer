@@ -13,6 +13,10 @@ public class PropertyKeysTest {
 	//
 	//******************************************************************************
 	
+	public static String colfusionURL = "colfusionURL";
+	
+	public static String colfusionRootLocation = "colfusionRootLocation";
+	
 	public static String testStoryTitle = "testStoryTitle";
 	
 	public static String test = "test";

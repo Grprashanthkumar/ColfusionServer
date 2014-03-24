@@ -201,9 +201,11 @@ public class DataLoadExecutorKTRImpl extends DataLoadExecutorBaseImpl implements
 
 		String carteServerURL = ConfigManager.getInstance().getPropertyByName(PropertyKeys.carteServerURL);
 		
-        String result = String.format("%s?trans=%s&Sid=%d&Eid=%d", carteServerURL, ktrLocation, sid, executionLogId);
+		String ktrFileURL = edu.pitt.sis.exp.colfusion.utils.IOUtils.getInstance().getFileURLFromName(ktrLocation);
+		
+        String result = String.format("%s?trans=%s&Sid=%d&Eid=%d", carteServerURL, ktrFileURL, sid, executionLogId);
         
-        executionInfoMgr.appendLog(executionLogId, String.format("Finished to prepare Carte Server Url for the %s", ktrLocation));
+        executionInfoMgr.appendLog(executionLogId, String.format("Finished to prepare Carte Server Url for the %s file. KtrFileURL is %s", ktrLocation, ktrFileURL));
 
         return result;
 	}
@@ -271,11 +273,11 @@ public class DataLoadExecutorKTRImpl extends DataLoadExecutorBaseImpl implements
 		try {
 			execute();
 			
-			this._manager.onDoneProcess(this);
+			this.getManager().onDoneProcess(this);
 		} catch (Exception e) {
 			//TODO: add logger if needed here, or maybe all exceptions should be logged by process manager
 			
-			this._manager.onFailedProcess(this, e);
+			this.getManager().onFailedProcess(this, e);
 		}	
 	}
 

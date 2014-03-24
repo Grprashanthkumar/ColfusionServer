@@ -14,6 +14,10 @@ public class PropertyKeys {
 	//
 	//******************************************************************************
 	
+	public static String colfusionURL = "colfusionURL";
+	
+	public static String colfusionRootLocation = "colfusionRootLocation";
+	
 	public static String uploadRawFileLocationKey = "uploadRawFilesBaseLocation";
 	
 	/**

@@ -13,6 +13,7 @@ import edu.pitt.sis.exp.colfusion.ConfigManager;
 import edu.pitt.sis.exp.colfusion.bll.dataSubmissionWizzard.DataSubmissionWizzardBL;
 import edu.pitt.sis.exp.colfusion.responseModels.AcceptedFilesResponse;
 import edu.pitt.sis.exp.colfusion.tests.PropertyKeysTest;
+import edu.pitt.sis.exp.colfusion.tests.Utils;
 import edu.pitt.sis.exp.colfusion.viewmodels.OneUploadedItemViewModel;
 
 public class DataSubmissionWizzardTest extends TestCase {
@@ -39,7 +40,18 @@ public class DataSubmissionWizzardTest extends TestCase {
 		
 		
 		DataSubmissionWizzardBL wizardBLL = new DataSubmissionWizzardBL();
-		AcceptedFilesResponse result = wizardBLL.storeUploadedFiles("test", "123", "fileType", "dbType", inputStreams);
+		
+		int sid = 0;
+		
+		try {
+			sid = Utils.getTestSid();
+		} catch (Exception e) {
+			logger.error("getTestSid failed", e);
+			
+			fail("prepareDatabase failed");
+		}
+		
+		AcceptedFilesResponse result = wizardBLL.storeUploadedFiles(String.valueOf(sid), "123", "fileType", "dbType", inputStreams);
 		
     	assertEquals(true, result.isSuccessful);
     	assertEquals("Files are uploaded successfully", result.message);

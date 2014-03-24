@@ -50,8 +50,13 @@ public class ProcessManager {
         update();
     }
     
+    //TODO: check if the next two methods really works as they are supposed to work. Seems like at all times, the _exeptions list will have only one exception.
+    
     public void onFailedProcess(Process p, Exception exception) {
         List<Exception> exceptions = new LinkedList<Exception>();
+        
+        p.getExceptions().add(exception);
+        
         exceptions.add(exception);
         onFailedProcess(p, exceptions);
     }

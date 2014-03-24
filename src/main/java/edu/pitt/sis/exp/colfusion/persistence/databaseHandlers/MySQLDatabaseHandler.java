@@ -150,7 +150,7 @@ public class MySQLDatabaseHandler extends DatabaseHandlerBase {
 	}
 
 	@Override
-	public boolean deleteDatabaseIfNotExist(String databaseName) throws Exception {
+	public boolean deleteDatabaseIfExists(String databaseName) throws Exception {
 		Statement statement = null;
 		
 		String sql = "";

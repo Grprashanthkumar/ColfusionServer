@@ -23,6 +23,8 @@ import org.apache.logging.log4j.Logger;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
+import edu.pitt.sis.exp.colfusion.ConfigManager;
+import edu.pitt.sis.exp.colfusion.PropertyKeys;
 import edu.pitt.sis.exp.colfusion.utils.models.IOUtilsStoredFileInfoModel;
 
 /**
@@ -253,5 +255,32 @@ public class IOUtils {
 		logger.info(String.format("readXMLDocument: Done to read XML document %s", ablsoluteXMLDocumentPath));
 		
 		return doc;
+	}
+
+	/**
+	 * Make file URL from file absolute name.
+	 * @param fileName absolute file name.
+	 * @return URL of the file.
+	 */
+	public String getFileURLFromName(String fileAbsoluteName) {
+		
+		String colfusionRoot = ConfigManager.getInstance().getPropertyByName(PropertyKeys.colfusionRootLocation);
+		
+		String fileRelativeName = fileAbsoluteName.replace(colfusionRoot + File.separator, "");
+		
+		String colfusionURL = ConfigManager.getInstance().getPropertyByName(PropertyKeys.colfusionURL);
+		
+		return colfusionURL + "/" + fileRelativeName;
+	}
+
+	/**
+	 * Makes absolute path by concatenating Col*Fusion root location with given string.
+	 * @param propertyByName
+	 * @return
+	 */
+	public String getAbsolutePathInColfutionRoot(String dir) {
+		String colfusionRoot = ConfigManager.getInstance().getPropertyByName(PropertyKeys.colfusionRootLocation);
+		
+		return colfusionRoot + File.separator + dir;
 	}
 }

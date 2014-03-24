@@ -173,7 +173,7 @@ public abstract class DatabaseHandlerBase {
 	 * @throws SQLException 
 	 * @throws Exception 
      */
-	public abstract boolean deleteDatabaseIfNotExist(String databaseName) throws SQLException, Exception;
+	public abstract boolean deleteDatabaseIfExists(String databaseName) throws SQLException, Exception;
 
 	/**
 	 * Creates a table where the data should be loaded.

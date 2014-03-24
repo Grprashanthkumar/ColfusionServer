@@ -375,7 +375,7 @@ public class KTRManager {
 		
 		for(String fileName : filesAbsoluteNames) {
 			Element name = ktrDocument.createElement("name");
-			name.appendChild(ktrDocument.createTextNode(fileName));
+			name.appendChild(ktrDocument.createTextNode(IOUtils.getInstance().getFileURLFromName(fileName)));
 			
 			fileNode.appendChild(name);
 		}
@@ -583,7 +583,7 @@ public class KTRManager {
 	 */
 	private IOUtilsStoredFileInfoModel createKTRFileFromTemplate(int sid, String dataFileExtension, String tableName) throws IOException {
 		
-		String ktrBaseDirLocation = ConfigManager.getInstance().getPropertyByName(PropertyKeys.ktrFielsBaseLocation);
+		String ktrBaseDirLocation = IOUtils.getInstance().getAbsolutePathInColfutionRoot(ConfigManager.getInstance().getPropertyByName(PropertyKeys.ktrFielsBaseLocation));
 		String ktrDirectoryLocation = ktrBaseDirLocation + File.separator +	sid;
 		
 		//TODO for now simple check for csv, but what if we going to have more extensions, need to rewrite this.
