@@ -25,6 +25,10 @@ public class DatabaseHandlerFactoryTest extends TestCase {
 	Logger logger = LogManager.getLogger(DatabaseHandlerFactoryTest.class.getName());
 	ConfigManager configManager = ConfigManager.getInstance();
 	
+	public DatabaseHandlerFactoryTest(String name) {
+		super(name);
+	}
+	
 	public void testOpenConnections() {
 		//TODO: do the test for all datahandler
 		

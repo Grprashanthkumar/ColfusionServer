@@ -10,11 +10,15 @@ public class ConfigManagerTest extends TestCase {
 	
 	Logger logger = LogManager.getLogger(ConfigManagerTest.class.getName());
 	
+	public ConfigManagerTest(String name) {
+		super(name);
+	}
+	
 	public void testGetParameterValueExisting() {
 		ConfigManager configManager = ConfigManager.getInstance();
 			
 		String testValue = configManager.getPropertyByName(PropertyKeysTest.test);
 		
 		assertEquals("test", testValue);
-	}	
+	}		
 }

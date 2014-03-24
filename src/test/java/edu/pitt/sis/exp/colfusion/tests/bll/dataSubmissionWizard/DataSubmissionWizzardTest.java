@@ -21,6 +21,10 @@ public class DataSubmissionWizzardTest extends TestCase {
 	Logger logger = LogManager.getLogger(DataSubmissionWizzardTest.class.getName());
 	ConfigManager configManager = ConfigManager.getInstance();
 	
+	public DataSubmissionWizzardTest(String name) {
+		super(name);
+	}
+	
 	/**
 	 * Test Store Uploaded Files
 	 */

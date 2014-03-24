@@ -44,6 +44,10 @@ public class KTRManagerTest extends TestCase {
 	Logger logger = LogManager.getLogger(KTRManagerTest.class.getName());
 	ConfigManager configManager = ConfigManager.getInstance();
 	
+	public KTRManagerTest(String name) {
+		super(name);
+	}
+	
 	public void testCreateKTR() {
 		
 		int sid = 0;
@@ -150,7 +154,7 @@ public class KTRManagerTest extends TestCase {
 		int sid = Utils.getTestSid();
 		
 		//TODO: again depend on other test, BAD.
-		DataSubmissionWizzardTest dataSubmissionTest = new DataSubmissionWizzardTest();
+		DataSubmissionWizzardTest dataSubmissionTest = new DataSubmissionWizzardTest("");
 		dataSubmissionTest.testStoreUploadedFiles();
 		
 		return sid;

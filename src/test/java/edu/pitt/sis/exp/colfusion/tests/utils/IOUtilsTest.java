@@ -20,6 +20,10 @@ public class IOUtilsTest extends TestCase {
 	Logger logger = LogManager.getLogger(IOUtilsTest.class.getName());
 	ConfigManager configManager = ConfigManager.getInstance();
 	
+	public IOUtilsTest(String name) {
+		super(name);
+	}
+	
 	/**
 	 * Test if the Excel file from the test/resources is written to specified in the properties location.
 	 */

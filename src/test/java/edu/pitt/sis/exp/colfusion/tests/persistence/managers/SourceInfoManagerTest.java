@@ -21,6 +21,11 @@ public class SourceInfoManagerTest extends TestCase {
 	
 	Logger logger = LogManager.getLogger(SourceInfoManagerTest.class.getName());
 	
+	public SourceInfoManagerTest(String name) {
+		super(name);
+	}
+	
+	
 	/**
 	 * Test if the Excel file from the test/resources is written to specified in the properties location.
 	 */

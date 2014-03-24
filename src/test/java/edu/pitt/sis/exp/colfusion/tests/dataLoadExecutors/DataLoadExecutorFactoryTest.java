@@ -32,6 +32,10 @@ public class DataLoadExecutorFactoryTest  extends TestCase {
 
 	Logger logger = LogManager.getLogger(DataLoadExecutorFactoryTest.class.getName());
 	
+	public DataLoadExecutorFactoryTest(String name) {
+		super(name);
+	}
+	
 	public void testGetDataLoadExecutor() {
 		
 		int sid = 0; //TODO this should be updated when we start to use test database.
@@ -116,12 +120,12 @@ public class DataLoadExecutorFactoryTest  extends TestCase {
 		int sid = Utils.getTestSid();
 		
 		//TODO: again depend on other test, BAD.
-		DataSubmissionWizzardTest dataSubmissionTest = new DataSubmissionWizzardTest();
+		DataSubmissionWizzardTest dataSubmissionTest = new DataSubmissionWizzardTest("");
 		dataSubmissionTest.testStoreUploadedFiles();
 		
 		//TODO: this is bad, because unit tests should be FIRST (the important part is independent), but I couldn't figure our how to better do it.
 		//we need to have ktr file created and the location of it stored in the DB.
-		KTRManagerTest ktrManagerTest = new KTRManagerTest();
+		KTRManagerTest ktrManagerTest = new KTRManagerTest("");
 		ktrManagerTest.testCreateKTR();
 		
 		return sid;

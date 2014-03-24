@@ -33,6 +33,10 @@ public class ImporterFactoryTest extends TestCase {
 	Logger logger = LogManager.getLogger(ImporterFactoryTest.class.getName());
 	ConfigManager configManager = ConfigManager.getInstance();
 	
+	public ImporterFactoryTest(String name) {
+		super(name);
+	}
+	
 	private Importer getImporter(ImporterType importerType) throws Exception {
 		try {
 			return ImporterFactory.getImporter(importerType);
