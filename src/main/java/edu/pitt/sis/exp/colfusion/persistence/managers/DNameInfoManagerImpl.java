@@ -72,9 +72,15 @@ public class DNameInfoManagerImpl implements DNameInfoManager {
             
             return result;
         } catch (NonUniqueResultException ex) {
+        	
+        	HibernateUtil.rollbackTransaction();
+        	
             logger.error("save failed NonUniqueResultException", ex);
             throw ex;
         } catch (HibernateException ex) {
+        	
+        	HibernateUtil.rollbackTransaction();
+        	
         	logger.error("save failed HibernateException", ex);
         	throw ex;
         }
@@ -89,8 +95,14 @@ public class DNameInfoManagerImpl implements DNameInfoManager {
             
             HibernateUtil.commitTransaction();
         } catch (NonUniqueResultException ex) {
+        	
+        	HibernateUtil.rollbackTransaction();
+        	
             logger.error("save failed NonUniqueResultException", ex);
         } catch (HibernateException ex) {
+
+        	HibernateUtil.rollbackTransaction();
+        	
         	logger.error("save failed HibernateException", ex);
         }
 	}
@@ -106,9 +118,15 @@ public class DNameInfoManagerImpl implements DNameInfoManager {
             
             return result;
         } catch (NonUniqueResultException ex) {
-            logger.error("merge failed NonUniqueResultException", ex);
+
+        	HibernateUtil.rollbackTransaction();
+        	
+        	logger.error("merge failed NonUniqueResultException", ex);
             throw ex;
         } catch (HibernateException ex) {
+
+        	HibernateUtil.rollbackTransaction();
+        	
         	logger.error("merge failed HibernateException", ex);
         	throw ex;
         }
@@ -126,8 +144,14 @@ public class DNameInfoManagerImpl implements DNameInfoManager {
             
             HibernateUtil.commitTransaction();
         } catch (NonUniqueResultException ex) {
-            logger.error("delete failed NonUniqueResultException", ex);
+
+        	HibernateUtil.rollbackTransaction();
+        	
+        	logger.error("delete failed NonUniqueResultException", ex);
         } catch (HibernateException ex) {
+
+        	HibernateUtil.rollbackTransaction();
+        	
         	logger.error("delete failed HibernateException", ex);
         }
 	}
@@ -142,8 +166,14 @@ public class DNameInfoManagerImpl implements DNameInfoManager {
             
             HibernateUtil.commitTransaction();
         } catch (NonUniqueResultException ex) {
-            logger.error("findAll failed NonUniqueResultException", ex);
+
+        	HibernateUtil.rollbackTransaction();
+        	
+        	logger.error("findAll failed NonUniqueResultException", ex);
         } catch (HibernateException ex) {
+
+        	HibernateUtil.rollbackTransaction();
+        	
         	logger.error("findAll failed HibernateException", ex);
         }
 		return result;
@@ -162,8 +192,14 @@ public class DNameInfoManagerImpl implements DNameInfoManager {
             
             HibernateUtil.commitTransaction();
         } catch (NonUniqueResultException ex) {
-            logger.error("findByID failed NonUniqueResultException", ex);
+
+        	HibernateUtil.rollbackTransaction();
+        	
+        	logger.error("findByID failed NonUniqueResultException", ex);
         } catch (HibernateException ex) {
+
+        	HibernateUtil.rollbackTransaction();
+        	
         	logger.error("findByID failed HibernateException", ex);
         }
 		return result;		
@@ -236,10 +272,12 @@ public class DNameInfoManagerImpl implements DNameInfoManager {
             
             HibernateUtil.commitTransaction();
         } catch (NonUniqueResultException ex) {
+        	
         	HibernateUtil.rollbackTransaction();
             
         	logger.error("findByID failed NonUniqueResultException", ex);
         } catch (HibernateException ex) {
+        	
         	HibernateUtil.rollbackTransaction();
         	
         	logger.error("findByID failed HibernateException", ex);
@@ -351,10 +389,12 @@ public class DNameInfoManagerImpl implements DNameInfoManager {
             
             HibernateUtil.commitTransaction();
         } catch (NonUniqueResultException ex) {
+        	
         	HibernateUtil.rollbackTransaction();
             
         	logger.error("findByID failed NonUniqueResultException", ex);
         } catch (HibernateException ex) {
+        	
         	HibernateUtil.rollbackTransaction();
         	
         	logger.error("findByID failed HibernateException", ex);

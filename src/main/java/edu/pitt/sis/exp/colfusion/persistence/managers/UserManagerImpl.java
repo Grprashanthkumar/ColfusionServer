@@ -40,9 +40,15 @@ public class UserManagerImpl implements UserManager {
             
             return result;
         } catch (NonUniqueResultException ex) {
-            logger.error("save failed NonUniqueResultException", ex);
+
+        	HibernateUtil.rollbackTransaction();
+        	
+        	logger.error("save failed NonUniqueResultException", ex);
             throw ex;
         } catch (HibernateException ex) {
+
+        	HibernateUtil.rollbackTransaction();
+        	
         	logger.error("save failed HibernateException", ex);
         	throw ex;
         }
@@ -57,9 +63,17 @@ public class UserManagerImpl implements UserManager {
             
             HibernateUtil.commitTransaction();
         } catch (NonUniqueResultException ex) {
-            logger.error("save failed NonUniqueResultException", ex);
+
+        	HibernateUtil.rollbackTransaction();
+        	
+        	logger.error("save failed NonUniqueResultException", ex);
+        	throw ex;
         } catch (HibernateException ex) {
+
+        	HibernateUtil.rollbackTransaction();
+        	
         	logger.error("save failed HibernateException", ex);
+        	throw ex;
         }
 	}
 
@@ -74,9 +88,15 @@ public class UserManagerImpl implements UserManager {
             
             return result;
         } catch (NonUniqueResultException ex) {
-            logger.error("merge failed NonUniqueResultException", ex);
+
+        	HibernateUtil.rollbackTransaction();
+        	
+        	logger.error("merge failed NonUniqueResultException", ex);
             throw ex;
         } catch (HibernateException ex) {
+
+        	HibernateUtil.rollbackTransaction();
+        	
         	logger.error("merge failed HibernateException", ex);
         	throw ex;
         }
@@ -91,9 +111,17 @@ public class UserManagerImpl implements UserManager {
             
             HibernateUtil.commitTransaction();
         } catch (NonUniqueResultException ex) {
-            logger.error("delete failed NonUniqueResultException", ex);
+
+        	HibernateUtil.rollbackTransaction();
+        	
+        	logger.error("delete failed NonUniqueResultException", ex);
+        	throw ex;
         } catch (HibernateException ex) {
+
+        	HibernateUtil.rollbackTransaction();
+        	
         	logger.error("delete failed HibernateException", ex);
+        	throw ex;
         }
 	}
 
@@ -107,9 +135,17 @@ public class UserManagerImpl implements UserManager {
             
             HibernateUtil.commitTransaction();
         } catch (NonUniqueResultException ex) {
-            logger.error("findAll failed NonUniqueResultException", ex);
+
+        	HibernateUtil.rollbackTransaction();
+
+        	logger.error("findAll failed NonUniqueResultException", ex);
+        	throw ex;
         } catch (HibernateException ex) {
+
+        	HibernateUtil.rollbackTransaction();
+        	
         	logger.error("findAll failed HibernateException", ex);
+        	throw ex;
         }
 		return result;
 	}
@@ -124,9 +160,17 @@ public class UserManagerImpl implements UserManager {
             
             HibernateUtil.commitTransaction();
         } catch (NonUniqueResultException ex) {
-            logger.error("findByID failed NonUniqueResultException", ex);
+
+        	HibernateUtil.rollbackTransaction();
+        	
+        	logger.error("findByID failed NonUniqueResultException", ex);
+        	throw ex;
         } catch (HibernateException ex) {
+
+        	HibernateUtil.rollbackTransaction();
+        	
         	logger.error("findByID failed HibernateException", ex);
+        	throw ex;
         }
 		return result;		
 	}
@@ -146,12 +190,17 @@ public class UserManagerImpl implements UserManager {
             
             return result;
         } catch (NonUniqueResultException ex) {
-            logger.error("save failed NonUniqueResultException", ex);
+
+        	HibernateUtil.rollbackTransaction();
+        	
+        	logger.error("save failed NonUniqueResultException", ex);
             throw ex;
         } catch (HibernateException ex) {
+
+        	HibernateUtil.rollbackTransaction();
+        	
         	logger.error("save failed HibernateException", ex);
         	throw ex;
         }
 	}
-
 }

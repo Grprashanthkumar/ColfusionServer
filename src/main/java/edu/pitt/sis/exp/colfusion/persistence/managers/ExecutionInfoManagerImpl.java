@@ -46,9 +46,15 @@ public class ExecutionInfoManagerImpl implements ExecutionInfoManager {
             
             return result;
         } catch (NonUniqueResultException ex) {
-            logger.error("save failed NonUniqueResultException", ex);
+
+        	HibernateUtil.rollbackTransaction();
+        	
+        	logger.error("save failed NonUniqueResultException", ex);
             throw ex;
         } catch (HibernateException ex) {
+
+        	HibernateUtil.rollbackTransaction();
+        	
         	logger.error("save failed HibernateException", ex);
         	throw ex;
         }
@@ -63,9 +69,17 @@ public class ExecutionInfoManagerImpl implements ExecutionInfoManager {
             
             HibernateUtil.commitTransaction();
         } catch (NonUniqueResultException ex) {
-            logger.error("save failed NonUniqueResultException", ex);
+
+        	HibernateUtil.rollbackTransaction();
+        	
+        	logger.error("save failed NonUniqueResultException", ex);
+        	throw ex;
         } catch (HibernateException ex) {
+
+        	HibernateUtil.rollbackTransaction();
+        	
         	logger.error("save failed HibernateException", ex);
+        	throw ex;
         }
 	}
 
@@ -80,9 +94,15 @@ public class ExecutionInfoManagerImpl implements ExecutionInfoManager {
             
             return result;
         } catch (NonUniqueResultException ex) {
-            logger.error("merge failed NonUniqueResultException", ex);
+
+        	HibernateUtil.rollbackTransaction();
+        	
+        	logger.error("merge failed NonUniqueResultException", ex);
             throw ex;
         } catch (HibernateException ex) {
+
+        	HibernateUtil.rollbackTransaction();
+        	
         	logger.error("merge failed HibernateException", ex);
         	throw ex;
         }
@@ -97,9 +117,17 @@ public class ExecutionInfoManagerImpl implements ExecutionInfoManager {
             
             HibernateUtil.commitTransaction();
         } catch (NonUniqueResultException ex) {
-            logger.error("delete failed NonUniqueResultException", ex);
+
+        	HibernateUtil.rollbackTransaction();
+        	
+        	logger.error("delete failed NonUniqueResultException", ex);
+        	throw ex;
         } catch (HibernateException ex) {
+
+        	HibernateUtil.rollbackTransaction();
+        	
         	logger.error("delete failed HibernateException", ex);
+        	throw ex;
         }
 	}
 
@@ -113,8 +141,14 @@ public class ExecutionInfoManagerImpl implements ExecutionInfoManager {
             
             HibernateUtil.commitTransaction();
         } catch (NonUniqueResultException ex) {
-            logger.error("findAll failed NonUniqueResultException", ex);
+
+        	HibernateUtil.rollbackTransaction();
+        	
+        	logger.error("findAll failed NonUniqueResultException", ex);
         } catch (HibernateException ex) {
+
+        	HibernateUtil.rollbackTransaction();
+        	
         	logger.error("findAll failed HibernateException", ex);
         }
 		return result;
@@ -130,9 +164,17 @@ public class ExecutionInfoManagerImpl implements ExecutionInfoManager {
             
             HibernateUtil.commitTransaction();
         } catch (NonUniqueResultException ex) {
-            logger.error("findByID failed NonUniqueResultException", ex);
+
+        	HibernateUtil.rollbackTransaction();
+        	
+        	logger.error("findByID failed NonUniqueResultException", ex);
+        	throw ex;
         } catch (HibernateException ex) {
+
+        	HibernateUtil.rollbackTransaction();
+        	
         	logger.error("findByID failed HibernateException", ex);
+        	throw ex;
         }
 		return result;		
 	}
@@ -197,10 +239,16 @@ public class ExecutionInfoManagerImpl implements ExecutionInfoManager {
             
             return executeInfoRecords;
         } catch (NonUniqueResultException ex) {
-            logger.error("getExistingExecutionLogId failed NonUniqueResultException", ex);
+
+        	HibernateUtil.rollbackTransaction();
+        	
+        	logger.error("getExistingExecutionLogId failed NonUniqueResultException", ex);
             
             throw ex;
         } catch (HibernateException ex) {
+
+        	HibernateUtil.rollbackTransaction();
+        	
         	logger.error("getExistingExecutionLogId failed HibernateException", ex);
         	
         	throw ex;
@@ -254,10 +302,16 @@ public class ExecutionInfoManagerImpl implements ExecutionInfoManager {
    
             HibernateUtil.commitTransaction();           
         } catch (NonUniqueResultException ex) {
-            logger.error("updateStatus failed NonUniqueResultException", ex);
+
+        	HibernateUtil.rollbackTransaction();
+        	
+        	logger.error("updateStatus failed NonUniqueResultException", ex);
             
             throw ex;
         } catch (HibernateException ex) {
+
+        	HibernateUtil.rollbackTransaction();
+        	
         	logger.error("updateStatus failed HibernateException", ex);
         	
         	throw ex;
@@ -289,14 +343,19 @@ public class ExecutionInfoManagerImpl implements ExecutionInfoManager {
    
             HibernateUtil.commitTransaction();           
         } catch (NonUniqueResultException ex) {
-            logger.error("appendLog failed NonUniqueResultException", ex);
+
+        	HibernateUtil.rollbackTransaction();
+        	
+        	logger.error("appendLog failed NonUniqueResultException", ex);
             
             throw ex;
         } catch (HibernateException ex) {
+
+        	HibernateUtil.rollbackTransaction();
+        	
         	logger.error("appendLog failed HibernateException", ex);
         	
         	throw ex;
         }
 	}
-
 }
