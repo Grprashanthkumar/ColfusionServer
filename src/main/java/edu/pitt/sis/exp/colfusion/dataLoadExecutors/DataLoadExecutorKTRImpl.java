@@ -197,11 +197,11 @@ public class DataLoadExecutorKTRImpl extends DataLoadExecutorBaseImpl implements
 
 		executionInfoMgr.appendLog(executionLogId, String.format("Started to prepare Carte Server Url for the %s", ktrLocation));
 		
-		ktrLocation = URLEncoder.encode(ktrLocation, "UTF-8");
+		String ktrFileURL = edu.pitt.sis.exp.colfusion.utils.IOUtils.getInstance().getFileURLFromName(ktrLocation);
+		
+		ktrFileURL = URLEncoder.encode(ktrFileURL, "UTF-8");
 
 		String carteServerURL = ConfigManager.getInstance().getPropertyByName(PropertyKeys.carteServerURL);
-		
-		String ktrFileURL = edu.pitt.sis.exp.colfusion.utils.IOUtils.getInstance().getFileURLFromName(ktrLocation);
 		
         String result = String.format("%s?trans=%s&Sid=%d&Eid=%d", carteServerURL, ktrFileURL, sid, executionLogId);
         

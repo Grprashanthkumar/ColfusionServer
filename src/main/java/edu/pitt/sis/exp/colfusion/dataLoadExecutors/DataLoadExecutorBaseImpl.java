@@ -73,7 +73,9 @@ public abstract class DataLoadExecutorBaseImpl extends ProcessBase implements Da
 			linkedServerHandler.addOrUpdateLinkedServer(sourceDBInfo);
 			
 		} catch (Exception e) {
-			// TODO: handle exception
+			//TODO: throw proper exception
+			
+			throw e;
 		}
 		finally {
 			linkedServerHandler.close();
