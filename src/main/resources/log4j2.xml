@@ -9,6 +9,13 @@
         <PatternLayout pattern="%d{yyyy-mm-dd HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
     </File>  
     
+    <SMTP name="Mail" subject="Col*Fusion Error Log" to="Karataev.Evgeny@gmail.com" from="support@chia.pitt.edu"
+          smtpHost="localhost" smtpPort="25" bufferSize="50">
+          
+          <PatternLayout pattern="%d{yyyy-mm-dd HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
+          
+    </SMTP>
+    
     <Async name="Async">
       <AppenderRef ref="MyFile"/>
     </Async>
@@ -18,6 +25,8 @@
       <AppenderRef ref="Console"/>
       
       <AppenderRef ref="Async"/>
+      
+      <AppenderRef ref="Mail" level="error"/>
     </Root>
   </Loggers>
 </Configuration>
