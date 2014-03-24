@@ -13,6 +13,8 @@ public class PropertyKeysTest {
 	//
 	//******************************************************************************
 	
+	public static String testStoryTitle = "testStoryTitle";
+	
 	public static String test = "test";
 	
 	public static String testExcelFileNameInResourceFolder = "testExcelFileNameInResourceFolder";
@@ -83,4 +85,6 @@ public class PropertyKeysTest {
 	 * Type is the database vendor, e.g. MySQL, MSSQL, etc.
 	 */
 	public static String testTargetFileToDBDatabase_Type = "testTargetFileToDBDatabase_Type";
+
+	public static String testUserLogin = "testUserLogin";
 }

@@ -13,6 +13,7 @@ import org.apache.logging.log4j.Logger;
  * @author Evgeny
  *
  */
+//TODO: move it to other place
 public enum DataSourceTypes {
 	DATA_FILE("data file"), DUMP_FILE("dump file"), EXTERNAL_DATABASE("external database");
     

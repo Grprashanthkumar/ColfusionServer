@@ -55,7 +55,7 @@ public interface SourceInfoManager extends GeneralManager<ColfusionSourceinfo, I
 	 * @param searchTerm to search to be contained in the datasets title.
 	 * @return all found datasets which conform to the search criteria. 
 	 */
-	public List<ColfusionSourceinfo> findByTitle(String searchTerm);
+	public List<ColfusionSourceinfo> findByTitle(String searchTerm, int limit);
 
 	/**
 	 * Creates new story with given input parameters and stores it in the database and the resulting entity has automatically generated sid.
@@ -64,8 +64,9 @@ public interface SourceInfoManager extends GeneralManager<ColfusionSourceinfo, I
 	 * @param date when the new story is created.
 	 * @param source_type type of the source from which the data will be imported.
 	 * @return newly created story which is stored in the db. Has auto generated sid.
+	 * @throws Exception 
 	 */
-	public ColfusionSourceinfo newStory(int userId, Date date, DataSourceTypes source_type);
+	public ColfusionSourceinfo newStory(int userId, Date date, DataSourceTypes source_type) throws Exception;
 
 	/**
 	 * Updates both sourceinfo and links table with story metadata.

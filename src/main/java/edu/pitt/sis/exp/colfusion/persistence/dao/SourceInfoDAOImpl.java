@@ -57,9 +57,11 @@ public class SourceInfoDAOImpl extends GenericDAOImpl<ColfusionSourceinfo, Integ
 	}
 
 	@Override
-	public List<ColfusionSourceinfo> findDatasetsInfoByTitle(String searchTerm) {
-		// TODO Auto-generated method stub
-		return null;
+	public List<ColfusionSourceinfo> lookupStories(String searchTerm, int limit) {
+		String sql = "select si from ColfusionSourceinfo si where si.title like :searchTerm";
+		Query query = HibernateUtil.getSession().createQuery(sql).setParameter("searchTerm", "%" + searchTerm + "%").setMaxResults(limit);
+		
+		return this.findMany(query);
 	}
 
 }

@@ -29,58 +29,106 @@ public class UserManagerImpl implements UserManager {
 	// General manager interface
 	//***************************************
 	
-	/* (non-Javadoc)
-	 * @see edu.pitt.sis.exp.colfusion.persistence.managers.GeneralManager#save(java.lang.Object)
-	 */
 	@Override
 	public Integer save(ColfusionUsers entity) {
-		// TODO Auto-generated method stub
-		return null;
+		try {
+            HibernateUtil.beginTransaction();
+            
+            Integer result = userDAO.save(entity);
+            
+            HibernateUtil.commitTransaction();
+            
+            return result;
+        } catch (NonUniqueResultException ex) {
+            logger.error("save failed NonUniqueResultException", ex);
+            throw ex;
+        } catch (HibernateException ex) {
+        	logger.error("save failed HibernateException", ex);
+        	throw ex;
+        }
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.pitt.sis.exp.colfusion.persistence.managers.GeneralManager#saveOrUpdate(java.lang.Object)
-	 */
 	@Override
 	public void saveOrUpdate(ColfusionUsers entity) {
-		// TODO Auto-generated method stub
-
+		try {
+            HibernateUtil.beginTransaction();
+            
+            userDAO.saveOrUpdate(entity);
+            
+            HibernateUtil.commitTransaction();
+        } catch (NonUniqueResultException ex) {
+            logger.error("save failed NonUniqueResultException", ex);
+        } catch (HibernateException ex) {
+        	logger.error("save failed HibernateException", ex);
+        }
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.pitt.sis.exp.colfusion.persistence.managers.GeneralManager#merge(java.lang.Object)
-	 */
 	@Override
 	public ColfusionUsers merge(ColfusionUsers entity) {
-		// TODO Auto-generated method stub
-		return null;
+		try {
+            HibernateUtil.beginTransaction();
+            
+            ColfusionUsers result = userDAO.merge(entity);
+            
+            HibernateUtil.commitTransaction();
+            
+            return result;
+        } catch (NonUniqueResultException ex) {
+            logger.error("merge failed NonUniqueResultException", ex);
+            throw ex;
+        } catch (HibernateException ex) {
+        	logger.error("merge failed HibernateException", ex);
+        	throw ex;
+        }
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.pitt.sis.exp.colfusion.persistence.managers.GeneralManager#delete(java.lang.Object)
-	 */
 	@Override
 	public void delete(ColfusionUsers entity) {
-		// TODO Auto-generated method stub
-
+		try {
+            HibernateUtil.beginTransaction();
+            
+            userDAO.delete(entity);
+            
+            HibernateUtil.commitTransaction();
+        } catch (NonUniqueResultException ex) {
+            logger.error("delete failed NonUniqueResultException", ex);
+        } catch (HibernateException ex) {
+        	logger.error("delete failed HibernateException", ex);
+        }
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.pitt.sis.exp.colfusion.persistence.managers.GeneralManager#findAll()
-	 */
 	@Override
 	public List<ColfusionUsers> findAll() {
-		// TODO Auto-generated method stub
-		return null;
+		List<ColfusionUsers> result = null;
+		try {
+            HibernateUtil.beginTransaction();
+            
+            result = userDAO.findAll(ColfusionUsers.class);
+            
+            HibernateUtil.commitTransaction();
+        } catch (NonUniqueResultException ex) {
+            logger.error("findAll failed NonUniqueResultException", ex);
+        } catch (HibernateException ex) {
+        	logger.error("findAll failed HibernateException", ex);
+        }
+		return result;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.pitt.sis.exp.colfusion.persistence.managers.GeneralManager#findByID(java.lang.Object)
-	 */
 	@Override
 	public ColfusionUsers findByID(Integer id) {
-		// TODO Auto-generated method stub
-		return null;
+		ColfusionUsers result = null;
+		try {
+            HibernateUtil.beginTransaction();
+            
+            result = userDAO.findByID(ColfusionUsers.class, id);
+            
+            HibernateUtil.commitTransaction();
+        } catch (NonUniqueResultException ex) {
+            logger.error("findByID failed NonUniqueResultException", ex);
+        } catch (HibernateException ex) {
+        	logger.error("findByID failed HibernateException", ex);
+        }
+		return result;		
 	}
 
 	//***************************************

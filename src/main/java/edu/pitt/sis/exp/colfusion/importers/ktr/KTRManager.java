@@ -69,6 +69,8 @@ public class KTRManager {
 	 * 
 	 * If the otherFiles field is not empty, then those files should have exactly the same structure as the main file. The ktr template will then 
 	 * list other files with exactly the same properties for sheets and as the result the data from all file will be appended.
+	 * 
+	 * The KTR files locations are also saved to database at this point.
 	 * @param file
 	 * @throws Exception 
 	 */

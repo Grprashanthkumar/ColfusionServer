@@ -6,6 +6,8 @@ package edu.pitt.sis.exp.colfusion.tests.importers.ktr;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPathExpressionException;
@@ -17,8 +19,13 @@ import org.xml.sax.SAXException;
 import edu.pitt.sis.exp.colfusion.ConfigManager;
 import edu.pitt.sis.exp.colfusion.PropertyKeys;
 import edu.pitt.sis.exp.colfusion.importers.ktr.KTRManager;
+import edu.pitt.sis.exp.colfusion.importers.utils.DataSourceTypes;
 import edu.pitt.sis.exp.colfusion.persistence.managers.SourceInfoManager;
 import edu.pitt.sis.exp.colfusion.persistence.managers.SourceInfoManagerImpl;
+import edu.pitt.sis.exp.colfusion.persistence.managers.UserManager;
+import edu.pitt.sis.exp.colfusion.persistence.managers.UserManagerImpl;
+import edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionSourceinfo;
+import edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionUsers;
 import edu.pitt.sis.exp.colfusion.tests.PropertyKeysTest;
 import edu.pitt.sis.exp.colfusion.viewmodels.DatasetVariableViewModel;
 import edu.pitt.sis.exp.colfusion.viewmodels.FileContentInfoViewModel;
@@ -36,7 +43,15 @@ public class KTRManagerTest extends TestCase {
 	
 	public void testCreateKTR() {
 		
-		int sid = 1163;
+		int sid = 0;
+		
+		try {
+			sid = prepareDatabase();
+		} catch (Exception e1) {
+			logger.error("prepareDatabase failed", e1);
+			
+			fail("prepareDatabase failed");
+		}
 		
 		KTRManager ktrManager = new KTRManager(sid);
 		
@@ -121,5 +136,52 @@ public class KTRManagerTest extends TestCase {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+
+	private int  prepareDatabase() throws Exception {
+		// TODO the same code is used in the KTRManagerTest, should be probably moved to somewhere like TestUtils
+		
+		SourceInfoManager storyMgr = new SourceInfoManagerImpl();
+		List<ColfusionSourceinfo> stories = storyMgr.findByTitle(ConfigManager.getInstance().getPropertyByName(PropertyKeysTest.testStoryTitle), 1);
+		
+		ColfusionSourceinfo story = null;
+		
+		if (stories.size() == 0 || stories.get(0) == null) {
+			
+			UserManager userMgr = new UserManagerImpl();
+			
+			List<ColfusionUsers> users = userMgr.lookUpUser(ConfigManager.getInstance().getPropertyByName(PropertyKeysTest.testUserLogin), 1);
+			ColfusionUsers user = null;
+			
+			if (users.size() == 0 || users.get(0) == null) {
+				user = new ColfusionUsers(new Date(), new Date(),
+						new Date(), new Date(), new Date(), true);
+				
+				user.setUserLogin(ConfigManager.getInstance().getPropertyByName(PropertyKeysTest.testUserLogin));
+				
+				userMgr.save(user);
+				
+				userMgr.saveOrUpdate(user);
+			}
+			else {
+				user = users.get(0);
+			}
+			
+			story = storyMgr.newStory(user.getUserId(), new Date(), DataSourceTypes.DATA_FILE);
+			story.setTitle(ConfigManager.getInstance().getPropertyByName(PropertyKeysTest.testStoryTitle));
+			storyMgr.saveOrUpdate(story);
+		}
+		else {
+			story = stories.get(0);
+			
+			if (DataSourceTypes.fromString(story.getSourceType()) != DataSourceTypes.DATA_FILE) {
+				story.setSourceType(DataSourceTypes.DATA_FILE.getValue());
+				
+				storyMgr.saveOrUpdate(story);
+			}
+		}
+		
+				
+		return story.getSid();
 	}
 }

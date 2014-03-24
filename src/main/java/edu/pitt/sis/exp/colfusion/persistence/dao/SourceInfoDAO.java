@@ -44,10 +44,10 @@ public interface SourceInfoDAO extends GenericDAO<ColfusionSourceinfo, Integer> 
 	public ColfusionSourceinfo findDatasetInfoBySid(int sid, boolean includeDraft);
 	
 	/**
-	 * Finds all datasets that have title containing given search term as a keyword/phrase.
-	 * 
-	 * @param searchTerm to search to be contained in the datasets title.
-	 * @return all found datasets which conform to the search criteria. 
+	 * Find stories which titles contain search term.
+	 * @param searchTerm the term to look for in the title of stories.
+	 * @param limit the up to number of stories to return.
+	 * @return the list of stories which satisfy the conditions.
 	 */
-	public List<ColfusionSourceinfo> findDatasetsInfoByTitle(String searchTerm);
+	public List<ColfusionSourceinfo> lookupStories(String searchTerm, int limit);
 }

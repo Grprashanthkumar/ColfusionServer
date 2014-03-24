@@ -187,7 +187,10 @@ public class SourceInfoManagerImpl implements SourceInfoManager {
             
             result = sourceInfoDAO.findByID(ColfusionSourceinfo.class, id);
             
-            Hibernate.initialize(result.getColfusionUsers());
+            if (result != null) { 
+            
+            	Hibernate.initialize(result.getColfusionUsers());
+            }
             
             HibernateUtil.commitTransaction();
         } catch (NonUniqueResultException ex) {
@@ -225,13 +228,19 @@ public class SourceInfoManagerImpl implements SourceInfoManager {
             
             sourceinfo = sourceInfoDAO.findDatasetInfoBySid(sid, includeDraft);
             
-            Hibernate.initialize(sourceinfo.getColfusionUsers());
-            Hibernate.initialize(sourceinfo.getColfusionSourceinfoUsers());
+            if (sourceinfo != null) {
             
-            for (Object sourceInfoUserObj : sourceinfo.getColfusionSourceinfoUsers().toArray()) {
-    			ColfusionSourceinfoUser sourceInfoUser = (ColfusionSourceinfoUser) sourceInfoUserObj;
-    			Hibernate.initialize(sourceInfoUser.getColfusionUsers());
-    		}
+	            Hibernate.initialize(sourceinfo.getColfusionUsers());
+	            Hibernate.initialize(sourceinfo.getColfusionSourceinfoUsers());
+	            
+	            for (Object sourceInfoUserObj : sourceinfo.getColfusionSourceinfoUsers().toArray()) {
+	    			ColfusionSourceinfoUser sourceInfoUser = (ColfusionSourceinfoUser) sourceInfoUserObj;
+	    			
+	    			if (sourceInfoUser != null) {
+	    				Hibernate.initialize(sourceInfoUser.getColfusionUsers());
+	    			}
+	    		}
+            }
             
             HibernateUtil.commitTransaction();
         } catch (NonUniqueResultException ex) {
@@ -243,9 +252,36 @@ public class SourceInfoManagerImpl implements SourceInfoManager {
 	}
 
 	@Override
-	public List<ColfusionSourceinfo> findByTitle(String searchTerm) {
-		// TODO Auto-generated method stub
-		return null;
+	public List<ColfusionSourceinfo> findByTitle(String searchTerm, int limit) {
+		try {
+            HibernateUtil.beginTransaction();
+            
+            List<ColfusionSourceinfo> result = sourceInfoDAO.lookupStories(searchTerm, limit);
+            
+            for (ColfusionSourceinfo sourceinfo : result) {
+            	
+            	Hibernate.initialize(sourceinfo.getColfusionUsers());
+	            Hibernate.initialize(sourceinfo.getColfusionSourceinfoUsers());
+	            
+	            for (Object sourceInfoUserObj : sourceinfo.getColfusionSourceinfoUsers().toArray()) {
+	    			ColfusionSourceinfoUser sourceInfoUser = (ColfusionSourceinfoUser) sourceInfoUserObj;
+	    			
+	    			if (sourceInfoUser != null) {
+	    				Hibernate.initialize(sourceInfoUser.getColfusionUsers());
+	    			}
+	    		}
+			}
+            
+            HibernateUtil.commitTransaction();
+            
+            return result;
+        } catch (NonUniqueResultException ex) {
+            logger.error("save failed NonUniqueResultException", ex);
+            throw ex;
+        } catch (HibernateException ex) {
+        	logger.error("save failed HibernateException", ex);
+        	throw ex;
+        }
 	}
 
 	/**
@@ -255,16 +291,23 @@ public class SourceInfoManagerImpl implements SourceInfoManager {
 	 * @param date when the new story is created.
 	 * @param source_type type of the source from which the data will be imported.
 	 * @return newly created story which is stored in the db. Has auto generated sid.
+	 * @throws Exception 
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
-	public ColfusionSourceinfo newStory(int userId, Date date, DataSourceTypes source_type) throws NonUniqueResultException, HibernateException {
+	public ColfusionSourceinfo newStory(int userId, Date date, DataSourceTypes source_type) throws Exception {
 		try {
             HibernateUtil.beginTransaction();
             
             UsersDAO usersDAO = new UsersDAOImpl();
             
             ColfusionUsers userCreator = usersDAO.findByID(ColfusionUsers.class, userId);
+            
+            if (userCreator == null) {
+            	logger.error(String.format("newStory failed: could not find user by %d id", userId));
+            	
+            	throw new Exception(String.format("newStory failed: could not find user by %d id", userId));
+            }
             
             ColfusionSourceinfo newStoryEntity = new ColfusionSourceinfo(userCreator, date, source_type.getValue());
             
@@ -275,6 +318,12 @@ public class SourceInfoManagerImpl implements SourceInfoManager {
             UserRolesDAO userRolesDAO = new UserRolesDAOImpl();
             // 1 is for contributor/submitter, TODO: maybe we should use enum here not hard wired value.
             ColfusionUserroles userRole = userRolesDAO.findByID(ColfusionUserroles.class, 1);
+            
+            if (userRole == null) {
+            	logger.error(String.format("newStory failed: could not find userRole by %d id", 1));
+            	
+            	throw new Exception(String.format("newStory failed: could not find user by %d id", 1));
+            }
             
             SourceinfoUserRolesDAO sourceinfoUserRoles = new SourceinfoUserRolesDAOImpl();
             
@@ -534,18 +583,22 @@ public class SourceInfoManagerImpl implements SourceInfoManager {
             result.setSid(sid);
             
             for (ColfusionSourceinfoMetadataEditHistory historyRecord : historyLog) {
-            	Hibernate.initialize(historyRecord.getColfusionUsers());
-            	StoryAuthorViewModel author = MappingUtils.getInstance().mapColfusionUserToStoryAuthorViewModel(historyRecord.getColfusionUsers());
             	
-            	StoryMetadataHistoryLogRecordViewModel historyRecordViewModel = new StoryMetadataHistoryLogRecordViewModel();
-            	historyRecordViewModel.setHid(historyRecord.getHid());
-            	historyRecordViewModel.setItem(historyRecord.getItem());
-            	historyRecordViewModel.setItemValue(historyRecord.getItemValue());
-            	historyRecordViewModel.setReason(historyRecord.getReason());
-            	historyRecordViewModel.setWhenSaved(historyRecord.getWhenSaved());
-            	historyRecordViewModel.setAuthor(author);
+            	if (historyRecord != null) {
             	
-            	result.getHistoryLogRecords().add(historyRecordViewModel);
+	            	Hibernate.initialize(historyRecord.getColfusionUsers());
+	            	StoryAuthorViewModel author = MappingUtils.getInstance().mapColfusionUserToStoryAuthorViewModel(historyRecord.getColfusionUsers());
+	            	
+	            	StoryMetadataHistoryLogRecordViewModel historyRecordViewModel = new StoryMetadataHistoryLogRecordViewModel();
+	            	historyRecordViewModel.setHid(historyRecord.getHid());
+	            	historyRecordViewModel.setItem(historyRecord.getItem());
+	            	historyRecordViewModel.setItemValue(historyRecord.getItemValue());
+	            	historyRecordViewModel.setReason(historyRecord.getReason());
+	            	historyRecordViewModel.setWhenSaved(historyRecord.getWhenSaved());
+	            	historyRecordViewModel.setAuthor(author);
+	            	
+	            	result.getHistoryLogRecords().add(historyRecordViewModel);
+            	}
             }
             
             HibernateUtil.commitTransaction();
