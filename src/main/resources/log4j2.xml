@@ -9,7 +9,7 @@
         <PatternLayout pattern="%d{yyyy-mm-dd HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
     </File>  
     
-    <SMTP name="Mail" subject="Error Log" to="errors@logging.apache.org" from="test@logging.apache.org"
+    <SMTP name="Mail" subject="Col*Fusion Error Log" to="Karataev.Evgeny@gmail.com" from="support@chia.pitt.edu"
           smtpHost="localhost" smtpPort="25" bufferSize="50">
     </SMTP>
     
