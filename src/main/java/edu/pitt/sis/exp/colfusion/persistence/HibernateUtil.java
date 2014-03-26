@@ -38,16 +38,33 @@ public class HibernateUtil {
 	 
 	public static Session beginTransaction() {
 		Session hibernateSession = HibernateUtil.getSession();
-		hibernateSession.beginTransaction();
+		
+		if (hibernateSession.getTransaction() != null
+	            && hibernateSession.getTransaction().isActive()) {
+			hibernateSession.getTransaction();
+	    } else {
+	    	hibernateSession.beginTransaction();
+	    }
+		
 		return hibernateSession;
 	}
 	 
 	public static void commitTransaction() {
-		HibernateUtil.getSession().getTransaction().commit();
+		if (HibernateUtil.getSession().getTransaction() != null) {
+			HibernateUtil.getSession().getTransaction().commit();
+		}
+		else {
+			logger.error("commitTransaction was trying to commit but HibernateUtil.getSession().getTransaction() equals NULL");
+		}
 	}
 	 
 	public static void rollbackTransaction() {
-		HibernateUtil.getSession().getTransaction().rollback();
+		if (HibernateUtil.getSession().getTransaction() != null) {
+			HibernateUtil.getSession().getTransaction().rollback();
+		}
+		else {
+			logger.error("rollbackTransaction was trying to commit but HibernateUtil.getSession().getTransaction() equals NULL");
+		}
 	}
 	 
 	public static void closeSession() {
