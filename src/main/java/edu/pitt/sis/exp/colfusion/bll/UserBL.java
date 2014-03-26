@@ -30,18 +30,32 @@ public class UserBL {
 	 * @return the response model {@link AuthorsResponse} which has payload with found users as {@link List} of {@link StoryAuthorViewModel}.
 	 */
 	public AuthorsResponse lookUpAuthors(String searchTerm, int limit) {
-		UserManager userMng = new UserManagerImpl();
-		
 		logger.info(String.format("started to look up up to %d users which contain %s search term", limit, searchTerm));
-		
-		List<ColfusionUsers> users = userMng.lookUpUser(searchTerm, limit);
 		
 		AuthorsResponse result = new AuthorsResponse();
 		
-		for (ColfusionUsers user : users) {
-			StoryAuthorViewModel author = MappingUtils.getInstance().mapColfusionUserToStoryAuthorViewModel(user);
+		result.isSuccessful = true;
+		result.message = "OK";
+		
+		if (searchTerm.length() == 0 || limit == 0) {
+			result.message = "Search term is empty or limit is set to 0";
+			return result;
+		}
+		
+		try {
+			UserManager userMng = new UserManagerImpl();
 			
-			result.getPayload().add(author);
+			List<ColfusionUsers> users = userMng.lookUpUser(searchTerm, limit);
+			
+			for (ColfusionUsers user : users) {
+				StoryAuthorViewModel author = MappingUtils.getInstance().mapColfusionUserToStoryAuthorViewModel(user);
+				
+				result.getPayload().add(author);
+			}
+		} catch (Exception e) {
+			logger.error(String.format("lookUpAuthors in UserBL failed for search term: %s and limit %d", searchTerm, limit), e);
+			result.isSuccessful = false;
+			result.message = String.format("lookUpAuthors in UserBL failed for search term: %s and limit %d", searchTerm, limit);		
 		}
 		
 		logger.info(String.format("finished to look up and mapping up to %d users which contain %s search term", limit, searchTerm));

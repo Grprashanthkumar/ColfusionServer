@@ -52,11 +52,11 @@ public class UserController extends BaseController {
 		AuthorsResponse result = new AuthorsResponse();
 		
 		try {
+			
 			UserBL userBL = new UserBL();
 			
 			result = userBL.lookUpAuthors(searchTerm, limit);
-			result.isSuccessful = true;
-			result.message = "OK";
+			
 		} catch (Exception e) {
 			result.isSuccessful = false;
 			result.message = "Could not perform look up.";
