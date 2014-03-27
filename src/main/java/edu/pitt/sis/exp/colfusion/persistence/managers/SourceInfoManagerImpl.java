@@ -454,7 +454,7 @@ public class SourceInfoManagerImpl implements SourceInfoManager {
         newStoryEntity.setTitle(metadata.getTitle());
         newStoryEntity.setStatus(metadata.getStatus());
         
-        handleHistoryEdits(newStoryEntity, metadata.getUserId());
+        handleHistoryEdits(newStoryEntity, metadata.getUserId(), metadata.getEditReason());
         sourceInfoDAO.merge(newStoryEntity);
         
         return newStoryEntity;
@@ -468,16 +468,16 @@ public class SourceInfoManagerImpl implements SourceInfoManager {
 	 * @param newStory new instance of the sourceinfo record possibly updated by user during edit operation.
 	 * @param userId id of the user who did edit (note, it is not the submitter, it is id of the user who was logged in and performed the edit).
 	 */
-	private void handleHistoryEdits(ColfusionSourceinfo newStory, int userId) {
+	private void handleHistoryEdits(ColfusionSourceinfo newStory, int userId, String reason) {
 		SourceInfoMetadataEditHistoryDAO editHistorDAO = new SourceInfoMetadataEditHistoryDAOImpl();
 		
 		ColfusionSourceinfo oldStory = sourceInfoDAO.findByID(ColfusionSourceinfo.class, newStory.getSid());
 		
 		String oldValue = (oldStory == null) ? null : oldStory.getTitle();
-		editHistorDAO.saveHistoryIfChanged(newStory.getSid(), userId, oldValue, newStory.getTitle(), HistoryItem.TITLE,  "");
+		editHistorDAO.saveHistoryIfChanged(newStory.getSid(), userId, oldValue, newStory.getTitle(), HistoryItem.TITLE,  reason);
 		
 		oldValue = (oldStory == null) ? null : oldStory.getStatus();
-		editHistorDAO.saveHistoryIfChanged(newStory.getSid(), userId, oldValue, newStory.getStatus(), HistoryItem.STATUS,  "");
+		editHistorDAO.saveHistoryIfChanged(newStory.getSid(), userId, oldValue, newStory.getStatus(), HistoryItem.STATUS,  reason);
 	}
 	
 	/**
@@ -487,17 +487,17 @@ public class SourceInfoManagerImpl implements SourceInfoManager {
 	 * @param newLink new instance of the links record possibly updated by user during edit operation.
 	 * @param userId id of the user who did edit (note, it is not the submitter, it is id of the user who was logged in and performed the edit).
 	 */
-	private void handleHistoryEdits(ColfusionLinks newLink, int userId) {
+	private void handleHistoryEdits(ColfusionLinks newLink, int userId, String reason) {
 		SourceInfoMetadataEditHistoryDAO editHistorDAO = new SourceInfoMetadataEditHistoryDAOImpl();
 		
 		LinksDAO linksDAO = new LinksDAOImpl();
 		ColfusionLinks oldLink = linksDAO.findByID(ColfusionLinks.class, newLink.getLinkId());
 		
 		String oldValue = (oldLink == null) ? null : oldLink.getLinkContent();
-		editHistorDAO.saveHistoryIfChanged(newLink.getLinkId(), userId, oldValue, newLink.getLinkContent(), HistoryItem.DESCRIPTION,  "");
+		editHistorDAO.saveHistoryIfChanged(newLink.getLinkId(), userId, oldValue, newLink.getLinkContent(), HistoryItem.DESCRIPTION, reason);
 		
 		oldValue = (oldLink == null) ? null : oldLink.getLinkTags();
-		editHistorDAO.saveHistoryIfChanged(newLink.getLinkId(), userId, oldValue, newLink.getLinkTags(), HistoryItem.TAGS,  "");
+		editHistorDAO.saveHistoryIfChanged(newLink.getLinkId(), userId, oldValue, newLink.getLinkTags(), HistoryItem.TAGS, reason);
 	}
 	
 	
@@ -567,7 +567,7 @@ public class SourceInfoManagerImpl implements SourceInfoManager {
         newLink.setLinkTags(metadata.getTags());
         newLink.setLinkTitleUrl(String.valueOf(metadata.getSid()));
         
-        handleHistoryEdits(newLink, metadata.getUserId());
+        handleHistoryEdits(newLink, metadata.getUserId(), metadata.getEditReason());
         
         LinksDAO linksDAO = new LinksDAOImpl();
         linksDAO.merge(newLink);
@@ -642,7 +642,7 @@ public class SourceInfoManagerImpl implements SourceInfoManager {
             SourceInfoMetadataEditHistoryDAO metadataHistoryDAO = new SourceInfoMetadataEditHistoryDAOImpl();
 
             //TODO: this should be moved to hitory manager
-            String sql = "select h from ColfusionSourceinfoMetadataEditHistory h where h.colfusionSourceinfo = :sid and h.item = :item ";
+            String sql = "select h from ColfusionSourceinfoMetadataEditHistory h where h.colfusionSourceinfo = :sid and h.item = :item ORDER BY h.hid DESC";
             ColfusionSourceinfo sourceInfo = sourceInfoDAO.findByID(ColfusionSourceinfo.class, sid);
             Query query = HibernateUtil.getSession().createQuery(sql).setParameter("sid", sourceInfo).setParameter("item", historyItem);
             ArrayList<ColfusionSourceinfoMetadataEditHistory> historyLog = (ArrayList<ColfusionSourceinfoMetadataEditHistory>) metadataHistoryDAO.findMany(query);

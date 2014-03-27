@@ -22,6 +22,7 @@ public class StoryMetadataViewModel {
 	private String sourceType;
 	private String tags;
 	private Date dateSubmitted;
+	private String editReason;
 	
 	private StoryAuthorViewModel storySubmitter;
 	private ArrayList<StoryAuthorViewModel> storyAuthors;
@@ -33,7 +34,7 @@ public class StoryMetadataViewModel {
 		this.removedStoryAuthors = new ArrayList<>();
 	}
 	
-	public StoryMetadataViewModel(int sid, int userId, String title, String description, String status, String sourceType, String tags, Date dateSubmitted, 
+	public StoryMetadataViewModel(int sid, int userId, String title, String description, String status, String sourceType, String tags, Date dateSubmitted, String editReason,
 			StoryAuthorViewModel storySubmitter, ArrayList<StoryAuthorViewModel> storyAuthors, ArrayList<StoryAuthorViewModel> removedStoryAuthors) {
 		setSid(sid);
 		setUserId(userId);
@@ -43,6 +44,7 @@ public class StoryMetadataViewModel {
 		setSourceType(sourceType);
 		setTags(tags);
 		setDateSubmitted(dateSubmitted);
+		setEditReason(editReason);
 		setStorySubmitter(storySubmitter);
 		setStoryAuthors(storyAuthors);
 		setRemovedStoryAuthors(removedStoryAuthors);
@@ -183,6 +185,20 @@ public class StoryMetadataViewModel {
 	 */
 	public void setUserId(int userId) {
 		this.userId = userId;
+	}
+
+	/**
+	 * @return the editReason
+	 */
+	public String getEditReason() {
+		return editReason;
+	}
+
+	/**
+	 * @param editReason the editReason to set
+	 */
+	public void setEditReason(String editReason) {
+		this.editReason = editReason;
 	}
 	
 }
