@@ -5,6 +5,7 @@ package edu.pitt.sis.exp.colfusion.importers.ktr;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -592,6 +593,7 @@ public class KTRManager {
 				: ConfigManager.getInstance().getPropertyByName(PropertyKeys.excelToDatabaseKTRTemplate);
 				
 		String ktrTemplateNameLocation = Thread.currentThread().getContextClassLoader().getResource(ktrTemplateName).getFile();
+		ktrTemplateNameLocation = URLDecoder.decode(ktrTemplateNameLocation, "UTF-8");
 		
 		IOUtilsStoredFileInfoModel result = IOUtils.getInstance().copyFileContent(ktrTemplateNameLocation, ktrDirectoryLocation, tableName + ".ktr");
 		
