@@ -266,7 +266,7 @@ public class IOUtils {
 		
 		String colfusionRoot = ConfigManager.getInstance().getPropertyByName(PropertyKeys.colfusionRootLocation);
 		
-		fileAbsoluteName = fileAbsoluteName.replace(File.separator, "/");
+		fileAbsoluteName = fileAbsoluteName.replace('\\', '/');
 		
 		String fileRelativeName = fileAbsoluteName.replace(colfusionRoot + File.separator, "");
 		
