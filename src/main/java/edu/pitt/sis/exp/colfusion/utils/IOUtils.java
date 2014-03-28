@@ -266,6 +266,8 @@ public class IOUtils {
 		
 		String colfusionRoot = ConfigManager.getInstance().getPropertyByName(PropertyKeys.colfusionRootLocation);
 		
+		fileAbsoluteName = fileAbsoluteName.replaceAll("/", File.separator);
+		
 		String fileRelativeName = fileAbsoluteName.replace(colfusionRoot + File.separator, "");
 		
 		String colfusionURL = ConfigManager.getInstance().getPropertyByName(PropertyKeys.colfusionURL);
