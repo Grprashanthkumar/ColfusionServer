@@ -208,7 +208,8 @@ public class ExecutionInfoManagerImpl implements ExecutionInfoManager {
 			//TODO: the table should not have more than one record for a given pair of sid and table name, however it is not restricted on the db level
 			// so and maybe our code is bad, so we need to check if there is more than one record and do something with it.
 			
-			logger.info(String.format("getExecutionLogId for %d sid and %s table: Found %d execution info records - use the first one", sid, tableName, executeInfoRecords.size()));
+			logger.info(String.format("getExecutionLogId for %d sid and %s table: Found %d execution info records - use the first one. The eid is %d", 
+					sid, tableName, executeInfoRecords.size(), executeInfoRecords.get(0).getEid()));
 			
 			return executeInfoRecords.get(0).getEid();
 		}

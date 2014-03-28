@@ -51,8 +51,12 @@ public class DataLoadExecutorKTRImpl extends DataLoadExecutorBaseImpl implements
 	@Override
 	public void execute() throws Exception {
 		
+		logger.info(String.format("DataLoadExecutorKTR, execute: Starting for sid:", sid));
+		
 		SourceInfoManager storyMgr = new SourceInfoManagerImpl();
 		ArrayList<String> ktrLocations = storyMgr.getStoryKTRLocations(sid);
+		
+		logger.info(String.format("DataLoadExecutorKTR, execute: got %d ktrLocations:", ktrLocations.size()));
 		
 		//If there are several files, there will be several KTR files accosted with one sid, however they all will be associated whit one target database
 		//therefore we need only one KTR file to extract and save target database connection info.
@@ -65,16 +69,27 @@ public class DataLoadExecutorKTRImpl extends DataLoadExecutorBaseImpl implements
 		
 		for(String ktrLocation : ktrLocations) {
 			
+			logger.info(String.format("DataLoadExecutorKTR, execute: Starting loading this ktr: ", ktrLocation));
+			
 			KTRManager ktrManager = new KTRManager(sid);
 			ktrManager.loadKTR(ktrLocation);
+			
+			logger.info(String.format("DataLoadExecutorKTR, execute: Loaded this ktr: ", ktrLocation));
 			
 			int executionLogId = executionInfoMgr.getExecutionLogId(sid, ktrManager.getTableName());
 			
 			executionInfoMgr.updateStatus(executionLogId, DataLoadExecutionStatus.IN_PROGRESS);
 			
+			logger.info(String.format("DataLoadExecutorKTR, execute: Set execution status to IN_PROGRESS for eid = %d", executionLogId));
+			
+			logger.info(String.format("DataLoadExecutorKTR, execute: Starting to change ransformation name for ktr file at %s to %s", 
+					ktrLocation, String.valueOf(executionLogId)));
+			
 			changeTransformationName(executionInfoMgr, executionLogId, ktrManager, ktrLocation, String.valueOf(executionLogId));
 			
 			if (firstKtr) {
+				
+				logger.info(String.format("DataLoadExecutorKTR, execute: It is first ktr. Location: %s", ktrLocation));
 				
 				//If there are several files, there will be several KTR files accosted with one sid, however they all will be associated whit one target database
 				//therefore we need only one KTR file to extract and save target database connection info.
