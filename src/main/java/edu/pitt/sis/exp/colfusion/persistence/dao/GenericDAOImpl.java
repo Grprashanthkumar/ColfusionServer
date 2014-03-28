@@ -6,6 +6,7 @@ package edu.pitt.sis.exp.colfusion.persistence.dao;
 import java.io.Serializable;
 import java.util.List;
 
+import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
 
@@ -17,7 +18,7 @@ import edu.pitt.sis.exp.colfusion.persistence.HibernateUtil;
  */
 public abstract class GenericDAOImpl<T, ID extends Serializable> implements GenericDAO<T, ID> {
  
-    protected Session getSession() {
+    protected Session getSession() throws HibernateException {
         return HibernateUtil.getSession();
     }
  
@@ -25,9 +26,10 @@ public abstract class GenericDAOImpl<T, ID extends Serializable> implements Gene
 	 * Saves provided entity in the database.
 	 * 
 	 * @param entity to be saved in the database.
+     * @throws Exception 
 	 */
     @SuppressWarnings("unchecked")
-	public ID save(T entity) {
+	public ID save(T entity) throws HibernateException {
         Session hibernateSession = this.getSession();
         return (ID) hibernateSession.save(entity);
     }
@@ -36,8 +38,9 @@ public abstract class GenericDAOImpl<T, ID extends Serializable> implements Gene
 	 * Saves provided entity in the database.
 	 * 
 	 * @param entity to be saved in the database.
+     * @throws Exception 
 	 */
-    public void saveOrUpdate(T entity) {
+    public void saveOrUpdate(T entity) throws HibernateException {
         Session hibernateSession = this.getSession();
         hibernateSession.saveOrUpdate(entity);
     }
@@ -45,9 +48,10 @@ public abstract class GenericDAOImpl<T, ID extends Serializable> implements Gene
     /**
 	 * 
 	 * @param entity
+     * @throws Exception 
 	 */
     @SuppressWarnings("unchecked")
-	public T merge(T entity) {
+	public T merge(T entity) throws HibernateException {
         Session hibernateSession = this.getSession();
         
 		return (T) hibernateSession.merge(entity);
@@ -57,8 +61,9 @@ public abstract class GenericDAOImpl<T, ID extends Serializable> implements Gene
      * Deletes provided entity.
      * 
      * @param entity to be deleted from database.
+     * @throws Exception 
      */
-    public void delete(T entity) {
+    public void delete(T entity) throws HibernateException {
         Session hibernateSession = this.getSession();
         hibernateSession.delete(entity);
     }
@@ -95,9 +100,10 @@ public abstract class GenericDAOImpl<T, ID extends Serializable> implements Gene
      * @param clazz of entity to be found.
      * @param id to search for.
      * @return found entity.
+     * @throws Exception 
      */
     @SuppressWarnings({ "unchecked", "rawtypes" })
-	public T findByID(Class clazz, ID id) {
+	public T findByID(Class clazz, ID id) throws HibernateException {
         Session hibernateSession = this.getSession();
         T t = null;
         t = (T) hibernateSession.get(clazz, id);
@@ -109,9 +115,10 @@ public abstract class GenericDAOImpl<T, ID extends Serializable> implements Gene
      * 
      * @param clazz of entities to be returned.
      * @return all found entities.
+     * @throws Exception 
      */
     @SuppressWarnings("unchecked")
-	public List<T> findAll(@SuppressWarnings("rawtypes") Class clazz) {
+	public List<T> findAll(@SuppressWarnings("rawtypes") Class clazz) throws HibernateException {
         Session hibernateSession = this.getSession();
         List<T> result = null;
         Query query = hibernateSession.createQuery("from " + clazz.getName());

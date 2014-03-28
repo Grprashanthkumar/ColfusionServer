@@ -21,6 +21,7 @@ public interface SourceInfoMetadataEditHistoryDAO extends GenericDAO<ColfusionSo
 	 * @param newValue
 	 * @param itemType of this enum type {@link HistoryItem}
 	 * @param reason the comment user left when did the change.
+	 * @throws Exception 
 	 */
-	public void saveHistoryIfChanged(int sid, int userId, String oldValue, String newValue, HistoryItem itemType, String reason);
+	public void saveHistoryIfChanged(int sid, int userId, String oldValue, String newValue, HistoryItem itemType, String reason) throws Exception;
 }

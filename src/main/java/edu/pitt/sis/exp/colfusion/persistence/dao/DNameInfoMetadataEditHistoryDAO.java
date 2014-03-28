@@ -21,7 +21,8 @@ public interface DNameInfoMetadataEditHistoryDAO extends GenericDAO<ColfusionDna
 	 * @param newValue
 	 * @param itemType of this enum type {@link VariableMetadataHistoryItem}
 	 * @param reason the comment user left when did the change.
+	 * @throws Exception 
 	 */
-	void saveHistoryIfChanged(Integer cid, int userId, String oldValue, String newValue, VariableMetadataHistoryItem editedAttribute, String reason);
+	void saveHistoryIfChanged(Integer cid, int userId, String oldValue, String newValue, VariableMetadataHistoryItem editedAttribute, String reason) throws Exception;
 
 }

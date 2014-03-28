@@ -4,6 +4,7 @@
 package edu.pitt.sis.exp.colfusion.persistence.managers;
 
 import java.util.List;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.hibernate.HibernateException;
@@ -292,37 +293,45 @@ public class DNameInfoManagerImpl implements DNameInfoManager {
 	 * 
 	 * @param newVariable new instance of the dnameinfo record possibly updated by user during edit operation.
 	 * @param userId id of the user who did edit.
+	 * @throws Exception 
 	 */
 	//TODO: add reason
-	private void handleHistoryEdits(ColfusionDnameinfo newVariable, int userId) {
+	private void handleHistoryEdits(ColfusionDnameinfo newVariable, int userId) throws Exception {
 		DNameInfoMetadataEditHistoryDAO editHistorDAO = new DNameInfoMetadataEditHistoryDAOImpl();
 		
 		ColfusionDnameinfo oldVariable = dNameInfoDAO.findByID(ColfusionDnameinfo.class, newVariable.getCid());
 		
-		String oldValue = (oldVariable == null) ? null : oldVariable.getDnameChosen();
-		editHistorDAO.saveHistoryIfChanged(newVariable.getCid(), userId, oldValue, newVariable.getDnameChosen(), VariableMetadataHistoryItem.CHOSEN_NAME,  "");
+		try {
+			String oldValue = (oldVariable == null) ? null : oldVariable.getDnameChosen();
+			editHistorDAO.saveHistoryIfChanged(newVariable.getCid(), userId, oldValue, newVariable.getDnameChosen(), VariableMetadataHistoryItem.CHOSEN_NAME,  "");
 		
-		oldValue = (oldVariable == null) ? null : oldVariable.getDnameOriginalName();
-		editHistorDAO.saveHistoryIfChanged(newVariable.getCid(), userId, oldValue, newVariable.getDnameOriginalName(), VariableMetadataHistoryItem.ORIGINAL_NAME,  "");
+			oldValue = (oldVariable == null) ? null : oldVariable.getDnameOriginalName();
+			editHistorDAO.saveHistoryIfChanged(newVariable.getCid(), userId, oldValue, newVariable.getDnameOriginalName(), VariableMetadataHistoryItem.ORIGINAL_NAME,  "");
+			
+			oldValue = (oldVariable == null) ? null : oldVariable.getDnameValueType();
+			editHistorDAO.saveHistoryIfChanged(newVariable.getCid(), userId, oldValue, newVariable.getDnameValueType(), VariableMetadataHistoryItem.DATA_TYPE,  "");
+			
+			oldValue = (oldVariable == null) ? null : oldVariable.getDnameValueUnit();
+			editHistorDAO.saveHistoryIfChanged(newVariable.getCid(), userId, oldValue, newVariable.getDnameValueUnit(), VariableMetadataHistoryItem.VALUE_UNIT,  "");
+			
+			oldValue = (oldVariable == null) ? null : oldVariable.getDnameValueDescription();
+			editHistorDAO.saveHistoryIfChanged(newVariable.getCid(), userId, oldValue, newVariable.getDnameValueDescription(), VariableMetadataHistoryItem.DESCRIPTION,  "");
+			
+			oldValue = (oldVariable == null) ? null : oldVariable.getDnameValueFormat();
+			editHistorDAO.saveHistoryIfChanged(newVariable.getCid(), userId, oldValue, newVariable.getDnameValueFormat(), VariableMetadataHistoryItem.FORMAT,  "");
+			
+			oldValue = (oldVariable == null) ? null : oldVariable.getMissingValue();
+			editHistorDAO.saveHistoryIfChanged(newVariable.getCid(), userId, oldValue, newVariable.getMissingValue(), VariableMetadataHistoryItem.MISSING_VALUE,  "");
+			
+			//TODO: isConstant is missing, need to add to check if it was changed.
+			oldValue = (oldVariable == null) ? null : oldVariable.getConstantValue();
+			editHistorDAO.saveHistoryIfChanged(newVariable.getCid(), userId, oldValue, newVariable.getConstantValue(), VariableMetadataHistoryItem.CONSTANT_VALUE,  "");
 		
-		oldValue = (oldVariable == null) ? null : oldVariable.getDnameValueType();
-		editHistorDAO.saveHistoryIfChanged(newVariable.getCid(), userId, oldValue, newVariable.getDnameValueType(), VariableMetadataHistoryItem.DATA_TYPE,  "");
-		
-		oldValue = (oldVariable == null) ? null : oldVariable.getDnameValueUnit();
-		editHistorDAO.saveHistoryIfChanged(newVariable.getCid(), userId, oldValue, newVariable.getDnameValueUnit(), VariableMetadataHistoryItem.VALUE_UNIT,  "");
-		
-		oldValue = (oldVariable == null) ? null : oldVariable.getDnameValueDescription();
-		editHistorDAO.saveHistoryIfChanged(newVariable.getCid(), userId, oldValue, newVariable.getDnameValueDescription(), VariableMetadataHistoryItem.DESCRIPTION,  "");
-		
-		oldValue = (oldVariable == null) ? null : oldVariable.getDnameValueFormat();
-		editHistorDAO.saveHistoryIfChanged(newVariable.getCid(), userId, oldValue, newVariable.getDnameValueFormat(), VariableMetadataHistoryItem.FORMAT,  "");
-		
-		oldValue = (oldVariable == null) ? null : oldVariable.getMissingValue();
-		editHistorDAO.saveHistoryIfChanged(newVariable.getCid(), userId, oldValue, newVariable.getMissingValue(), VariableMetadataHistoryItem.MISSING_VALUE,  "");
-		
-		//TODO: isConstant is missing, need to add to check if it was changed.
-		oldValue = (oldVariable == null) ? null : oldVariable.getConstantValue();
-		editHistorDAO.saveHistoryIfChanged(newVariable.getCid(), userId, oldValue, newVariable.getConstantValue(), VariableMetadataHistoryItem.CONSTANT_VALUE,  "");
+		} catch (Exception e) {
+			logger.error(String.format("handleHistoryEdits failed due to one of many saveHistoryIfChanged calls for userId = %d", userId), e);
+			
+			throw e;
+		}
 	}
 	
 	/**

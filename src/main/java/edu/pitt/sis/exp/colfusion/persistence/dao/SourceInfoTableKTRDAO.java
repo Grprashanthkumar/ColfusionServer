@@ -18,7 +18,8 @@ public interface SourceInfoTableKTRDAO extends GenericDAO<ColfusionSourceinfoTab
 	 * Gets locations of KTR files associated with given story by sid.
 	 * @param sid is of the story.
 	 * @return array of records from CourseInfoTableKTR table.
+	 * @throws Exception 
 	 */
-	ArrayList<ColfusionSourceinfoTableKtr> getKTRLocationsBySid(int sid);
+	ArrayList<ColfusionSourceinfoTableKtr> getKTRLocationsBySid(int sid) throws Exception;
 
 }

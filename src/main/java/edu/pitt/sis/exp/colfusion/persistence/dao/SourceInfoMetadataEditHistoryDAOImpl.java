@@ -22,7 +22,7 @@ public class SourceInfoMetadataEditHistoryDAOImpl extends GenericDAOImpl<Colfusi
 	Logger logger = LogManager.getLogger(SourceInfoMetadataEditHistoryDAOImpl.class.getName());
 	
 	@Override
-	public void saveHistoryIfChanged(int sid, int userId, String oldValue, String newValue, HistoryItem itemType, String reason) {
+	public void saveHistoryIfChanged(int sid, int userId, String oldValue, String newValue, HistoryItem itemType, String reason) throws Exception {
 		// If value was not changed, then we don't need to save anything
 		if (newValue == null ) {
 			return ;
@@ -33,12 +33,32 @@ public class SourceInfoMetadataEditHistoryDAOImpl extends GenericDAOImpl<Colfusi
 		}
 				
 		SourceInfoDAO sourceInfoDAO = new SourceInfoDAOImpl();
-		ColfusionSourceinfo colfusionSourceinfo = sourceInfoDAO.findByID(ColfusionSourceinfo.class, sid);
+		ColfusionSourceinfo colfusionSourceinfo;
+		try {
+			colfusionSourceinfo = sourceInfoDAO.findByID(ColfusionSourceinfo.class, sid);
+		} catch (Exception e) {
+			logger.error(String.format("saveHistoryIfChanged failed on sourceInfoDAO.findByID(ColfusionSourceinfo.class, sid); for sid = %d", sid));
+			
+			throw e;
+		}
 		
 		UsersDAO userDAO = new UsersDAOImpl();
-		ColfusionUsers colfusionUsers = userDAO.findByID(ColfusionUsers.class, userId);
+		ColfusionUsers colfusionUsers;
+		try {
+			colfusionUsers = userDAO.findByID(ColfusionUsers.class, userId);
+		} catch (Exception e) {
+			logger.error(String.format("saveHistoryIfChanged failed on userDAO.findByID(ColfusionUsers.class, userId); for userId = %d", userId));
+			
+			throw e;
+		}
 		
-		this.save(new ColfusionSourceinfoMetadataEditHistory(colfusionSourceinfo, colfusionUsers, new Date(), itemType.getValue(), reason, newValue));		
+		try {
+			this.save(new ColfusionSourceinfoMetadataEditHistory(colfusionSourceinfo, colfusionUsers, new Date(), itemType.getValue(), reason, newValue));
+		} catch (Exception e) {
+			logger.error(String.format("saveHistoryIfChanged failed on save for sid = %d, userId = %d", sid, userId));
+			
+			throw e;
+		}		
 	}
 
 }

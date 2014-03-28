@@ -5,6 +5,8 @@ package edu.pitt.sis.exp.colfusion.persistence.dao;
 
 import java.util.List;
 
+import org.hibernate.HibernateException;
+
 import edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionUsers;
 
 /**
@@ -19,6 +21,7 @@ public interface UsersDAO extends GenericDAO<ColfusionUsers, Integer> {
 	 * @param searchTerm to find to be contained in user name.
 	 * @param limit the number of users that should be returned.
 	 * @return user who satisfy search term. 
+	 * @throws Exception 
 	 */
-	public List<ColfusionUsers> lookUpUser(String searchTerm, int limit);
+	public List<ColfusionUsers> lookUpUser(String searchTerm, int limit) throws HibernateException;
 }

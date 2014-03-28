@@ -417,9 +417,10 @@ public class SourceInfoManagerImpl implements SourceInfoManager {
 	 * Updates both sourceinfo and links table with story metadata.
 	 * 
 	 * @param metadata the metadata to be used to update the tables in database.
+	 * @throws Exception 
 	 */
 	@Override
-	public void updateStory(StoryMetadataViewModel metadata) {
+	public void updateStory(StoryMetadataViewModel metadata) throws Exception {
 		try {
             HibernateUtil.beginTransaction();
             
@@ -441,10 +442,15 @@ public class SourceInfoManagerImpl implements SourceInfoManager {
         	
         	logger.error("findDatasetInfoBySid failed HibernateException", ex);
         	throw ex;
-        }
+        } catch (Exception e) {
+        	HibernateUtil.rollbackTransaction();
+        	
+        	logger.error("findDatasetInfoBySid failed most probably because of updateSourceInfo failed", e);
+        	throw e;
+		}
 	}
 
-	private ColfusionSourceinfo updateSourceInfo(StoryMetadataViewModel metadata) {
+	private ColfusionSourceinfo updateSourceInfo(StoryMetadataViewModel metadata) throws Exception {
 		UsersDAO usersDAO = new UsersDAOImpl();
         
         ColfusionUsers userCreator = usersDAO.findByID(ColfusionUsers.class, metadata.getStorySubmitter().getUserId());
@@ -454,7 +460,13 @@ public class SourceInfoManagerImpl implements SourceInfoManager {
         newStoryEntity.setTitle(metadata.getTitle());
         newStoryEntity.setStatus(metadata.getStatus());
         
-        handleHistoryEdits(newStoryEntity, metadata.getUserId(), metadata.getEditReason());
+        try {
+			handleHistoryEdits(newStoryEntity, metadata.getUserId(), metadata.getEditReason());
+		} catch (Exception e) {
+			logger.error(String.format("updateSourceInfo failed on handleHistoryEdits"));
+			
+			throw e;
+		}
         sourceInfoDAO.merge(newStoryEntity);
         
         return newStoryEntity;
@@ -467,17 +479,25 @@ public class SourceInfoManagerImpl implements SourceInfoManager {
 	 * 
 	 * @param newStory new instance of the sourceinfo record possibly updated by user during edit operation.
 	 * @param userId id of the user who did edit (note, it is not the submitter, it is id of the user who was logged in and performed the edit).
+	 * @throws Exception 
 	 */
-	private void handleHistoryEdits(ColfusionSourceinfo newStory, int userId, String reason) {
+	private void handleHistoryEdits(ColfusionSourceinfo newStory, int userId, String reason) throws Exception {
 		SourceInfoMetadataEditHistoryDAO editHistorDAO = new SourceInfoMetadataEditHistoryDAOImpl();
 		
 		ColfusionSourceinfo oldStory = sourceInfoDAO.findByID(ColfusionSourceinfo.class, newStory.getSid());
 		
-		String oldValue = (oldStory == null) ? null : oldStory.getTitle();
-		editHistorDAO.saveHistoryIfChanged(newStory.getSid(), userId, oldValue, newStory.getTitle(), HistoryItem.TITLE,  reason);
+		try {
+			String oldValue = (oldStory == null) ? null : oldStory.getTitle();
+			editHistorDAO.saveHistoryIfChanged(newStory.getSid(), userId, oldValue, newStory.getTitle(), HistoryItem.TITLE,  reason);
 		
-		oldValue = (oldStory == null) ? null : oldStory.getStatus();
-		editHistorDAO.saveHistoryIfChanged(newStory.getSid(), userId, oldValue, newStory.getStatus(), HistoryItem.STATUS,  reason);
+			oldValue = (oldStory == null) ? null : oldStory.getStatus();
+			editHistorDAO.saveHistoryIfChanged(newStory.getSid(), userId, oldValue, newStory.getStatus(), HistoryItem.STATUS,  reason);
+		
+		} catch (Exception e) {
+			logger.error(String.format("handleHistoryEdits for sourceinfo failed due to one of the two calls of editHistorDAO.saveHistoryIfChanged. userId = %d and reason is %s", userId, reason));
+			
+			throw e;
+		}
 	}
 	
 	/**
@@ -486,18 +506,25 @@ public class SourceInfoManagerImpl implements SourceInfoManager {
 	 * 
 	 * @param newLink new instance of the links record possibly updated by user during edit operation.
 	 * @param userId id of the user who did edit (note, it is not the submitter, it is id of the user who was logged in and performed the edit).
+	 * @throws Exception 
 	 */
-	private void handleHistoryEdits(ColfusionLinks newLink, int userId, String reason) {
+	private void handleHistoryEdits(ColfusionLinks newLink, int userId, String reason) throws Exception {
 		SourceInfoMetadataEditHistoryDAO editHistorDAO = new SourceInfoMetadataEditHistoryDAOImpl();
 		
 		LinksDAO linksDAO = new LinksDAOImpl();
 		ColfusionLinks oldLink = linksDAO.findByID(ColfusionLinks.class, newLink.getLinkId());
 		
-		String oldValue = (oldLink == null) ? null : oldLink.getLinkContent();
-		editHistorDAO.saveHistoryIfChanged(newLink.getLinkId(), userId, oldValue, newLink.getLinkContent(), HistoryItem.DESCRIPTION, reason);
+		try {
+			String oldValue = (oldLink == null) ? null : oldLink.getLinkContent();
+			editHistorDAO.saveHistoryIfChanged(newLink.getLinkId(), userId, oldValue, newLink.getLinkContent(), HistoryItem.DESCRIPTION, reason);
 		
-		oldValue = (oldLink == null) ? null : oldLink.getLinkTags();
-		editHistorDAO.saveHistoryIfChanged(newLink.getLinkId(), userId, oldValue, newLink.getLinkTags(), HistoryItem.TAGS, reason);
+			oldValue = (oldLink == null) ? null : oldLink.getLinkTags();
+			editHistorDAO.saveHistoryIfChanged(newLink.getLinkId(), userId, oldValue, newLink.getLinkTags(), HistoryItem.TAGS, reason);
+		} catch (Exception e) {
+			logger.error(String.format("handleHistoryEdits for links failed due to one of the two calls of editHistorDAO.saveHistoryIfChanged. userId = %d and reason is %s", userId, reason));
+			
+			throw e;
+		}
 	}
 	
 	
@@ -557,7 +584,7 @@ public class SourceInfoManagerImpl implements SourceInfoManager {
         logger.info("finished updatingUserRolesFor story");
 	}
 
-	private void updateLink(StoryMetadataViewModel metadata) {
+	private void updateLink(StoryMetadataViewModel metadata) throws Exception {
 		ColfusionLinks newLink = new ColfusionLinks(metadata.getSid(), metadata.getStorySubmitter().getUserId(), 0, 0, 0, 0, new BigDecimal(0.0), metadata.getDateSubmitted(), metadata.getDateSubmitted(), 
         		metadata.getDateSubmitted(), 0, 1, 0, metadata.getStatus(), 0);
         newLink.setLinkTitle(metadata.getTitle());
@@ -567,16 +594,28 @@ public class SourceInfoManagerImpl implements SourceInfoManager {
         newLink.setLinkTags(metadata.getTags());
         newLink.setLinkTitleUrl(String.valueOf(metadata.getSid()));
         
-        handleHistoryEdits(newLink, metadata.getUserId(), metadata.getEditReason());
+        try {
+			handleHistoryEdits(newLink, metadata.getUserId(), metadata.getEditReason());
+		} catch (Exception e) {
+			logger.error(String.format("updateLink failed on handleHistoryEdits"));
+			
+			throw e;
+		}
         
         LinksDAO linksDAO = new LinksDAOImpl();
         linksDAO.merge(newLink);
 	}
 
-	private void updateTags(StoryMetadataViewModel metadata) {
+	private void updateTags(StoryMetadataViewModel metadata) throws Exception {
 		TagsDAO tagsDAO = new TagsDAOImpl();
 		
-		tagsDAO.deleteAllBySid(metadata.getSid());
+		try {
+			tagsDAO.deleteAllBySid(metadata.getSid());
+		} catch (Exception e) {
+			logger.error(String.format("updateTags failed on tagsDAO.deleteAllBySid(metadata.getSid()); for sid = %d", metadata.getSid()));
+			
+			throw e;
+		}
 			
 		
 		if (metadata.getTags().length() > 0) {
@@ -589,7 +628,14 @@ public class SourceInfoManagerImpl implements SourceInfoManager {
 		}
 		
 		TagsCacheDAO tagsCacheDAO = new TagsCacheDAOImpl();
-		tagsCacheDAO.deleteAll();
+		
+		try {
+			tagsCacheDAO.deleteAll();
+		} catch (Exception e) {
+			logger.error(String.format("updateTags failed on tagsCacheDAO.deleteAll();for sid = %d", metadata.getSid()));
+			
+			throw e;
+		}
 	}
 
 	/**
@@ -761,7 +807,7 @@ public class SourceInfoManagerImpl implements SourceInfoManager {
 
 	//TODO: add tests
 	@Override
-	public ArrayList<String> getStoryKTRLocations(int sid) {
+	public ArrayList<String> getStoryKTRLocations(int sid) throws Exception {
 		try {
             HibernateUtil.beginTransaction();
             
@@ -791,7 +837,11 @@ public class SourceInfoManagerImpl implements SourceInfoManager {
         	
         	logger.error("findDatasetInfoBySid failed HibernateException", ex);
         	throw ex;
-        }		
+        } catch (Exception e) {
+			logger.error(String.format("getStoryKTRLocations faild on most probably sourceTableKTRDAO.getKTRLocationsBySid(sid); for sid = %d", sid));
+			
+			throw e;
+		}		
 	}
 
 	@Override

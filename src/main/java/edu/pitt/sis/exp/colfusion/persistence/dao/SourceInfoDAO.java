@@ -5,6 +5,8 @@ package edu.pitt.sis.exp.colfusion.persistence.dao;
 
 import java.util.List;
 
+import org.hibernate.HibernateException;
+
 import edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionSourceinfo;
 
 /**
@@ -40,14 +42,16 @@ public interface SourceInfoDAO extends GenericDAO<ColfusionSourceinfo, Integer> 
 	 * @param sid the id of the dataset to search for.
 	 * @param includeDraft indicates whether a draft dataset be returned or not.
 	 * @return all found datasets which conform to the search criteria. 
+	 * @throws Exception 
 	 */
-	public ColfusionSourceinfo findDatasetInfoBySid(int sid, boolean includeDraft);
+	public ColfusionSourceinfo findDatasetInfoBySid(int sid, boolean includeDraft) throws HibernateException;
 	
 	/**
 	 * Find stories which titles contain search term.
 	 * @param searchTerm the term to look for in the title of stories.
 	 * @param limit the up to number of stories to return.
 	 * @return the list of stories which satisfy the conditions.
+	 * @throws Exception 
 	 */
-	public List<ColfusionSourceinfo> lookupStories(String searchTerm, int limit);
+	public List<ColfusionSourceinfo> lookupStories(String searchTerm, int limit) throws HibernateException;
 }

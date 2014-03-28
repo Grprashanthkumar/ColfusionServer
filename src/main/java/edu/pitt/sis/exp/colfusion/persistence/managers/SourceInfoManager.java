@@ -72,8 +72,9 @@ public interface SourceInfoManager extends GeneralManager<ColfusionSourceinfo, I
 	 * Updates both sourceinfo and links table with story metadata.
 	 * 
 	 * @param metadata the metadata to be used to update the tables in database.
+	 * @throws Exception 
 	 */
-	public void updateStory(StoryMetadataViewModel metadata);
+	public void updateStory(StoryMetadataViewModel metadata) throws Exception;
 
 	/**
 	 * Transforms referenced field ColfusionSourceinfoUsers of a given story into map where keys are user ids and values are records from StoryUserRoles table which
@@ -118,8 +119,9 @@ public interface SourceInfoManager extends GeneralManager<ColfusionSourceinfo, I
 	 * Get locations of KTR files associated with a given sourceinfo record;
 	 * @param sid is of the sourceinfo record/story.
 	 * @return locations of KTRs files associated with the story.
+	 * @throws Exception 
 	 */
-	public ArrayList<String> getStoryKTRLocations(int sid);
+	public ArrayList<String> getStoryKTRLocations(int sid) throws Exception;
 
 	/**
 	 * Return info about target database connection for given story.

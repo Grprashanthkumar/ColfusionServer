@@ -7,6 +7,7 @@ import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.hibernate.HibernateException;
 import org.hibernate.Query;
 
 import edu.pitt.sis.exp.colfusion.persistence.HibernateUtil;
@@ -35,7 +36,7 @@ public class SourceInfoDAOImpl extends GenericDAOImpl<ColfusionSourceinfo, Integ
 	}
 
 	@Override
-	public ColfusionSourceinfo findDatasetInfoBySid(int sid, boolean includeDraft) {
+	public ColfusionSourceinfo findDatasetInfoBySid(int sid, boolean includeDraft) throws HibernateException {
 		
 		ColfusionSourceinfo sourceInfo = null;
 		String sql = "";
@@ -48,7 +49,14 @@ public class SourceInfoDAOImpl extends GenericDAOImpl<ColfusionSourceinfo, Integ
 		
 		logger.info(String.format("Starting processing findDatasetInfoBySid for %s with drafts included %s", sid, includeDraft));
 		
-		Query query = HibernateUtil.getSession().createQuery(sql).setParameter("sid", sid);
+		Query query = null;
+		try {
+			query = HibernateUtil.getSession().createQuery(sql).setParameter("sid", sid);
+		} catch (Exception e) {
+			logger.error(String.format("findDatasetInfoBySid failed on HibernateUtil.getSession().createQuery(sql).setParameter(sid, sid); for sid = %d", sid), e);
+			
+			throw e;
+		}
         sourceInfo = findOne(query);
         
         logger.info(String.format("Finish processing findDatasetInfoBySid for %s with drafts included %s", sid, includeDraft));
@@ -57,9 +65,16 @@ public class SourceInfoDAOImpl extends GenericDAOImpl<ColfusionSourceinfo, Integ
 	}
 
 	@Override
-	public List<ColfusionSourceinfo> lookupStories(String searchTerm, int limit) {
+	public List<ColfusionSourceinfo> lookupStories(String searchTerm, int limit) throws HibernateException {
 		String sql = "select si from ColfusionSourceinfo si where si.title like :searchTerm";
-		Query query = HibernateUtil.getSession().createQuery(sql).setParameter("searchTerm", "%" + searchTerm + "%").setMaxResults(limit);
+		Query query = null;
+		try {
+			query = HibernateUtil.getSession().createQuery(sql).setParameter("searchTerm", "%" + searchTerm + "%").setMaxResults(limit);
+		} catch (Exception e) {
+			logger.error(String.format("lookupStories failed on HibernateUtil.getSession().... for searchTerm = %s and limit = %d", searchTerm, limit), e);
+			
+			throw e;
+		}
 		
 		return this.findMany(query);
 	}
