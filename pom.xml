@@ -16,7 +16,6 @@
 	    <artifact.id>ColFusionServer</artifact.id>
 	    <version>1.0</version>      
 	    
-	    <autodeploy.directory xml:space="preserve">C:\Program Files\Apache Software Foundation\Tomcat 7.0\webapps</autodeploy.directory>
 	    <war.name>${artifact.id}##${maven.build.timestamp}</war.name>   
     </properties>
 
@@ -126,7 +125,13 @@
 		<dependency>
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-core</artifactId>
-			<version>4.3.1.Final</version>
+			<version>4.3.4.Final</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-c3p0</artifactId>
+			<version>4.3.4.Final</version>
 		</dependency>
 
 		<dependency>

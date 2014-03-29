@@ -1,5 +1,6 @@
 package edu.pitt.sis.exp.colfusion.tests.bll.dataSubmissionWizard;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
@@ -52,6 +53,13 @@ public class DataSubmissionWizzardTest extends TestCase {
 		} catch (Exception e) {
 			logger.error("getTestSid failed", e);
 			
+			try {
+				testFileNameIS.close();
+				testArchiveFileIS.close();
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block		
+			}
+			
 			fail("prepareDatabase failed");
 		}
 		
@@ -64,5 +72,12 @@ public class DataSubmissionWizzardTest extends TestCase {
     	OneUploadedItemViewModel filesFromArray = result.getPayload().get(0);
     	
     	assertEquals(2, filesFromArray.getFiles().size());
+    	
+    	try {
+			testFileNameIS.close();
+			testArchiveFileIS.close();
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block	
+		}
 	}
 }
