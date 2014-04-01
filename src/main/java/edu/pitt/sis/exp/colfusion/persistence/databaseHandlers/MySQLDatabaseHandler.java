@@ -124,6 +124,7 @@ public class MySQLDatabaseHandler extends DatabaseHandlerBase {
 			}
 			
 			sql = sqlBuilder.toString();
+			sql = sql.replace("``", "`"); //Because column names might have been already wrapped into `` before.
 			
 			statement.executeUpdate(sql);
 			

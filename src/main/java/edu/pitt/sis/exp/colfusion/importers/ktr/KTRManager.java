@@ -257,7 +257,7 @@ public class KTRManager {
 			Element field = ktrDocument.createElement("field");
 			
 			Element columnName = ktrDocument.createElement("column_name");
-			columnName.appendChild(ktrDocument.createTextNode(variable.getOriginalName()));
+			columnName.appendChild(ktrDocument.createTextNode(String.format("`%s`", variable.getOriginalName())));
 
 			Element streamName = ktrDocument.createElement("stream_name");
 			streamName.appendChild(ktrDocument.createTextNode(variable.getOriginalName()));
