@@ -18,6 +18,7 @@ import org.hibernate.NonUniqueResultException;
 import org.hibernate.Query;
 
 import edu.pitt.sis.exp.colfusion.importers.utils.DataSourceTypes;
+import edu.pitt.sis.exp.colfusion.importers.utils.StoryStatusTypes;
 import edu.pitt.sis.exp.colfusion.persistence.HibernateUtil;
 import edu.pitt.sis.exp.colfusion.persistence.dao.LinksDAO;
 import edu.pitt.sis.exp.colfusion.persistence.dao.LinksDAOImpl;
@@ -367,6 +368,8 @@ public class SourceInfoManagerImpl implements SourceInfoManager {
             }
             
             ColfusionSourceinfo newStoryEntity = new ColfusionSourceinfo(userCreator, date, source_type.getValue());
+            
+            newStoryEntity.setStatus(StoryStatusTypes.DRAFT.getValue());
             
             int sid = sourceInfoDAO.save(newStoryEntity);
             

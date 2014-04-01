@@ -55,7 +55,7 @@ public class StoryBL {
 			storyMetadata.setDescription("");
 			storyMetadata.setSourceType(DataSourceTypes.DATA_FILE.getValue());
 			storyMetadata.setDateSubmitted(newStory.getEntryDate());
-			storyMetadata.setStatus("draft");
+			storyMetadata.setStatus(newStory.getStatus());
 			
 			Map<Integer, ColfusionUserroles> userRoles = storyMgr.getUsersInRolesForStory(newStory);
 			storyMetadata.setStorySubmitter(makeStorySubmitterViewModel(newStory, newStory.getColfusionUsers(), userRoles));
