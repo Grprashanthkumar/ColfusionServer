@@ -9,7 +9,7 @@ import edu.pitt.sis.exp.colfusion.viewmodels.PreviewFileViewModel;
  * @author Evgeny
  *
  */
-public class PreviewFileResponse extends GeneralResponse {
+public class PreviewFileResponse extends GeneralResponseImpl {
 	private PreviewFileViewModel payload;
 
 	/**

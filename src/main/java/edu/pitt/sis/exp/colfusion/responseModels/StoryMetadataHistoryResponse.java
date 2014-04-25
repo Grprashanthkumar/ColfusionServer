@@ -9,7 +9,7 @@ import edu.pitt.sis.exp.colfusion.viewmodels.StoryMetadataHistoryViewModel;
  * @author Evgeny
  *
  */
-public class StoryMetadataHistoryResponse extends GeneralResponse {
+public class StoryMetadataHistoryResponse extends GeneralResponseImpl {
 	private StoryMetadataHistoryViewModel payload = new StoryMetadataHistoryViewModel();
 
 	/**

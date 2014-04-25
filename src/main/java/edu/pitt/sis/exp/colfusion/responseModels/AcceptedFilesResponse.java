@@ -16,7 +16,7 @@ import edu.pitt.sis.exp.colfusion.viewmodels.OneUploadedItemViewModel;
  *
  */
 @XmlRootElement
-public class AcceptedFilesResponse extends GeneralResponse {
+public class AcceptedFilesResponse extends GeneralResponseImpl {
 
 	/**
 	 * The files which were uploaded and stored

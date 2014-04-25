@@ -14,7 +14,7 @@ import edu.pitt.sis.exp.colfusion.viewmodels.StoryAuthorViewModel;
  *
  */
 @XmlRootElement
-public class AuthorsResponse extends GeneralResponse {
+public class AuthorsResponse extends GeneralResponseImpl {
 	private ArrayList<StoryAuthorViewModel> payload = new ArrayList<>();
 
 	/**

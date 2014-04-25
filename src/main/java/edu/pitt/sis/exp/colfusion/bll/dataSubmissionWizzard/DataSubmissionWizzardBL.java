@@ -30,7 +30,7 @@ import edu.pitt.sis.exp.colfusion.persistence.managers.SourceInfoManagerImpl;
 import edu.pitt.sis.exp.colfusion.process.ProcessManager;
 import edu.pitt.sis.exp.colfusion.responseModels.AcceptedFilesResponse;
 import edu.pitt.sis.exp.colfusion.responseModels.FileContentInfoReponse;
-import edu.pitt.sis.exp.colfusion.responseModels.GeneralResponse;
+import edu.pitt.sis.exp.colfusion.responseModels.GeneralResponseImpl;
 import edu.pitt.sis.exp.colfusion.responseModels.OneNumberResponse;
 import edu.pitt.sis.exp.colfusion.responseModels.PreviewFileResponse;
 import edu.pitt.sis.exp.colfusion.utils.IOUtils;
@@ -216,7 +216,7 @@ public class DataSubmissionWizzardBL {
 	 * @param dataMatchingStepData {@link List} list of files info {@link FileContentInfoViewModel}
 	 * @return {@link FileContentInfoReponse} with success or error message no payload.
 	 */
-	public GeneralResponse saveVariablesMetadata(FilesContentInfoViewModel filesInfo) {
+	public GeneralResponseImpl saveVariablesMetadata(FilesContentInfoViewModel filesInfo) {
 		FileContentInfoReponse result = new FileContentInfoReponse();
 		
 		try {
@@ -251,9 +251,9 @@ public class DataSubmissionWizzardBL {
 	 * @param dataMatchingStepData
 	 * @return
 	 */
-	public GeneralResponse generateKTR(FilesContentInfoViewModel dataMatchingStepData) {
+	public GeneralResponseImpl generateKTR(FilesContentInfoViewModel dataMatchingStepData) {
 		
-		GeneralResponse result = new GeneralResponse();
+		GeneralResponseImpl result = new GeneralResponseImpl();
 		result.isSuccessful = true;
 		result.message = "OK";
 		
@@ -281,8 +281,8 @@ public class DataSubmissionWizzardBL {
 	 * @param sid
 	 * @return
 	 */
-	public GeneralResponse triggerDataLoadExecution(int sid) {
-		GeneralResponse result = new GeneralResponse();
+	public GeneralResponseImpl triggerDataLoadExecution(int sid) {
+		GeneralResponseImpl result = new GeneralResponseImpl();
 		
 		result.isSuccessful = true;
 		result.message = "OK";

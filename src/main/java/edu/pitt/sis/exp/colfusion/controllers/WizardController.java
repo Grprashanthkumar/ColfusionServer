@@ -25,14 +25,13 @@ import org.glassfish.jersey.media.multipart.FormDataParam;
 import edu.pitt.sis.exp.colfusion.bll.dataSubmissionWizzard.DataSubmissionWizzardBL;
 import edu.pitt.sis.exp.colfusion.responseModels.AcceptedFilesResponse;
 import edu.pitt.sis.exp.colfusion.responseModels.FileContentInfoReponse;
-import edu.pitt.sis.exp.colfusion.responseModels.GeneralResponse;
+import edu.pitt.sis.exp.colfusion.responseModels.GeneralResponseImpl;
 import edu.pitt.sis.exp.colfusion.responseModels.OneNumberResponse;
 import edu.pitt.sis.exp.colfusion.responseModels.PreviewFileResponse;
 import edu.pitt.sis.exp.colfusion.viewmodels.CreateTemplateViewModel;
 import edu.pitt.sis.exp.colfusion.viewmodels.FileContentInfoViewModel;
 import edu.pitt.sis.exp.colfusion.viewmodels.FilesContentInfoViewModel;
 import edu.pitt.sis.exp.colfusion.viewmodels.PreviewFileViewModel;
-
 
 @Path("Wizard/")
 public class WizardController extends BaseController {
@@ -48,9 +47,9 @@ public class WizardController extends BaseController {
 	@Path("test")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public GeneralResponse getProvenance() {
+    public GeneralResponseImpl getProvenance() {
     	
-    	GeneralResponse grm = new GeneralResponse(); 
+    	GeneralResponseImpl grm = new GeneralResponseImpl(); 
     	
     	grm.isSuccessful = true;
     	grm.message = "MsgBLBL";
@@ -125,7 +124,7 @@ public class WizardController extends BaseController {
     @Produces(MediaType.APPLICATION_JSON)
     public Response createTemplate(CreateTemplateViewModel createTemplateViewModel) {
 		    	
-		GeneralResponse result = new GeneralResponse();
+		GeneralResponseImpl result = new GeneralResponseImpl();
     	result.isSuccessful = true;
     	result.message = "YEAH";
     	
@@ -229,7 +228,7 @@ public class WizardController extends BaseController {
 		    	
 		DataSubmissionWizzardBL wizardBLL = new DataSubmissionWizzardBL();
 					
-		GeneralResponse result = wizardBLL.saveVariablesMetadata(dataMatchingStepData);
+		GeneralResponseImpl result = wizardBLL.saveVariablesMetadata(dataMatchingStepData);
 		
 		if (result.isSuccessful) {
 			result = wizardBLL.generateKTR(dataMatchingStepData);
@@ -266,7 +265,7 @@ public class WizardController extends BaseController {
 		    	
 		DataSubmissionWizzardBL wizardBLL = new DataSubmissionWizzardBL();
 		
-		GeneralResponse result = wizardBLL.triggerDataLoadExecution(sid);
+		GeneralResponseImpl result = wizardBLL.triggerDataLoadExecution(sid);
 		
     	return makeCORS(Response.status(200).entity(result)); //.build();
     }

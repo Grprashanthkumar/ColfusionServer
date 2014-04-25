@@ -9,7 +9,7 @@ import java.io.Serializable;
  * @author Evgeny
  *
  */
-public class OneNumberResponse extends GeneralResponse {
+public class OneNumberResponse extends GeneralResponseImpl {
 	private Serializable payload;
 
 	/**

@@ -14,7 +14,7 @@ import edu.pitt.sis.exp.colfusion.viewmodels.FileContentInfoViewModel;
  *
  */
 @XmlRootElement
-public class FileContentInfoReponse extends GeneralResponse {
+public class FileContentInfoReponse extends GeneralResponseImpl {
 	/**
 	 * The files which were uploaded and stored
 	 */
