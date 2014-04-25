@@ -29,7 +29,6 @@ public class ProcessManager {
 		return instance;
 	}
    
-
     public void queueProcess(Process process) throws Exception {
         if (process.isImmediate() && _processes.size() == 0) {
             _latestExceptions = null;

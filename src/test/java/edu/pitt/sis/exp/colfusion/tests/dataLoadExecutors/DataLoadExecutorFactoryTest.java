@@ -67,7 +67,7 @@ public class DataLoadExecutorFactoryTest  extends TestCase {
 			ProcessManager.getInstance().queueProcess(executor);
 			
 			while (!executor.isDone()) {
-				logger.info("testGetDataLoadExecutor: going to sleep for 200 ms");
+				logger.info("testGetDataLoadExecutor: going to sleep for 1000 ms");
 				Thread.sleep(1000);
 			}
 			
