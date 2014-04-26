@@ -10,7 +10,7 @@ import edu.pitt.sis.exp.colfusion.persistence.managers.ExecutionInfoManager;
 import edu.pitt.sis.exp.colfusion.persistence.managers.SourceInfoManager;
 import edu.pitt.sis.exp.colfusion.persistence.managers.SourceInfoManagerImpl;
 import edu.pitt.sis.exp.colfusion.process.ProcessBase;
-import edu.pitt.sis.exp.colfusion.viewmodels.StoryTargetDB;
+import edu.pitt.sis.exp.colfusion.viewmodels.StoryTargetDBViewModel;
 
 /**
  * All executors should inherit from this class and run this class execute method as the first instruction in their execute method.
@@ -20,6 +20,11 @@ import edu.pitt.sis.exp.colfusion.viewmodels.StoryTargetDB;
  */
 public abstract class DataLoadExecutorBaseImpl extends ProcessBase implements DataLoadExecutor {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -8124562049915428600L;
+	
 	protected int sid;
 	
 	@Override
@@ -33,7 +38,7 @@ public abstract class DataLoadExecutorBaseImpl extends ProcessBase implements Da
 	 * @param sourceDBInfo the info about target database.
 	 * @throws Exception 
 	 */
-	protected void updateSourceDBInfo(ExecutionInfoManager executionInfoMgr, int executionLogId, StoryTargetDB sourceDBInfo) throws Exception {
+	protected void updateSourceDBInfo(ExecutionInfoManager executionInfoMgr, int executionLogId, StoryTargetDBViewModel sourceDBInfo) throws Exception {
 		
 		executionInfoMgr.appendLog(executionLogId, String.format("Starting to update sourceintoDB record with target database conneciton info : %s ", 
 				sourceDBInfo.toString()));
@@ -52,7 +57,7 @@ public abstract class DataLoadExecutorBaseImpl extends ProcessBase implements Da
 	 * @param sourceDBInfo target database connection info.
 	 * @throws Exception
 	 */
-	protected void updateLinkedServer(ExecutionInfoManager executionInfoMgr, int executionLogId, StoryTargetDB sourceDBInfo) throws Exception {
+	protected void updateLinkedServer(ExecutionInfoManager executionInfoMgr, int executionLogId, StoryTargetDBViewModel sourceDBInfo) throws Exception {
 		
 		executionInfoMgr.appendLog(executionLogId, String.format("Starting to update Linked Server with target database conneciton info : %s ", 
 				sourceDBInfo.toString()));

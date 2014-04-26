@@ -32,7 +32,7 @@ import edu.pitt.sis.exp.colfusion.tests.bll.dataSubmissionWizard.DataSubmissionW
 import edu.pitt.sis.exp.colfusion.utils.IOUtils;
 import edu.pitt.sis.exp.colfusion.viewmodels.DatasetVariableViewModel;
 import edu.pitt.sis.exp.colfusion.viewmodels.FileContentInfoViewModel;
-import edu.pitt.sis.exp.colfusion.viewmodels.StoryTargetDB;
+import edu.pitt.sis.exp.colfusion.viewmodels.StoryTargetDBViewModel;
 import edu.pitt.sis.exp.colfusion.viewmodels.WorksheetViewModel;
 import junit.framework.TestCase;
 
@@ -121,7 +121,7 @@ public class KTRManagerTest extends TestCase {
 			
 			assertEquals("Sheet1", ktrManager.getTableName());
 			
-			StoryTargetDB dbInfo = ktrManager.readTargetDatabaseInfo();
+			StoryTargetDBViewModel dbInfo = ktrManager.readTargetDatabaseInfo();
 			
 			String dbNameExpected = configManager.getPropertyByName(PropertyKeys.targetFileToDBDatabase_DatabaseNamePrefix) + sid;
 			String dbNameActual =  dbInfo.getDatabaseName();

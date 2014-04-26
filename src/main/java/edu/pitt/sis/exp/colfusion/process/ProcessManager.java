@@ -3,22 +3,37 @@
  */
 package edu.pitt.sis.exp.colfusion.process;
 
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+
+import edu.pitt.sis.exp.colfusion.ConfigManager;
+import edu.pitt.sis.exp.colfusion.PropertyKeys;
 
 /**
  * @author Evgeny
  *
+ * ProcessManager is responsible to manage all the Col*Fusion processes that should be executed in a background. 
+ * The processes are back up in the database and their states are reflected in the database too, e.g. if the process is being executed or if it failed or done.
+ * 
+ * The project manager is implemented as a singleton patter, but if something happens and the app crashes, on the next initialization, 
+ * ProjectManager will read processes from database and start from the last not executed one.
+ * 
  */
 public class ProcessManager {
 	
+	private final int _maxNumberOfConcurrentProceses;
+	
 	private static ProcessManager instance = null;
 	
-	protected List<Process> _processes;
+	protected Map<String, Process> _runningProcesses;
     protected List<Exception> _latestExceptions;
     
     protected ProcessManager() {
-    	_processes  = new LinkedList<Process>();
+    	_runningProcesses  = new HashMap<String, Process>();
+    	
+    	_maxNumberOfConcurrentProceses = Integer.parseInt(ConfigManager.getInstance().getPropertyByName(PropertyKeys.maxNumberOfConcurrentProceses));
     }
     
     public static ProcessManager getInstance() {
@@ -29,19 +44,19 @@ public class ProcessManager {
 		return instance;
 	}
    
+    /**
+     * This adds a {@link Process} to the queue. 
+     * Also at this moment the process is serialized into db.
+     * Also at this moment the process gets the unique name. 
+     * 
+     * @param process is the process to add to the queue.
+     * @throws Exception if something goes wrong.
+     */
     public void queueProcess(Process process) throws Exception {
-        if (process.isImmediate() && _processes.size() == 0) {
-            _latestExceptions = null;
-            //TODO
-        } else {
-            _processes.add(process);
-            
-            update();
-        }
-    }
-    
-    public boolean hasPending() {
-        return _processes.size() > 0;
+        
+        addProcessToDB(process);
+        
+        update();        
     }
     
     public void onDoneProcess(Process p) {
@@ -68,7 +83,7 @@ public class ProcessManager {
     
     public void cancelAll() {
         for (Process p : _processes) {
-            if (!p.isImmediate() && p.isRunning()) {
+            if (p.isRunning()) {
                 p.cancel();
             }
         }
@@ -79,22 +94,15 @@ public class ProcessManager {
     protected void update() {
         while (_processes.size() > 0) {
             Process p = _processes.get(0);
-            if (p.isImmediate()) {
-                _latestExceptions = null;
-                try {
-                    //TODO: p.performImmediate();
-                } catch (Exception e) {
-                    // TODO: Not sure what to do yet
-                    e.printStackTrace();
-                }
-                _processes.remove(0);
-            } else if (p.isDone()) {
+            
+            if (p.isDone()) {
                 _processes.remove(0);
             } else {
                 if (!p.isRunning()) {
                     _latestExceptions = null;
                     p.startPerforming(this);
                 }
+                
                 break;
             }
         }

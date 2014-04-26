@@ -14,7 +14,7 @@ import org.apache.logging.log4j.Logger;
 import edu.pitt.sis.exp.colfusion.ConfigManager;
 import edu.pitt.sis.exp.colfusion.PropertyKeys;
 import edu.pitt.sis.exp.colfusion.persistence.managers.ExecutionInfoManager;
-import edu.pitt.sis.exp.colfusion.viewmodels.StoryTargetDB;
+import edu.pitt.sis.exp.colfusion.viewmodels.StoryTargetDBViewModel;
 
 //TODO: should probably be in a separate package.
 
@@ -177,7 +177,7 @@ public class LinkedServerHandler {
 	 * @param sourceDBInfo connection info to target database.
 	 * @throws Exception 
 	 */
-	public void addOrUpdateLinkedServer(StoryTargetDB sourceDBInfo) throws Exception {
+	public void addOrUpdateLinkedServer(StoryTargetDBViewModel sourceDBInfo) throws Exception {
 	
 		//TODO: this is hack to test on local machine on Mac
 		if (sourceDBInfo.getServerAddress().equals("localhost")) {
@@ -208,7 +208,7 @@ public class LinkedServerHandler {
 	 * @param sourceDBInfo has info of the target database and linked sever name.
 	 * @throws Exception
 	 */
-	private void addLinkedServerLogin(StoryTargetDB sourceDBInfo) throws Exception {
+	private void addLinkedServerLogin(StoryTargetDBViewModel sourceDBInfo) throws Exception {
 		
 		Statement statement = null;
 		
@@ -284,7 +284,7 @@ public class LinkedServerHandler {
 	 * @return the SQL query.
 	 * @throws Exception
 	 */
-	private String prepareAddLinkedServerSQLString(StoryTargetDB sourceDBInfo) throws Exception {
+	private String prepareAddLinkedServerSQLString(StoryTargetDBViewModel sourceDBInfo) throws Exception {
 		DatabaseHanderType vendor = DatabaseHanderType.fromString(sourceDBInfo.getDriver());
 		
 		String srvproduct = "";

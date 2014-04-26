@@ -15,7 +15,7 @@ import edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionUserroles;
 import edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionUsers;
 import edu.pitt.sis.exp.colfusion.viewmodels.StoryMetadataHistoryViewModel;
 import edu.pitt.sis.exp.colfusion.viewmodels.StoryMetadataViewModel;
-import edu.pitt.sis.exp.colfusion.viewmodels.StoryTargetDB;
+import edu.pitt.sis.exp.colfusion.viewmodels.StoryTargetDBViewModel;
 
 /**
  * @author Evgeny
@@ -113,7 +113,7 @@ public interface SourceInfoManager extends GeneralManager<ColfusionSourceinfo, I
 	 * 
 	 * @param sourceDBInfo the info about the target database.
 	 */
-	public void saveOrUpdateSourceInfoDB(StoryTargetDB sourceDBInfo) throws Exception;
+	public void saveOrUpdateSourceInfoDB(StoryTargetDBViewModel sourceDBInfo) throws Exception;
 
 	/**
 	 * Get locations of KTR files associated with a given sourceinfo record;
@@ -129,5 +129,5 @@ public interface SourceInfoManager extends GeneralManager<ColfusionSourceinfo, I
 	 * @param sid is of the story.
 	 * @return the target database info.
 	 */
-	public StoryTargetDB getStorySourceInfoDB(int sid);
+	public StoryTargetDBViewModel getStorySourceInfoDB(int sid);
 }

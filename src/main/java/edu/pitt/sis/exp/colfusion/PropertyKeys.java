@@ -146,5 +146,7 @@ public class PropertyKeys {
 	
 	
 	public static String linkedServerColFusionHost = "linkedServerColFusionHost";
+
+	public static String maxNumberOfConcurrentProceses = "maxNumberOfConcurrentProceses";
 	
 }

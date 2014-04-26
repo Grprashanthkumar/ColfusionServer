@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Apr 26, 2014 9:30:11 AM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionProcesses" table="colfusion_processes" catalog="colfusion">
+        <id name="pid" type="java.lang.Integer">
+            <column name="pid" />
+            <generator class="identity" />
+        </id>
+        <property name="status" type="string">
+            <column name="status" length="7" />
+        </property>
+        <property name="processSer" type="string">
+            <column name="processSer" length="65535">
+                <comment>JSON serialization of the process</comment>
+            </column>
+        </property>
+    </class>
+</hibernate-mapping>

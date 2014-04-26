@@ -17,6 +17,7 @@ import org.apache.logging.log4j.Logger;
 
 import edu.pitt.sis.exp.colfusion.bll.RelationshipBL;
 import edu.pitt.sis.exp.colfusion.bll.StoryBL;
+import edu.pitt.sis.exp.colfusion.responseModels.GeneralResponse;
 import edu.pitt.sis.exp.colfusion.responseModels.StoryMetadataResponse;
 
 /**
@@ -53,7 +54,7 @@ public class RelationshipController extends BaseController {
     	
 		RelationshipBL relationshipBL = new RelationshipBL();
 		
-		StoryMetadataResponse result = relationshipBL.mineRelationshipsFor(sid);
+		GeneralResponse result = relationshipBL.mineRelationshipsFor(sid);
     	
     	return makeCORS(Response.status(200).entity(result)); //.build();
     }

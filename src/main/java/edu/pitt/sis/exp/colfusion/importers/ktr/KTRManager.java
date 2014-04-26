@@ -42,7 +42,7 @@ import edu.pitt.sis.exp.colfusion.utils.StoryUtils;
 import edu.pitt.sis.exp.colfusion.utils.models.IOUtilsStoredFileInfoModel;
 import edu.pitt.sis.exp.colfusion.viewmodels.DatasetVariableViewModel;
 import edu.pitt.sis.exp.colfusion.viewmodels.FileContentInfoViewModel;
-import edu.pitt.sis.exp.colfusion.viewmodels.StoryTargetDB;
+import edu.pitt.sis.exp.colfusion.viewmodels.StoryTargetDBViewModel;
 import edu.pitt.sis.exp.colfusion.viewmodels.WorksheetViewModel;
 
 /**
@@ -634,7 +634,7 @@ public class KTRManager {
 	 * @return the info about target database.
 	 * @throws Exception 
 	 */
-	public StoryTargetDB readTargetDatabaseInfo() throws Exception {
+	public StoryTargetDBViewModel readTargetDatabaseInfo() throws Exception {
 		
 		if (ktrDocument == null) {
 			//TODO: create appropriate exception.
@@ -657,7 +657,7 @@ public class KTRManager {
 	
 		Node connectionNode = (Node) connectionTag.item(0);
 		
-		StoryTargetDB result = new StoryTargetDB();
+		StoryTargetDBViewModel result = new StoryTargetDBViewModel();
 		
 		if (connectionNode.getNodeType() == Node.ELEMENT_NODE) {
 			Element connectionElement = (Element) connectionNode;

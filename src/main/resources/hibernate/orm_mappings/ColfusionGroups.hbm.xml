@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
-"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
-<!-- Generated Feb 28, 2014 5:25:41 PM by Hibernate Tools 3.4.0.CR1 -->
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Apr 26, 2014 9:30:11 AM by Hibernate Tools 3.4.0.CR1 -->
 <hibernate-mapping>
     <class name="edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionGroups" table="colfusion_groups" catalog="colfusion">
         <id name="groupId" type="java.lang.Integer">

@@ -56,7 +56,7 @@ import edu.pitt.sis.exp.colfusion.viewmodels.StoryAuthorViewModel;
 import edu.pitt.sis.exp.colfusion.viewmodels.StoryMetadataHistoryLogRecordViewModel;
 import edu.pitt.sis.exp.colfusion.viewmodels.StoryMetadataHistoryViewModel;
 import edu.pitt.sis.exp.colfusion.viewmodels.StoryMetadataViewModel;
-import edu.pitt.sis.exp.colfusion.viewmodels.StoryTargetDB;
+import edu.pitt.sis.exp.colfusion.viewmodels.StoryTargetDBViewModel;
 
 
 /**
@@ -755,7 +755,7 @@ public class SourceInfoManagerImpl implements SourceInfoManager {
 	
 	
 	@Override
-	public void saveOrUpdateSourceInfoDB(StoryTargetDB sourceDBInfo) throws Exception {
+	public void saveOrUpdateSourceInfoDB(StoryTargetDBViewModel sourceDBInfo) throws Exception {
 		try {
             HibernateUtil.beginTransaction();
             
@@ -848,7 +848,7 @@ public class SourceInfoManagerImpl implements SourceInfoManager {
 	}
 
 	@Override
-	public StoryTargetDB getStorySourceInfoDB(int sid) {
+	public StoryTargetDBViewModel getStorySourceInfoDB(int sid) {
 		try {
             HibernateUtil.beginTransaction();
             
@@ -856,7 +856,7 @@ public class SourceInfoManagerImpl implements SourceInfoManager {
             
             ColfusionSourceinfoDb sourceinfoDB = sourceInfoDBDAO.findByID(ColfusionSourceinfoDb.class, sid);
             
-            StoryTargetDB result = new StoryTargetDB();
+            StoryTargetDBViewModel result = new StoryTargetDBViewModel();
             result.setDatabaseName(sourceinfoDB.getSourceDatabase());
             result.setDriver(sourceinfoDB.getDriver());
             result.setIsLocal(sourceinfoDB.getIsLocal());

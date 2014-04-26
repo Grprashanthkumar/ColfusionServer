@@ -10,7 +10,7 @@ import javax.xml.bind.annotation.XmlRootElement;
  *
  */
 @XmlRootElement
-public class StoryTargetDB {
+public class StoryTargetDBViewModel {
 	private int sid;
 	private String serverAddress;
 	private int port;
@@ -24,11 +24,11 @@ public class StoryTargetDB {
 	private int isLocal;
 	private String linkedServerName;
 	
-	public StoryTargetDB() {
+	public StoryTargetDBViewModel() {
 		
 	}
 	
-	public StoryTargetDB(int sid, String serverAddress, int port, String userName, String password, String databaseName, String driver,
+	public StoryTargetDBViewModel(int sid, String serverAddress, int port, String userName, String password, String databaseName, String driver,
 			int isLocal, String linkedServerName) {
 		
 		setSid(sid);

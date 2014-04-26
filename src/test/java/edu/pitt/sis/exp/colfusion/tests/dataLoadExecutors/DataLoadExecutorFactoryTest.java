@@ -22,7 +22,7 @@ import edu.pitt.sis.exp.colfusion.process.ProcessManager;
 import edu.pitt.sis.exp.colfusion.tests.Utils;
 import edu.pitt.sis.exp.colfusion.tests.bll.dataSubmissionWizard.DataSubmissionWizzardTest;
 import edu.pitt.sis.exp.colfusion.tests.importers.ktr.KTRManagerTest;
-import edu.pitt.sis.exp.colfusion.viewmodels.StoryTargetDB;
+import edu.pitt.sis.exp.colfusion.viewmodels.StoryTargetDBViewModel;
 
 /**
  * @author Evgeny
@@ -71,7 +71,7 @@ public class DataLoadExecutorFactoryTest  extends TestCase {
 				Thread.sleep(1000);
 			}
 			
-			StoryTargetDB storyTargetDB = storyMng.getStorySourceInfoDB(sid);
+			StoryTargetDBViewModel storyTargetDB = storyMng.getStorySourceInfoDB(sid);
 			
 			ConfigManager configManager = ConfigManager.getInstance();
 			

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE hibernate-reverse-engineering PUBLIC "-//Hibernate/Hibernate Reverse Engineering DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-reverse-engineering-3.0.dtd" >
+<!DOCTYPE hibernate-reverse-engineering PUBLIC "-//Hibernate/Hibernate Reverse Engineering DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-reverse-engineering-3.0.dtd" >
 
 <hibernate-reverse-engineering>
   <table-filter match-catalog="colfusion" match-name="colfusion_additional_categories"/>
@@ -32,6 +32,7 @@
   <table-filter match-catalog="colfusion" match-name="colfusion_pentaho_log_performance"/>
   <table-filter match-catalog="colfusion" match-name="colfusion_pentaho_log_step"/>
   <table-filter match-catalog="colfusion" match-name="colfusion_pentaho_log_transformaion"/>
+  <table-filter match-catalog="colfusion" match-name="colfusion_processes"/>
   <table-filter match-catalog="colfusion" match-name="colfusion_redirects"/>
   <table-filter match-catalog="colfusion" match-name="colfusion_relationships"/>
   <table-filter match-catalog="colfusion" match-name="colfusion_relationships_columns"/>
