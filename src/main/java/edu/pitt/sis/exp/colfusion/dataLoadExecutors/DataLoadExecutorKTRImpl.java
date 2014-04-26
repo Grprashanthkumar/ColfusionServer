@@ -29,14 +29,18 @@ import edu.pitt.sis.exp.colfusion.persistence.managers.ExecutionInfoManager;
 import edu.pitt.sis.exp.colfusion.persistence.managers.ExecutionInfoManagerImpl;
 import edu.pitt.sis.exp.colfusion.persistence.managers.SourceInfoManager;
 import edu.pitt.sis.exp.colfusion.persistence.managers.SourceInfoManagerImpl;
-import edu.pitt.sis.exp.colfusion.viewmodels.StoryTargetDB;
+import edu.pitt.sis.exp.colfusion.viewmodels.StoryTargetDBViewModel;
 
 /**
  * @author Evgeny
  *
  */
-public class DataLoadExecutorKTRImpl extends DataLoadExecutorBaseImpl implements
-		DataLoadExecutor {
+public class DataLoadExecutorKTRImpl extends DataLoadExecutorBaseImpl implements DataLoadExecutor {
+	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -8121337577769586080L;
 	
 	Logger logger = LogManager.getLogger(DataLoadExecutorKTRImpl.class.getName());
 	
@@ -64,7 +68,7 @@ public class DataLoadExecutorKTRImpl extends DataLoadExecutorBaseImpl implements
 		
 		ExecutionInfoManager executionInfoMgr = new ExecutionInfoManagerImpl();
 		
-		StoryTargetDB targetDBConnectionInfo = null;
+		StoryTargetDBViewModel targetDBConnectionInfo = null;
 		DatabaseHandlerBase databaseHandlerBase = null;
 		
 		for(String ktrLocation : ktrLocations) {
@@ -107,6 +111,7 @@ public class DataLoadExecutorKTRImpl extends DataLoadExecutorBaseImpl implements
 					throw e;
 				}
 				
+				//TODO: uncomment!!!
 				updateLinkedServerInfo(executionInfoMgr, executionLogId, targetDBConnectionInfo);
 				
 				firstKtr = false;
@@ -147,7 +152,7 @@ public class DataLoadExecutorKTRImpl extends DataLoadExecutorBaseImpl implements
 		executionInfoMgr.appendLog(executionLogId, String.format("Finished to create target table %s", tableName));
 	}
 
-	private DatabaseHandlerBase createTargetDatabase(ExecutionInfoManager executionInfoMgr, int executionLogId, StoryTargetDB targetDBConnectionInfo) 
+	private DatabaseHandlerBase createTargetDatabase(ExecutionInfoManager executionInfoMgr, int executionLogId, StoryTargetDBViewModel targetDBConnectionInfo) 
 			throws Exception {
 		executionInfoMgr.appendLog(executionLogId, "Starting to create target database");
 		
@@ -243,11 +248,11 @@ public class DataLoadExecutorKTRImpl extends DataLoadExecutorBaseImpl implements
 		}
 	}
 
-	private StoryTargetDB updateTargetDatabaseConnectionInfo(ExecutionInfoManager executionInfoMgr, int executionLogId, KTRManager ktrManager, String ktrLocation) throws Exception {
+	private StoryTargetDBViewModel updateTargetDatabaseConnectionInfo(ExecutionInfoManager executionInfoMgr, int executionLogId, KTRManager ktrManager, String ktrLocation) throws Exception {
 		try {
 			executionInfoMgr.appendLog(executionLogId, String.format("Starting to read traget database info from the KTR file located at %s", ktrLocation));
 			
-			StoryTargetDB sourceDBInfo = ktrManager.readTargetDatabaseInfo();
+			StoryTargetDBViewModel sourceDBInfo = ktrManager.readTargetDatabaseInfo();
 			
 			executionInfoMgr.appendLog(executionLogId, String.format("Finished reading traget database info from the KTR file located at %s", ktrLocation));
 			
@@ -269,7 +274,7 @@ public class DataLoadExecutorKTRImpl extends DataLoadExecutorBaseImpl implements
 	 * @param sourceDBInfo target database connection info.
 	 * @throws Exception
 	 */
-	private void updateLinkedServerInfo(ExecutionInfoManager executionInfoMgr, int executionLogId, StoryTargetDB sourceDBInfo) throws Exception {
+	private void updateLinkedServerInfo(ExecutionInfoManager executionInfoMgr, int executionLogId, StoryTargetDBViewModel sourceDBInfo) throws Exception {
 		try {
 			
 			super.updateLinkedServer(executionInfoMgr, executionLogId, sourceDBInfo);
