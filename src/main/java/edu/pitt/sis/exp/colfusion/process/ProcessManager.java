@@ -8,8 +8,12 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import edu.pitt.sis.exp.colfusion.ConfigManager;
 import edu.pitt.sis.exp.colfusion.PropertyKeys;
+import edu.pitt.sis.exp.colfusion.tests.processes.ProcessManagerTest;
 
 /**
  * @author Evgeny
@@ -23,7 +27,9 @@ import edu.pitt.sis.exp.colfusion.PropertyKeys;
  */
 public class ProcessManager {
 	
-	private final int _maxNumberOfConcurrentProceses;
+	Logger logger = LogManager.getLogger(ProcessManager.class.getName());
+	
+	private final int _maxNumberOfConcurrentProceses; 
 	
 	private static ProcessManager instance = null;
 	
@@ -33,7 +39,18 @@ public class ProcessManager {
     protected ProcessManager() {
     	_runningProcesses  = new HashMap<String, Process>();
     	
-    	_maxNumberOfConcurrentProceses = Integer.parseInt(ConfigManager.getInstance().getPropertyByName(PropertyKeys.maxNumberOfConcurrentProceses));
+    	int maxNumberOfConcurrentProceses = 5; //This number comes from config file, but if it is missing in the config file then use this value as default.
+    	
+    	try {
+    		maxNumberOfConcurrentProceses= Integer.parseInt(ConfigManager.getInstance().getPropertyByName(PropertyKeys.maxNumberOfConcurrentProceses));
+    	}
+    	catch (Exception e) {
+    		logger.info("maxNumberOfConcurrentProceses property was not parsed into int correctly (e.g., it might be missing), therefore is going to use the defaul number of max threads.");
+    	}
+    	
+    	logger.info(String.format("Process Manager is going to use max of threads to execute Col*Fusion processes", maxNumberOfConcurrentProceses));
+    	
+    	_maxNumberOfConcurrentProceses = maxNumberOfConcurrentProceses;
     }
     
     public static ProcessManager getInstance() {
