@@ -10,13 +10,17 @@ public class ColfusionProcesses implements java.io.Serializable {
 	private Integer pid;
 	private String status;
 	private String processSer;
-
+	private String processClass;
+	private String reasonForStatus;
+	
 	public ColfusionProcesses() {
 	}
 
-	public ColfusionProcesses(String status, String processSer) {
+	public ColfusionProcesses(String status, String processSer, String processClass, String reasonForStatus) {
 		this.status = status;
 		this.processSer = processSer;
+		this.processClass = processClass;
+		this.reasonForStatus = reasonForStatus;
 	}
 
 	public Integer getPid() {
@@ -42,5 +46,20 @@ public class ColfusionProcesses implements java.io.Serializable {
 	public void setProcessSer(String processSer) {
 		this.processSer = processSer;
 	}
+	
+	public String getProcessClass() {
+		return this.processClass;
+	}
 
+	public void setProcessClass(String processClass) {
+		this.processClass = processClass;
+	}
+
+	public String getReasonForStatus() {
+		return this.reasonForStatus;
+	}
+
+	public void setReasonForStatus(String reasonForStatus) {
+		this.reasonForStatus = reasonForStatus;
+	}
 }

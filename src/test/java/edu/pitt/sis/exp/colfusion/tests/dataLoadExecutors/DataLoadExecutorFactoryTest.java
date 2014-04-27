@@ -19,6 +19,7 @@ import edu.pitt.sis.exp.colfusion.importers.utils.DataSourceTypes;
 import edu.pitt.sis.exp.colfusion.persistence.managers.SourceInfoManager;
 import edu.pitt.sis.exp.colfusion.persistence.managers.SourceInfoManagerImpl;
 import edu.pitt.sis.exp.colfusion.process.ProcessManager;
+import edu.pitt.sis.exp.colfusion.process.ProcessStatusEnum;
 import edu.pitt.sis.exp.colfusion.tests.Utils;
 import edu.pitt.sis.exp.colfusion.tests.bll.dataSubmissionWizard.DataSubmissionWizzardTest;
 import edu.pitt.sis.exp.colfusion.tests.importers.ktr.KTRManagerTest;
@@ -64,11 +65,15 @@ public class DataLoadExecutorFactoryTest  extends TestCase {
 			
 			executor.setSid(sid);
 			
-			ProcessManager.getInstance().queueProcess(executor);
+			int processId = ProcessManager.getInstance().queueProcess(executor);
 			
-			while (!executor.isDone()) {
-				logger.info("testGetDataLoadExecutor: going to sleep for 1000 ms");
-				Thread.sleep(1000);
+			ProcessStatusEnum status = ProcessManager.getInstance().getProcessStatus(processId);
+			
+			while (status != ProcessStatusEnum.DONE && status != ProcessStatusEnum.FAILED) {
+				logger.info("testGetDataLoadExecutor: going to sleep for 2000 ms");
+				Thread.sleep(2000);
+				
+				status = ProcessManager.getInstance().getProcessStatus(processId);
 			}
 			
 			StoryTargetDBViewModel storyTargetDB = storyMng.getStorySourceInfoDB(sid);

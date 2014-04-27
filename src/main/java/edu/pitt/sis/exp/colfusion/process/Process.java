@@ -22,14 +22,15 @@ public interface Process extends Runnable, Serializable {
 	 * 
 	 * @param uniqueName the name of the process to set.
 	 */
-	public void setUniqueName(String uniqueName);
+	//TODO: rename to process id?
+	public void setID(int id);
 	
 	/**
 	 * The unique name of the process. Always unique. Mapped to the row id in the database table where Process Manager stores the processes.
 	 * 
 	 * @return the unique name of the process.
 	 */
-	public String getUniqueName();
+	public int getID();
 	
 	/**
 	 * Checks whether a thread that executes the Col*Fusion process is active or not.

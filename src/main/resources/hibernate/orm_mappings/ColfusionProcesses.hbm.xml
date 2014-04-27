@@ -16,5 +16,11 @@
                 <comment>JSON serialization of the process</comment>
             </column>
         </property>
+        <property name="processClass" type="string">
+            <column name="processClass" length="1000" />
+        </property>
+        <property name="reasonForStatus" type="string">
+            <column name="reasonForStatus" length="65535" />
+        </property>
     </class>
 </hibernate-mapping>

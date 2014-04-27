@@ -14,6 +14,7 @@ import edu.pitt.sis.exp.colfusion.persistence.HibernateUtil;
 import edu.pitt.sis.exp.colfusion.persistence.dao.ProcessesDAO;
 import edu.pitt.sis.exp.colfusion.persistence.dao.ProcessesDAOImpl;
 import edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionProcesses;
+import edu.pitt.sis.exp.colfusion.process.ProcessStatusEnum;
 
 /**
  * @author Evgeny
@@ -166,6 +167,37 @@ public class ProcessPersistantManagerImpl implements ProcessPersistantManager {
         	HibernateUtil.rollbackTransaction();
         	
         	logger.error("findByID failed HibernateException", ex);
+        	throw ex;
+        }
+		return result;	
+	}
+
+	@Override
+	public ColfusionProcesses getNewPendingProcessAndSetAsRunningFromDB(String status, String reason, int limit) {
+		ColfusionProcesses result = null;
+		try {
+            HibernateUtil.beginTransaction();
+            
+            result = processesDAO.findPendingProcess(limit);
+            
+            if (result != null) {
+            	result.setStatus(status);
+            	result.setReasonForStatus(reason);
+            	processesDAO.saveOrUpdate(result);
+            }
+                        
+            HibernateUtil.commitTransaction();
+        } catch (NonUniqueResultException ex) {
+
+        	HibernateUtil.rollbackTransaction();
+        	
+        	logger.error("findPendingProcess failed NonUniqueResultException", ex);
+        	throw ex;
+        } catch (HibernateException ex) {
+
+        	HibernateUtil.rollbackTransaction();
+        	
+        	logger.error("findPendingProcess failed HibernateException", ex);
         	throw ex;
         }
 		return result;	

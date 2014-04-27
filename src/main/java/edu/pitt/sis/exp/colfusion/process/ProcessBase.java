@@ -20,23 +20,21 @@ public abstract class ProcessBase implements Process {
 	 */
 	private static final long serialVersionUID = -1618488906520414665L;
 	
-	protected String _uniqueName;
+	protected int _id = -1; // -1 means not set
 	final protected String       _description;
 	transient private ProcessManager     	 _manager;
 	transient protected Thread             _thread;
     
-    private List<Exception>    _exceptions;
+    protected List<Exception>    _exceptions = new ArrayList<>();
     
     abstract protected Runnable getRunnable();
     
     protected ProcessBase() {
         _description = "";
-        _exceptions = new ArrayList<>();
     }
     
     protected ProcessBase(String description) {
-        _description = description;
-        _exceptions = new ArrayList<>();
+        _description = description;        
     }
 
     @Override
@@ -62,7 +60,7 @@ public abstract class ProcessBase implements Process {
             setManager(manager);
             
             _thread = new Thread(getRunnable());
-            _thread.setName(_uniqueName);
+            _thread.setName(String.valueOf(_id));
             
             _thread.start();
         }
@@ -93,13 +91,13 @@ public abstract class ProcessBase implements Process {
 	}
 	
 	@Override
-	public void setUniqueName(String uniqueName) {
-		_uniqueName = uniqueName;
+	public void setID(int id) {
+		_id = id;
 	}
 	
 	@Override
-	public String getUniqueName() {
-		return _uniqueName;
+	public int getID() {
+		return _id;
 	}
 	
 	/**

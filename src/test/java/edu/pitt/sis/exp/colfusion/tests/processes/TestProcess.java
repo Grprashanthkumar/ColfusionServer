@@ -18,7 +18,7 @@ import edu.pitt.sis.exp.colfusion.process.ProcessBase;
  */
 public class TestProcess extends ProcessBase {
 
-	transient Logger logger = LogManager.getLogger(ProcessManagerTest.class.getName());
+	transient Logger logger = LogManager.getLogger(TestProcess.class.getName());
 	
 	private int _sid;
 	
@@ -41,7 +41,11 @@ public class TestProcess extends ProcessBase {
 			e.printStackTrace();
 						
 			logger.error("Ups, catched an error in run method in TestProcess", e);
+			
+			this.getManager().onFailedProcess(this, e);
 		}
+		
+		this.getManager().onDoneProcess(this);
 	}
 
 	@Override

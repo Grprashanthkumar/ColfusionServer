@@ -42,7 +42,7 @@ public class DataLoadExecutorKTRImpl extends DataLoadExecutorBaseImpl implements
 	 */
 	private static final long serialVersionUID = -8121337577769586080L;
 	
-	Logger logger = LogManager.getLogger(DataLoadExecutorKTRImpl.class.getName());
+	transient Logger logger = LogManager.getLogger(DataLoadExecutorKTRImpl.class.getName());
 	
 	public DataLoadExecutorKTRImpl() {
 	
@@ -296,6 +296,8 @@ public class DataLoadExecutorKTRImpl extends DataLoadExecutorBaseImpl implements
 			this.getManager().onDoneProcess(this);
 		} catch (Exception e) {
 			//TODO: add logger if needed here, or maybe all exceptions should be logged by process manager
+			
+			this._exceptions.add(e);
 			
 			this.getManager().onFailedProcess(this, e);
 		}	
