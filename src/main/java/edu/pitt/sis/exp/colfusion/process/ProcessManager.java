@@ -4,8 +4,6 @@
 package edu.pitt.sis.exp.colfusion.process;
 
 import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 
 import org.apache.logging.log4j.LogManager;
@@ -16,7 +14,6 @@ import edu.pitt.sis.exp.colfusion.PropertyKeys;
 import edu.pitt.sis.exp.colfusion.persistence.managers.ProcessPersistantManager;
 import edu.pitt.sis.exp.colfusion.persistence.managers.ProcessPersistantManagerImpl;
 import edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionProcesses;
-import edu.pitt.sis.exp.colfusion.tests.processes.ProcessManagerTest;
 
 /**
  * @author Evgeny
@@ -58,6 +55,8 @@ public class ProcessManager {
     	_maxNumberOfConcurrentProceses = maxNumberOfConcurrentProceses;
     	
     	processPersistantManager = new ProcessPersistantManagerImpl();
+    	
+    	updateRunningProcessesQueue();
     }
     
     public static ProcessManager getInstance() {
