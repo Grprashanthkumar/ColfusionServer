@@ -139,7 +139,18 @@ public class StoryBL {
 			storyMetadata.setStoryAuthors(authors);
 						
 			LinksManager linksMgr = new LinksManagerImpl();
-			ColfusionLinks link = linksMgr.findByID(sid); 
+			ColfusionLinks link = null;
+			try {
+				link = linksMgr.findByID(sid);
+			} catch (Exception e) {
+				result.isSuccessful = false;
+				result.message = "No story found with sid:  " + sid;
+				result.setPayload(null);
+				
+				logger.error(String.format("Failed to findById for sid = %d", sid), e);
+				
+				return result;
+			} 
 			
 			if (link != null) {
 				storyMetadata.setTitle(link.getLinkTitle());

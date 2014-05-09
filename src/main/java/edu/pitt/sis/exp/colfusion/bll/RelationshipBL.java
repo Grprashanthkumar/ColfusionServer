@@ -29,4 +29,22 @@ public class RelationshipBL {
 		
 		return result;
 	}
+
+	/**
+	 * Triggers background process for data matching calculations for all relationships of a given story that were not yet and are
+	 * not being calculated.
+	 * 
+	 * @param sid is the id of the story.
+	 * @return simple message if processes has been started.
+	 */
+	public GeneralResponse triggerDataMatchingRatiosCalculationsForAllNotCalculated(int sid) {
+		
+		GeneralResponseGen<String> result = new GeneralResponseGenImpl<>();
+		
+		result.setMessage("OK");
+		result.setPayload("Started" + sid);
+		result.setSuccessful(true);
+	
+		return result;
+	}
 }

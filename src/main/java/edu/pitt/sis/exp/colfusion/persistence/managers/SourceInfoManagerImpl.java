@@ -63,11 +63,13 @@ import edu.pitt.sis.exp.colfusion.viewmodels.StoryTargetDBViewModel;
  * @author Evgeny
  *
  */
-public class SourceInfoManagerImpl implements SourceInfoManager {
+public class SourceInfoManagerImpl extends GeneralManagerImpl<ColfusionSourceinfo, Integer> implements SourceInfoManager {
 
 	Logger logger = LogManager.getLogger(SourceInfoManagerImpl.class.getName());
 	
-	private SourceInfoDAO sourceInfoDAO = new SourceInfoDAOImpl();
+	public SourceInfoManagerImpl() {
+		super(new SourceInfoDAOImpl(), ColfusionSourceinfo.class);
+	}
 	
 	public enum HistoryItem {
 	    TITLE("title"), DESCRIPTION("description"), TAGS("tags"), STATUS("status");
@@ -96,132 +98,12 @@ public class SourceInfoManagerImpl implements SourceInfoManager {
 	//***************************************
 	
 	@Override
-	public Integer save(ColfusionSourceinfo entity) throws NonUniqueResultException, HibernateException {
-		try {
-            HibernateUtil.beginTransaction();
-            
-            Integer result = sourceInfoDAO.save(entity);
-            
-            HibernateUtil.commitTransaction();
-            
-            return result;
-        } catch (NonUniqueResultException ex) {
-
-        	HibernateUtil.rollbackTransaction();
-        	
-        	logger.error("save failed NonUniqueResultException", ex);
-            throw ex;
-        } catch (HibernateException ex) {
-
-        	HibernateUtil.rollbackTransaction();
-        	
-        	logger.error("save failed HibernateException", ex);
-        	throw ex;
-        }
-	}
-	
-	@Override
-	public void saveOrUpdate(ColfusionSourceinfo entity) {
-		try {
-            HibernateUtil.beginTransaction();
-            
-            sourceInfoDAO.saveOrUpdate(entity);
-            
-            HibernateUtil.commitTransaction();
-        } catch (NonUniqueResultException ex) {
-
-        	HibernateUtil.rollbackTransaction();
-        	
-        	logger.error("save failed NonUniqueResultException", ex);
-        	throw ex;
-        } catch (HibernateException ex) {
-
-        	HibernateUtil.rollbackTransaction();
-        	
-        	logger.error("save failed HibernateException", ex);
-        	throw ex;
-        }
-	}
-
-	@Override
-	public ColfusionSourceinfo merge(ColfusionSourceinfo entity) throws NonUniqueResultException, HibernateException {
-		try {
-            HibernateUtil.beginTransaction();
-            
-            ColfusionSourceinfo result = sourceInfoDAO.merge(entity);
-            
-            HibernateUtil.commitTransaction();
-            
-            return result;
-        } catch (NonUniqueResultException ex) {
-
-        	HibernateUtil.rollbackTransaction();
-        	
-        	logger.error("merge failed NonUniqueResultException", ex);
-            throw ex;
-        } catch (HibernateException ex) {
-
-        	HibernateUtil.rollbackTransaction();
-        	
-        	logger.error("merge failed HibernateException", ex);
-        	throw ex;
-        }
-	}
-
-	@Override
-	public void delete(ColfusionSourceinfo entity) {
-		try {
-            HibernateUtil.beginTransaction();
-            
-            sourceInfoDAO.delete(entity);
-            
-            HibernateUtil.commitTransaction();
-        } catch (NonUniqueResultException ex) {
-
-        	HibernateUtil.rollbackTransaction();
-        	
-        	logger.error("delete failed NonUniqueResultException", ex);
-        	throw ex;
-        } catch (HibernateException ex) {
-
-        	HibernateUtil.rollbackTransaction();
-        	
-        	logger.error("delete failed HibernateException", ex);
-        	throw ex;
-        }
-	}
-
-	@Override
-	public List<ColfusionSourceinfo> findAll() {
-		List<ColfusionSourceinfo> result = null;
-		try {
-            HibernateUtil.beginTransaction();
-            
-            result = sourceInfoDAO.findAll(ColfusionSourceinfo.class);
-            
-            HibernateUtil.commitTransaction();
-        } catch (NonUniqueResultException ex) {
-
-        	HibernateUtil.rollbackTransaction();
-        	
-        	logger.error("findAll failed NonUniqueResultException", ex);
-        } catch (HibernateException ex) {
-        	
-        	HibernateUtil.rollbackTransaction();
-        	
-        	logger.error("findAll failed HibernateException", ex);
-        	throw ex;
-        }
-		return result;
-	}
-
-	@Override
 	public ColfusionSourceinfo findByID(Integer id) {
 		ColfusionSourceinfo result = null;
 		try {
             HibernateUtil.beginTransaction();
             
-            result = sourceInfoDAO.findByID(ColfusionSourceinfo.class, id);
+            result = _dao.findByID(ColfusionSourceinfo.class, id);
             
             if (result != null) { 
             
@@ -244,8 +126,6 @@ public class SourceInfoManagerImpl implements SourceInfoManager {
         }
 		return result;		
 	}
-	
-	
 	
 	//************************************
 	// SOURCINFOMANAGER interface
@@ -270,7 +150,7 @@ public class SourceInfoManagerImpl implements SourceInfoManager {
         try {
             HibernateUtil.beginTransaction();
             
-            sourceinfo = sourceInfoDAO.findDatasetInfoBySid(sid, includeDraft);
+            sourceinfo = ((SourceInfoDAO)_dao).findDatasetInfoBySid(sid, includeDraft);
             
             if (sourceinfo != null) {
             
@@ -308,7 +188,7 @@ public class SourceInfoManagerImpl implements SourceInfoManager {
 		try {
             HibernateUtil.beginTransaction();
             
-            List<ColfusionSourceinfo> result = sourceInfoDAO.lookupStories(searchTerm, limit);
+            List<ColfusionSourceinfo> result = ((SourceInfoDAO) _dao).lookupStories(searchTerm, limit);
             
             for (ColfusionSourceinfo sourceinfo : result) {
             	
@@ -371,7 +251,7 @@ public class SourceInfoManagerImpl implements SourceInfoManager {
             
             newStoryEntity.setStatus(StoryStatusTypes.DRAFT.getValue());
             
-            int sid = sourceInfoDAO.save(newStoryEntity);
+            int sid = _dao.save(newStoryEntity);
             
             //Add user as submitter/contributer for newly created story.
             
@@ -470,7 +350,7 @@ public class SourceInfoManagerImpl implements SourceInfoManager {
 			
 			throw e;
 		}
-        sourceInfoDAO.merge(newStoryEntity);
+        _dao.merge(newStoryEntity);
         
         return newStoryEntity;
 	}
@@ -487,7 +367,7 @@ public class SourceInfoManagerImpl implements SourceInfoManager {
 	private void handleHistoryEdits(ColfusionSourceinfo newStory, int userId, String reason) throws Exception {
 		SourceInfoMetadataEditHistoryDAO editHistorDAO = new SourceInfoMetadataEditHistoryDAOImpl();
 		
-		ColfusionSourceinfo oldStory = sourceInfoDAO.findByID(ColfusionSourceinfo.class, newStory.getSid());
+		ColfusionSourceinfo oldStory = _dao.findByID(ColfusionSourceinfo.class, newStory.getSid());
 		
 		try {
 			String oldValue = (oldStory == null) ? null : oldStory.getTitle();
@@ -692,7 +572,7 @@ public class SourceInfoManagerImpl implements SourceInfoManager {
 
             //TODO: this should be moved to hitory manager
             String sql = "select h from ColfusionSourceinfoMetadataEditHistory h where h.colfusionSourceinfo = :sid and h.item = :item ORDER BY h.hid DESC";
-            ColfusionSourceinfo sourceInfo = sourceInfoDAO.findByID(ColfusionSourceinfo.class, sid);
+            ColfusionSourceinfo sourceInfo = _dao.findByID(ColfusionSourceinfo.class, sid);
             Query query = HibernateUtil.getSession().createQuery(sql).setParameter("sid", sourceInfo).setParameter("item", historyItem);
             ArrayList<ColfusionSourceinfoMetadataEditHistory> historyLog = (ArrayList<ColfusionSourceinfoMetadataEditHistory>) metadataHistoryDAO.findMany(query);
             
@@ -759,7 +639,7 @@ public class SourceInfoManagerImpl implements SourceInfoManager {
 		try {
             HibernateUtil.beginTransaction();
             
-            ColfusionSourceinfo story = sourceInfoDAO.findByID(ColfusionSourceinfo.class, sourceDBInfo.getSid());
+            ColfusionSourceinfo story = _dao.findByID(ColfusionSourceinfo.class, sourceDBInfo.getSid());
             
             if (story == null) {
             	logger.error(String.format("saveOrUpdateSourceInfoDB failed: could not find story with %d sid", sourceDBInfo.getSid()));

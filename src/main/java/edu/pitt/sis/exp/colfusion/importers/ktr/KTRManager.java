@@ -558,19 +558,33 @@ public class KTRManager {
 	 * @param sid id of the story.
 	 * @param tableName name of the sheet/table.
 	 * @param ktrAbsoluteFileName absolute location of the KTR file.
+	 * @throws Exception 
 	 */
-	private void saveKTRFileLocationToDB(int sid, String tableName, String ktrAbsoluteFileName) {
+	private void saveKTRFileLocationToDB(int sid, String tableName, String ktrAbsoluteFileName) throws Exception {
 		
 		SourceInfoTableKTRManager sourceInfoTableKTRManager = new SourceInfoTableKTRManagerImpl();
 		SourceInfoManager sourceInoMgr = new SourceInfoManagerImpl();
-		ColfusionSourceinfo sourceInfo = sourceInoMgr.findByID(sid);
+		ColfusionSourceinfo sourceInfo;
+		try {
+			sourceInfo = sourceInoMgr.findByID(sid);
+		} catch (Exception e) {
+			logger.error(String.format("Failed to find sourceinfo by sid = %d in saveKTRFileLocationToDB", sid), e);
+			
+			throw e;
+		}
 		
 		ColfusionSourceinfoTableKtrId sourceInfoTableKTRId = new ColfusionSourceinfoTableKtrId(sid, tableName);
 		
 		ColfusionSourceinfoTableKtr sourceInfoTableKTR = new ColfusionSourceinfoTableKtr(sourceInfoTableKTRId, sourceInfo, 
 				ktrAbsoluteFileName);
 		
-		sourceInfoTableKTRManager.saveOrUpdate(sourceInfoTableKTR);
+		try {
+			sourceInfoTableKTRManager.saveOrUpdate(sourceInfoTableKTR);
+		} catch (Exception e) {
+			logger.error(String.format("Failed to saveOrUpdate sourceinfotablektr in saveKTRFileLocationToDB"), e);
+			
+			throw e;
+		}
 	}
 
 	/**

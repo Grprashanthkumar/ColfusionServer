@@ -1,6 +1,8 @@
 package edu.pitt.sis.exp.colfusion.responseModels;
 
-public interface GeneralResponseGen<T> extends GeneralResponse {
+import java.io.Serializable;
+
+public interface GeneralResponseGen<T extends Serializable> extends GeneralResponse {
 
 	/**
 	 * @return the payload

@@ -35,8 +35,8 @@ public class RelationshipController extends BaseController {
      * @return
      */
 	@OPTIONS
-    @Path("mineRelationshipsFor/{sid}")
-    public Response mineRelationshipsFor(@HeaderParam("Access-Control-Request-Headers") String requestH) {
+    @Path("triggerDataMatching/{sid}")
+    public Response triggerDataMatchingRatiosCalculationsForAllNotCalculated(@HeaderParam("Access-Control-Request-Headers") String requestH) {
 		return makeCORS(Response.ok()); //, requestH);
     }
 	
@@ -47,14 +47,14 @@ public class RelationshipController extends BaseController {
      * @param sid is the id of the story for which to perform mining.
      * @return response mining status.
      */
-	@Path("mineRelationshipsFor/{sid}")
+	@Path("triggerDataMatching/{sid}")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response mineRelationshipsFor(@PathParam("sid") int sid) {
+    public Response triggerDataMatchingRatiosCalculationsForAllNotCalculated(@PathParam("sid") int sid) {
     	
 		RelationshipBL relationshipBL = new RelationshipBL();
 		
-		GeneralResponse result = relationshipBL.mineRelationshipsFor(sid);
+		GeneralResponse result = relationshipBL.triggerDataMatchingRatiosCalculationsForAllNotCalculated(sid);
     	
     	return makeCORS(Response.status(200).entity(result)); //.build();
     }

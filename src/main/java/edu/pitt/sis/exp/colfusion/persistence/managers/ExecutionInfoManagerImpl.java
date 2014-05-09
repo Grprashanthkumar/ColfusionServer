@@ -25,160 +25,16 @@ import edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionSourceinfo;
  * @author Evgeny
  *
  */
-public class ExecutionInfoManagerImpl implements ExecutionInfoManager {
+public class ExecutionInfoManagerImpl extends GeneralManagerImpl<ColfusionExecuteinfo, Integer> implements ExecutionInfoManager {
 
 	Logger logger = LogManager.getLogger(ExecutionInfoManagerImpl.class.getName());
 	
-	private ExecutionInfoDAO executionInfoDAO = new ExecutionInfoDAOImpl();
+	public ExecutionInfoManagerImpl() {
+		super(new ExecutionInfoDAOImpl(), ColfusionExecuteinfo.class);
+	}
 	
-	//***************************************
-	// General manager interface
-	//***************************************
 	
-	@Override
-	public Integer save(ColfusionExecuteinfo entity) {
-		try {
-            HibernateUtil.beginTransaction();
-            
-            Integer result = executionInfoDAO.save(entity);
-            
-            HibernateUtil.commitTransaction();
-            
-            return result;
-        } catch (NonUniqueResultException ex) {
-
-        	HibernateUtil.rollbackTransaction();
-        	
-        	logger.error("save failed NonUniqueResultException", ex);
-            throw ex;
-        } catch (HibernateException ex) {
-
-        	HibernateUtil.rollbackTransaction();
-        	
-        	logger.error("save failed HibernateException", ex);
-        	throw ex;
-        }
-	}
-
-	@Override
-	public void saveOrUpdate(ColfusionExecuteinfo entity) {
-		try {
-            HibernateUtil.beginTransaction();
-            
-            executionInfoDAO.saveOrUpdate(entity);
-            
-            HibernateUtil.commitTransaction();
-        } catch (NonUniqueResultException ex) {
-
-        	HibernateUtil.rollbackTransaction();
-        	
-        	logger.error("save failed NonUniqueResultException", ex);
-        	throw ex;
-        } catch (HibernateException ex) {
-
-        	HibernateUtil.rollbackTransaction();
-        	
-        	logger.error("save failed HibernateException", ex);
-        	throw ex;
-        }
-	}
-
-	@Override
-	public ColfusionExecuteinfo merge(ColfusionExecuteinfo entity) {
-		try {
-            HibernateUtil.beginTransaction();
-            
-            ColfusionExecuteinfo result = executionInfoDAO.merge(entity);
-            
-            HibernateUtil.commitTransaction();
-            
-            return result;
-        } catch (NonUniqueResultException ex) {
-
-        	HibernateUtil.rollbackTransaction();
-        	
-        	logger.error("merge failed NonUniqueResultException", ex);
-            throw ex;
-        } catch (HibernateException ex) {
-
-        	HibernateUtil.rollbackTransaction();
-        	
-        	logger.error("merge failed HibernateException", ex);
-        	throw ex;
-        }
-	}
-
-	@Override
-	public void delete(ColfusionExecuteinfo entity) {
-		try {
-            HibernateUtil.beginTransaction();
-            
-            executionInfoDAO.delete(entity);
-            
-            HibernateUtil.commitTransaction();
-        } catch (NonUniqueResultException ex) {
-
-        	HibernateUtil.rollbackTransaction();
-        	
-        	logger.error("delete failed NonUniqueResultException", ex);
-        	throw ex;
-        } catch (HibernateException ex) {
-
-        	HibernateUtil.rollbackTransaction();
-        	
-        	logger.error("delete failed HibernateException", ex);
-        	throw ex;
-        }
-	}
-
-	@Override
-	public List<ColfusionExecuteinfo> findAll() {
-		List<ColfusionExecuteinfo> result = null;
-		try {
-            HibernateUtil.beginTransaction();
-            
-            result = executionInfoDAO.findAll(ColfusionExecuteinfo.class);
-            
-            HibernateUtil.commitTransaction();
-        } catch (NonUniqueResultException ex) {
-
-        	HibernateUtil.rollbackTransaction();
-        	
-        	logger.error("findAll failed NonUniqueResultException", ex);
-        } catch (HibernateException ex) {
-
-        	HibernateUtil.rollbackTransaction();
-        	
-        	logger.error("findAll failed HibernateException", ex);
-        }
-		return result;
-	}
-
-	@Override
-	public ColfusionExecuteinfo findByID(Integer id) {
-		ColfusionExecuteinfo result = null;
-		try {
-            HibernateUtil.beginTransaction();
-            
-            result = executionInfoDAO.findByID(ColfusionExecuteinfo.class, id);
-            
-            HibernateUtil.commitTransaction();
-        } catch (NonUniqueResultException ex) {
-
-        	HibernateUtil.rollbackTransaction();
-        	
-        	logger.error("findByID failed NonUniqueResultException", ex);
-        	throw ex;
-        } catch (HibernateException ex) {
-
-        	HibernateUtil.rollbackTransaction();
-        	
-        	logger.error("findByID failed HibernateException", ex);
-        	throw ex;
-        }
-		return result;		
-	}
-
+	
 	//***************************************
 	// Custom methods
 	//***************************************
@@ -234,7 +90,7 @@ public class ExecutionInfoManagerImpl implements ExecutionInfoManager {
     		
     		//TODO: the findOne should be good here because there should be only one record for given pair of sid and table name, however it is not 
     		//restricted on the db level, so at least for now I used findMany.
-    		List<ColfusionExecuteinfo> executeInfoRecords = executionInfoDAO.findMany(query);
+    		List<ColfusionExecuteinfo> executeInfoRecords = _dao.findMany(query);
             
             HibernateUtil.commitTransaction();
             
@@ -288,7 +144,7 @@ public class ExecutionInfoManagerImpl implements ExecutionInfoManager {
 		try {
             HibernateUtil.beginTransaction();
             
-            ColfusionExecuteinfo executionInfo = executionInfoDAO.findByID(ColfusionExecuteinfo.class, executionLogId);
+            ColfusionExecuteinfo executionInfo = _dao.findByID(ColfusionExecuteinfo.class, executionLogId);
             
             if (executionInfo == null) {
             	logger.error(String.format("updateStatus failed: could not find execution info record by given id %d", executionLogId));
@@ -299,7 +155,7 @@ public class ExecutionInfoManagerImpl implements ExecutionInfoManager {
             
             executionInfo.setStatus(statusValue.getValue());
             
-            executionInfoDAO.saveOrUpdate(executionInfo);
+            _dao.saveOrUpdate(executionInfo);
    
             HibernateUtil.commitTransaction();           
         } catch (NonUniqueResultException ex) {
@@ -324,7 +180,7 @@ public class ExecutionInfoManagerImpl implements ExecutionInfoManager {
 		try {
             HibernateUtil.beginTransaction();
             
-            ColfusionExecuteinfo executionInfo = executionInfoDAO.findByID(ColfusionExecuteinfo.class, executionLogId);
+            ColfusionExecuteinfo executionInfo = _dao.findByID(ColfusionExecuteinfo.class, executionLogId);
             
             if (executionInfo == null) {
             	logger.error(String.format("appendLog failed: could not find execution info record by given id %d", executionLogId));
@@ -340,7 +196,7 @@ public class ExecutionInfoManagerImpl implements ExecutionInfoManager {
             
             executionInfo.setLog(log);
             
-            executionInfoDAO.saveOrUpdate(executionInfo);
+            _dao.saveOrUpdate(executionInfo);
    
             HibernateUtil.commitTransaction();           
         } catch (NonUniqueResultException ex) {

@@ -4,6 +4,7 @@
 package edu.pitt.sis.exp.colfusion.process;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import com.google.gson.Gson;
@@ -18,10 +19,14 @@ public abstract class ProcessBase implements Process {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -1618488906520414665L;
+	private static final long serialVersionUID = 2L;
 	
 	protected int _id = -1; // -1 means not set
 	final protected String       _description;
+	final private Date creationsTime = new Date();
+	protected Date runStartTime;
+	protected Date runEndTime;
+	
 	transient private ProcessManager     	 _manager;
 	transient protected Thread             _thread;
     
@@ -121,4 +126,39 @@ public abstract class ProcessBase implements Process {
     	
     	return gson.fromJson(json, clazz);
     }
+
+	/**
+	 * @return the creationsTime
+	 */
+	public Date getCreationsTime() {
+		return creationsTime;
+	}
+
+	/**
+	 * @return the runStratTime
+	 */
+	public Date getRunStartTime() {
+		return runStartTime;
+	}
+
+	/**
+	 * @param runStratTime the runStratTime to set
+	 */
+	public void setRunStartTime(Date runStartTime) {
+		this.runStartTime = runStartTime;
+	}
+
+	/**
+	 * @return the runEndTime
+	 */
+	public Date getRunEndTime() {
+		return runEndTime;
+	}
+
+	/**
+	 * @param runEndTime the runEndTime to set
+	 */
+	public void setRunEndTime(Date runEndTime) {
+		this.runEndTime = runEndTime;
+	}
 }

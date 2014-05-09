@@ -3,12 +3,17 @@
  */
 package edu.pitt.sis.exp.colfusion.responseModels;
 
+import java.io.Serializable;
+
+import javax.xml.bind.annotation.XmlRootElement;
+
 
 /**
  * @author Evgeny
  *
  */
-public class GeneralResponseGenImpl<T> implements GeneralResponseGen<T> {
+@XmlRootElement
+public class GeneralResponseGenImpl<T extends Serializable> implements GeneralResponseGen<T> {
 		
 	private boolean isSuccessful;
     private String message;

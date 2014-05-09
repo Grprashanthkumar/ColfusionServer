@@ -43,7 +43,15 @@ public class SourceInfoManagerTest extends TestCase {
 		
 		SourceInfoManager sourceInfoManager = new SourceInfoManagerImpl();
 		 
-		ColfusionSourceinfo si = sourceInfoManager.findByID(sid);
+		ColfusionSourceinfo si = null;
+		try {
+			si = sourceInfoManager.findByID(sid);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			
+			fail();
+		}
 		
 		if (si == null) {
 			logger.error("testFindDatasetInfoBySid failed. Could not find sotry by sid " + sid);

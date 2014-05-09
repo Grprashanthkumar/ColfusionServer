@@ -111,7 +111,7 @@ public class ProcessManager {
     	
 		try {
 						
-			ColfusionProcesses colfusionProcess = new ColfusionProcesses(ProcessStatusEnum.NEW.getValue(), processJson, process.getClass().getName(), "newly added process");
+			ColfusionProcesses colfusionProcess = new ColfusionProcesses(ProcessStatusEnum.NEW.getValue(), processJson, process.getClass().getName(), "newly added process", null);
 			
 			processPersistantManager.saveOrUpdate(colfusionProcess);
 			

@@ -58,6 +58,7 @@
   <mapping resource="hibernate/orm_mappings/ColfusionRelationships.hbm.xml"/>
   <mapping resource="hibernate/orm_mappings/ColfusionRelationshipsColumns.hbm.xml"/>
   <mapping resource="hibernate/orm_mappings/ColfusionRelationshipsColumnsCachingExecutionInfo.hbm.xml"/>
+   <mapping resource="hibernate/orm_mappings/ColfusionRelationshipsColumnsDataMathingRatios.hbm.xml"/>
   <mapping resource="hibernate/orm_mappings/ColfusionSavedLinks.hbm.xml"/>
   <mapping resource="hibernate/orm_mappings/ColfusionShares.hbm.xml"/>
   <mapping resource="hibernate/orm_mappings/ColfusionSourceinfo.hbm.xml"/>
