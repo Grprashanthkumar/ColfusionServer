@@ -26,9 +26,6 @@ public abstract class DataLoadExecutorBaseImpl extends ProcessBase implements Da
 	private static final long serialVersionUID = -8124562049915428600L;
 	
 	protected int sid;
-	
-	@Override
-	public abstract void execute() throws Exception;
 
 	/**
 	 * Updates/inserts record about target database (the database where the data should be loaded).

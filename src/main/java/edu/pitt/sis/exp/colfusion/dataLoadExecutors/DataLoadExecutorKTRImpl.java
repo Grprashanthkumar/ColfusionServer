@@ -289,31 +289,6 @@ public class DataLoadExecutorKTRImpl extends DataLoadExecutorBaseImpl implements
 	}
 
 	@Override
-	public void run() {
-		
-		try {
-			
-			setRunStartTime(new Date());
-			
-			execute();
-			
-			//Not really the end of the run, but the next statement can hold the process for a long time.
-			setRunEndTime(new Date());
-			
-			this.getManager().onDoneProcess(this);
-		} catch (Exception e) {
-			//TODO: add logger if needed here, or maybe all exceptions should be logged by process manager
-			
-			this._exceptions.add(e);
-			
-			//Not really the end of the run, but the next statement can hold the process for a long time.
-			setRunEndTime(new Date());
-			
-			this.getManager().onFailedProcess(this, e);
-		}	
-	}
-
-	@Override
 	protected Runnable getRunnable() {
 		return this;
 	}

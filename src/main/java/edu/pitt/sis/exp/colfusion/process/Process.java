@@ -73,4 +73,6 @@ public interface Process extends Runnable, Serializable {
      * @return the list of exceptions which occurred during the process execution.
      */
     public List<Exception> getExceptions();
+    
+    public void execute() throws Exception;
 }
