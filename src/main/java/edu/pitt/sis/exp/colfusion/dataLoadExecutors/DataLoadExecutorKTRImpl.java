@@ -113,7 +113,7 @@ public class DataLoadExecutorKTRImpl extends DataLoadExecutorBaseImpl implements
 				}
 				
 				//TODO: uncomment!!!
-				//updateLinkedServerInfo(executionInfoMgr, executionLogId, targetDBConnectionInfo);
+				updateLinkedServerInfo(executionInfoMgr, executionLogId, targetDBConnectionInfo);
 				
 				firstKtr = false;
 			}
