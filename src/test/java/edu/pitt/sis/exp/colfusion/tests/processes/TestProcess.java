@@ -27,28 +27,7 @@ public class TestProcess extends ProcessBase {
 	 */
 	private static final long serialVersionUID = 8932832409517582844L;
 
-	@Override
-	public void run() {
-		try {
-			
-			logger.info("running TestProcess");
-			
-			Thread.sleep(1000);
-			
-			logger.info("Finished running TestProcess");
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-						
-			logger.error("Ups, catched an error in run method in TestProcess", e);
-			
-			this.getManager().onFailedProcess(this, e);
-		}
-		
-		this.getManager().onDoneProcess(this);
-	}
-
-	@Override
+		@Override
 	protected Runnable getRunnable() {
 		return this;
 	}
@@ -65,6 +44,15 @@ public class TestProcess extends ProcessBase {
 	 */
 	public void setSid(int _sid) {
 		this._sid = _sid;
+	}
+
+	@Override
+	public void execute() throws Exception {
+		logger.info("running TestProcess");
+		
+		Thread.sleep(1000);
+		
+		logger.info("Finished running TestProcess");
 	}
 
 }

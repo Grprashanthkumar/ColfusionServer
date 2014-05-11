@@ -10,5 +10,5 @@ import edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionRelationships;
  *
  */
 public interface RelationshipsManager extends GeneralManager<ColfusionRelationships, Integer> {
-
+	
 }
