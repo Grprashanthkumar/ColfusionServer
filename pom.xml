@@ -195,6 +195,13 @@
 		</dependency>
 
 	</dependencies>
-	
+
+    <repositories>
+        <repository>
+            <id>repo</id>
+            <url>file://${project.basedir}/repo</url>
+        </repository>
+    </repositories>
+
 	<url>colfusion.exp.sis.pitt.edu/colfusion</url>
 </project>
