@@ -32,8 +32,8 @@ public abstract class DatabaseHandlerBase {
     
     Logger logger = LogManager.getLogger(DatabaseHandlerBase.class.getName());
     
-    public DatabaseHandlerBase(String host, int port, String user, String password, String database, DatabaseHanderType databaseHanderType,
-    		ExecutionInfoManager executionInfoMgr, int executionLogId) {
+    public DatabaseHandlerBase(final String host, final int port, final String user, final String password, final String database, final DatabaseHanderType databaseHanderType,
+    		final ExecutionInfoManager executionInfoMgr, final int executionLogId) {
     	setHost(host);
     	setPort(port);
     	setUser(user);
@@ -54,7 +54,7 @@ public abstract class DatabaseHandlerBase {
 	/**
 	 * @param host the host to set
 	 */
-	public void setHost(String host) {
+	public void setHost(final String host) {
 		this.host = host;
 	}
 	/**
@@ -66,7 +66,7 @@ public abstract class DatabaseHandlerBase {
 	/**
 	 * @param port the port to set
 	 */
-	public void setPort(int port) {
+	public void setPort(final int port) {
 		this.port = port;
 	}
 	/**
@@ -78,7 +78,7 @@ public abstract class DatabaseHandlerBase {
 	/**
 	 * @param user the user to set
 	 */
-	public void setUser(String user) {
+	public void setUser(final String user) {
 		this.user = user;
 	}
 	/**
@@ -90,7 +90,7 @@ public abstract class DatabaseHandlerBase {
 	/**
 	 * @param password the password to set
 	 */
-	public void setPassword(String password) {
+	public void setPassword(final String password) {
 		this.password = password;
 	}
 	/**
@@ -102,7 +102,7 @@ public abstract class DatabaseHandlerBase {
 	/**
 	 * @param database the database to set
 	 */
-	public void setDatabase(String database) {
+	public void setDatabase(final String database) {
 		this.database = database;
 	}
 	/**
@@ -114,7 +114,7 @@ public abstract class DatabaseHandlerBase {
 	/**
 	 * @param databaseHanderType the databaseHanderType to set
 	 */
-	public void setDatabaseHanderType(DatabaseHanderType databaseHanderType) {
+	public void setDatabaseHanderType(final DatabaseHanderType databaseHanderType) {
 		this.databaseHanderType = databaseHanderType;
 	}
     
@@ -123,7 +123,7 @@ public abstract class DatabaseHandlerBase {
 	 * @return the connection.
 	 * @throws Exception 
 	 */
-	protected void openConnection(String connectionString) throws Exception {
+	protected void openConnection(final String connectionString) throws Exception {
 		try {
 			connection = DriverManager.getConnection(connectionString, getUser(), getPassword());
 			
@@ -184,6 +184,13 @@ public abstract class DatabaseHandlerBase {
 	 * @throws Exception 
 	 */
 	public abstract boolean createTableIfNotExist(String tableName, List<String> variables) throws SQLException, Exception;
+
+	/**
+	 * Creates indices on a list of columns. Depending on combineColumns parameter one or many indices will be created.
+	 * @param columnNames - a list of names of columns on which index (indices) need to be created.
+	 * @param combineColumns - if true, only one index will be created where key will be combination of all columns, otherwise a separate index on each column will be created.
+	 */
+	public abstract void createIndeces(List<String> columnNames, boolean combineColumns);
 	
 	
 	

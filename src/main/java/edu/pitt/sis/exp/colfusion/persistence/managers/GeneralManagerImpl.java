@@ -4,10 +4,12 @@
 package edu.pitt.sis.exp.colfusion.persistence.managers;
 
 import java.io.Serializable;
+import java.lang.reflect.Field;
 import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.hibernate.Hibernate;
 import org.hibernate.HibernateException;
 import org.hibernate.NonUniqueResultException;
 
@@ -21,17 +23,17 @@ import edu.pitt.sis.exp.colfusion.persistence.dao.GenericDAO;
  */
 public abstract class GeneralManagerImpl<T extends Object, ID extends Serializable> implements GeneralManager<T, ID> {
 
-	Logger logger = LogManager.getLogger(GeneralManagerImpl.class.getName());
+	private static Logger logger = LogManager.getLogger(GeneralManagerImpl.class.getName());
 	
 	protected final GenericDAO<T, ID> _dao;
 	private final Class<?> _clazz;
 	
-	protected GeneralManagerImpl(GenericDAO<T, ID>  dao, Class<?> clazz) {
+	protected GeneralManagerImpl(final GenericDAO<T, ID>  dao, final Class<?> clazz) {
 		_dao = dao;
 		_clazz = clazz;
 	}
 	
-	private void checkIfDaoSet() throws Exception {
+	protected void checkIfDaoSet() throws Exception {
 		if (_dao == null) {
 			logger.error("Dao is not set up");
 			//TODO: create custom exception
@@ -40,7 +42,7 @@ public abstract class GeneralManagerImpl<T extends Object, ID extends Serializab
 	}
 	
 	@Override
-	public ID save(T entity) throws Exception {
+	public ID save(final T entity) throws Exception {
 		
 		checkIfDaoSet();
 		
@@ -68,7 +70,7 @@ public abstract class GeneralManagerImpl<T extends Object, ID extends Serializab
 	}
 
 	@Override
-	public void saveOrUpdate(T entity) throws Exception {
+	public void saveOrUpdate(final T entity) throws Exception {
 		
 		checkIfDaoSet();
 		
@@ -94,7 +96,7 @@ public abstract class GeneralManagerImpl<T extends Object, ID extends Serializab
 	}
 
 	@Override
-	public T merge(T entity) throws Exception {
+	public T merge(final T entity) throws Exception {
 		
 		checkIfDaoSet();
 		
@@ -122,7 +124,7 @@ public abstract class GeneralManagerImpl<T extends Object, ID extends Serializab
 	}
 
 	@Override
-	public void delete(T entity) throws Exception {
+	public void delete(final T entity) throws Exception {
 		
 		checkIfDaoSet();
 		
@@ -176,7 +178,7 @@ public abstract class GeneralManagerImpl<T extends Object, ID extends Serializab
 	}
 
 	@Override
-	public T findByID(ID id) throws Exception {
+	public T findByID(final ID id) throws Exception {
 		
 		checkIfDaoSet();
 		
@@ -202,5 +204,63 @@ public abstract class GeneralManagerImpl<T extends Object, ID extends Serializab
         }
 		return result;	
 	}
+	
+	 public static <T extends Object> T initializeField(final T detachedParent, final String fieldName) throws NoSuchFieldException, IllegalAccessException  {
+		 try {
+			 //TODO:add a check whether field is already initialized
+			 
+	           HibernateUtil.beginTransaction();
+	            
+	            @SuppressWarnings("unchecked")
+				T reattachedParent = (T) HibernateUtil.getSession().merge(detachedParent); 
+	            
+	            // get the field from the entity and initialize it
+	            Field fieldToInitialize = detachedParent.getClass().getDeclaredField(fieldName);
+	            fieldToInitialize.setAccessible(true);
+	            Object objectToInitialize = fieldToInitialize.get(reattachedParent);
+
+	            Hibernate.initialize(objectToInitialize);
+	            
+	            HibernateUtil.commitTransaction();
+	            
+	            return reattachedParent;
+	        } catch (NonUniqueResultException ex) {
+
+	        	HibernateUtil.rollbackTransaction();
+	        	
+	        	logger.error("findByID failed NonUniqueResultException", ex);
+	        	throw ex;
+	        } catch (HibernateException ex) {
+
+	        	HibernateUtil.rollbackTransaction();
+	        	
+	        	logger.error("findByID failed HibernateException", ex);
+	        	throw ex;
+	        } catch (NoSuchFieldException e) {
+	        	
+	        	HibernateUtil.rollbackTransaction();
+	        	
+	        	logger.error(String.format("initializeField FAILED. No such field as %s.", fieldName), e);
+	        	throw e;
+			} catch (SecurityException e) {
+				
+				HibernateUtil.rollbackTransaction();
+				
+				logger.error(String.format("initializeField FAILED something wrong. Field name is %s.", fieldName), e);
+				throw e;
+			} catch (IllegalArgumentException e) {
+				
+				HibernateUtil.rollbackTransaction();
+				
+				logger.error(String.format("initializeField FAILED something wrong. Field name is %s.", fieldName), e);
+				throw e;
+			} catch (IllegalAccessException e) {
+				
+				HibernateUtil.rollbackTransaction();
+				
+				logger.error(String.format("initializeField FAILED something wrong. Field name is %s.", fieldName), e);
+				throw e;
+			}
+	 }
 
 }

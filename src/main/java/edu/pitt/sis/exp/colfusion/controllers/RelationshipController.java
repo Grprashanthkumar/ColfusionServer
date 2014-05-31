@@ -3,6 +3,8 @@
  */
 package edu.pitt.sis.exp.colfusion.controllers;
 
+import java.math.BigDecimal;
+
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.OPTIONS;
@@ -16,9 +18,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import edu.pitt.sis.exp.colfusion.bll.RelationshipBL;
-import edu.pitt.sis.exp.colfusion.bll.StoryBL;
 import edu.pitt.sis.exp.colfusion.responseModels.GeneralResponse;
-import edu.pitt.sis.exp.colfusion.responseModels.StoryMetadataResponse;
+import edu.pitt.sis.exp.colfusion.responseModels.GeneralResponseGenImpl;
 
 /**
  * @author Evgeny
@@ -35,8 +36,8 @@ public class RelationshipController extends BaseController {
      * @return
      */
 	@OPTIONS
-    @Path("triggerDataMatching/{sid}")
-    public Response triggerDataMatchingRatiosCalculationsForAllNotCalculated(@HeaderParam("Access-Control-Request-Headers") String requestH) {
+    @Path("triggerDataMatching/{sid}/{similarityThreshold}")
+    public Response triggerDataMatchingRatiosCalculationsForAllNotCalculated(@HeaderParam("Access-Control-Request-Headers") final String requestH) {
 		return makeCORS(Response.ok()); //, requestH);
     }
 	
@@ -47,14 +48,22 @@ public class RelationshipController extends BaseController {
      * @param sid is the id of the story for which to perform mining.
      * @return response mining status.
      */
-	@Path("triggerDataMatching/{sid}")
+	@Path("triggerDataMatching/{sid}/{similarityThreshold}")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response triggerDataMatchingRatiosCalculationsForAllNotCalculated(@PathParam("sid") int sid) {
+    public Response triggerDataMatchingRatiosCalculationsForAllNotCalculated(@PathParam("sid") final int sid, @PathParam("similarityThreshold") final BigDecimal similarityThreshold) {
     	
 		RelationshipBL relationshipBL = new RelationshipBL();
 		
-		GeneralResponse result = relationshipBL.triggerDataMatchingRatiosCalculationsForAllNotCalculated(sid);
+		GeneralResponse result = new GeneralResponseGenImpl<>();
+		try {
+			result = relationshipBL.triggerDataMatchingRatiosCalculationsForAllNotCalculatedBySid(sid, similarityThreshold);
+		} catch (Exception e) {
+			logger.error(String.format("triggerDataMatchingRatiosCalculationsForAllNotCalculated FAILED for sid %d", sid));
+			
+			result.setMessage("Something went wrong. " + e.getMessage());
+			result.setSuccessful(false);
+		}
     	
     	return makeCORS(Response.status(200).entity(result)); //.build();
     }

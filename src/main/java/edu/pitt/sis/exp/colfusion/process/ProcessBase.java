@@ -38,7 +38,7 @@ public abstract class ProcessBase implements Process {
         _description = "";
     }
     
-    protected ProcessBase(String description) {
+    protected ProcessBase(final String description) {
         _description = description;        
     }
 
@@ -60,7 +60,7 @@ public abstract class ProcessBase implements Process {
     }
 
     @Override
-    public void startPerforming(ProcessManager manager) {
+    public void startPerforming(final ProcessManager manager) {
         if (_thread == null) {
             setManager(manager);
             
@@ -79,7 +79,7 @@ public abstract class ProcessBase implements Process {
 	/**
 	 * @param _manager the _manager to set
 	 */
-	protected void setManager(ProcessManager _manager) {
+	protected void setManager(final ProcessManager _manager) {
 		this._manager = _manager;
 	}
 
@@ -91,12 +91,12 @@ public abstract class ProcessBase implements Process {
 	/**
 	 * @param _exceptions the _exceptions to set
 	 */
-	protected void setExceptions(List<Exception> _exceptions) {
+	protected void setExceptions(final List<Exception> _exceptions) {
 		this._exceptions = _exceptions;
 	}
 	
 	@Override
-	public void setID(int id) {
+	public void setID(final int id) {
 		_id = id;
 	}
 	
@@ -109,19 +109,18 @@ public abstract class ProcessBase implements Process {
      * Serializes the object into JSON string.
      * @return string with a JSON representation of the object.
      */
-	public static String toJson(Process process) {
+	public static String toJson(final Process process) {
 		Gson gson = new Gson();
 		String json = gson.toJson(process);
 		
 		return json;
 	}
-    
-    @SuppressWarnings("unchecked")
+        
     /**
      * Deserializes object from JSON string.
      * @return the object form JSON string.
      */
-    public static <T> T fromJson(String json, Class<T> clazz) {
+    public static <T> T fromJson(final String json, final Class<T> clazz) {
     	Gson gson = new Gson();
     	
     	return gson.fromJson(json, clazz);
@@ -144,7 +143,7 @@ public abstract class ProcessBase implements Process {
 	/**
 	 * @param runStratTime the runStratTime to set
 	 */
-	public void setRunStartTime(Date runStartTime) {
+	public void setRunStartTime(final Date runStartTime) {
 		this.runStartTime = runStartTime;
 	}
 
@@ -158,7 +157,7 @@ public abstract class ProcessBase implements Process {
 	/**
 	 * @param runEndTime the runEndTime to set
 	 */
-	public void setRunEndTime(Date runEndTime) {
+	public void setRunEndTime(final Date runEndTime) {
 		this.runEndTime = runEndTime;
 	}
 	

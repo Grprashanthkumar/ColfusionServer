@@ -19,16 +19,16 @@ public class ColfusionRelationshipsColumnsDataMathingRatios implements
 	}
 
 	public ColfusionRelationshipsColumnsDataMathingRatios(
-			ColfusionRelationshipsColumnsDataMathingRatiosId id,
-			ColfusionProcesses colfusionProcesses) {
+			final ColfusionRelationshipsColumnsDataMathingRatiosId id,
+			final ColfusionProcesses colfusionProcesses) {
 		this.id = id;
 		this.colfusionProcesses = colfusionProcesses;
 	}
 
 	public ColfusionRelationshipsColumnsDataMathingRatios(
-			ColfusionRelationshipsColumnsDataMathingRatiosId id,
-			ColfusionProcesses colfusionProcesses,
-			BigDecimal dataMatchingFromRatio, BigDecimal dataMatchingToRatio) {
+			final ColfusionRelationshipsColumnsDataMathingRatiosId id,
+			final ColfusionProcesses colfusionProcesses,
+			final BigDecimal dataMatchingFromRatio, final BigDecimal dataMatchingToRatio) {
 		this.id = id;
 		this.colfusionProcesses = colfusionProcesses;
 		this.dataMatchingFromRatio = dataMatchingFromRatio;
@@ -39,7 +39,7 @@ public class ColfusionRelationshipsColumnsDataMathingRatios implements
 		return this.id;
 	}
 
-	public void setId(ColfusionRelationshipsColumnsDataMathingRatiosId id) {
+	public void setId(final ColfusionRelationshipsColumnsDataMathingRatiosId id) {
 		this.id = id;
 	}
 
@@ -47,7 +47,7 @@ public class ColfusionRelationshipsColumnsDataMathingRatios implements
 		return this.colfusionProcesses;
 	}
 
-	public void setColfusionProcesses(ColfusionProcesses colfusionProcesses) {
+	public void setColfusionProcesses(final ColfusionProcesses colfusionProcesses) {
 		this.colfusionProcesses = colfusionProcesses;
 	}
 
@@ -55,7 +55,7 @@ public class ColfusionRelationshipsColumnsDataMathingRatios implements
 		return this.dataMatchingFromRatio;
 	}
 
-	public void setDataMatchingFromRatio(BigDecimal dataMatchingFromRatio) {
+	public void setDataMatchingFromRatio(final BigDecimal dataMatchingFromRatio) {
 		this.dataMatchingFromRatio = dataMatchingFromRatio;
 	}
 
@@ -63,7 +63,7 @@ public class ColfusionRelationshipsColumnsDataMathingRatios implements
 		return this.dataMatchingToRatio;
 	}
 
-	public void setDataMatchingToRatio(BigDecimal dataMatchingToRatio) {
+	public void setDataMatchingToRatio(final BigDecimal dataMatchingToRatio) {
 		this.dataMatchingToRatio = dataMatchingToRatio;
 	}
 

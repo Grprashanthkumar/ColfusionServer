@@ -7,6 +7,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import edu.pitt.sis.exp.colfusion.persistence.managers.ExecutionInfoManager;
+import edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionSourceinfoDb;
 
 /**
  * @author Evgeny
@@ -26,8 +27,8 @@ public class DatabaseHandlerFactory {
 	 * @return the vendor specific implementation of the database handler.
 	 * @throws Exception
 	 */
-	public static DatabaseHandlerBase getDatabaseHandler(String host, int port, String user, String password, String database, 
-			DatabaseHanderType databaseHanderType, ExecutionInfoManager executionInfoMgr, int executionLogId) throws Exception {
+	public static DatabaseHandlerBase getDatabaseHandler(final String host, final int port, final String user, final String password, final String database, 
+			final DatabaseHanderType databaseHanderType, final ExecutionInfoManager executionInfoMgr, final int executionLogId) throws Exception {
 		switch (databaseHanderType) {
 		case MYSQL:
 			return new MySQLDatabaseHandler(host, port, user, password, database, databaseHanderType, executionInfoMgr, executionLogId);
@@ -43,5 +44,11 @@ public class DatabaseHandlerFactory {
 			//TODO, FIXME: throw proper exception
 			throw new Exception("DatabaseHandler type not found");
 		}
+	}
+	
+	public static DatabaseHandlerBase getDatabaseHandler(final ColfusionSourceinfoDb storyDbInfo) throws Exception {
+		return DatabaseHandlerFactory.getDatabaseHandler(storyDbInfo.getServerAddress(), storyDbInfo.getPort(), 
+				storyDbInfo.getUserName(), storyDbInfo.getPassword(), storyDbInfo.getSourceDatabase(), DatabaseHanderType.fromString(storyDbInfo.getDriver()), 
+				null, -1);
 	}
 }

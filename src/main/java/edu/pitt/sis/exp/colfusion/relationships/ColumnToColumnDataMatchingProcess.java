@@ -4,6 +4,7 @@
 package edu.pitt.sis.exp.colfusion.relationships;
 
 import java.math.BigDecimal;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -22,6 +23,7 @@ public class ColumnToColumnDataMatchingProcess extends ProcessBase {
 	
 	transient Logger logger = LogManager.getLogger(ColumnToColumnDataMatchingProcess.class.getName());
 	
+	private int relId;
 	private String clFrom;
 	private String clTo;
 	private BigDecimal similarityThreshold;
@@ -31,15 +33,13 @@ public class ColumnToColumnDataMatchingProcess extends ProcessBase {
 	
 	}
 	
-	public ColumnToColumnDataMatchingProcess(String clFrom, String clTo, BigDecimal similarityThreshold) {
+	public ColumnToColumnDataMatchingProcess(final int relId, final String clFrom, final String clTo, final BigDecimal similarityThreshold) {
+		this.relId = relId;
 		this.clFrom = clFrom;
 		this.clTo = clTo;
 		this.similarityThreshold = similarityThreshold;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.pitt.sis.exp.colfusion.process.ProcessBase#getRunnable()
-	 */
 	@Override
 	protected Runnable getRunnable() {
 		// TODO probabl can be just implemented in the ProcessBase class
@@ -56,7 +56,7 @@ public class ColumnToColumnDataMatchingProcess extends ProcessBase {
 	/**
 	 * @param clFrom the clFrom to set
 	 */
-	public void setClFrom(String clFrom) {
+	public void setClFrom(final String clFrom) {
 		this.clFrom = clFrom;
 	}
 
@@ -70,7 +70,7 @@ public class ColumnToColumnDataMatchingProcess extends ProcessBase {
 	/**
 	 * @param clTo the clTo to set
 	 */
-	public void setClTo(String clTo) {
+	public void setClTo(final String clTo) {
 		this.clTo = clTo;
 	}
 
@@ -84,13 +84,20 @@ public class ColumnToColumnDataMatchingProcess extends ProcessBase {
 	/**
 	 * @param similarityThreshold the similarityThreshold to set
 	 */
-	public void setSimilarityThreshold(BigDecimal similarityThreshold) {
+	public void setSimilarityThreshold(final BigDecimal similarityThreshold) {
 		this.similarityThreshold = similarityThreshold;
 	}
 
+	public int getRelId() {
+		return relId;
+	}
+
+	public void setRelId(final int relId) {
+		this.relId = relId;
+	}
+	
 	@Override
 	public void execute() throws Exception {
-		// TODO Auto-generated method stub
 		
 	}
 

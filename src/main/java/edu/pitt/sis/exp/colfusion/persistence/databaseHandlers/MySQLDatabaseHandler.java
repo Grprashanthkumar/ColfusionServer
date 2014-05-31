@@ -30,10 +30,10 @@ public class MySQLDatabaseHandler extends DatabaseHandlerBase {
 	 * @param databaseHanderType the type of the database (vendor).
 	 * @throws Exception 
 	 */
-	public MySQLDatabaseHandler(String host, int port, String user,
-			String password, String database,
-			DatabaseHanderType databaseHanderType,
-			ExecutionInfoManager executionInfoMgr, int executionLogId) throws Exception {
+	public MySQLDatabaseHandler(final String host, final int port, final String user,
+			final String password, final String database,
+			final DatabaseHanderType databaseHanderType,
+			final ExecutionInfoManager executionInfoMgr, final int executionLogId) throws Exception {
 		super(host, port, user, password, database, databaseHanderType, executionInfoMgr, executionLogId);
 		
 		try {
@@ -58,7 +58,7 @@ public class MySQLDatabaseHandler extends DatabaseHandlerBase {
 	}
 	
 	@Override
-	public boolean createDatabaseIfNotExist(String databaseName) throws Exception {
+	public boolean createDatabaseIfNotExist(final String databaseName) throws Exception {
 		Statement statement = null;
 		
 		String sql = "";
@@ -99,7 +99,7 @@ public class MySQLDatabaseHandler extends DatabaseHandlerBase {
 	}
 
 	@Override
-	public boolean createTableIfNotExist(String tableName, List<String> variables) throws Exception {
+	public boolean createTableIfNotExist(final String tableName, final List<String> variables) throws Exception {
 		Statement statement = null;
 		
 		String sql = "";
@@ -151,7 +151,7 @@ public class MySQLDatabaseHandler extends DatabaseHandlerBase {
 	}
 
 	@Override
-	public boolean deleteDatabaseIfExists(String databaseName) throws Exception {
+	public boolean deleteDatabaseIfExists(final String databaseName) throws Exception {
 		Statement statement = null;
 		
 		String sql = "";
@@ -189,5 +189,11 @@ public class MySQLDatabaseHandler extends DatabaseHandlerBase {
 				}
 			}
 		}	
+	}
+
+	@Override
+	public void createIndeces(final List<String> columnNames, final boolean combineColumns) {
+		// TODO IMPLEMENT SOON
+		
 	}
 }

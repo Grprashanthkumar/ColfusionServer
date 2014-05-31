@@ -76,7 +76,7 @@ public class SourceInfoManagerImpl extends GeneralManagerImpl<ColfusionSourceinf
 	    
 	    private String value;
 
-	    private HistoryItem(String value) {
+	    private HistoryItem(final String value) {
 	            this.value = value;
 	    }
 	    
@@ -84,11 +84,13 @@ public class SourceInfoManagerImpl extends GeneralManagerImpl<ColfusionSourceinf
 	    	return this.value;
 	    }
 	    
-	    static public boolean isMember(String enumValueToTest) {
+	    static public boolean isMember(final String enumValueToTest) {
 	    	HistoryItem[] enumValues = HistoryItem.values();
-	        for (HistoryItem enumValue : enumValues)
-	            if (enumValue.value.equals(enumValueToTest))
-	                return true;
+	        for (HistoryItem enumValue : enumValues) {
+				if (enumValue.value.equals(enumValueToTest)) {
+					return true;
+				}
+			}
 	        return false;
 	    }
 	};
@@ -98,7 +100,7 @@ public class SourceInfoManagerImpl extends GeneralManagerImpl<ColfusionSourceinf
 	//***************************************
 	
 	@Override
-	public ColfusionSourceinfo findByID(Integer id) {
+	public ColfusionSourceinfo findByID(final Integer id) {
 		ColfusionSourceinfo result = null;
 		try {
             HibernateUtil.beginTransaction();
@@ -132,20 +134,20 @@ public class SourceInfoManagerImpl extends GeneralManagerImpl<ColfusionSourceinf
 	//***********************************
 
 	@Override
-	public List<ColfusionSourceinfo> findByUserId(int userId) {
+	public List<ColfusionSourceinfo> findByUserId(final int userId) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public List<ColfusionSourceinfo> findBySidOrTitle(
-			String searchTerm) {
+			final String searchTerm) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public ColfusionSourceinfo findBySid(int sid, boolean includeDraft) {
+	public ColfusionSourceinfo findBySid(final int sid, final boolean includeDraft) {
 		ColfusionSourceinfo sourceinfo = null;
         try {
             HibernateUtil.beginTransaction();
@@ -184,7 +186,7 @@ public class SourceInfoManagerImpl extends GeneralManagerImpl<ColfusionSourceinf
 	}
 
 	@Override
-	public List<ColfusionSourceinfo> findByTitle(String searchTerm, int limit) {
+	public List<ColfusionSourceinfo> findByTitle(final String searchTerm, final int limit) {
 		try {
             HibernateUtil.beginTransaction();
             
@@ -233,7 +235,7 @@ public class SourceInfoManagerImpl extends GeneralManagerImpl<ColfusionSourceinf
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
-	public ColfusionSourceinfo newStory(int userId, Date date, DataSourceTypes source_type) throws Exception {
+	public ColfusionSourceinfo newStory(final int userId, final Date date, final DataSourceTypes source_type) throws Exception {
 		try {
             HibernateUtil.beginTransaction();
             
@@ -303,7 +305,7 @@ public class SourceInfoManagerImpl extends GeneralManagerImpl<ColfusionSourceinf
 	 * @throws Exception 
 	 */
 	@Override
-	public void updateStory(StoryMetadataViewModel metadata) throws Exception {
+	public void updateStory(final StoryMetadataViewModel metadata) throws Exception {
 		try {
             HibernateUtil.beginTransaction();
             
@@ -333,7 +335,7 @@ public class SourceInfoManagerImpl extends GeneralManagerImpl<ColfusionSourceinf
 		}
 	}
 
-	private ColfusionSourceinfo updateSourceInfo(StoryMetadataViewModel metadata) throws Exception {
+	private ColfusionSourceinfo updateSourceInfo(final StoryMetadataViewModel metadata) throws Exception {
 		UsersDAO usersDAO = new UsersDAOImpl();
         
         ColfusionUsers userCreator = usersDAO.findByID(ColfusionUsers.class, metadata.getStorySubmitter().getUserId());
@@ -364,7 +366,7 @@ public class SourceInfoManagerImpl extends GeneralManagerImpl<ColfusionSourceinf
 	 * @param userId id of the user who did edit (note, it is not the submitter, it is id of the user who was logged in and performed the edit).
 	 * @throws Exception 
 	 */
-	private void handleHistoryEdits(ColfusionSourceinfo newStory, int userId, String reason) throws Exception {
+	private void handleHistoryEdits(final ColfusionSourceinfo newStory, final int userId, final String reason) throws Exception {
 		SourceInfoMetadataEditHistoryDAO editHistorDAO = new SourceInfoMetadataEditHistoryDAOImpl();
 		
 		ColfusionSourceinfo oldStory = _dao.findByID(ColfusionSourceinfo.class, newStory.getSid());
@@ -391,7 +393,7 @@ public class SourceInfoManagerImpl extends GeneralManagerImpl<ColfusionSourceinf
 	 * @param userId id of the user who did edit (note, it is not the submitter, it is id of the user who was logged in and performed the edit).
 	 * @throws Exception 
 	 */
-	private void handleHistoryEdits(ColfusionLinks newLink, int userId, String reason) throws Exception {
+	private void handleHistoryEdits(final ColfusionLinks newLink, final int userId, final String reason) throws Exception {
 		SourceInfoMetadataEditHistoryDAO editHistorDAO = new SourceInfoMetadataEditHistoryDAOImpl();
 		
 		LinksDAO linksDAO = new LinksDAOImpl();
@@ -416,7 +418,7 @@ public class SourceInfoManagerImpl extends GeneralManagerImpl<ColfusionSourceinf
 	 * @param addedUpdatedStory {@link ColfusionSourceinfo} is the story for which information about user and their roles needs to be added/updated.
 	 * @param metadata {@link StoryMetadataViewModel} holds the information which need to be inserted/updated in the db.
 	 */
-	private void updateUserRoles(ColfusionSourceinfo addedUpdatedStory, StoryMetadataViewModel metadata) {
+	private void updateUserRoles(final ColfusionSourceinfo addedUpdatedStory, final StoryMetadataViewModel metadata) {
 		UsersDAO usersDAO = new UsersDAOImpl();
 		SourceinfoUserRolesDAO userStoryRolesDAO = new SourceinfoUserRolesDAOImpl();
         UserRolesDAO userRolesDAO = new UserRolesDAOImpl();
@@ -467,7 +469,7 @@ public class SourceInfoManagerImpl extends GeneralManagerImpl<ColfusionSourceinf
         logger.info("finished updatingUserRolesFor story");
 	}
 
-	private void updateLink(StoryMetadataViewModel metadata) throws Exception {
+	private void updateLink(final StoryMetadataViewModel metadata) throws Exception {
 		ColfusionLinks newLink = new ColfusionLinks(metadata.getSid(), metadata.getStorySubmitter().getUserId(), 0, 0, 0, 0, new BigDecimal(0.0), metadata.getDateSubmitted(), metadata.getDateSubmitted(), 
         		metadata.getDateSubmitted(), 0, 1, 0, metadata.getStatus(), 0);
         newLink.setLinkTitle(metadata.getTitle());
@@ -489,7 +491,7 @@ public class SourceInfoManagerImpl extends GeneralManagerImpl<ColfusionSourceinf
         linksDAO.merge(newLink);
 	}
 
-	private void updateTags(StoryMetadataViewModel metadata) throws Exception {
+	private void updateTags(final StoryMetadataViewModel metadata) throws Exception {
 		TagsDAO tagsDAO = new TagsDAOImpl();
 		
 		try {
@@ -529,7 +531,7 @@ public class SourceInfoManagerImpl extends GeneralManagerImpl<ColfusionSourceinf
 	 * @return the map as described in the description.
 	 */
 	@Override
-	public Map<Integer, ColfusionUserroles> getUsersInRolesForStory(ColfusionSourceinfo newStory) {
+	public Map<Integer, ColfusionUserroles> getUsersInRolesForStory(final ColfusionSourceinfo newStory) {
 		
 		//TODO, FIXME: the key in the map should not be user id, it should be composition of userid and roleid.
 		// Right now one user can have only one role, but in database we allow one user to have several roles.
@@ -551,7 +553,7 @@ public class SourceInfoManagerImpl extends GeneralManagerImpl<ColfusionSourceinf
 	}
 
 	@Override
-	public List<ColfusionUsers> findStoryAuthors(ColfusionSourceinfo story) {
+	public List<ColfusionUsers> findStoryAuthors(final ColfusionSourceinfo story) {
 		ArrayList<ColfusionUsers> result = new ArrayList<>();
 		
 		for (Object sourceInfoUserObj : story.getColfusionSourceinfoUsers().toArray()) {
@@ -564,7 +566,7 @@ public class SourceInfoManagerImpl extends GeneralManagerImpl<ColfusionSourceinf
 	}
 
 	@Override
-	public StoryMetadataHistoryViewModel getStoryMetadataHistory(int sid, String historyItem) {
+	public StoryMetadataHistoryViewModel getStoryMetadataHistory(final int sid, final String historyItem) {
 		try {
             HibernateUtil.beginTransaction();
             
@@ -618,7 +620,7 @@ public class SourceInfoManagerImpl extends GeneralManagerImpl<ColfusionSourceinf
 	}
 
 	@Override
-	public DataSourceTypes getStorySourceType(int sid) throws Exception {
+	public DataSourceTypes getStorySourceType(final int sid) throws Exception {
 		ColfusionSourceinfo story = this.findByID(sid);
 		
 		if (story != null) {
@@ -635,7 +637,7 @@ public class SourceInfoManagerImpl extends GeneralManagerImpl<ColfusionSourceinf
 	
 	
 	@Override
-	public void saveOrUpdateSourceInfoDB(StoryTargetDBViewModel sourceDBInfo) throws Exception {
+	public void saveOrUpdateSourceInfoDB(final StoryTargetDBViewModel sourceDBInfo) throws Exception {
 		try {
             HibernateUtil.beginTransaction();
             
@@ -690,7 +692,7 @@ public class SourceInfoManagerImpl extends GeneralManagerImpl<ColfusionSourceinf
 
 	//TODO: add tests
 	@Override
-	public ArrayList<String> getStoryKTRLocations(int sid) throws Exception {
+	public ArrayList<String> getStoryKTRLocations(final int sid) throws Exception {
 		try {
             HibernateUtil.beginTransaction();
             
@@ -728,7 +730,7 @@ public class SourceInfoManagerImpl extends GeneralManagerImpl<ColfusionSourceinf
 	}
 
 	@Override
-	public StoryTargetDBViewModel getStorySourceInfoDB(int sid) {
+	public StoryTargetDBViewModel getStorySourceInfoDB(final int sid) {
 		try {
             HibernateUtil.beginTransaction();
             
@@ -750,6 +752,35 @@ public class SourceInfoManagerImpl extends GeneralManagerImpl<ColfusionSourceinf
             HibernateUtil.commitTransaction();
             
             return result;
+		
+        } catch (NonUniqueResultException ex) {
+
+        	HibernateUtil.rollbackTransaction();
+        	
+        	logger.error("findDatasetInfoBySid failed NonUniqueResultException", ex);
+            throw ex;
+        } catch (HibernateException ex) {
+
+        	HibernateUtil.rollbackTransaction();
+        	
+        	logger.error("findDatasetInfoBySid failed HibernateException", ex);
+        	throw ex;
+        }	
+	}
+
+	@Override
+	public ColfusionSourceinfo findStoryByCid(final Integer cid) {
+		try {
+            HibernateUtil.beginTransaction();
+            
+            Query query = HibernateUtil.getSession().createQuery("SELECT di.colfusionSourceinfo FROM ColfusionDnameinfo di join di.colfusionSourceinfo where di.cid =:cid");
+            query.setParameter("cid", cid);
+            
+            ColfusionSourceinfo sourceinfo = this._dao.findOne(query);
+                        
+            HibernateUtil.commitTransaction();
+            
+            return sourceinfo;
 		
         } catch (NonUniqueResultException ex) {
 

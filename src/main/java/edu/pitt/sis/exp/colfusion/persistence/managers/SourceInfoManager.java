@@ -130,4 +130,11 @@ public interface SourceInfoManager extends GeneralManager<ColfusionSourceinfo, I
 	 * @return the target database info.
 	 */
 	public StoryTargetDBViewModel getStorySourceInfoDB(int sid);
+
+	/**
+	 * Find a story by the id of one of the columns.
+	 * @param integer column id.
+	 * @return story that contains that column.
+	 */
+	public ColfusionSourceinfo findStoryByCid(Integer integer);
 }
