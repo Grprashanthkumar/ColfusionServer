@@ -11,6 +11,7 @@ import java.util.List;
  *
  * This interface describes Col*Fusion processes that are run in a background by {@link ProcessManager}. This process are not OS processes. 
  * Each Col*Fusion process is executed in a separate Thread. 
+ * 
  */
 public interface Process extends Runnable, Serializable {
 	

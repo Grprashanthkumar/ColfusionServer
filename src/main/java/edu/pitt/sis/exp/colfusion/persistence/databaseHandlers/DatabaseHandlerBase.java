@@ -189,8 +189,9 @@ public abstract class DatabaseHandlerBase {
 	 * Creates indices on a list of columns. Depending on combineColumns parameter one or many indices will be created.
 	 * @param columnNames - a list of names of columns on which index (indices) need to be created.
 	 * @param combineColumns - if true, only one index will be created where key will be combination of all columns, otherwise a separate index on each column will be created.
+	 * @throws SQLException 
 	 */
-	public abstract void createIndeces(List<String> columnNames, boolean combineColumns);
+	public abstract void createIndecesIfNotExist(String tableName, String columnNames) throws SQLException;
 	
 	
 	

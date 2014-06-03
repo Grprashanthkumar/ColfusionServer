@@ -8,11 +8,15 @@ import java.util.Date;
 import java.util.List;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.annotations.Expose;
 
 
 /**
  * @author Evgeny
  *
+ *
+ * Use @Expose on private fiedls that you want to be serialized by gson.
  */
 public abstract class ProcessBase implements Process {
 
@@ -21,16 +25,16 @@ public abstract class ProcessBase implements Process {
 	 */
 	private static final long serialVersionUID = 2L;
 	
-	protected int _id = -1; // -1 means not set
-	final protected String       _description;
-	final private Date creationsTime = new Date();
-	protected Date runStartTime;
-	protected Date runEndTime;
+	@Expose protected int _id = -1; // -1 means not set
+	@Expose final protected String       _description;
+	@Expose final private Date creationsTime = new Date();
+	@Expose protected Date runStartTime;
+	@Expose protected Date runEndTime;
 	
 	transient private ProcessManager     	 _manager;
 	transient protected Thread             _thread;
     
-    protected List<Exception>    _exceptions = new ArrayList<>();
+	@Expose protected List<Exception>    _exceptions = new ArrayList<>();
     
     abstract protected Runnable getRunnable();
     
@@ -110,7 +114,7 @@ public abstract class ProcessBase implements Process {
      * @return string with a JSON representation of the object.
      */
 	public static String toJson(final Process process) {
-		Gson gson = new Gson();
+		Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
 		String json = gson.toJson(process);
 		
 		return json;

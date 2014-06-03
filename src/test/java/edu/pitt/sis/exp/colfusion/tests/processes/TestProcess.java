@@ -3,12 +3,10 @@
  */
 package edu.pitt.sis.exp.colfusion.tests.processes;
 
-import java.io.Serializable;
-
-import javax.persistence.Transient;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import com.google.gson.annotations.Expose;
 
 import edu.pitt.sis.exp.colfusion.process.ProcessBase;
 
@@ -20,7 +18,7 @@ public class TestProcess extends ProcessBase {
 
 	transient Logger logger = LogManager.getLogger(TestProcess.class.getName());
 	
-	private int _sid;
+	@Expose private int _sid;
 	
 	/**
 	 * 
@@ -42,7 +40,7 @@ public class TestProcess extends ProcessBase {
 	/**
 	 * @param _sid the _sid to set
 	 */
-	public void setSid(int _sid) {
+	public void setSid(final int _sid) {
 		this._sid = _sid;
 	}
 

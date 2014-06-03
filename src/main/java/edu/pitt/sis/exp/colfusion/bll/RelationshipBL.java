@@ -209,16 +209,24 @@ public class RelationshipBL {
 					throw new Exception(msg);
 				}
 					
-				columnNames.add(column.getDnameOriginalName());
-			}
-			
-			try {
-				DatabaseHandlerBase dbHandler = DatabaseHandlerFactory.getDatabaseHandler(story.getColfusionSourceinfoDb());
-				dbHandler.createIndeces(columnNames, false);
-			} catch (Exception e) {
-				logger.error("createIndeces FAILED to initialize colfusionSourceinfoDb field.");
-				throw e;
-			}
+				try {
+					column = GeneralManagerImpl.initializeField(column, "colfusionColumnTableInfo");
+				} catch (NoSuchFieldException e) {
+					logger.error("createIndeces FAILED to initialize colfusionColumnTableInfo field of column. Seems that field was not found");
+					throw e;
+				} catch (IllegalAccessException e) {
+					logger.error("createIndeces FAILED to initialize colfusionColumnTableInfo field.");
+					throw e;
+				}
+				
+				try {
+					DatabaseHandlerBase dbHandler = DatabaseHandlerFactory.getDatabaseHandler(story.getColfusionSourceinfoDb());
+					dbHandler.createIndecesIfNotExist(column.getColfusionColumnTableInfo().getTableName(), column.getDnameOriginalName());
+				} catch (Exception e) {
+					logger.error("createIndeces FAILED to initialize colfusionSourceinfoDb field.");
+					throw e;
+				}
+			}			
 		}
 	}
 

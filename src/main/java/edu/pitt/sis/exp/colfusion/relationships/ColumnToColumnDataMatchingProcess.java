@@ -8,6 +8,8 @@ import java.math.BigDecimal;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.google.gson.annotations.Expose;
+
 import edu.pitt.sis.exp.colfusion.process.ProcessBase;
 
 /**
@@ -23,10 +25,10 @@ public class ColumnToColumnDataMatchingProcess extends ProcessBase {
 	
 	transient Logger logger = LogManager.getLogger(ColumnToColumnDataMatchingProcess.class.getName());
 	
-	private int relId;
-	private String clFrom;
-	private String clTo;
-	private BigDecimal similarityThreshold;
+	@Expose private int relId;
+	@Expose private String clFrom;
+	@Expose private String clTo;
+	@Expose private BigDecimal similarityThreshold;
 	
 	
 	public ColumnToColumnDataMatchingProcess() {

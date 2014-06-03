@@ -3,6 +3,8 @@
  */
 package edu.pitt.sis.exp.colfusion.dataLoadExecutors;
 
+import com.google.gson.annotations.Expose;
+
 import edu.pitt.sis.exp.colfusion.ConfigManager;
 import edu.pitt.sis.exp.colfusion.PropertyKeys;
 import edu.pitt.sis.exp.colfusion.persistence.databaseHandlers.LinkedServerHandler;
@@ -25,7 +27,7 @@ public abstract class DataLoadExecutorBaseImpl extends ProcessBase implements Da
 	 */
 	private static final long serialVersionUID = -8124562049915428600L;
 	
-	protected int sid;
+	@Expose protected int sid;
 
 	/**
 	 * Updates/inserts record about target database (the database where the data should be loaded).
@@ -35,7 +37,7 @@ public abstract class DataLoadExecutorBaseImpl extends ProcessBase implements Da
 	 * @param sourceDBInfo the info about target database.
 	 * @throws Exception 
 	 */
-	protected void updateSourceDBInfo(ExecutionInfoManager executionInfoMgr, int executionLogId, StoryTargetDBViewModel sourceDBInfo) throws Exception {
+	protected void updateSourceDBInfo(final ExecutionInfoManager executionInfoMgr, final int executionLogId, final StoryTargetDBViewModel sourceDBInfo) throws Exception {
 		
 		executionInfoMgr.appendLog(executionLogId, String.format("Starting to update sourceintoDB record with target database conneciton info : %s ", 
 				sourceDBInfo.toString()));
@@ -54,7 +56,7 @@ public abstract class DataLoadExecutorBaseImpl extends ProcessBase implements Da
 	 * @param sourceDBInfo target database connection info.
 	 * @throws Exception
 	 */
-	protected void updateLinkedServer(ExecutionInfoManager executionInfoMgr, int executionLogId, StoryTargetDBViewModel sourceDBInfo) throws Exception {
+	protected void updateLinkedServer(final ExecutionInfoManager executionInfoMgr, final int executionLogId, final StoryTargetDBViewModel sourceDBInfo) throws Exception {
 		
 		executionInfoMgr.appendLog(executionLogId, String.format("Starting to update Linked Server with target database conneciton info : %s ", 
 				sourceDBInfo.toString()));
@@ -86,10 +88,12 @@ public abstract class DataLoadExecutorBaseImpl extends ProcessBase implements Da
 		executionInfoMgr.appendLog(executionLogId, "Finished update Linked Server with target database conneciton info");
 	}
 	
-	public void setSid(int sid) {
+	@Override
+	public void setSid(final int sid) {
 		this.sid = sid;
 	}
 	
+	@Override
 	public int getSid() {
 		return this.sid;
 	}
