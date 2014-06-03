@@ -16,7 +16,7 @@ import com.google.gson.annotations.Expose;
  * @author Evgeny
  *
  *
- * Use @Expose on private fiedls that you want to be serialized by gson.
+ * Use @Expose on private fields that you want to be serialized by gson.
  */
 public abstract class ProcessBase implements Process {
 
