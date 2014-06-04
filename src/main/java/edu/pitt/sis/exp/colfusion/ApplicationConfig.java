@@ -7,6 +7,7 @@ import javax.ws.rs.core.Application;
 
 import org.glassfish.jersey.media.multipart.MultiPartFeature;
 
+import edu.pitt.sis.exp.colfusion.controllers.OpenRefineController;
 import edu.pitt.sis.exp.colfusion.controllers.RelationshipController;
 import edu.pitt.sis.exp.colfusion.controllers.StoryController;
 import edu.pitt.sis.exp.colfusion.controllers.UserController;
@@ -22,6 +23,7 @@ public class ApplicationConfig extends Application {
         resources.add(StoryController.class);
         resources.add(UserController.class);
         resources.add(RelationshipController.class);
+        resources.add(OpenRefineController.class);
         resources.add(MyResource.class);
 
         // Add additional features such as support for Multipart.

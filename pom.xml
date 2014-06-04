@@ -5,19 +5,19 @@
 
 	<groupId>edu.pitt.sis.exp.colfusion</groupId>
 	<artifactId>ColFusionServer</artifactId>
-	<packaging>war</packaging>
+	<packaging>pom</packaging>
 	<version>1.0-SNAPSHOT</version>
 	<name>ColFusionServer</name>
 
 	<properties>
 		<jersey.version>2.5.1</jersey.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-	
-	    <artifact.id>ColFusionServer</artifact.id>
-	    <version>1.0</version>      
-	    
-	    <war.name>${artifact.id}##${maven.build.timestamp}</war.name>   
-    </properties>
+
+		<artifact.id>ColFusionServer</artifact.id>
+		<version>1.0</version>
+
+		<war.name>${artifact.id}##${maven.build.timestamp}</war.name>
+	</properties>
 
 	<build>
 		<finalName>ColFusionServer</finalName>
@@ -32,14 +32,112 @@
 					<target>1.7</target>
 				</configuration>
 			</plugin>
-			
+
 			<plugin>
-			    <artifactId>maven-war-plugin</artifactId>
-			    <version>2.3</version>
-			    <configuration>
-			        <warName>${war.name}</warName>
-			    </configuration>
+				<artifactId>maven-war-plugin</artifactId>
+				<version>2.3</version>
+				<configuration>
+					<warName>${war.name}</warName>
+				</configuration>
 			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-antrun-plugin</artifactId>
+				<version>1.7</version>
+				<dependencies>
+					<dependency>
+						<groupId>sun.jdk</groupId>
+						<artifactId>tools</artifactId>
+						<version>1.7</version>
+						<scope>system</scope>
+						<systemPath>C:\Program Files (x86)\Java\jdk1.7.0\lib\tools.jar</systemPath>
+					</dependency>
+				</dependencies>
+				<executions>
+					<execution>
+						<phase>process-resources</phase>
+						<configuration>
+							<target>
+								<echo>Running Ant Build</echo>
+							</target>
+							<target>
+
+								<ant
+									antfile="C:\Users\xxl\Desktop\Projects\OpenRefine\OpenRefine\build.xml"
+									target="jar" inheritAll="false" />
+							</target>
+						</configuration>
+						<goals>
+							<goal>run</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			
+		<plugin>
+			<groupId>org.apache.maven.plugins</groupId>
+			<artifactId>maven-install-plugin</artifactId>
+			<version>2.3.1</version>
+			<executions>
+				<execution>
+					<id>install-openrefine-server</id>
+					<phase>generate-sources</phase>
+					<goals>
+						<goal>install-file</goal>
+					</goals>
+					<configuration>
+						<groupId>org.openrefine</groupId>
+						<artifactId>openrefine-server</artifactId>
+						<version>1.0.0</version>
+						<packaging>jar</packaging>
+						<file>C:\Users\xxl\Desktop\Projects\OpenRefine\OpenRefine\build\openrefine-trunk-server.jar</file>
+					</configuration>
+				</execution>
+				<execution>
+					<id>install-openrefine</id>
+					<phase>generate-sources</phase>
+					<goals>
+						<goal>install-file</goal>
+					</goals>
+					<configuration>
+						<groupId>org.openrefine</groupId>
+						<artifactId>openrefine</artifactId>
+						<version>1.0.0</version>
+						<packaging>jar</packaging>
+						<file>C:\Users\xxl\Desktop\Projects\OpenRefine\OpenRefine\build\openrefine-trunk.jar</file>
+					</configuration>
+				</execution>
+			</executions>
+			</plugin>
+			
+			
+			
+			<!-- <plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>build-helper-maven-plugin</artifactId>
+				<version>1.8</version>
+				<executions>
+					<execution>
+						<id>add-jar</id>
+						<phase>package</phase>
+						<goals>
+							<goal>attach-artifact</goal>
+						</goals>
+						<configuration>
+							<artifacts>
+								<artifact>
+									<file>C:\Users\xxl\Desktop\Projects\OpenRefine\OpenRefine\build\openrefine-trunk-server.jar</file>
+									<type>jar</type>
+									<classifier>openrefine</classifier>
+								</artifact>
+							</artifacts>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
+ -->
+
 		</plugins>
 	</build>
 
@@ -56,6 +154,21 @@
 	</dependencyManagement>
 
 	<dependencies>
+
+		 <dependency>
+			<groupId>org.openrefine</groupId>
+			<artifactId>openrefine-server</artifactId>
+			<version>1.0.0</version>
+			
+		</dependency>
+		
+		<dependency>
+			<groupId>org.openrefine</groupId>
+			<artifactId>openrefine</artifactId>
+			<version>1.0.0</version>
+			
+		</dependency>
+
 		<dependency>
 			<groupId>org.glassfish.jersey.containers</groupId>
 			<artifactId>jersey-container-servlet-core</artifactId>
@@ -77,8 +190,7 @@
 		<dependency>
 			<groupId>org.glassfish.jersey.media</groupId>
 			<artifactId>jersey-media-multipart</artifactId>
-			<version>2.5.1</version>
-		</dependency>
+			</dependency>
 
 		<dependency>
 			<groupId>com.thetransactioncompany</groupId>
@@ -86,16 +198,16 @@
 			<version>1.7.1</version>
 		</dependency>
 
-		<dependency>	
-		    <groupId>org.apache.logging.log4j</groupId>
-		    <artifactId>log4j-api</artifactId>
-		    <version>2.0-rc1</version>
+		<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-api</artifactId>
+			<version>2.0-rc1</version>
 		</dependency>
 		<dependency>
-		    <groupId>org.apache.logging.log4j</groupId>
-		    <artifactId>log4j-core</artifactId>
-		    <version>2.0-rc1</version>
-	    </dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-core</artifactId>
+			<version>2.0-rc1</version>
+		</dependency>
 
 		<dependency>
 			<groupId>junit</groupId>
@@ -115,7 +227,7 @@
 			<artifactId>commons-compress</artifactId>
 			<version>1.7</version>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-lang3</artifactId>
@@ -157,7 +269,7 @@
 			<artifactId>poi</artifactId>
 			<version>3.10-FINAL</version>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>org.apache.poi</groupId>
 			<artifactId>poi-ooxml</artifactId>
@@ -169,7 +281,7 @@
 			<artifactId>opencsv</artifactId>
 			<version>2.3</version>
 		</dependency>
-            
+
 		<dependency>
 			<groupId>org.apache.httpcomponents</groupId>
 			<artifactId>httpclient</artifactId>
@@ -177,9 +289,9 @@
 		</dependency>
 
 		<dependency>
-		    <groupId>com.microsoft.sqlserver</groupId>
-		    <artifactId>sqljdbc4</artifactId>
-		    <version>4.0</version>
+			<groupId>com.microsoft.sqlserver</groupId>
+			<artifactId>sqljdbc4</artifactId>
+			<version>4.0</version>
 		</dependency>
 
 		<dependency>
@@ -193,15 +305,46 @@
 			<artifactId>gson</artifactId>
 			<version>2.2.4</version>
 		</dependency>
+		<!--<dependency> 
+				<groupId>org.openRefine</groupId> 
+				<artifactId>openRefine</artifactId> 
+				<version>1.0</version> 
+			</dependency>
+			-->
+			
+			
+			<dependency>
+				<groupId>org.slf4j</groupId>
+				<artifactId>slf4j-api</artifactId>
+				<version>1.5.6</version>
+			</dependency>
+			
+			<dependency>
+				<groupId>org.apache.ant</groupId>
+				<artifactId>ant</artifactId>
+				<version>1.8.2</version>
+			</dependency>
+			
+			<dependency>
+				<groupId>edu.mit.simile</groupId>
+				<artifactId>butterfly</artifactId>
+				<version>1.0</version>
+			</dependency>
+			
+			
+			
+			
+			 <dependency> <groupId>org.json</groupId> 
+			<artifactId>json</artifactId> <version>20140107</version> </dependency> 
 
 	</dependencies>
 
-    <repositories>
-        <repository>
-            <id>repo</id>
-            <url>file://${project.basedir}/repo</url>
-        </repository>
-    </repositories>
+	<repositories>
+		<repository>
+			<id>repo</id>
+			<url>file://${project.basedir}/repo</url>
+		</repository>
+	</repositories>
 
 	<url>colfusion.exp.sis.pitt.edu/colfusion</url>
 </project>

@@ -3,6 +3,9 @@
 	<name>ColFusionServer</name>
 	<comment></comment>
 	<projects>
+		<project>TestProject_2</project>
+		<project>OpenRefine</project>
+		<project>TestProject_1</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>
