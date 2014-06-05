@@ -21,6 +21,8 @@ public class MySQLDatabaseHandler extends DatabaseHandlerBase {
 
 	Logger logger = LogManager.getLogger(MySQLDatabaseHandler.class.getName());
 	
+	private static int MYSQL_INDEX_KEY_LENGTH = 100;
+	
 	/**
 	 * Creates a MySQL database handler. Also the connection is initialized at this time. So always wrap it in try/catch/finally and call close in finally.
 	 * @param host the url of the server.
@@ -204,7 +206,7 @@ public class MySQLDatabaseHandler extends DatabaseHandlerBase {
 		
 		try (Statement statement = connection.createStatement()) {
 			//TODO: escape query, SQL injection is possible. See if it is possible to use prepared statement.
-			sql = String.format("ALTER TABLE `%s` ADD INDEX `%s` (`%s`);", tableName, indexName, columnName);
+			sql = String.format("ALTER TABLE `%s` ADD INDEX `%s` (`%s`(%d));", tableName, indexName, columnName, MYSQL_INDEX_KEY_LENGTH);
 			
 			statement.executeUpdate(sql);			
 		} catch (SQLException e) {

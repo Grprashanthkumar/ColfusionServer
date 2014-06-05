@@ -140,6 +140,8 @@ public class RelationshipBL {
 			if (object instanceof ColfusionRelationshipsColumns) {
 				ColfusionRelationshipsColumns relationshipColumns = (ColfusionRelationshipsColumns) object;
 				
+				//TODO: Once we add ability to chain processes or make some processes depend on other processes
+				//TODO: indices should be also created in a background process.
 				createIndeces(relationshipColumns);
 				
 				triggerDataMatchingRatiosCalculationsByRelationshipsColumns(relationshipColumns, similarityThreshold);
@@ -154,6 +156,11 @@ public class RelationshipBL {
 		}
 	}
 
+	/**
+	 * Creates indices if they don't exist yet for columns (clFrom and clTo) of a given relationship (for one link).
+	 * @param relationshipColumns clFrom and clTo of one relationship link
+	 * @throws Exception
+	 */
 	private void createIndeces(final ColfusionRelationshipsColumns relationshipColumns) throws Exception {
 		List<Integer> cidFromOneStory = extractCidsFromTransformation(relationshipColumns.getId().getClFrom());
 		
@@ -278,6 +285,9 @@ public class RelationshipBL {
 			logger.info(String.format("triggerDataMatchingRatiosCalculationsByRelationshipsColumns: don't need to trigger calculations because a record "
 					+ "about data matching for givel columns (from: %s and to: %s) and similarity threshold (%f) was found in db.", 
 					relationshipColumns.getId().getClFrom(), relationshipColumns.getId().getClTo(), similarityThreshold));
+			
+			
+			//TODO: we might check the status of the associated process and if it is a failure, then we can probably restart the calculations.
 		}
 		else {
 
