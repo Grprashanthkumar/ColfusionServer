@@ -4,8 +4,6 @@
 package edu.pitt.sis.exp.colfusion.persistence.managers;
 
 import edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionRelationships;
-import edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionRelationshipsColumnsDataMathingRatios;
-import edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionRelationshipsColumnsDataMathingRatiosId;
 
 /**
  * @author Evgeny
@@ -20,6 +18,4 @@ public interface RelationshipsManager extends GeneralManager<ColfusionRelationsh
 	 * @return all relationships of given story.
 	 */
 	//List<ColfusionRelationships> findRelationshipsBySid(int sid);
-	
-	ColfusionRelationshipsColumnsDataMathingRatios findColfusionRelationshipsColumnsDataMathingRatios(ColfusionRelationshipsColumnsDataMathingRatiosId colfusionRelationshipsColumnsDataMathingRatiosId);
 }

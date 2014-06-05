@@ -10,7 +10,7 @@ import edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionRelationshipsColumnsD
  * @author Evgeny
  *
  */
-public interface ColfusionRelationshipsColumnsDataMathingRatiosDAO extends
+public interface RelationshipsColumnsDataMathingRatiosDAO extends
 		GenericDAO<ColfusionRelationshipsColumnsDataMathingRatios, ColfusionRelationshipsColumnsDataMathingRatiosId> {
 
 }

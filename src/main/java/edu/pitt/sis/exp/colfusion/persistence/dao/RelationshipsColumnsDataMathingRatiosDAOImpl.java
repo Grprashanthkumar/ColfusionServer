@@ -10,8 +10,8 @@ import edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionRelationshipsColumnsD
  * @author Evgeny
  *
  */
-public class ColfusionRelationshipsColumnsDataMathingRatiosDAOImpl extends
+public class RelationshipsColumnsDataMathingRatiosDAOImpl extends
 		GenericDAOImpl<ColfusionRelationshipsColumnsDataMathingRatios, ColfusionRelationshipsColumnsDataMathingRatiosId> implements
-		ColfusionRelationshipsColumnsDataMathingRatiosDAO {
+		RelationshipsColumnsDataMathingRatiosDAO {
 
 }

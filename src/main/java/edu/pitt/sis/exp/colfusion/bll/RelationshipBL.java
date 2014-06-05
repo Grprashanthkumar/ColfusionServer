@@ -18,11 +18,16 @@ import edu.pitt.sis.exp.colfusion.persistence.databaseHandlers.DatabaseHandlerFa
 import edu.pitt.sis.exp.colfusion.persistence.managers.DNameInfoManager;
 import edu.pitt.sis.exp.colfusion.persistence.managers.DNameInfoManagerImpl;
 import edu.pitt.sis.exp.colfusion.persistence.managers.GeneralManagerImpl;
+import edu.pitt.sis.exp.colfusion.persistence.managers.ProcessPersistantManager;
+import edu.pitt.sis.exp.colfusion.persistence.managers.ProcessPersistantManagerImpl;
+import edu.pitt.sis.exp.colfusion.persistence.managers.RelationshipsColumnsDataMathingRatiosManager;
+import edu.pitt.sis.exp.colfusion.persistence.managers.RelationshipsColumnsDataMathingRatiosManagerImpl;
 import edu.pitt.sis.exp.colfusion.persistence.managers.RelationshipsManager;
 import edu.pitt.sis.exp.colfusion.persistence.managers.RelationshipsManagerImpl;
 import edu.pitt.sis.exp.colfusion.persistence.managers.SourceInfoManager;
 import edu.pitt.sis.exp.colfusion.persistence.managers.SourceInfoManagerImpl;
 import edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionDnameinfo;
+import edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionProcesses;
 import edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionRelationships;
 import edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionRelationshipsColumns;
 import edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionRelationshipsColumnsDataMathingRatios;
@@ -279,12 +284,14 @@ public class RelationshipBL {
 	private void triggerDataMatchingRatiosCalculationsByRelationshipsColumns(
 			final ColfusionRelationshipsColumns relationshipColumns, final BigDecimal similarityThreshold) throws Exception {
 		
+		RelationshipsColumnsDataMathingRatiosManager dataMatingRatiosMng = new RelationshipsColumnsDataMathingRatiosManagerImpl();
+		
 		// Check if data matching for given columns was already calculated or not but searching for a record in colfusion_relationships_columns_dataMathing_ratios table
 		ColfusionRelationshipsColumnsDataMathingRatiosId columnsDataMathingRatiosId = new ColfusionRelationshipsColumnsDataMathingRatiosId(relationshipColumns.getId().getClFrom(), 
 				relationshipColumns.getId().getClTo(), similarityThreshold);
 		
 		ColfusionRelationshipsColumnsDataMathingRatios colfusionRelationshipsColumnsDataMathingRatios = 
-				relationshipsManager.findColfusionRelationshipsColumnsDataMathingRatios(columnsDataMathingRatiosId);
+				dataMatingRatiosMng.findColfusionRelationshipsColumnsDataMathingRatios(columnsDataMathingRatiosId);
 		// if a record found in colfusion_relationships_columns_dataMathing_ratios for given columns and sim threshold, then data matchng values are known.
 		if (colfusionRelationshipsColumnsDataMathingRatios != null) {
 			logger.info(String.format("triggerDataMatchingRatiosCalculationsByRelationshipsColumns: don't need to trigger calculations because a record "
@@ -299,8 +306,10 @@ public class RelationshipBL {
 			ColumnToColumnDataMatchingProcess process = new ColumnToColumnDataMatchingProcess(relationshipColumns.getId().getRelId(), 
 					relationshipColumns.getId().getClFrom(), relationshipColumns.getId().getClTo(), similarityThreshold);
 			
+			int processId = -1;
+			
 			try {
-				ProcessManager.getInstance().queueProcess(process);
+				processId = ProcessManager.getInstance().queueProcess(process);
 			} catch (Exception e) {
 				logger.error(String.format("triggerDataMatchingRatiosCalculationsByRelationshipsColumns: FAILED to add a process "
 						+ "to calculate data matching for givel columns (from: %s and to: %s) and similarity threshold (%f) was found in db.", 
@@ -308,6 +317,17 @@ public class RelationshipBL {
 				
 				throw e;
 			}
+			
+			ProcessPersistantManager processMng = new ProcessPersistantManagerImpl();
+			ColfusionProcesses colfusionProcess = processMng.findByID(processId);
+			
+			if (colfusionProcess != null) {
+				ColfusionRelationshipsColumnsDataMathingRatios dataMathingRatios = new 
+						ColfusionRelationshipsColumnsDataMathingRatios(columnsDataMathingRatiosId, colfusionProcess);
+				
+				dataMatingRatiosMng.save(dataMathingRatios);
+			}
+			
 		}		
 	}
 }
