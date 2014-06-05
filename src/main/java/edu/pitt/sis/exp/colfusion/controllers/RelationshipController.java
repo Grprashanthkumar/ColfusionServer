@@ -59,7 +59,7 @@ public class RelationshipController extends BaseController {
 		try {
 			result = relationshipBL.triggerDataMatchingRatiosCalculationsForAllNotCalculatedBySid(sid, similarityThreshold);
 		} catch (Exception e) {
-			logger.error(String.format("triggerDataMatchingRatiosCalculationsForAllNotCalculated FAILED for sid %d", sid));
+			logger.error(String.format("triggerDataMatchingRatiosCalculationsForAllNotCalculated FAILED for sid %d", sid), e);
 			
 			result.setMessage("Something went wrong. " + e.getMessage());
 			result.setSuccessful(false);

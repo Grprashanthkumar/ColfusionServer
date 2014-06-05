@@ -252,7 +252,7 @@ public class MySQLDatabaseHandler extends DatabaseHandlerBase {
 	 * @return generated index name
 	 */
 	private String makeIndexName(final String tableName, final String columnName) {
-		String indexName = String.format("Index_%s_%s", tableName, columnName);
+		String indexName = String.format("Index_%s_%s_%s", this.getDatabase(), tableName, columnName);
 		
 		logger.info(String.format("Generated index name %s", indexName));
 		return indexName;

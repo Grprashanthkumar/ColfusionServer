@@ -88,16 +88,21 @@ public class RelationshipBL {
 			throw new NullPointerException(msg);
 		}
 		
+		GeneralResponseGen<String> result = new GeneralResponseGenImpl<>();
+		
 		story = GeneralManagerImpl.initializeField(story, "colfusionRelationshipsesForSid1");
+		
+		if (story.getColfusionRelationshipsesForSid1().size() != 0 ){
+			triggerDataMatchingRatiosCalculationsForAllNotCalculatedByRelationshipsSet(
+					sid, story.getColfusionRelationshipsesForSid1(), similarityThreshold);
+		}
+		
 		story = GeneralManagerImpl.initializeField(story, "colfusionRelationshipsesForSid2");
 		
-		triggerDataMatchingRatiosCalculationsForAllNotCalculatedByRelationshipsSet(
-				sid, story.getColfusionRelationshipsesForSid1(), similarityThreshold);
-		
-		triggerDataMatchingRatiosCalculationsForAllNotCalculatedByRelationshipsSet(
-				sid, story.getColfusionRelationshipsesForSid2(), similarityThreshold);
-		
-		GeneralResponseGen<String> result = new GeneralResponseGenImpl<>();
+		if (story.getColfusionRelationshipsesForSid2().size() != 0 ){
+			triggerDataMatchingRatiosCalculationsForAllNotCalculatedByRelationshipsSet(
+					sid, story.getColfusionRelationshipsesForSid2(), similarityThreshold);
+		}
 		
 		result.setMessage("OK");
 		result.setPayload("Started" + sid);
