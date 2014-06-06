@@ -23,7 +23,7 @@ public class ColumnToColumnDataMatchingProcess extends ProcessBase {
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	transient Logger logger = LogManager.getLogger(ColumnToColumnDataMatchingProcess.class.getName());
+	transient static Logger logger = LogManager.getLogger(ColumnToColumnDataMatchingProcess.class.getName());
 	
 	@Expose private int relId;
 	@Expose private String clFrom;
@@ -100,7 +100,13 @@ public class ColumnToColumnDataMatchingProcess extends ProcessBase {
 	
 	@Override
 	public void execute() throws Exception {
+		logger.info(String.format("Started execution of ColumnToColumnDataMatchingProcess process. RelId=%d, clFrom=%s, clTo=%s, similarityThreshold=%f", 
+				relId, clFrom, clTo, similarityThreshold));
 		
+		
+		
+		logger.info(String.format("Finished execution of ColumnToColumnDataMatchingProcess process. RelId=%d, clFrom=%s, clTo=%s, similarityThreshold=%f", 
+				relId, clFrom, clTo, similarityThreshold));
 	}
 
 }
