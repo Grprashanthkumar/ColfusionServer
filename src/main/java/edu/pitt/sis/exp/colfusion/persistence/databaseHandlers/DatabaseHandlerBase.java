@@ -5,9 +5,15 @@ package edu.pitt.sis.exp.colfusion.persistence.databaseHandlers;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -25,6 +31,9 @@ public abstract class DatabaseHandlerBase {
     private String database;
     private DatabaseHanderType databaseHanderType;
     
+    private final char dbCharToWrapNamesWithSpaces;
+    private final char dbCharToWrapStrings;
+    
     protected Connection connection;
     
     protected ExecutionInfoManager executionInfoMgr; 
@@ -33,13 +42,16 @@ public abstract class DatabaseHandlerBase {
     Logger logger = LogManager.getLogger(DatabaseHandlerBase.class.getName());
     
     public DatabaseHandlerBase(final String host, final int port, final String user, final String password, final String database, final DatabaseHanderType databaseHanderType,
-    		final ExecutionInfoManager executionInfoMgr, final int executionLogId) {
+    		final ExecutionInfoManager executionInfoMgr, final int executionLogId, final char dbCharToWrapNamesWithSpaces, final char dbCharToWrapStrings) {
     	setHost(host);
     	setPort(port);
     	setUser(user);
     	setPassword(password);
     	setDatabase(database);
     	setDatabaseHanderType(databaseHanderType);
+    	
+    	this.dbCharToWrapNamesWithSpaces = dbCharToWrapNamesWithSpaces;
+    	this.dbCharToWrapStrings = dbCharToWrapStrings;
     	
     	this.executionInfoMgr = executionInfoMgr;
     	this.executionLogId = executionLogId;
@@ -119,6 +131,20 @@ public abstract class DatabaseHandlerBase {
 	}
     
 	/**
+	 * @return the dbCharToWrapNamesWithSpaces
+	 */
+	public char getDbCharToWrapNamesWithSpaces() {
+		return dbCharToWrapNamesWithSpaces;
+	}
+
+	/**
+	 * @return the dbCharToWrapStrings
+	 */
+	public char getDbCharToWrapStrings() {
+		return dbCharToWrapStrings;
+	}
+	
+	/**
 	 * Initializes the connection.
 	 * @return the connection.
 	 * @throws Exception 
@@ -192,7 +218,41 @@ public abstract class DatabaseHandlerBase {
 	 * @throws SQLException 
 	 */
 	public abstract void createIndecesIfNotExist(String tableName, String columnNames) throws SQLException;
-	
-	
-	
+
+	public List<Map<String, String>> getAll(final String tableName, final List<String> columnDbNames) throws SQLException {
+		StringBuilder sql = new StringBuilder();
+		
+		sql.append("SELECT " + this.getDbCharToWrapNamesWithSpaces());
+		
+		String columnDbNamesCSV = StringUtils.join(columnDbNames, String.format("%c, %c", this.getDbCharToWrapNamesWithSpaces(), this.getDbCharToWrapNamesWithSpaces()));
+		
+		sql.append(String.format("%s%c FROM %s", columnDbNamesCSV, this.getDbCharToWrapNamesWithSpaces(), tableName));
+		
+		String sqlString = sql.toString();
+		
+		logger.info(String.format("About to execute this query: %s", sqlString));
+		
+		try (Statement statement = connection.createStatement()) {
+			
+			ResultSet resultSet = statement.executeQuery(sqlString);
+			
+			List<Map<String, String>> result = new ArrayList<>();
+			
+			while (resultSet.next()) {
+				Map<String, String> oneRow = new HashMap<String,String>();
+				
+				for (String column : columnDbNames) {
+					oneRow.put(column, resultSet.getString(column));
+				}
+				
+				result.add(oneRow);
+			}
+			
+			return result;
+		} catch (SQLException e) {
+			
+			logger.error("Something wrong happened when getAll tried to execute sql query.", e);
+			throw e;
+		}
+	}	
 }

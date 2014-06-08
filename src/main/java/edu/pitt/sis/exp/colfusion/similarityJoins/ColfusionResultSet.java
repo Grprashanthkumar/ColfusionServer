@@ -3,8 +3,10 @@
  */
 package edu.pitt.sis.exp.colfusion.similarityJoins;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.util.List;
+import java.util.Map;
+
+import edu.pitt.sis.exp.colfusion.relationships.transformation.RelationshipTransformation;
 
 /**
  * @author Evgeny
@@ -12,18 +14,18 @@ import java.sql.SQLException;
  */
 public class ColfusionResultSet {
 	
-	private final ResultSet resultSet;
+	private final List<Map<String, String>> resultSet;
 	
-	public ColfusionResultSet(final ResultSet resultSet) {
+	public ColfusionResultSet(final List<Map<String, String>> resultSet) {
 		this.resultSet = resultSet;
 	}
 	
-	public boolean next() throws SQLException {
-		return resultSet.next();
-	}
 	
-	
-	public String getStringFromTransformaion(final String transformation) {
+	public String getStringFromTransformaion(final RelationshipTransformation transformation) {
 		throw new UnsupportedOperationException("Not implemented yet.");
+	}
+
+	public int size() {
+		return 2; //IMPLEMENT resultSet.size();
 	}
 }

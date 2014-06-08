@@ -4,13 +4,28 @@
 package edu.pitt.sis.exp.colfusion.relationships;
 
 import java.math.BigDecimal;
+import java.util.List;
+import java.util.Map;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.google.gson.annotations.Expose;
 
+import edu.pitt.sis.exp.colfusion.persistence.databaseHandlers.DatabaseHandlerBase;
+import edu.pitt.sis.exp.colfusion.persistence.databaseHandlers.DatabaseHandlerFactory;
+import edu.pitt.sis.exp.colfusion.persistence.managers.ProcessPersistantManager;
+import edu.pitt.sis.exp.colfusion.persistence.managers.ProcessPersistantManagerImpl;
+import edu.pitt.sis.exp.colfusion.persistence.managers.RelationshipsColumnsDataMathingRatiosManager;
+import edu.pitt.sis.exp.colfusion.persistence.managers.RelationshipsColumnsDataMathingRatiosManagerImpl;
+import edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionProcesses;
+import edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionRelationshipsColumnsDataMathingRatios;
+import edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionRelationshipsColumnsDataMathingRatiosId;
 import edu.pitt.sis.exp.colfusion.process.ProcessBase;
+import edu.pitt.sis.exp.colfusion.relationships.transformation.RelationshipTransformation;
+import edu.pitt.sis.exp.colfusion.similarityJoins.ColfusionResultSet;
+import edu.pitt.sis.exp.colfusion.similarityJoins.NestedLoopSimilarityJoin;
+import edu.pitt.sis.exp.colfusion.similarityMeasures.LevenshteinDistance;
 
 /**
  * @author Evgeny
@@ -105,6 +120,41 @@ public class ColumnToColumnDataMatchingProcess extends ProcessBase {
 		logger.info(String.format("Started execution of ColumnToColumnDataMatchingProcess process. RelId=%d, clFrom=%s, clTo=%s, similarityThreshold=%f", 
 				relId, clFrom, clTo, similarityThreshold));
 		
+		RelationshipTransformation transformationFrom = new RelationshipTransformation(this.getClFrom());
+		
+		DatabaseHandlerBase dbHandlerFrom = DatabaseHandlerFactory.getDatabaseHandler(transformationFrom.getTargetDbConnectionInfo());
+		
+		RelationshipTransformation transformationTo = new RelationshipTransformation(this.getClFrom());
+		
+		DatabaseHandlerBase dbHandlerTo = DatabaseHandlerFactory.getDatabaseHandler(transformationTo.getTargetDbConnectionInfo());
+		
+		List<Map<String, String>> allTuplesFrom = dbHandlerFrom.getAll(transformationFrom.getTableName(), transformationFrom.getColumnDbNames());
+		
+		List<Map<String, String>> allTuplesTo = dbHandlerTo.getAll(transformationTo.getTableName(), transformationTo.getColumnDbNames());
+		
+		NestedLoopSimilarityJoin simJoin = new NestedLoopSimilarityJoin(new LevenshteinDistance(), null);
+		
+		ColfusionResultSet joinResult = simJoin.join(new ColfusionResultSet(allTuplesFrom), new ColfusionResultSet(allTuplesTo), 
+				transformationFrom, transformationTo, similarityThreshold.doubleValue());
+		
+		double dataMathingRatioFrom = (double) joinResult.size() / allTuplesFrom.size();
+		double dataMathingRatioTo = (double) joinResult.size() / allTuplesTo.size();
+		
+		
+		ColfusionRelationshipsColumnsDataMathingRatiosId dataMathingRatioId = new ColfusionRelationshipsColumnsDataMathingRatiosId(this.getClFrom(),
+				this.getClTo(), this.similarityThreshold);
+		
+		ProcessPersistantManager processPerMgn = new ProcessPersistantManagerImpl();
+		ColfusionProcesses process = processPerMgn.findByID(this.getID());
+		
+		ColfusionRelationshipsColumnsDataMathingRatios dataMathingRatio = new ColfusionRelationshipsColumnsDataMathingRatios();
+		dataMathingRatio.setId(dataMathingRatioId);
+		dataMathingRatio.setColfusionProcesses(process);
+		dataMathingRatio.setDataMatchingFromRatio(new BigDecimal(dataMathingRatioFrom));
+		dataMathingRatio.setDataMatchingToRatio(new BigDecimal(dataMathingRatioTo));
+		
+		RelationshipsColumnsDataMathingRatiosManager dataMatchingRatioMng = new RelationshipsColumnsDataMathingRatiosManagerImpl();
+		dataMatchingRatioMng.saveOrUpdate(dataMathingRatio);
 		
 		
 		logger.info(String.format("Finished execution of ColumnToColumnDataMatchingProcess process. RelId=%d, clFrom=%s, clTo=%s, similarityThreshold=%f", 

@@ -37,7 +37,8 @@ public class MySQLDatabaseHandler extends DatabaseHandlerBase {
 			final String password, final String database,
 			final DatabaseHanderType databaseHanderType,
 			final ExecutionInfoManager executionInfoMgr, final int executionLogId) throws Exception {
-		super(host, port, user, password, database, databaseHanderType, executionInfoMgr, executionLogId);
+		super(host, port, user, password, database, databaseHanderType, executionInfoMgr, executionLogId,
+				'`', '\'');
 		
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
