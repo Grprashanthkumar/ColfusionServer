@@ -1,9 +1,8 @@
 /**
  * 
  */
-package edu.pitt.sis.exp.colfusion.tests.bll.dataSubmissionWizard;
+package edu.pitt.sis.exp.colfusion.tests.relationships.transformation;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 import junit.framework.TestCase;
@@ -13,37 +12,18 @@ import org.apache.logging.log4j.Logger;
 import org.junit.Test;
 
 import edu.pitt.sis.exp.colfusion.bll.RelationshipBL;
+import edu.pitt.sis.exp.colfusion.relationships.transformation.TransofmationCidsExtractor;
 
 /**
  * @author Evgeny
  *
  */
-public class RelationshipBLTest extends TestCase {
+public class TransformationTest extends TestCase {
 	
-	private static Logger logger = LogManager.getLogger(RelationshipBLTest.class.getName());
+	private static Logger logger = LogManager.getLogger(TransformationTest.class.getName());
 	
-	private static int SID_FOR_TRIGGER_DATA_MATCHING = 1711;
-	private static BigDecimal SIMILARITY_THRESHOLD_FOR_TRIGGER_DATA_MATCHING = new BigDecimal(1);
-	
-	public RelationshipBLTest(final String name) {
+	public TransformationTest(final String name) {
 		super(name);
-		
-	}
-	
-	@Test
-	public void testTriggerDataMatchingRatiosCalculationsForAllNotCalculated() {
-		//TODO: prepare database
-		
-		RelationshipBL relBL = new RelationshipBL();
-		
-		try {
-			relBL.triggerDataMatchingRatiosCalculationsForAllNotCalculatedBySid(SID_FOR_TRIGGER_DATA_MATCHING, SIMILARITY_THRESHOLD_FOR_TRIGGER_DATA_MATCHING);
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			
-			fail(e.getMessage());
-		}
 		
 	}
 	
@@ -54,7 +34,7 @@ public class RelationshipBLTest extends TestCase {
 		RelationshipBL relBL = new RelationshipBL();
 		
 		try {
-			List<Integer> result = relBL.extractCidsFromTransformation(transformationString);
+			List<Integer> result = TransofmationCidsExtractor.extractCids(transformationString);
 			
 			assertEquals(1, result.size());
 			assertEquals(123, (int)result.get(0));
@@ -69,7 +49,7 @@ public class RelationshipBLTest extends TestCase {
 		relBL = new RelationshipBL();
 		
 		try {
-			List<Integer> result = relBL.extractCidsFromTransformation(transformationString);
+			List<Integer> result = TransofmationCidsExtractor.extractCids(transformationString);
 			
 			assertEquals(1, result.size());
 			assertEquals(123, (int)result.get(0));
@@ -84,7 +64,7 @@ public class RelationshipBLTest extends TestCase {
 		relBL = new RelationshipBL();
 		
 		try {
-			List<Integer> result = relBL.extractCidsFromTransformation(transformationString);
+			List<Integer> result = TransofmationCidsExtractor.extractCids(transformationString);
 			
 			assertEquals(2, result.size());
 			assertEquals(123, (int)result.get(0));
@@ -100,7 +80,7 @@ public class RelationshipBLTest extends TestCase {
 		relBL = new RelationshipBL();
 		
 		try {
-			List<Integer> result = relBL.extractCidsFromTransformation(transformationString);
+			List<Integer> result = TransofmationCidsExtractor.extractCids(transformationString);
 			
 			assertEquals(2, result.size());
 			assertEquals(123, (int)result.get(0));

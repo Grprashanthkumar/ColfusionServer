@@ -35,6 +35,8 @@ public class ColumnToColumnDataMatchingProcess extends ProcessBase {
 	
 	}
 	
+	//TODO: need to also accept Edit distance and an array of filters
+	
 	public ColumnToColumnDataMatchingProcess(final int relId, final String clFrom, final String clTo, final BigDecimal similarityThreshold) {
 		this.relId = relId;
 		this.clFrom = clFrom;

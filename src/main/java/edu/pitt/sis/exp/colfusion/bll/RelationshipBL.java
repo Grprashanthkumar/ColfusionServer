@@ -4,19 +4,13 @@
 package edu.pitt.sis.exp.colfusion.bll;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Set;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import edu.pitt.sis.exp.colfusion.persistence.databaseHandlers.DatabaseHandlerBase;
 import edu.pitt.sis.exp.colfusion.persistence.databaseHandlers.DatabaseHandlerFactory;
-import edu.pitt.sis.exp.colfusion.persistence.managers.DNameInfoManager;
-import edu.pitt.sis.exp.colfusion.persistence.managers.DNameInfoManagerImpl;
 import edu.pitt.sis.exp.colfusion.persistence.managers.GeneralManagerImpl;
 import edu.pitt.sis.exp.colfusion.persistence.managers.ProcessPersistantManager;
 import edu.pitt.sis.exp.colfusion.persistence.managers.ProcessPersistantManagerImpl;
@@ -26,7 +20,6 @@ import edu.pitt.sis.exp.colfusion.persistence.managers.RelationshipsManager;
 import edu.pitt.sis.exp.colfusion.persistence.managers.RelationshipsManagerImpl;
 import edu.pitt.sis.exp.colfusion.persistence.managers.SourceInfoManager;
 import edu.pitt.sis.exp.colfusion.persistence.managers.SourceInfoManagerImpl;
-import edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionDnameinfo;
 import edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionProcesses;
 import edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionRelationships;
 import edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionRelationshipsColumns;
@@ -35,6 +28,7 @@ import edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionRelationshipsColumnsD
 import edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionSourceinfo;
 import edu.pitt.sis.exp.colfusion.process.ProcessManager;
 import edu.pitt.sis.exp.colfusion.relationships.ColumnToColumnDataMatchingProcess;
+import edu.pitt.sis.exp.colfusion.relationships.transformation.RelationshipTransformation;
 import edu.pitt.sis.exp.colfusion.responseModels.GeneralResponse;
 import edu.pitt.sis.exp.colfusion.responseModels.GeneralResponseGen;
 import edu.pitt.sis.exp.colfusion.responseModels.GeneralResponseGenImpl;
@@ -150,9 +144,13 @@ public class RelationshipBL {
 			if (object instanceof ColfusionRelationshipsColumns) {
 				ColfusionRelationshipsColumns relationshipColumns = (ColfusionRelationshipsColumns) object;
 				
+				RelationshipTransformation transformationFrom = new RelationshipTransformation(relationshipColumns.getId().getClFrom());
+				RelationshipTransformation transformationTo = new RelationshipTransformation(relationshipColumns.getId().getClTo());
+				
 				//TODO: Once we add ability to chain processes or make some processes depend on other processes
 				//TODO: indices should be also created in a background process.
-				createIndeces(relationshipColumns);
+				createIndeces(transformationFrom);
+				createIndeces(transformationTo);
 				
 				triggerDataMatchingRatiosCalculationsByRelationshipsColumns(relationshipColumns, similarityThreshold);
 			}
@@ -166,111 +164,22 @@ public class RelationshipBL {
 		}
 	}
 
-	/**
-	 * Creates indices if they don't exist yet for columns (clFrom and clTo) of a given relationship (for one link).
-	 * @param relationshipColumns clFrom and clTo of one relationship link
-	 * @throws Exception
-	 */
-	private void createIndeces(final ColfusionRelationshipsColumns relationshipColumns) throws Exception {
-		List<Integer> cidFromOneStory = extractCidsFromTransformation(relationshipColumns.getId().getClFrom());
-		
-		createIndeces(cidFromOneStory);
-		
-		cidFromOneStory = extractCidsFromTransformation(relationshipColumns.getId().getClTo());
-		
-		createIndeces(cidFromOneStory);
-	}
-
-	/**
+		/**
 	 * Creates indexed in the target database on the columns provided by their ids (cid).
 	 * @param cidFromOneStory a list of cids. Note all cids should be from one story only (from one target database/table).
 	 * @throws Exception 
 	 */
-	private void createIndeces(final List<Integer> cidFromOneStory) throws Exception {
-		if (cidFromOneStory.size() > 0) {
-			
-			SourceInfoManager sourceInfoMng = new SourceInfoManagerImpl();
-			ColfusionSourceinfo story = sourceInfoMng.findStoryByCid(cidFromOneStory.get(0));
-			
+	private void createIndeces(final RelationshipTransformation transformation) throws Exception {
+		
+		for (String columnDbName : transformation.getColumnDbNames()) {
 			try {
-				story = GeneralManagerImpl.initializeField(story, "colfusionSourceinfoDb");
-			} catch (NoSuchFieldException e) {
-				logger.error("createIndeces FAILED to initialize colfusionSourceinfoDb field. Seems that field was not found");
-				throw e;
-			} catch (IllegalAccessException e) {
+				DatabaseHandlerBase dbHandler = DatabaseHandlerFactory.getDatabaseHandler(transformation.getTargetDbConnectionInfo());
+				dbHandler.createIndecesIfNotExist(transformation.getTableName(), columnDbName);
+			} catch (Exception e) {
 				logger.error("createIndeces FAILED to initialize colfusionSourceinfoDb field.");
 				throw e;
 			}
-			
-			DNameInfoManager columnManager = new DNameInfoManagerImpl();
-			
-			List<String> columnNames = new ArrayList<String>();
-			
-			for (Integer cid : cidFromOneStory) {
-				ColfusionDnameinfo column = null;
-				try {
-					column = columnManager.findByID(cid);
-				} catch (Exception e) {
-					String msg = String.format("createIndeces FAILED when searching for columns by cids on cid=%d", cid);
-					logger.error(msg);
-					
-					//TODO:maybe need custom error?
-					throw new Exception(msg);
-				}
-				
-				if (column == null) {
-					String msg = String.format("createIndeces FAILED when searching for columns by cids on cid=%d", cid);
-					logger.error(msg);
-					
-					//TODO:maybe need custom error?
-					throw new Exception(msg);
-				}
-					
-				try {
-					column = GeneralManagerImpl.initializeField(column, "colfusionColumnTableInfo");
-				} catch (NoSuchFieldException e) {
-					logger.error("createIndeces FAILED to initialize colfusionColumnTableInfo field of column. Seems that field was not found");
-					throw e;
-				} catch (IllegalAccessException e) {
-					logger.error("createIndeces FAILED to initialize colfusionColumnTableInfo field.");
-					throw e;
-				}
-				
-				try {
-					DatabaseHandlerBase dbHandler = DatabaseHandlerFactory.getDatabaseHandler(story.getColfusionSourceinfoDb());
-					dbHandler.createIndecesIfNotExist(column.getColfusionColumnTableInfo().getTableName(), column.getDnameOriginalName());
-				} catch (Exception e) {
-					logger.error("createIndeces FAILED to initialize colfusionSourceinfoDb field.");
-					throw e;
-				}
-			}			
 		}
-	}
-
-	/**
-	 * Extracts column ids from column transformation strings (colum id are supposed to be wrapped in cid(...));
-	 * @param transformation the transformation string.
-	 * @return list of ids extracted from the transformation string.
-	 */
-	public List<Integer> extractCidsFromTransformation(final String transformation) throws Exception {
-		Pattern pattern = Pattern.compile("(\\()(\\d+)(\\))");
-				
-		Matcher matcher = pattern.matcher(transformation);
-		
-		List<Integer> result = new ArrayList<Integer>();
-		
-		try {
-		
-			while (matcher.find()) {
-				result.add(Integer.parseInt(matcher.group(2)));
-			}
-		}
-		catch(Exception e) {
-			logger.error(String.format("Could not extract cids from this string: %s", transformation));
-			throw e;
-		}
-		
-		return result;		
 	}
 
 	/**
