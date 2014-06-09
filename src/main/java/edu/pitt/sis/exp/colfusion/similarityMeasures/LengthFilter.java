@@ -14,13 +14,14 @@ public class LengthFilter extends FilterBase {
 
 	static Logger logger = LogManager.getLogger(LengthFilter.class.getName());
 	
-	protected LengthFilter(final double threshold) {
-		super(threshold);
+	protected LengthFilter() {
+	
 	}
 
 	@Override
-	public boolean isToBeFiltered(final String value1, final String value2) {
+	public double calculate(final String value1, final String value2) {
 		throw new UnsupportedOperationException("isToBeFiltered is not implemented yet.");
 	}
 
+	
 }

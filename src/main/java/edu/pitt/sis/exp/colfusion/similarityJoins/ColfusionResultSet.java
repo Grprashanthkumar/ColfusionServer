@@ -13,7 +13,7 @@ import edu.pitt.sis.exp.colfusion.relationships.transformation.RelationshipTrans
  *
  */
 public class ColfusionResultSet {
-	
+	//TODO: this should be a class that describes each row. Each row should consist of sections of cells, each section belongs to one table
 	private final List<Map<String, String>> resultSet;
 	
 	public ColfusionResultSet(final List<Map<String, String>> resultSet) {
@@ -26,6 +26,20 @@ public class ColfusionResultSet {
 	}
 
 	public int size() {
-		return 2; //IMPLEMENT resultSet.size();
+		return resultSet.size();
+	}
+	
+	public List<Map<String, String>> getData() {
+		return resultSet;
+	}
+
+
+	public static String getByTransformation(
+			final Map<String, String> rowTable, final RelationshipTransformation transformationTable1) {
+		//TODO:for now just take one column, later need to be able to actually perform transformation.
+		
+		String columnName = transformationTable1.getColumnDbNames().get(0);
+		
+		return rowTable.get(columnName);
 	}
 }

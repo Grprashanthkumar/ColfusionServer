@@ -8,15 +8,17 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import edu.pitt.sis.exp.colfusion.dataModels.tableDataModel.Cell;
+import edu.pitt.sis.exp.colfusion.dataModels.tableDataModel.Column;
+import edu.pitt.sis.exp.colfusion.dataModels.tableDataModel.ColumnGroup;
+import edu.pitt.sis.exp.colfusion.dataModels.tableDataModel.Row;
+import edu.pitt.sis.exp.colfusion.dataModels.tableDataModel.Table;
 import edu.pitt.sis.exp.colfusion.persistence.managers.ExecutionInfoManager;
 
 /**
@@ -219,7 +221,7 @@ public abstract class DatabaseHandlerBase {
 	 */
 	public abstract void createIndecesIfNotExist(String tableName, String columnNames) throws SQLException;
 
-	public List<Map<String, String>> getAll(final String tableName, final List<String> columnDbNames) throws SQLException {
+	public Table getAll(final String tableName, final List<String> columnDbNames) throws SQLException {
 		StringBuilder sql = new StringBuilder();
 		
 		sql.append("SELECT " + this.getDbCharToWrapNamesWithSpaces());
@@ -236,16 +238,21 @@ public abstract class DatabaseHandlerBase {
 			
 			ResultSet resultSet = statement.executeQuery(sqlString);
 			
-			List<Map<String, String>> result = new ArrayList<>();
+			Table result = new Table();
 			
 			while (resultSet.next()) {
-				Map<String, String> oneRow = new HashMap<String,String>();
+				ColumnGroup columnGroup = new ColumnGroup(tableName);
 				
 				for (String column : columnDbNames) {
-					oneRow.put(column, resultSet.getString(column));
+					
+					Column colfusionColumn = new Column(column, new Cell(resultSet.getString(column)));
+					
+					columnGroup.add(colfusionColumn);
 				}
 				
-				result.add(oneRow);
+				Row row = new Row();
+				row.add(columnGroup);
+				result.add(row);
 			}
 			
 			return result;

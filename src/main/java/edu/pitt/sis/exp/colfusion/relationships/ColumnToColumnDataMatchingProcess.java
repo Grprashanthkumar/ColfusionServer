@@ -4,14 +4,13 @@
 package edu.pitt.sis.exp.colfusion.relationships;
 
 import java.math.BigDecimal;
-import java.util.List;
-import java.util.Map;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.google.gson.annotations.Expose;
 
+import edu.pitt.sis.exp.colfusion.dataModels.tableDataModel.Table;
 import edu.pitt.sis.exp.colfusion.persistence.databaseHandlers.DatabaseHandlerBase;
 import edu.pitt.sis.exp.colfusion.persistence.databaseHandlers.DatabaseHandlerFactory;
 import edu.pitt.sis.exp.colfusion.persistence.managers.ProcessPersistantManager;
@@ -23,9 +22,9 @@ import edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionRelationshipsColumnsD
 import edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionRelationshipsColumnsDataMathingRatiosId;
 import edu.pitt.sis.exp.colfusion.process.ProcessBase;
 import edu.pitt.sis.exp.colfusion.relationships.transformation.RelationshipTransformation;
-import edu.pitt.sis.exp.colfusion.similarityJoins.ColfusionResultSet;
 import edu.pitt.sis.exp.colfusion.similarityJoins.NestedLoopSimilarityJoin;
 import edu.pitt.sis.exp.colfusion.similarityMeasures.LevenshteinDistance;
+import edu.pitt.sis.exp.colfusion.similarityMeasures.NormalizedDistance;
 
 /**
  * @author Evgeny
@@ -124,17 +123,17 @@ public class ColumnToColumnDataMatchingProcess extends ProcessBase {
 		
 		DatabaseHandlerBase dbHandlerFrom = DatabaseHandlerFactory.getDatabaseHandler(transformationFrom.getTargetDbConnectionInfo());
 		
-		RelationshipTransformation transformationTo = new RelationshipTransformation(this.getClFrom());
+		RelationshipTransformation transformationTo = new RelationshipTransformation(this.getClTo());
 		
 		DatabaseHandlerBase dbHandlerTo = DatabaseHandlerFactory.getDatabaseHandler(transformationTo.getTargetDbConnectionInfo());
 		
-		List<Map<String, String>> allTuplesFrom = dbHandlerFrom.getAll(transformationFrom.getTableName(), transformationFrom.getColumnDbNames());
+		Table allTuplesFrom = dbHandlerFrom.getAll(transformationFrom.getTableName(), transformationFrom.getColumnDbNames());
 		
-		List<Map<String, String>> allTuplesTo = dbHandlerTo.getAll(transformationTo.getTableName(), transformationTo.getColumnDbNames());
+		Table allTuplesTo = dbHandlerTo.getAll(transformationTo.getTableName(), transformationTo.getColumnDbNames());
 		
-		NestedLoopSimilarityJoin simJoin = new NestedLoopSimilarityJoin(new LevenshteinDistance(), null);
+		NestedLoopSimilarityJoin simJoin = new NestedLoopSimilarityJoin(new NormalizedDistance(new LevenshteinDistance()), null, null);
 		
-		ColfusionResultSet joinResult = simJoin.join(new ColfusionResultSet(allTuplesFrom), new ColfusionResultSet(allTuplesTo), 
+		Table joinResult = simJoin.join(allTuplesFrom, allTuplesTo, 
 				transformationFrom, transformationTo, similarityThreshold.doubleValue());
 		
 		double dataMathingRatioFrom = (double) joinResult.size() / allTuplesFrom.size();

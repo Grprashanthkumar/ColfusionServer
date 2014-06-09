@@ -14,11 +14,9 @@ public abstract class FilterBase {
 	
 	static Logger logger = LogManager.getLogger(FilterBase.class.getName());
 	
-	protected final double threshold;
-	
-	protected FilterBase(final double threshold) {
-		this.threshold = threshold;
+	protected FilterBase() {
+		
 	}
 	
-	public abstract boolean isToBeFiltered(String value1, String value2);
+	public abstract double calculate(final String value1, final String value2);
 }
