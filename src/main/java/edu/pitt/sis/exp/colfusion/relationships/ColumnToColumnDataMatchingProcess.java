@@ -4,6 +4,7 @@
 package edu.pitt.sis.exp.colfusion.relationships;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -139,6 +140,7 @@ public class ColumnToColumnDataMatchingProcess extends ProcessBase {
 		double dataMathingRatioFrom = (double) joinResult.size() / allTuplesFrom.size();
 		double dataMathingRatioTo = (double) joinResult.size() / allTuplesTo.size();
 		
+		similarityThreshold = this.similarityThreshold.setScale(3, RoundingMode.HALF_UP);
 		
 		ColfusionRelationshipsColumnsDataMathingRatiosId dataMathingRatioId = new ColfusionRelationshipsColumnsDataMathingRatiosId(this.getClFrom(),
 				this.getClTo(), this.similarityThreshold);

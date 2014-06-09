@@ -152,7 +152,11 @@ public class RelationshipBL {
 				createIndeces(transformationFrom);
 				createIndeces(transformationTo);
 				
-				triggerDataMatchingRatiosCalculationsByRelationshipsColumns(relationshipColumns, similarityThreshold);
+				for (double i = 0; i <= 1; i+= 0.1) {
+					triggerDataMatchingRatiosCalculationsByRelationshipsColumns(relationshipColumns, new BigDecimal(i));
+				}
+				
+				
 			}
 			else {
 				
@@ -234,7 +238,7 @@ public class RelationshipBL {
 				ColfusionRelationshipsColumnsDataMathingRatios dataMathingRatios = new 
 						ColfusionRelationshipsColumnsDataMathingRatios(columnsDataMathingRatiosId, colfusionProcess);
 				
-				dataMatingRatiosMng.save(dataMathingRatios);
+				dataMatingRatiosMng.saveOrUpdate(dataMathingRatios);
 			}
 			
 		}		
