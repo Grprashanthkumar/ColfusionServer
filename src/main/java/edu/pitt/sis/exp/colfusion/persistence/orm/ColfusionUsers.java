@@ -1,6 +1,6 @@
 package edu.pitt.sis.exp.colfusion.persistence.orm;
 
-// Generated May 7, 2014 10:39:32 PM by Hibernate Tools 3.4.0.CR1
+// Generated 2014-5-12 21:35:22 by Hibernate Tools 3.4.0.CR1
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -56,8 +56,8 @@ public class ColfusionUsers implements java.io.Serializable {
 	private Set colfusionShareses = new HashSet(0);
 	private Set colfusionNotificationses = new HashSet(0);
 	private Set colfusionSourceinfoMetadataEditHistories = new HashSet(0);
-	private Set colfusionUserRelationshipVerdicts = new HashSet(0);
 	private Set colfusionSourceinfos = new HashSet(0);
+	private Set colfusionUserRelationshipVerdicts = new HashSet(0);
 	private Set colfusionSourceinfos_1 = new HashSet(0);
 	private Set colfusionSynonymsFroms = new HashSet(0);
 	private Set colfusionDesAttachmentses = new HashSet(0);
@@ -96,7 +96,7 @@ public class ColfusionUsers implements java.io.Serializable {
 			Set colfusionCanvaseses, Set colfusionShareses,
 			Set colfusionNotificationses,
 			Set colfusionSourceinfoMetadataEditHistories,
-			Set colfusionUserRelationshipVerdicts, Set colfusionSourceinfos,
+			Set colfusionSourceinfos, Set colfusionUserRelationshipVerdicts,
 			Set colfusionSourceinfos_1, Set colfusionSynonymsFroms,
 			Set colfusionDesAttachmentses, Set colfusionRelationshipses,
 			Set colfusionSynonymsTos) {
@@ -143,8 +143,8 @@ public class ColfusionUsers implements java.io.Serializable {
 		this.colfusionShareses = colfusionShareses;
 		this.colfusionNotificationses = colfusionNotificationses;
 		this.colfusionSourceinfoMetadataEditHistories = colfusionSourceinfoMetadataEditHistories;
-		this.colfusionUserRelationshipVerdicts = colfusionUserRelationshipVerdicts;
 		this.colfusionSourceinfos = colfusionSourceinfos;
+		this.colfusionUserRelationshipVerdicts = colfusionUserRelationshipVerdicts;
 		this.colfusionSourceinfos_1 = colfusionSourceinfos_1;
 		this.colfusionSynonymsFroms = colfusionSynonymsFroms;
 		this.colfusionDesAttachmentses = colfusionDesAttachmentses;
@@ -506,6 +506,14 @@ public class ColfusionUsers implements java.io.Serializable {
 		this.colfusionSourceinfoMetadataEditHistories = colfusionSourceinfoMetadataEditHistories;
 	}
 
+	public Set getColfusionSourceinfos() {
+		return this.colfusionSourceinfos;
+	}
+
+	public void setColfusionSourceinfos(Set colfusionSourceinfos) {
+		this.colfusionSourceinfos = colfusionSourceinfos;
+	}
+
 	public Set getColfusionUserRelationshipVerdicts() {
 		return this.colfusionUserRelationshipVerdicts;
 	}
@@ -513,14 +521,6 @@ public class ColfusionUsers implements java.io.Serializable {
 	public void setColfusionUserRelationshipVerdicts(
 			Set colfusionUserRelationshipVerdicts) {
 		this.colfusionUserRelationshipVerdicts = colfusionUserRelationshipVerdicts;
-	}
-
-	public Set getColfusionSourceinfos() {
-		return this.colfusionSourceinfos;
-	}
-
-	public void setColfusionSourceinfos(Set colfusionSourceinfos) {
-		this.colfusionSourceinfos = colfusionSourceinfos;
 	}
 
 	public Set getColfusionSourceinfos_1() {

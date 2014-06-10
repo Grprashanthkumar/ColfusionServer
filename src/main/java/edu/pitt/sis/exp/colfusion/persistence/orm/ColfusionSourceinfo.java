@@ -1,6 +1,6 @@
 package edu.pitt.sis.exp.colfusion.persistence.orm;
 
-// Generated May 7, 2014 10:39:32 PM by Hibernate Tools 3.4.0.CR1
+// Generated 2014-5-12 21:35:22 by Hibernate Tools 3.4.0.CR1
 
 import java.util.Date;
 import java.util.HashSet;
@@ -21,18 +21,18 @@ public class ColfusionSourceinfo implements java.io.Serializable {
 	private String rawDataPath;
 	private String sourceType;
 	private String provenance;
-	private Set colfusionSynonymsFroms = new HashSet(0);
 	private Set colfusionExecuteinfos = new HashSet(0);
-	private Set colfusionSourceinfoUsers = new HashSet(0);
-	private Set colfusionTemporaries = new HashSet(0);
-	private Set colfusionSynonymsTos = new HashSet(0);
 	private Set colfusionSourceinfoTableKtrs = new HashSet(0);
-	private Set colfusionRelationshipsesForSid1 = new HashSet(0);
-	private Set colfusionDesAttachmentses = new HashSet(0);
-	private Set colfusionRelationshipsesForSid2 = new HashSet(0);
 	private Set colfusionDnameinfos = new HashSet(0);
-	private ColfusionSourceinfoDb colfusionSourceinfoDb;
 	private Set colfusionSourceinfoMetadataEditHistories = new HashSet(0);
+	private Set colfusionSynonymsFroms = new HashSet(0);
+	private Set colfusionSourceinfoUsers = new HashSet(0);
+	private Set colfusionSynonymsTos = new HashSet(0);
+	private Set colfusionTemporaries = new HashSet(0);
+	private Set colfusionDesAttachmentses = new HashSet(0);
+	private Set colfusionRelationshipsesForSid1 = new HashSet(0);
+	private Set colfusionRelationshipsesForSid2 = new HashSet(0);
+	private ColfusionSourceinfoDb colfusionSourceinfoDb;
 	private Set colfusionVisualizations = new HashSet(0);
 
 	public ColfusionSourceinfo() {
@@ -48,13 +48,14 @@ public class ColfusionSourceinfo implements java.io.Serializable {
 	public ColfusionSourceinfo(ColfusionUsers colfusionUsers, String title,
 			String path, Date entryDate, Date lastUpdated, String status,
 			String rawDataPath, String sourceType, String provenance,
-			Set colfusionSynonymsFroms, Set colfusionExecuteinfos,
-			Set colfusionSourceinfoUsers, Set colfusionTemporaries,
-			Set colfusionSynonymsTos, Set colfusionSourceinfoTableKtrs,
-			Set colfusionRelationshipsesForSid1, Set colfusionDesAttachmentses,
-			Set colfusionRelationshipsesForSid2, Set colfusionDnameinfos,
-			ColfusionSourceinfoDb colfusionSourceinfoDb,
+			Set colfusionExecuteinfos, Set colfusionSourceinfoTableKtrs,
+			Set colfusionDnameinfos,
 			Set colfusionSourceinfoMetadataEditHistories,
+			Set colfusionSynonymsFroms, Set colfusionSourceinfoUsers,
+			Set colfusionSynonymsTos, Set colfusionTemporaries,
+			Set colfusionDesAttachmentses, Set colfusionRelationshipsesForSid1,
+			Set colfusionRelationshipsesForSid2,
+			ColfusionSourceinfoDb colfusionSourceinfoDb,
 			Set colfusionVisualizations) {
 		this.colfusionUsers = colfusionUsers;
 		this.title = title;
@@ -65,18 +66,18 @@ public class ColfusionSourceinfo implements java.io.Serializable {
 		this.rawDataPath = rawDataPath;
 		this.sourceType = sourceType;
 		this.provenance = provenance;
-		this.colfusionSynonymsFroms = colfusionSynonymsFroms;
 		this.colfusionExecuteinfos = colfusionExecuteinfos;
-		this.colfusionSourceinfoUsers = colfusionSourceinfoUsers;
-		this.colfusionTemporaries = colfusionTemporaries;
-		this.colfusionSynonymsTos = colfusionSynonymsTos;
 		this.colfusionSourceinfoTableKtrs = colfusionSourceinfoTableKtrs;
-		this.colfusionRelationshipsesForSid1 = colfusionRelationshipsesForSid1;
-		this.colfusionDesAttachmentses = colfusionDesAttachmentses;
-		this.colfusionRelationshipsesForSid2 = colfusionRelationshipsesForSid2;
 		this.colfusionDnameinfos = colfusionDnameinfos;
-		this.colfusionSourceinfoDb = colfusionSourceinfoDb;
 		this.colfusionSourceinfoMetadataEditHistories = colfusionSourceinfoMetadataEditHistories;
+		this.colfusionSynonymsFroms = colfusionSynonymsFroms;
+		this.colfusionSourceinfoUsers = colfusionSourceinfoUsers;
+		this.colfusionSynonymsTos = colfusionSynonymsTos;
+		this.colfusionTemporaries = colfusionTemporaries;
+		this.colfusionDesAttachmentses = colfusionDesAttachmentses;
+		this.colfusionRelationshipsesForSid1 = colfusionRelationshipsesForSid1;
+		this.colfusionRelationshipsesForSid2 = colfusionRelationshipsesForSid2;
+		this.colfusionSourceinfoDb = colfusionSourceinfoDb;
 		this.colfusionVisualizations = colfusionVisualizations;
 	}
 
@@ -160,20 +161,45 @@ public class ColfusionSourceinfo implements java.io.Serializable {
 		this.provenance = provenance;
 	}
 
-	public Set getColfusionSynonymsFroms() {
-		return this.colfusionSynonymsFroms;
-	}
-
-	public void setColfusionSynonymsFroms(Set colfusionSynonymsFroms) {
-		this.colfusionSynonymsFroms = colfusionSynonymsFroms;
-	}
-
 	public Set getColfusionExecuteinfos() {
 		return this.colfusionExecuteinfos;
 	}
 
 	public void setColfusionExecuteinfos(Set colfusionExecuteinfos) {
 		this.colfusionExecuteinfos = colfusionExecuteinfos;
+	}
+
+	public Set getColfusionSourceinfoTableKtrs() {
+		return this.colfusionSourceinfoTableKtrs;
+	}
+
+	public void setColfusionSourceinfoTableKtrs(Set colfusionSourceinfoTableKtrs) {
+		this.colfusionSourceinfoTableKtrs = colfusionSourceinfoTableKtrs;
+	}
+
+	public Set getColfusionDnameinfos() {
+		return this.colfusionDnameinfos;
+	}
+
+	public void setColfusionDnameinfos(Set colfusionDnameinfos) {
+		this.colfusionDnameinfos = colfusionDnameinfos;
+	}
+
+	public Set getColfusionSourceinfoMetadataEditHistories() {
+		return this.colfusionSourceinfoMetadataEditHistories;
+	}
+
+	public void setColfusionSourceinfoMetadataEditHistories(
+			Set colfusionSourceinfoMetadataEditHistories) {
+		this.colfusionSourceinfoMetadataEditHistories = colfusionSourceinfoMetadataEditHistories;
+	}
+
+	public Set getColfusionSynonymsFroms() {
+		return this.colfusionSynonymsFroms;
+	}
+
+	public void setColfusionSynonymsFroms(Set colfusionSynonymsFroms) {
+		this.colfusionSynonymsFroms = colfusionSynonymsFroms;
 	}
 
 	public Set getColfusionSourceinfoUsers() {
@@ -184,14 +210,6 @@ public class ColfusionSourceinfo implements java.io.Serializable {
 		this.colfusionSourceinfoUsers = colfusionSourceinfoUsers;
 	}
 
-	public Set getColfusionTemporaries() {
-		return this.colfusionTemporaries;
-	}
-
-	public void setColfusionTemporaries(Set colfusionTemporaries) {
-		this.colfusionTemporaries = colfusionTemporaries;
-	}
-
 	public Set getColfusionSynonymsTos() {
 		return this.colfusionSynonymsTos;
 	}
@@ -200,12 +218,20 @@ public class ColfusionSourceinfo implements java.io.Serializable {
 		this.colfusionSynonymsTos = colfusionSynonymsTos;
 	}
 
-	public Set getColfusionSourceinfoTableKtrs() {
-		return this.colfusionSourceinfoTableKtrs;
+	public Set getColfusionTemporaries() {
+		return this.colfusionTemporaries;
 	}
 
-	public void setColfusionSourceinfoTableKtrs(Set colfusionSourceinfoTableKtrs) {
-		this.colfusionSourceinfoTableKtrs = colfusionSourceinfoTableKtrs;
+	public void setColfusionTemporaries(Set colfusionTemporaries) {
+		this.colfusionTemporaries = colfusionTemporaries;
+	}
+
+	public Set getColfusionDesAttachmentses() {
+		return this.colfusionDesAttachmentses;
+	}
+
+	public void setColfusionDesAttachmentses(Set colfusionDesAttachmentses) {
+		this.colfusionDesAttachmentses = colfusionDesAttachmentses;
 	}
 
 	public Set getColfusionRelationshipsesForSid1() {
@@ -217,14 +243,6 @@ public class ColfusionSourceinfo implements java.io.Serializable {
 		this.colfusionRelationshipsesForSid1 = colfusionRelationshipsesForSid1;
 	}
 
-	public Set getColfusionDesAttachmentses() {
-		return this.colfusionDesAttachmentses;
-	}
-
-	public void setColfusionDesAttachmentses(Set colfusionDesAttachmentses) {
-		this.colfusionDesAttachmentses = colfusionDesAttachmentses;
-	}
-
 	public Set getColfusionRelationshipsesForSid2() {
 		return this.colfusionRelationshipsesForSid2;
 	}
@@ -234,14 +252,6 @@ public class ColfusionSourceinfo implements java.io.Serializable {
 		this.colfusionRelationshipsesForSid2 = colfusionRelationshipsesForSid2;
 	}
 
-	public Set getColfusionDnameinfos() {
-		return this.colfusionDnameinfos;
-	}
-
-	public void setColfusionDnameinfos(Set colfusionDnameinfos) {
-		this.colfusionDnameinfos = colfusionDnameinfos;
-	}
-
 	public ColfusionSourceinfoDb getColfusionSourceinfoDb() {
 		return this.colfusionSourceinfoDb;
 	}
@@ -249,15 +259,6 @@ public class ColfusionSourceinfo implements java.io.Serializable {
 	public void setColfusionSourceinfoDb(
 			ColfusionSourceinfoDb colfusionSourceinfoDb) {
 		this.colfusionSourceinfoDb = colfusionSourceinfoDb;
-	}
-
-	public Set getColfusionSourceinfoMetadataEditHistories() {
-		return this.colfusionSourceinfoMetadataEditHistories;
-	}
-
-	public void setColfusionSourceinfoMetadataEditHistories(
-			Set colfusionSourceinfoMetadataEditHistories) {
-		this.colfusionSourceinfoMetadataEditHistories = colfusionSourceinfoMetadataEditHistories;
 	}
 
 	public Set getColfusionVisualizations() {

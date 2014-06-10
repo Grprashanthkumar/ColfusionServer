@@ -6,9 +6,9 @@ package edu.pitt.sis.exp.colfusion.bll;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.google.refine.ProjectManager;
-import com.google.refine.ProjectMetadata;
-import com.google.refine.model.Project;
+//import com.google.refine.ProjectManager;
+//import com.google.refine.ProjectMetadata;
+//import com.google.refine.model.Project;
 
 import edu.pitt.sis.exp.colfusion.persistence.managers.OpenRefineProjectMapManager;
 import edu.pitt.sis.exp.colfusion.persistence.managers.OpenRefineProjectMapManagerImpl;
@@ -33,11 +33,11 @@ import java.util.Properties;
 import org.json.JSONException;
 import org.json.JSONWriter;
 
-import com.google.refine.commands.Command;
-import com.google.refine.model.Cell;
-import com.google.refine.model.Column;
-import com.google.refine.model.ModelException;
-import com.google.refine.model.Row;
+//import com.google.refine.commands.Command;
+//import com.google.refine.model.Cell;
+//import com.google.refine.model.Column;
+//import com.google.refine.model.ModelException;
+//import com.google.refine.model.Row;
 //import edu.pitt.sis.exp.colfusion.responseModels.GeneralResponseImpl;
 
 /**

@@ -20,8 +20,11 @@ import org.apache.logging.log4j.Logger;
 import edu.pitt.sis.exp.colfusion.bll.CancelPreview;
 import edu.pitt.sis.exp.colfusion.bll.CreateProject;
 import edu.pitt.sis.exp.colfusion.bll.OpenRefineBL;
+import edu.pitt.sis.exp.colfusion.bll.OpenRefineCancelChanges;
+import edu.pitt.sis.exp.colfusion.bll.OpenRefineSaveChanges;
 import edu.pitt.sis.exp.colfusion.bll.SavePreview;
 import edu.pitt.sis.exp.colfusion.responseModels.GeneralResponseGen;
+import edu.pitt.sis.exp.colfusion.responseModels.GeneralResponseGenImpl;
 //import edu.pitt.sis.exp.colfusion.tests.openrefine.TestCreatePro;
 //import edu.pitt.sis.exp.colfusion.tests.openrefine.TestCreatePro2;
 
@@ -119,6 +122,43 @@ public class OpenRefineController  extends BaseController {
 		GeneralResponseGen<String> result = savePreview.savePreview(sid, tableName);
 		
     	
+    	return makeCORS(Response.status(200).entity(result)); //.build();
+    }
+	
+	
+	@OPTIONS
+    @Path("saveChanges/{openRefinProjectId}")
+    public Response saveChangesOptions(@HeaderParam("Access-Control-Request-Headers") String requestH) {
+		return makeCORS(Response.ok()); //, requestH);
+    }
+	
+
+	@Path("saveChanges/{openRefinProjectId}")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response saveChanges(@PathParam("openRefinProjectId") String openRefinProjectId) throws ClassNotFoundException, Exception {
+
+		OpenRefineSaveChanges openRefineSaveChanges = new OpenRefineSaveChanges();
+		GeneralResponseGen<String> result = openRefineSaveChanges.saveChanges(openRefinProjectId);
+		
+    	return makeCORS(Response.status(200).entity(result)); //.build();
+    }
+	
+	@OPTIONS
+    @Path("cancelChanges/{openRefinProjectId}")
+    public Response cancelChangesOptions(@HeaderParam("Access-Control-Request-Headers") String requestH) {
+		return makeCORS(Response.ok()); //, requestH);
+    }
+	
+
+	@Path("cancelChanges/{openRefinProjectId}")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response cancelChanges(@PathParam("openRefinProjectId") String openRefinProjectId) throws ClassNotFoundException, Exception {
+
+		OpenRefineCancelChanges openRefineCancelChanges = new OpenRefineCancelChanges();
+		GeneralResponseGen<String> result = openRefineCancelChanges.cancelChanges(openRefinProjectId);
+		
     	return makeCORS(Response.status(200).entity(result)); //.build();
     }
 }

@@ -5,9 +5,9 @@
       <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
     </Console>
     
-    <File name="MyFile" fileName="${web:rootDir}/logs/app.log">
+   <!--   <File name="MyFile" fileName="${web:rootDir}/logs/app.log">
         <PatternLayout pattern="%d{yyyy-mm-dd HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
-    </File>  
+    </File>   -->
     
     <!-- 
     <SMTP name="Mail" subject="Col*Fusion Error Log" to="Karataev.Evgeny@gmail.com" from="support@chia.pitt.edu"
@@ -17,20 +17,20 @@
     <Async name="AsyncMail">
             <AppenderRef ref="Mail" />
     </Async>
-    -->
+    
     
     <Async name="Async">
       <AppenderRef ref="MyFile"/>
-    </Async>
+    </Async>-->
     
   </Appenders>
   <Loggers>
     <Root level="info">
       <AppenderRef ref="Console"/>
-      
+    <!--    
       <AppenderRef ref="Async"/>
       
-     <!--  <AppenderRef ref="AsyncMail" level="error"/> -->
+     <AppenderRef ref="AsyncMail" level="error"/> -->
     </Root>
   </Loggers>
 </Configuration>

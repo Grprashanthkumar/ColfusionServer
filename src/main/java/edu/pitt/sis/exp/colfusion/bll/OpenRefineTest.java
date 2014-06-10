@@ -5,8 +5,8 @@ import java.io.IOException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.google.refine.ProjectMetadata;
-import com.google.refine.model.Project;
+//import com.google.refine.ProjectMetadata;
+//import com.google.refine.model.Project;
 
 import edu.pitt.sis.exp.colfusion.responseModels.GeneralResponseGen;
 import edu.pitt.sis.exp.colfusion.responseModels.GeneralResponseGenImpl;

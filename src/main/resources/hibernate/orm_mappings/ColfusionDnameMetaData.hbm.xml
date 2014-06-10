@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 2014-5-12 21:35:22 by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionDnameMetaData" table="colfusion_dname_meta_data" catalog="colfusion">
+        <id name="metaId" type="java.lang.Integer">
+            <column name="meta_id" />
+            <generator class="identity" />
+        </id>
+        <property name="cid" type="int">
+            <column name="cid" not-null="true" />
+        </property>
+        <property name="type" type="string">
+            <column name="type" length="50" not-null="true" />
+        </property>
+        <property name="value" type="string">
+            <column name="value" length="100" not-null="true" />
+        </property>
+        <property name="sid" type="int">
+            <column name="sid" not-null="true" />
+        </property>
+    </class>
+</hibernate-mapping>

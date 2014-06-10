@@ -3,13 +3,13 @@
  */
 package edu.pitt.sis.exp.colfusion.persistence.dao;
 
-import edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionColumnTableInfo;
+import edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionColumntableinfo;
 
 /**
  * @author Evgeny
  *
  */
-public class ColumnTableInfoDAOImpl extends GenericDAOImpl<ColfusionColumnTableInfo, Integer> implements
+public class ColumnTableInfoDAOImpl extends GenericDAOImpl<ColfusionColumntableinfo, Integer> implements
 		ColumnTableInfoDAO {
 
 

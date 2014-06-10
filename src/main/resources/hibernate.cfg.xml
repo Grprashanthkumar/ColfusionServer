@@ -28,7 +28,7 @@
   <mapping resource="hibernate/orm_mappings/ColfusionCanvases.hbm.xml"/>
   <mapping resource="hibernate/orm_mappings/ColfusionCategories.hbm.xml"/>
   <mapping resource="hibernate/orm_mappings/ColfusionCharts.hbm.xml"/>
-  <mapping resource="hibernate/orm_mappings/ColfusionColumnTableInfo.hbm.xml"/>
+  <mapping resource="hibernate/orm_mappings/ColfusionColumntableinfo.hbm.xml"/>
   <mapping resource="hibernate/orm_mappings/ColfusionComments.hbm.xml"/>
   <mapping resource="hibernate/orm_mappings/ColfusionConfig.hbm.xml"/>
   <mapping resource="hibernate/orm_mappings/ColfusionDesAttachments.hbm.xml"/>
@@ -49,6 +49,7 @@
   <mapping resource="hibernate/orm_mappings/ColfusionNotifications.hbm.xml"/>
   <mapping resource="hibernate/orm_mappings/ColfusionNotificationsUnread.hbm.xml"/>
   <mapping resource="hibernate/orm_mappings/ColfusionOldUrls.hbm.xml"/>
+  <mapping resource="hibernate/orm_mappings/ColfusionOpenrefineProjectMap.hbm.xml"/>
   <mapping resource="hibernate/orm_mappings/ColfusionPentahoLogLoggingChannels.hbm.xml"/>
   <mapping resource="hibernate/orm_mappings/ColfusionPentahoLogPerformance.hbm.xml"/>
   <mapping resource="hibernate/orm_mappings/ColfusionPentahoLogStep.hbm.xml"/>
@@ -57,7 +58,7 @@
   <mapping resource="hibernate/orm_mappings/ColfusionRedirects.hbm.xml"/>
   <mapping resource="hibernate/orm_mappings/ColfusionRelationships.hbm.xml"/>
   <mapping resource="hibernate/orm_mappings/ColfusionRelationshipsColumns.hbm.xml"/>
-  <mapping resource="hibernate/orm_mappings/ColfusionRelationshipsColumnsCachingExecutionInfo.hbm.xml"/>
+  <mapping resource="hibernate/orm_mappings/ColfusionRelationshipsColumnsCachingexecutioninfo.hbm.xml"/>
    <mapping resource="hibernate/orm_mappings/ColfusionRelationshipsColumnsDataMathingRatios.hbm.xml"/>
   <mapping resource="hibernate/orm_mappings/ColfusionSavedLinks.hbm.xml"/>
   <mapping resource="hibernate/orm_mappings/ColfusionShares.hbm.xml"/>

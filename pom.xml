@@ -154,7 +154,7 @@
 	</dependencyManagement>
 
 	<dependencies>
-
+<!-- Commented before commit 06/10/2014 
 		 <dependency>
 			<groupId>org.openrefine</groupId>
 			<artifactId>openrefine-server</artifactId>
@@ -168,7 +168,7 @@
 			<version>1.0.0</version>
 			
 		</dependency>
-
+ -->
 		<dependency>
 			<groupId>org.glassfish.jersey.containers</groupId>
 			<artifactId>jersey-container-servlet-core</artifactId>
@@ -312,7 +312,7 @@
 			</dependency>
 			-->
 			
-			
+			<!-- Commented 06/10, before commit
 			<dependency>
 				<groupId>org.slf4j</groupId>
 				<artifactId>slf4j-api</artifactId>
@@ -331,7 +331,7 @@
 				<version>1.0</version>
 			</dependency>
 			
-			
+			 -->
 			
 			
 			 <dependency> <groupId>org.json</groupId> 
