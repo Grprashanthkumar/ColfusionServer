@@ -1,6 +1,6 @@
 package edu.pitt.sis.exp.colfusion.persistence.orm;
 
-// Generated 2014-5-12 21:35:22 by Hibernate Tools 3.4.0.CR1
+// Generated 2014-6-10 16:17:59 by Hibernate Tools 3.4.0.CR1
 
 import java.util.HashSet;
 import java.util.Set;
@@ -15,7 +15,7 @@ public class ColfusionProcesses implements java.io.Serializable {
 	private String processSer;
 	private String processClass;
 	private String reasonForStatus;
-	private Set colfusionRelationshipsColumnsDatamathingRatioses = new HashSet(
+	private Set colfusionRelationshipsColumnsDataMathingRatioses = new HashSet(
 			0);
 
 	public ColfusionProcesses() {
@@ -23,12 +23,12 @@ public class ColfusionProcesses implements java.io.Serializable {
 
 	public ColfusionProcesses(String status, String processSer,
 			String processClass, String reasonForStatus,
-			Set colfusionRelationshipsColumnsDatamathingRatioses) {
+			Set colfusionRelationshipsColumnsDataMathingRatioses) {
 		this.status = status;
 		this.processSer = processSer;
 		this.processClass = processClass;
 		this.reasonForStatus = reasonForStatus;
-		this.colfusionRelationshipsColumnsDatamathingRatioses = colfusionRelationshipsColumnsDatamathingRatioses;
+		this.colfusionRelationshipsColumnsDataMathingRatioses = colfusionRelationshipsColumnsDataMathingRatioses;
 	}
 
 	public Integer getPid() {
@@ -71,13 +71,13 @@ public class ColfusionProcesses implements java.io.Serializable {
 		this.reasonForStatus = reasonForStatus;
 	}
 
-	public Set getColfusionRelationshipsColumnsDatamathingRatioses() {
-		return this.colfusionRelationshipsColumnsDatamathingRatioses;
+	public Set getColfusionRelationshipsColumnsDataMathingRatioses() {
+		return this.colfusionRelationshipsColumnsDataMathingRatioses;
 	}
 
-	public void setColfusionRelationshipsColumnsDatamathingRatioses(
-			Set colfusionRelationshipsColumnsDatamathingRatioses) {
-		this.colfusionRelationshipsColumnsDatamathingRatioses = colfusionRelationshipsColumnsDatamathingRatioses;
+	public void setColfusionRelationshipsColumnsDataMathingRatioses(
+			Set colfusionRelationshipsColumnsDataMathingRatioses) {
+		this.colfusionRelationshipsColumnsDataMathingRatioses = colfusionRelationshipsColumnsDataMathingRatioses;
 	}
 
 }

@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
-<!-- Generated 2014-5-12 21:35:22 by Hibernate Tools 3.4.0.CR1 -->
+<!-- Generated 2014-6-10 16:18:00 by Hibernate Tools 3.4.0.CR1 -->
 <hibernate-mapping>
     <class name="edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionDnameinfo" table="colfusion_dnameinfo" catalog="colfusion">
         <id name="cid" type="java.lang.Integer">
@@ -52,6 +52,6 @@
             </key>
             <one-to-many class="edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionDnameinfoMetadataEditHistory" />
         </set>
-        <one-to-one name="colfusionColumntableinfo" class="edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionColumntableinfo"></one-to-one>
+        <one-to-one name="colfusionColumnTableInfo" class="edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionColumnTableInfo"></one-to-one>
     </class>
 </hibernate-mapping>

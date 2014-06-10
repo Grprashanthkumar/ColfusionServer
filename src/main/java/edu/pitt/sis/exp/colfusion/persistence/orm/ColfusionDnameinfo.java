@@ -1,6 +1,6 @@
 package edu.pitt.sis.exp.colfusion.persistence.orm;
 
-// Generated 2014-5-12 21:35:22 by Hibernate Tools 3.4.0.CR1
+// Generated 2014-6-10 16:17:59 by Hibernate Tools 3.4.0.CR1
 
 import java.util.HashSet;
 import java.util.Set;
@@ -22,7 +22,7 @@ public class ColfusionDnameinfo implements java.io.Serializable {
 	private String constantValue;
 	private String missingValue;
 	private Set colfusionDnameinfoMetadataEditHistories = new HashSet(0);
-	private ColfusionColumntableinfo colfusionColumntableinfo;
+	private ColfusionColumnTableInfo colfusionColumnTableInfo;
 
 	public ColfusionDnameinfo() {
 	}
@@ -40,7 +40,7 @@ public class ColfusionDnameinfo implements java.io.Serializable {
 			String dnameValueFormat, String dnameValueDescription,
 			String dnameOriginalName, boolean isConstant, String constantValue,
 			String missingValue, Set colfusionDnameinfoMetadataEditHistories,
-			ColfusionColumntableinfo colfusionColumntableinfo) {
+			ColfusionColumnTableInfo colfusionColumnTableInfo) {
 		this.colfusionSourceinfo = colfusionSourceinfo;
 		this.dnameChosen = dnameChosen;
 		this.dnameValueType = dnameValueType;
@@ -52,7 +52,7 @@ public class ColfusionDnameinfo implements java.io.Serializable {
 		this.constantValue = constantValue;
 		this.missingValue = missingValue;
 		this.colfusionDnameinfoMetadataEditHistories = colfusionDnameinfoMetadataEditHistories;
-		this.colfusionColumntableinfo = colfusionColumntableinfo;
+		this.colfusionColumnTableInfo = colfusionColumnTableInfo;
 	}
 
 	public Integer getCid() {
@@ -152,13 +152,13 @@ public class ColfusionDnameinfo implements java.io.Serializable {
 		this.colfusionDnameinfoMetadataEditHistories = colfusionDnameinfoMetadataEditHistories;
 	}
 
-	public ColfusionColumntableinfo getColfusionColumntableinfo() {
-		return this.colfusionColumntableinfo;
+	public ColfusionColumnTableInfo getColfusionColumnTableInfo() {
+		return this.colfusionColumnTableInfo;
 	}
 
-	public void setColfusionColumntableinfo(
-			ColfusionColumntableinfo colfusionColumntableinfo) {
-		this.colfusionColumntableinfo = colfusionColumntableinfo;
+	public void setColfusionColumnTableInfo(
+			ColfusionColumnTableInfo colfusionColumnTableInfo) {
+		this.colfusionColumnTableInfo = colfusionColumnTableInfo;
 	}
 
 }
