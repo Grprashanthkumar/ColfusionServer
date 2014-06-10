@@ -8,6 +8,7 @@ import org.apache.logging.log4j.Logger;
 
 import edu.pitt.sis.exp.colfusion.persistence.managers.ExecutionInfoManager;
 import edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionSourceinfoDb;
+import edu.pitt.sis.exp.colfusion.viewmodels.StoryTargetDBViewModel;
 
 /**
  * @author Evgeny
@@ -51,4 +52,11 @@ public class DatabaseHandlerFactory {
 				storyDbInfo.getUserName(), storyDbInfo.getPassword(), storyDbInfo.getSourceDatabase(), DatabaseHanderType.fromString(storyDbInfo.getDriver()), 
 				null, -1);
 	}
+	
+	public static DatabaseHandlerBase getDatabaseHandler(final StoryTargetDBViewModel storyDbInfo) throws Exception {
+		return DatabaseHandlerFactory.getDatabaseHandler(storyDbInfo.getServerAddress(), storyDbInfo.getPort(), 
+				storyDbInfo.getUserName(), storyDbInfo.getPassword(), storyDbInfo.getDatabaseName(), DatabaseHanderType.fromString(storyDbInfo.getDriver()), 
+				null, -1);
+	}
+	
 }
