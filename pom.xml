@@ -5,7 +5,7 @@
 
 	<groupId>edu.pitt.sis.exp.colfusion</groupId>
 	<artifactId>ColFusionServer</artifactId>
-	<packaging>pom</packaging>
+	<packaging>war</packaging>
 	<version>1.0-SNAPSHOT</version>
 	<name>ColFusionServer</name>
 
@@ -39,105 +39,7 @@
 				<configuration>
 					<warName>${war.name}</warName>
 				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-antrun-plugin</artifactId>
-				<version>1.7</version>
-				<dependencies>
-					<dependency>
-						<groupId>sun.jdk</groupId>
-						<artifactId>tools</artifactId>
-						<version>1.7</version>
-						<scope>system</scope>
-						<systemPath>C:\Program Files (x86)\Java\jdk1.7.0\lib\tools.jar</systemPath>
-					</dependency>
-				</dependencies>
-				<executions>
-					<execution>
-						<phase>process-resources</phase>
-						<configuration>
-							<target>
-								<echo>Running Ant Build</echo>
-							</target>
-							<target>
-
-								<ant
-									antfile="C:\Users\xxl\Desktop\Projects\OpenRefine\OpenRefine\build.xml"
-									target="jar" inheritAll="false" />
-							</target>
-						</configuration>
-						<goals>
-							<goal>run</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-			
-		<plugin>
-			<groupId>org.apache.maven.plugins</groupId>
-			<artifactId>maven-install-plugin</artifactId>
-			<version>2.3.1</version>
-			<executions>
-				<execution>
-					<id>install-openrefine-server</id>
-					<phase>generate-sources</phase>
-					<goals>
-						<goal>install-file</goal>
-					</goals>
-					<configuration>
-						<groupId>org.openrefine</groupId>
-						<artifactId>openrefine-server</artifactId>
-						<version>1.0.0</version>
-						<packaging>jar</packaging>
-						<file>C:\Users\xxl\Desktop\Projects\OpenRefine\OpenRefine\build\openrefine-trunk-server.jar</file>
-					</configuration>
-				</execution>
-				<execution>
-					<id>install-openrefine</id>
-					<phase>generate-sources</phase>
-					<goals>
-						<goal>install-file</goal>
-					</goals>
-					<configuration>
-						<groupId>org.openrefine</groupId>
-						<artifactId>openrefine</artifactId>
-						<version>1.0.0</version>
-						<packaging>jar</packaging>
-						<file>C:\Users\xxl\Desktop\Projects\OpenRefine\OpenRefine\build\openrefine-trunk.jar</file>
-					</configuration>
-				</execution>
-			</executions>
-			</plugin>
-			
-			
-			
-			<!-- <plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>build-helper-maven-plugin</artifactId>
-				<version>1.8</version>
-				<executions>
-					<execution>
-						<id>add-jar</id>
-						<phase>package</phase>
-						<goals>
-							<goal>attach-artifact</goal>
-						</goals>
-						<configuration>
-							<artifacts>
-								<artifact>
-									<file>C:\Users\xxl\Desktop\Projects\OpenRefine\OpenRefine\build\openrefine-trunk-server.jar</file>
-									<type>jar</type>
-									<classifier>openrefine</classifier>
-								</artifact>
-							</artifacts>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-
- -->
-
+			</plugin>		
 		</plugins>
 	</build>
 
@@ -154,21 +56,7 @@
 	</dependencyManagement>
 
 	<dependencies>
-<!-- Commented before commit 06/10/2014 
-		 <dependency>
-			<groupId>org.openrefine</groupId>
-			<artifactId>openrefine-server</artifactId>
-			<version>1.0.0</version>
-			
-		</dependency>
-		
-		<dependency>
-			<groupId>org.openrefine</groupId>
-			<artifactId>openrefine</artifactId>
-			<version>1.0.0</version>
-			
-		</dependency>
- -->
+
 		<dependency>
 			<groupId>org.glassfish.jersey.containers</groupId>
 			<artifactId>jersey-container-servlet-core</artifactId>
@@ -305,38 +193,6 @@
 			<artifactId>gson</artifactId>
 			<version>2.2.4</version>
 		</dependency>
-		<!--<dependency> 
-				<groupId>org.openRefine</groupId> 
-				<artifactId>openRefine</artifactId> 
-				<version>1.0</version> 
-			</dependency>
-			-->
-			
-			<!-- Commented 06/10, before commit
-			<dependency>
-				<groupId>org.slf4j</groupId>
-				<artifactId>slf4j-api</artifactId>
-				<version>1.5.6</version>
-			</dependency>
-			
-			<dependency>
-				<groupId>org.apache.ant</groupId>
-				<artifactId>ant</artifactId>
-				<version>1.8.2</version>
-			</dependency>
-			
-			<dependency>
-				<groupId>edu.mit.simile</groupId>
-				<artifactId>butterfly</artifactId>
-				<version>1.0</version>
-			</dependency>
-			
-			 -->
-			
-			
-			 <dependency> <groupId>org.json</groupId> 
-			<artifactId>json</artifactId> <version>20140107</version> </dependency> 
-
 	</dependencies>
 
 	<repositories>
