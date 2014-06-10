@@ -14,7 +14,7 @@ import edu.pitt.sis.exp.colfusion.persistence.dao.ColumnTableInfoDAOImpl;
 import edu.pitt.sis.exp.colfusion.persistence.dao.DNameInfoDAOImpl;
 import edu.pitt.sis.exp.colfusion.persistence.dao.DNameInfoMetadataEditHistoryDAO;
 import edu.pitt.sis.exp.colfusion.persistence.dao.DNameInfoMetadataEditHistoryDAOImpl;
-import edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionColumntableinfo;
+import edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionColumnTableInfo;
 import edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionDnameinfo;
 import edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionSourceinfo;
 import edu.pitt.sis.exp.colfusion.viewmodels.DatasetVariableViewModel;
@@ -240,7 +240,7 @@ public class DNameInfoManagerImpl extends GeneralManagerImpl<ColfusionDnameinfo,
 		try {
             HibernateUtil.beginTransaction();
             
-            ColfusionColumntableinfo columnTableInfo = new ColfusionColumntableinfo(column, tableName);
+            ColfusionColumnTableInfo columnTableInfo = new ColfusionColumnTableInfo(column, tableName);
             
             ColumnTableInfoDAO columnTableInfoDAO = new ColumnTableInfoDAOImpl();
             
