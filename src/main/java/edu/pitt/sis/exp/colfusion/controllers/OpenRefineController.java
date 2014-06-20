@@ -30,7 +30,7 @@ public class OpenRefineController  extends BaseController {
 
 	@OPTIONS
     @Path("createNewProject/{sid}/{tableName}")
-    public Response createNewProject(@HeaderParam("Access-Control-Request-Headers") String requestH) {
+    public Response createNewProject(@HeaderParam("Access-Control-Request-Headers") final String requestH) {
 		return makeCORS(Response.ok()); //, requestH);
     }
 	
@@ -38,7 +38,7 @@ public class OpenRefineController  extends BaseController {
 	@Path("createNewProject/{sid}/{tableName}")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response newStoryMetadata(@PathParam("sid") int sid, @PathParam("tableName") String tableName) throws ClassNotFoundException, Exception {
+    public Response newStoryMetadata(@PathParam("sid") final int sid, @PathParam("tableName") final String tableName) throws ClassNotFoundException, Exception {
 
 		CreateProject createProject = new CreateProject();
 		GeneralResponseGen<String> result = createProject.testCreateProject(sid, tableName);
@@ -48,19 +48,19 @@ public class OpenRefineController  extends BaseController {
 	
 	
 	@OPTIONS
-    @Path("saveChanges/{openRefinProjectId}")
-    public Response saveChangesOptions(@HeaderParam("Access-Control-Request-Headers") String requestH) {
+    @Path("saveChanges/{openRefinProjectId}/{colfusionUserId}")
+    public Response saveChangesOptions(@HeaderParam("Access-Control-Request-Headers") final String requestH) {
 		return makeCORS(Response.ok()); //, requestH);
     }
 	
 
-	@Path("saveChanges/{openRefinProjectId}")
+	@Path("saveChanges/{openRefinProjectId}/{colfusionUserId}")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response saveChanges(@PathParam("openRefinProjectId") String openRefinProjectId) throws ClassNotFoundException, Exception {
+    public Response saveChanges(@PathParam("openRefinProjectId") final String openRefinProjectId, @PathParam("colfusionUserId") final String colfusionUserId) throws ClassNotFoundException, Exception {
 
 		OpenRefineSaveChanges openRefineSaveChanges = new OpenRefineSaveChanges();
-		GeneralResponseGen<String> result = openRefineSaveChanges.saveChanges(openRefinProjectId);
+		GeneralResponseGen<String> result = openRefineSaveChanges.saveChanges(openRefinProjectId, colfusionUserId);
 		
     	return makeCORS(Response.status(200).entity(result)); //.build();
     }

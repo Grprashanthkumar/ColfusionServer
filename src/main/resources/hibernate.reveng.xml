@@ -7,7 +7,7 @@
   <table-filter match-catalog="colfusion" match-name="colfusion_canvases"/>
   <table-filter match-catalog="colfusion" match-name="colfusion_categories"/>
   <table-filter match-catalog="colfusion" match-name="colfusion_charts"/>
-  <table-filter match-catalog="colfusion" match-name="colfusion_columntableinfo"/>
+  <table-filter match-catalog="colfusion" match-name="colfusion_columnTableInfo"/>
   <table-filter match-catalog="colfusion" match-name="colfusion_comments"/>
   <table-filter match-catalog="colfusion" match-name="colfusion_config"/>
   <table-filter match-catalog="colfusion" match-name="colfusion_des_attachments"/>
@@ -38,12 +38,12 @@
   <table-filter match-catalog="colfusion" match-name="colfusion_redirects"/>
   <table-filter match-catalog="colfusion" match-name="colfusion_relationships"/>
   <table-filter match-catalog="colfusion" match-name="colfusion_relationships_columns"/>
-  <table-filter match-catalog="colfusion" match-name="colfusion_relationships_columns_cachingexecutioninfo"/>
-  <table-filter match-catalog="colfusion" match-name="colfusion_relationships_columns_datamathing_ratios"/>
+  <table-filter match-catalog="colfusion" match-name="colfusion_relationships_columns_cachingExecutionInfo"/>
+  <table-filter match-catalog="colfusion" match-name="colfusion_relationships_columns_dataMathing_ratios"/>
   <table-filter match-catalog="colfusion" match-name="colfusion_saved_links"/>
   <table-filter match-catalog="colfusion" match-name="colfusion_shares"/>
   <table-filter match-catalog="colfusion" match-name="colfusion_sourceinfo"/>
-  <table-filter match-catalog="colfusion" match-name="colfusion_sourceinfo_db"/>
+  <table-filter match-catalog="colfusion" match-name="colfusion_sourceinfo_DB"/>
   <table-filter match-catalog="colfusion" match-name="colfusion_sourceinfo_metadata_edit_history"/>
   <table-filter match-catalog="colfusion" match-name="colfusion_sourceinfo_table_ktr"/>
   <table-filter match-catalog="colfusion" match-name="colfusion_sourceinfo_user"/>
