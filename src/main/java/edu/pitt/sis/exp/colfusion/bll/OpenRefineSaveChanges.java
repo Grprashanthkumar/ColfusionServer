@@ -31,7 +31,7 @@ final Logger logger = LogManager.getLogger(OpenRefineSaveChanges.class.getName()
 	public GeneralResponseGen<String> saveChanges(final String projectId, final String colfusionUserId) throws SQLException, ClassNotFoundException, IOException {
 		
 		Properties p = new Properties();
-        String fileName="/ColFusionOpenRefine.properties";
+        String fileName="/config.properties";
         InputStream in = OpenRefineSaveChanges.class.getResourceAsStream(fileName);
         p.load(in);  
         in.close();

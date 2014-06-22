@@ -52,7 +52,7 @@ public class TargetDatabaseHandlerFactory {
     
     static {
     	Properties p = new Properties();
-        String fileName="/ColFusionOpenRefine.properties";
+        String fileName="/config.properties";
         InputStream in = TargetDatabaseHandlerFactory.class.getResourceAsStream(fileName);
         try {
 			p.load(in);
