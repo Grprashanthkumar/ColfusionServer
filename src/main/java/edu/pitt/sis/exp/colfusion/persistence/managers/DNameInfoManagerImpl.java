@@ -3,10 +3,13 @@
  */
 package edu.pitt.sis.exp.colfusion.persistence.managers;
 
+import java.util.List;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.hibernate.HibernateException;
 import org.hibernate.NonUniqueResultException;
+import org.hibernate.Query;
 
 import edu.pitt.sis.exp.colfusion.persistence.HibernateUtil;
 import edu.pitt.sis.exp.colfusion.persistence.dao.ColumnTableInfoDAO;
@@ -14,6 +17,8 @@ import edu.pitt.sis.exp.colfusion.persistence.dao.ColumnTableInfoDAOImpl;
 import edu.pitt.sis.exp.colfusion.persistence.dao.DNameInfoDAOImpl;
 import edu.pitt.sis.exp.colfusion.persistence.dao.DNameInfoMetadataEditHistoryDAO;
 import edu.pitt.sis.exp.colfusion.persistence.dao.DNameInfoMetadataEditHistoryDAOImpl;
+import edu.pitt.sis.exp.colfusion.persistence.dao.SourceInfoDAO;
+import edu.pitt.sis.exp.colfusion.persistence.dao.SourceInfoDAOImpl;
 import edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionColumnTableInfo;
 import edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionDnameinfo;
 import edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionSourceinfo;
@@ -38,7 +43,7 @@ public class DNameInfoManagerImpl extends GeneralManagerImpl<ColfusionDnameinfo,
 	    
 	    private String value;
 
-	    private VariableMetadataHistoryItem(String value) {
+	    private VariableMetadataHistoryItem(final String value) {
 	            this.value = value;
 	    }
 	    
@@ -46,11 +51,13 @@ public class DNameInfoManagerImpl extends GeneralManagerImpl<ColfusionDnameinfo,
 	    	return this.value;
 	    }
 	    
-	    static public boolean isMember(String enumValueToTest) {
+	    static public boolean isMember(final String enumValueToTest) {
 	    	VariableMetadataHistoryItem[] enumValues = VariableMetadataHistoryItem.values();
-	        for (VariableMetadataHistoryItem enumValue : enumValues)
-	            if (enumValue.value.equals(enumValueToTest))
-	                return true;
+	        for (VariableMetadataHistoryItem enumValue : enumValues) {
+				if (enumValue.value.equals(enumValueToTest)) {
+					return true;
+				}
+			}
 	        return false;
 	    }
 	};
@@ -62,7 +69,7 @@ public class DNameInfoManagerImpl extends GeneralManagerImpl<ColfusionDnameinfo,
 	
 	@Override
 	//TODO: maybe all should happen in one transaction, righ now each variable is written in its own transaction
-	public void createOrUpdateSheetMetadata(WorksheetViewModel worksheet, String tableNamePrefix, int sid, int userId) throws Exception {
+	public void createOrUpdateSheetMetadata(final WorksheetViewModel worksheet, final String tableNamePrefix, final int sid, final int userId) throws Exception {
 		for (DatasetVariableViewModel variable : worksheet.getVariables()) {
 			
 			if (!variable.isChecked()) { // if user didn't select the variable then we don't need to save it, at last for now.
@@ -76,26 +83,26 @@ public class DNameInfoManagerImpl extends GeneralManagerImpl<ColfusionDnameinfo,
 				if (variableMeta == null) {
 					//could not find the variable in the db, should we try to create it?
 					
-					ColfusionDnameinfo addedColumn = addVariable(variable, sid);
-					addOrUpdateTableNameRecordForNewVariable(addedColumn, tableNamePrefix + worksheet.getSheetName());
+					ColfusionDnameinfo addedColumn = this.addVariable(variable, sid);
+					this.addOrUpdateTableNameRecordForNewVariable(addedColumn, tableNamePrefix + worksheet.getSheetName());
 				}
 				else {
 					//perform the update here and record the history
 					
-					ColfusionDnameinfo updatedColumn = updateVariable(variable, sid, userId);
-					addOrUpdateTableNameRecordForNewVariable(updatedColumn, tableNamePrefix + worksheet.getSheetName());
+					ColfusionDnameinfo updatedColumn = this.updateVariable(variable, sid, userId);
+					this.addOrUpdateTableNameRecordForNewVariable(updatedColumn, tableNamePrefix + worksheet.getSheetName());
 				}
 			}
 			else if (variable.getCid() == 0) {
 				//variable has not been saved to the db yet, need to save
 				
-				ColfusionDnameinfo addedColumn = addVariable(variable, sid);
-				addOrUpdateTableNameRecordForNewVariable(addedColumn, tableNamePrefix + worksheet.getSheetName());
+				ColfusionDnameinfo addedColumn = this.addVariable(variable, sid);
+				this.addOrUpdateTableNameRecordForNewVariable(addedColumn, tableNamePrefix + worksheet.getSheetName());
 			}
 			else {
 				//TODO: implement, throw an error, cid cannot be less than 0.
 				
-				logger.error(String.format("createOrUpdateSheetMetadata fialed because the cid is less than 0 - %d", variable.getCid()));
+				this.logger.error(String.format("createOrUpdateSheetMetadata fialed because the cid is less than 0 - %d", variable.getCid()));
 				
 				throw new Exception("createOrUpdateSheetMetadata fialed because the cid is less than 0.");
 			}
@@ -110,28 +117,28 @@ public class DNameInfoManagerImpl extends GeneralManagerImpl<ColfusionDnameinfo,
 	 * @return
 	 * @throws Exception
 	 */
-	private ColfusionDnameinfo updateVariable(DatasetVariableViewModel variable, int sid, int userId) throws Exception {
+	private ColfusionDnameinfo updateVariable(final DatasetVariableViewModel variable, final int sid, final int userId) throws Exception {
 		
-		ColfusionDnameinfo variableMeta = createVariableFromViewModel(variable, sid);
+		ColfusionDnameinfo variableMeta = this.createVariableFromViewModel(variable, sid);
 		variableMeta.setCid(variable.getCid());
 		
 		try {
             HibernateUtil.beginTransaction();
             
-            handleHistoryEdits(variableMeta, userId);
-            variableMeta = _dao.merge(variableMeta);
+            this.handleHistoryEdits(variableMeta, userId);
+            variableMeta = this._dao.merge(variableMeta);
             
             HibernateUtil.commitTransaction();
         } catch (NonUniqueResultException ex) {
         	
         	HibernateUtil.rollbackTransaction();
             
-        	logger.error("findByID failed NonUniqueResultException", ex);
+        	this.logger.error("findByID failed NonUniqueResultException", ex);
         } catch (HibernateException ex) {
         	
         	HibernateUtil.rollbackTransaction();
         	
-        	logger.error("findByID failed HibernateException", ex);
+        	this.logger.error("findByID failed HibernateException", ex);
         }
 		 
         return variableMeta;
@@ -146,10 +153,10 @@ public class DNameInfoManagerImpl extends GeneralManagerImpl<ColfusionDnameinfo,
 	 * @throws Exception 
 	 */
 	//TODO: add reason
-	private void handleHistoryEdits(ColfusionDnameinfo newVariable, int userId) throws Exception {
+	private void handleHistoryEdits(final ColfusionDnameinfo newVariable, final int userId) throws Exception {
 		DNameInfoMetadataEditHistoryDAO editHistorDAO = new DNameInfoMetadataEditHistoryDAOImpl();
 		
-		ColfusionDnameinfo oldVariable = _dao.findByID(ColfusionDnameinfo.class, newVariable.getCid());
+		ColfusionDnameinfo oldVariable = this._dao.findByID(ColfusionDnameinfo.class, newVariable.getCid());
 		
 		try {
 			String oldValue = (oldVariable == null) ? null : oldVariable.getDnameChosen();
@@ -178,7 +185,7 @@ public class DNameInfoManagerImpl extends GeneralManagerImpl<ColfusionDnameinfo,
 			editHistorDAO.saveHistoryIfChanged(newVariable.getCid(), userId, oldValue, newVariable.getConstantValue(), VariableMetadataHistoryItem.CONSTANT_VALUE,  "");
 		
 		} catch (Exception e) {
-			logger.error(String.format("handleHistoryEdits failed due to one of many saveHistoryIfChanged calls for userId = %d", userId), e);
+			this.logger.error(String.format("handleHistoryEdits failed due to one of many saveHistoryIfChanged calls for userId = %d", userId), e);
 			
 			throw e;
 		}
@@ -192,24 +199,24 @@ public class DNameInfoManagerImpl extends GeneralManagerImpl<ColfusionDnameinfo,
 	 * @return added columns as {@link ColfusionDnameinfo} object which is the id of created/inserted variable in the database.
 	 * @throws Exception if they story for which new variable is added cannot be found in the database, then the exception is thrown.
 	 */
-	private ColfusionDnameinfo addVariable(DatasetVariableViewModel variable, int sid) throws Exception {
+	private ColfusionDnameinfo addVariable(final DatasetVariableViewModel variable, final int sid) throws Exception {
 		
-		ColfusionDnameinfo variableMeta = createVariableFromViewModel(variable, sid);
+		ColfusionDnameinfo variableMeta = this.createVariableFromViewModel(variable, sid);
 		
 		//TODO:make sure cid is updated for the object)
-		save(variableMeta);
+		this.save(variableMeta);
 		
 		return variableMeta;
 	}
 
-	private ColfusionDnameinfo createVariableFromViewModel(DatasetVariableViewModel variable, int sid) throws Exception {
+	private ColfusionDnameinfo createVariableFromViewModel(final DatasetVariableViewModel variable, final int sid) throws Exception {
 		//TODO: test maybe we don't need to search for the story, we can just create transparent object that might be enough
 		SourceInfoManager sourceInfoMgr = new SourceInfoManagerImpl();
 		
 		ColfusionSourceinfo story = sourceInfoMgr.findByID(sid);
 		
 		if (story == null) {
-			logger.error(String.format("addVariable fialed because the story with %d sid could be found", sid));
+			this.logger.error(String.format("addVariable fialed because the story with %d sid could be found", sid));
 			
 			throw new Exception("Could not find a story for which to create a variable");
 		}
@@ -235,7 +242,7 @@ public class DNameInfoManagerImpl extends GeneralManagerImpl<ColfusionDnameinfo,
 	 * @param column {@link ColfusionDnameinfo} for which to add/update record about parent table.
 	 * @param tableName new/updated table name.
 	 */
-	private void addOrUpdateTableNameRecordForNewVariable(ColfusionDnameinfo column, String tableName) {
+	private void addOrUpdateTableNameRecordForNewVariable(final ColfusionDnameinfo column, final String tableName) {
 		
 		try {
             HibernateUtil.beginTransaction();
@@ -251,12 +258,47 @@ public class DNameInfoManagerImpl extends GeneralManagerImpl<ColfusionDnameinfo,
         	
         	HibernateUtil.rollbackTransaction();
             
-        	logger.error("findByID failed NonUniqueResultException", ex);
+        	this.logger.error("findByID failed NonUniqueResultException", ex);
         } catch (HibernateException ex) {
         	
         	HibernateUtil.rollbackTransaction();
         	
-        	logger.error("findByID failed HibernateException", ex);
+        	this.logger.error("findByID failed HibernateException", ex);
         }
+	}
+
+	@Override
+	public List<ColfusionDnameinfo> getColumnsMetadata(final int sid, final String tableName) {
+		try {
+            HibernateUtil.beginTransaction();
+                   
+            SourceInfoDAO storyDAO = new SourceInfoDAOImpl();
+            ColfusionSourceinfo story = storyDAO.findByID(ColfusionSourceinfo.class, sid);
+            
+            Query query = HibernateUtil.getSession().createQuery("SELECT di FROM ColfusionDnameinfo di join di.colfusionColumnTableInfo where di.colfusionSourceinfo =:sid AND "
+            		+ "di.colfusionColumnTableInfo.tableName = :tableName");
+            
+            query.setParameter("sid", story);
+            query.setParameter("tableName", tableName);
+            
+            List<ColfusionDnameinfo> columnsMetadata = this._dao.findMany(query);
+                        
+            HibernateUtil.commitTransaction();
+            
+            return columnsMetadata;
+		
+        } catch (NonUniqueResultException ex) {
+
+        	HibernateUtil.rollbackTransaction();
+        	
+        	this.logger.error("getColumnsMetadata failed NonUniqueResultException", ex);
+            throw ex;
+        } catch (HibernateException ex) {
+
+        	HibernateUtil.rollbackTransaction();
+        	
+        	this.logger.error("getColumnsMetadata failed HibernateException", ex);
+        	throw ex;
+        }	
 	}
 }

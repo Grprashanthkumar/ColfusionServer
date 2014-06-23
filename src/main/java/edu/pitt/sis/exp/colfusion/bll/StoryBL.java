@@ -5,24 +5,30 @@ package edu.pitt.sis.exp.colfusion.bll;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import edu.pitt.sis.exp.colfusion.importers.utils.DataSourceTypes;
+import edu.pitt.sis.exp.colfusion.persistence.managers.DNameInfoManager;
+import edu.pitt.sis.exp.colfusion.persistence.managers.DNameInfoManagerImpl;
 import edu.pitt.sis.exp.colfusion.persistence.managers.LinksManager;
 import edu.pitt.sis.exp.colfusion.persistence.managers.LinksManagerImpl;
 import edu.pitt.sis.exp.colfusion.persistence.managers.SourceInfoManager;
 import edu.pitt.sis.exp.colfusion.persistence.managers.SourceInfoManagerImpl;
 import edu.pitt.sis.exp.colfusion.persistence.managers.SourceInfoManagerImpl.HistoryItem;
+import edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionDnameinfo;
 import edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionLinks;
 import edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionSourceinfo;
 import edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionUserroles;
 import edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionUsers;
+import edu.pitt.sis.exp.colfusion.responseModels.ColumnMetadataResponse;
 import edu.pitt.sis.exp.colfusion.responseModels.StoryMetadataHistoryResponse;
 import edu.pitt.sis.exp.colfusion.responseModels.StoryMetadataResponse;
 import edu.pitt.sis.exp.colfusion.utils.MappingUtils;
+import edu.pitt.sis.exp.colfusion.viewmodels.DatasetVariableViewModel;
 import edu.pitt.sis.exp.colfusion.viewmodels.StoryAuthorViewModel;
 import edu.pitt.sis.exp.colfusion.viewmodels.StoryMetadataHistoryViewModel;
 import edu.pitt.sis.exp.colfusion.viewmodels.StoryMetadataViewModel;
@@ -40,7 +46,7 @@ public class StoryBL {
 	 * Creates empty story.
 	 * @return story metadata almost empty but with auto generated sid.
 	 */
-	public StoryMetadataResponse createStory(int userId) {
+	public StoryMetadataResponse createStory(final int userId) {
 		StoryMetadataResponse result = new StoryMetadataResponse();
 		
 		try {
@@ -58,12 +64,12 @@ public class StoryBL {
 			storyMetadata.setStatus(newStory.getStatus());
 			
 			Map<Integer, ColfusionUserroles> userRoles = storyMgr.getUsersInRolesForStory(newStory);
-			storyMetadata.setStorySubmitter(makeStorySubmitterViewModel(newStory, newStory.getColfusionUsers(), userRoles));
+			storyMetadata.setStorySubmitter(this.makeStorySubmitterViewModel(newStory, newStory.getColfusionUsers(), userRoles));
 			
 			ArrayList<StoryAuthorViewModel> authors = new ArrayList<StoryAuthorViewModel>();
 			ArrayList<ColfusionUsers> users = (ArrayList<ColfusionUsers>) storyMgr.findStoryAuthors(newStory);
 			for (ColfusionUsers author : users) {
-				authors.add(makeStorySubmitterViewModel(newStory, author, userRoles));
+				authors.add(this.makeStorySubmitterViewModel(newStory, author, userRoles));
 			}
 			
 			storyMetadata.setStoryAuthors(authors);
@@ -72,7 +78,7 @@ public class StoryBL {
 			result.message = "OK";
 			result.setPayload(storyMetadata);
 		} catch (Exception e) {
-			logger.error("createStory failed", e);
+			this.logger.error("createStory failed", e);
 			result.isSuccessful = false;
 			result.message = "Could not create new story. Try again later please";
 		}
@@ -87,7 +93,7 @@ public class StoryBL {
 	 * @param userRoles 
 	 * @return {@link StoryAuthorViewModel} model which has user/author information for given story.
 	 */
-	private StoryAuthorViewModel makeStorySubmitterViewModel(ColfusionSourceinfo story, ColfusionUsers user, Map<Integer, ColfusionUserroles> userRoles) {
+	private StoryAuthorViewModel makeStorySubmitterViewModel(final ColfusionSourceinfo story, final ColfusionUsers user, final Map<Integer, ColfusionUserroles> userRoles) {
 		
 		StoryAuthorViewModel result = MappingUtils.getInstance().mapColfusionUserToStoryAuthorViewModel(user);
 		
@@ -106,7 +112,7 @@ public class StoryBL {
 	 * @param sid of the story of which metadata will be returned.
 	 * @return the 
 	 */
-	public StoryMetadataResponse getStoryMetadata(int sid) {
+	public StoryMetadataResponse getStoryMetadata(final int sid) {
 		StoryMetadataResponse result = new StoryMetadataResponse();
 		
 		//Get Story info
@@ -128,12 +134,12 @@ public class StoryBL {
 			//Getting user's role in the story and put in the view model with role details: role name, description and role id.
 			Map<Integer, ColfusionUserroles> userRoles = storyMgr.getUsersInRolesForStory(storyInfo);
 			
-			storyMetadata.setStorySubmitter(makeStorySubmitterViewModel(storyInfo, storyInfo.getColfusionUsers(), userRoles));
+			storyMetadata.setStorySubmitter(this.makeStorySubmitterViewModel(storyInfo, storyInfo.getColfusionUsers(), userRoles));
 			
 			ArrayList<StoryAuthorViewModel> authors = new ArrayList<StoryAuthorViewModel>();
 			ArrayList<ColfusionUsers> users = (ArrayList<ColfusionUsers>) storyMgr.findStoryAuthors(storyInfo);
 			for (ColfusionUsers author : users) {
-				authors.add(makeStorySubmitterViewModel(storyInfo, author, userRoles));
+				authors.add(this.makeStorySubmitterViewModel(storyInfo, author, userRoles));
 			}
 			
 			storyMetadata.setStoryAuthors(authors);
@@ -147,7 +153,7 @@ public class StoryBL {
 				result.message = "No story found with sid:  " + sid;
 				result.setPayload(null);
 				
-				logger.error(String.format("Failed to findById for sid = %d", sid), e);
+				this.logger.error(String.format("Failed to findById for sid = %d", sid), e);
 				
 				return result;
 			} 
@@ -179,7 +185,7 @@ public class StoryBL {
 	 * @param metadata information to be updated.
 	 * @return response with information if the update was successful or not.
 	 */
-	public StoryMetadataResponse updateStoryMetadata(StoryMetadataViewModel metadata) {
+	public StoryMetadataResponse updateStoryMetadata(final StoryMetadataViewModel metadata) {
 		StoryMetadataResponse result = new StoryMetadataResponse();
 		
 		try {
@@ -191,7 +197,7 @@ public class StoryBL {
 			result.isSuccessful = true;
 			result.message = "OK";
 		} catch (Exception e) {
-			logger.error("updateStoryMetadata failed", e);
+			this.logger.error("updateStoryMetadata failed", e);
 			result.isSuccessful = false;
 			result.message = "Could not update story. Please try again later.";
 		}
@@ -199,7 +205,7 @@ public class StoryBL {
 		return result;
 	}
 
-	public StoryMetadataHistoryResponse getStoryMetadataHistory(int sid, String historyItem) {
+	public StoryMetadataHistoryResponse getStoryMetadataHistory(final int sid, final String historyItem) {
 		StoryMetadataHistoryResponse result = new StoryMetadataHistoryResponse();
 		
 		try {
@@ -210,7 +216,7 @@ public class StoryBL {
 			if (!HistoryItem.isMember(historyItem)) {
 				result.isSuccessful = false;
 				result.message = "The history item is not valid";	
-				logger.info(String.format("getStoryMetadataHistory provided history item %s is not valid for story %d", historyItem, sid));
+				this.logger.info(String.format("getStoryMetadataHistory provided history item %s is not valid for story %d", historyItem, sid));
 			}
 			else {
 			
@@ -221,11 +227,37 @@ public class StoryBL {
 				result.message = "OK";
 			}
 		} catch (Exception e) {
-			logger.error(String.format("getStoryMetadataHistory failed for %d sid and %s history item", sid, historyItem), e);
+			this.logger.error(String.format("getStoryMetadataHistory failed for %d sid and %s history item", sid, historyItem), e);
 			result.isSuccessful = false;
 			result.message = "Could not fetch history for the story. Please try again later.";
 		}
 		
+		return result;
+	}
+	public ColumnMetadataResponse getColumnMetaData(final int sid, final String tableName) {
+		ColumnMetadataResponse result = new ColumnMetadataResponse();
+		try{
+			
+			DNameInfoManager columnManager = new DNameInfoManagerImpl();
+			List<ColfusionDnameinfo> columnsMetadataFromDB = columnManager.getColumnsMetadata(sid, tableName);
+			
+			for (ColfusionDnameinfo colfusionDnameinfo : columnsMetadataFromDB) {
+				result.getPayload().add(new DatasetVariableViewModel(colfusionDnameinfo.getCid(), 
+						colfusionDnameinfo.getDnameOriginalName(), 
+						colfusionDnameinfo.getDnameChosen(),
+						colfusionDnameinfo.getDnameValueDescription(), 
+						colfusionDnameinfo.getDnameValueUnit(), 
+						colfusionDnameinfo.getDnameValueType(), 
+						colfusionDnameinfo.getDnameValueFormat(), 
+						colfusionDnameinfo.getMissingValue(), false));
+			}
+			
+			result.isSuccessful = true;
+			result.message = "OK";	
+		}catch (Exception e){
+			result.isSuccessful = false;
+			result.message = "Could not fetch column metadata for the table. Please try again later.";
+		}
 		return result;
 	}
 }

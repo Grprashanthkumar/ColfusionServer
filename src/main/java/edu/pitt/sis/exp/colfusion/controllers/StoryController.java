@@ -18,6 +18,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import edu.pitt.sis.exp.colfusion.bll.StoryBL;
+import edu.pitt.sis.exp.colfusion.responseModels.ColumnMetadataResponse;
 import edu.pitt.sis.exp.colfusion.responseModels.StoryMetadataHistoryResponse;
 import edu.pitt.sis.exp.colfusion.responseModels.StoryMetadataResponse;
 import edu.pitt.sis.exp.colfusion.viewmodels.StoryMetadataViewModel;
@@ -126,4 +127,25 @@ public class StoryController extends BaseController {
     	
     	return makeCORS(Response.status(200).entity(result)); //.build();
     }
+	
+	@OPTIONS
+    @Path("{sid}/{tableName}/metadata/columns")
+    public Response getColumnMetadata(@HeaderParam("Access-Control-Request-Headers") String requestH) {
+		return makeCORS(Response.ok()); //, requestH);
+    }
+	
+	@Path("{sid}/{tableName}/metadata/columns")
+	@GET
+	@Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+	public Response getColumnMetadata(@PathParam("sid") int sid, @PathParam("tableName") String tableName){
+		 StoryBL storyBL= new StoryBL();
+		 
+		 ColumnMetadataResponse result= storyBL.getColumnMetaData(sid, tableName);
+		
+		 return makeCORS(Response.status(200).entity(result));
+	}
+	
+	
+	
 }

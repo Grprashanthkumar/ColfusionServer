@@ -3,6 +3,8 @@
  */
 package edu.pitt.sis.exp.colfusion.persistence.managers;
 
+import java.util.List;
+
 import edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionDnameinfo;
 import edu.pitt.sis.exp.colfusion.viewmodels.WorksheetViewModel;
 
@@ -20,4 +22,12 @@ public interface DNameInfoManager extends GeneralManager<ColfusionDnameinfo, Int
 	 */
 	void createOrUpdateSheetMetadata(WorksheetViewModel worksheet, String tableNamePrefix, int sid, int userId)  throws Exception;
 
+	//TODO: wrintt a comment
+	/**
+	 * 
+	 * @param sid
+	 * @param tableName
+	 * @return
+	 */
+	List<ColfusionDnameinfo> getColumnsMetadata(int sid, String tableName);
 }
