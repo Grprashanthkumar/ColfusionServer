@@ -80,7 +80,7 @@ public class StoryBL {
 			result.message = "OK";
 			result.setPayload(storyMetadata);
 			
-			logger.info(String.format("Successfully created new story by user with id %d", userId));
+			logger.info(String.format("Successfully created new story by user with id %d. New Story Id is %d", userId, newStory.getSid()));
 		} catch (Exception e) {
 			this.logger.error("createStory failed", e);
 			result.isSuccessful = false;
