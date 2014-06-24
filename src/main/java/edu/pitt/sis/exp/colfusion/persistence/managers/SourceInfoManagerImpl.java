@@ -4,6 +4,7 @@
 package edu.pitt.sis.exp.colfusion.persistence.managers;
 
 import java.math.BigDecimal;
+import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -16,6 +17,7 @@ import org.hibernate.Hibernate;
 import org.hibernate.HibernateException;
 import org.hibernate.NonUniqueResultException;
 import org.hibernate.Query;
+import org.hibernate.internal.SessionFactoryImpl;
 
 import edu.pitt.sis.exp.colfusion.importers.utils.DataSourceTypes;
 import edu.pitt.sis.exp.colfusion.importers.utils.StoryStatusTypes;
@@ -237,6 +239,16 @@ public class SourceInfoManagerImpl extends GeneralManagerImpl<ColfusionSourceinf
 	@Override
 	public ColfusionSourceinfo newStory(final int userId, final Date date, final DataSourceTypes source_type) throws Exception {
 		try {
+			logger.info(String.format("Creating new story by user with id %d. Date: %s, source type:%s", userId, date.toString(), source_type.getValue()));
+			
+			
+			Connection connection = ((SessionFactoryImpl) HibernateUtil.getSession().getSessionFactory()).getJdbcServices().getConnectionProvider().getConnection();
+			String dbURL = connection.getMetaData().getURL();
+			
+			logger.info(String.format("Creating new story by user with id %d. Date: %s, source type:%s. Database Connection String is %s", userId, date.toString(), source_type.getValue(), dbURL));
+			
+			connection.close();
+			
             HibernateUtil.beginTransaction();
             
             UsersDAO usersDAO = new UsersDAOImpl();

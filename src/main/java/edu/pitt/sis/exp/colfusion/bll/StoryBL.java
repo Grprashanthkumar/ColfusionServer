@@ -50,6 +50,8 @@ public class StoryBL {
 		StoryMetadataResponse result = new StoryMetadataResponse();
 		
 		try {
+			logger.info(String.format("Creating new story by user with id %d", userId));
+			
 			SourceInfoManager storyMgr = new SourceInfoManagerImpl();
 			
 			ColfusionSourceinfo newStory = storyMgr.newStory(userId, new Date(), DataSourceTypes.DATA_FILE);
@@ -77,6 +79,8 @@ public class StoryBL {
 			result.isSuccessful = true;
 			result.message = "OK";
 			result.setPayload(storyMetadata);
+			
+			logger.info(String.format("Successfully created new story by user with id %d", userId));
 		} catch (Exception e) {
 			this.logger.error("createStory failed", e);
 			result.isSuccessful = false;
