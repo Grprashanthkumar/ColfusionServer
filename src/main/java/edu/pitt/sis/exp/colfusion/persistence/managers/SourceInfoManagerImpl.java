@@ -244,6 +244,7 @@ public class SourceInfoManagerImpl extends GeneralManagerImpl<ColfusionSourceinf
 			
 			Connection connection = ((SessionFactoryImpl) HibernateUtil.getSession().getSessionFactory()).getJdbcServices().getConnectionProvider().getConnection();
 			String dbURL = connection.getMetaData().getURL();
+			String dbUserName = connection.getMetaData().getUserName();
 			
 			logger.info(String.format("Creating new story by user with id %d. Date: %s, source type:%s. Database Connection String is %s", userId, date.toString(), source_type.getValue(), dbURL));
 			
