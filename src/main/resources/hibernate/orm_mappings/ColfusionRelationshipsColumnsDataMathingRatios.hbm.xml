@@ -4,7 +4,7 @@
 <!-- Generated 2014-6-10 16:18:00 by Hibernate Tools 3.4.0.CR1 -->
 <hibernate-mapping>
     <class name="edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionRelationshipsColumnsDataMathingRatios" table="colfusion_relationships_columns_dataMathing_ratios"
-    catalog="colfusion2.0">
+    catalog="colfusion2_0">
         <composite-id name="id" class="edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionRelationshipsColumnsDataMathingRatiosId">
             <key-property name="clFrom" type="string">
                 <column name="cl_from" />
