@@ -3,8 +3,11 @@
  */
 package edu.pitt.sis.exp.colfusion.similarityJoins;
 
+import java.util.List;
+
 import edu.pitt.sis.exp.colfusion.dataModels.tableDataModel.Row;
 import edu.pitt.sis.exp.colfusion.dataModels.tableDataModel.Table;
+import edu.pitt.sis.exp.colfusion.relationships.transformation.RelationshipLink;
 import edu.pitt.sis.exp.colfusion.relationships.transformation.RelationshipTransformation;
 import edu.pitt.sis.exp.colfusion.similarityMeasures.FilterBase;
 import edu.pitt.sis.exp.colfusion.similarityMeasures.SimilarityDistanceMeasure;
@@ -55,6 +58,12 @@ public class NestedLoopSimilarityJoin extends SimilarityJoinBase {
 		result.addAll(rowTable2);
 		
 		return result;
+	}
+
+
+	public Table join(final Table allTuplesFrom, final Table allTuplesTo,
+			final List<RelationshipLink> links, final double similarityThreshold) {
+		throw new RuntimeException("Not implemented yet");
 	}
 
 }

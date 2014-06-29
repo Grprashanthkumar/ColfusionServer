@@ -2,7 +2,13 @@ package edu.pitt.sis.exp.colfusion.dataModels.tableDataModel;
 
 import java.util.ArrayList;
 
-public class Table extends ArrayList<Row> {
+import javax.xml.bind.annotation.XmlRootElement;
+
+import edu.pitt.sis.exp.colfusion.utils.Gsonazable;
+import edu.pitt.sis.exp.colfusion.utils.Gsonizer;
+
+@XmlRootElement
+public class Table extends ArrayList<Row> implements Gsonazable{
 	
 	/**
 	 * 
@@ -11,6 +17,17 @@ public class Table extends ArrayList<Row> {
 		
 	public Table() {
 		super();
+	}
+
+	@Override
+	public String toJson() {
+		return Gsonizer.toJson(this, false);
+	}
+
+	@Override
+	public void fromJson() {
+		// TODO Auto-generated method stub
+		
 	}
 	
 	@Override

@@ -5,9 +5,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import edu.pitt.sis.exp.colfusion.relationships.transformation.RelationshipTransformation;
+import javax.xml.bind.annotation.XmlRootElement;
 
-public class Row extends ArrayList<ColumnGroup> {
+import edu.pitt.sis.exp.colfusion.relationships.transformation.RelationshipTransformation;
+import edu.pitt.sis.exp.colfusion.utils.Gsonazable;
+import edu.pitt.sis.exp.colfusion.utils.Gsonizer;
+
+@XmlRootElement
+public class Row extends ArrayList<ColumnGroup> implements Gsonazable {
 	
 	/**
 	 * 
@@ -44,6 +49,17 @@ public class Row extends ArrayList<ColumnGroup> {
 		}
 		
 		return result;
+	}
+
+	@Override
+	public String toJson() {
+		return Gsonizer.toJson(this, false);
+	}
+
+	@Override
+	public void fromJson() {
+		// TODO Auto-generated method stub
+		
 	}
 	
 	@Override

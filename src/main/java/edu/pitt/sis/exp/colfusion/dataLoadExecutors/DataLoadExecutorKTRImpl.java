@@ -6,7 +6,6 @@ package edu.pitt.sis.exp.colfusion.dataLoadExecutors;
 import java.io.StringWriter;
 import java.net.URLEncoder;
 import java.util.ArrayList;
-import java.util.Date;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpResponse;
@@ -49,7 +48,7 @@ public class DataLoadExecutorKTRImpl extends DataLoadExecutorBaseImpl implements
 	
 	}
 	
-	public DataLoadExecutorKTRImpl(int sid) {
+	public DataLoadExecutorKTRImpl(final int sid) {
 		this.sid = sid;
 	}
 	
@@ -112,7 +111,7 @@ public class DataLoadExecutorKTRImpl extends DataLoadExecutorBaseImpl implements
 					throw e;
 				}
 				
-				//TODO: uncomment!!!
+				//TODO: uncomment if we still need Linked Servers
 				//updateLinkedServerInfo(executionInfoMgr, executionLogId, targetDBConnectionInfo);
 				
 				firstKtr = false;
@@ -141,7 +140,7 @@ public class DataLoadExecutorKTRImpl extends DataLoadExecutorBaseImpl implements
 		}
 	}
 
-	private void createTargetTable(ExecutionInfoManager executionInfoMgr, int executionLogId, DatabaseHandlerBase databaseHandlerBase, KTRManager ktrManager) 
+	private void createTargetTable(final ExecutionInfoManager executionInfoMgr, final int executionLogId, final DatabaseHandlerBase databaseHandlerBase, final KTRManager ktrManager) 
 			throws Exception {		
 		
 		String tableName = ktrManager.getTableName();
@@ -153,7 +152,7 @@ public class DataLoadExecutorKTRImpl extends DataLoadExecutorBaseImpl implements
 		executionInfoMgr.appendLog(executionLogId, String.format("Finished to create target table %s", tableName));
 	}
 
-	private DatabaseHandlerBase createTargetDatabase(ExecutionInfoManager executionInfoMgr, int executionLogId, StoryTargetDBViewModel targetDBConnectionInfo) 
+	private DatabaseHandlerBase createTargetDatabase(final ExecutionInfoManager executionInfoMgr, final int executionLogId, final StoryTargetDBViewModel targetDBConnectionInfo) 
 			throws Exception {
 		executionInfoMgr.appendLog(executionLogId, "Starting to create target database");
 		
@@ -169,7 +168,7 @@ public class DataLoadExecutorKTRImpl extends DataLoadExecutorBaseImpl implements
 		return databaseHandlerBase;
 	}
 
-	private void doHTTPCallToCarteServer(ExecutionInfoManager executionInfoMgr, int executionLogId, String url) throws Exception {
+	private void doHTTPCallToCarteServer(final ExecutionInfoManager executionInfoMgr, final int executionLogId, final String url) throws Exception {
 		
 		executionInfoMgr.appendLog(executionLogId, String.format("Starting HTTP call to Carte Server %s", url));
 		
@@ -213,7 +212,7 @@ public class DataLoadExecutorKTRImpl extends DataLoadExecutorBaseImpl implements
 		executionInfoMgr.appendLog(executionLogId, String.format("Finished HTTP call to Carte Server %s", url));		
 	}
 
-	private String getPentahoCarteURL(ExecutionInfoManager executionInfoMgr, int executionLogId, KTRManager ktrManager, String ktrLocation) 
+	private String getPentahoCarteURL(final ExecutionInfoManager executionInfoMgr, final int executionLogId, final KTRManager ktrManager, final String ktrLocation) 
 			throws Exception {
 
 		executionInfoMgr.appendLog(executionLogId, String.format("Started to prepare Carte Server Url for the %s", ktrLocation));
@@ -231,8 +230,8 @@ public class DataLoadExecutorKTRImpl extends DataLoadExecutorBaseImpl implements
         return result;
 	}
 
-	private void changeTransformationName(ExecutionInfoManager executionInfoMgr, int executionLogId, KTRManager ktrManager, String ktrLocation,
-			String transformationName) throws Exception {
+	private void changeTransformationName(final ExecutionInfoManager executionInfoMgr, final int executionLogId, final KTRManager ktrManager, final String ktrLocation,
+			final String transformationName) throws Exception {
 		try {
 			executionInfoMgr.appendLog(executionLogId, String.format("Starting to change the name for the KTR file located at %s. "
 					+ "The new name is: %s", ktrLocation, transformationName));
@@ -249,7 +248,7 @@ public class DataLoadExecutorKTRImpl extends DataLoadExecutorBaseImpl implements
 		}
 	}
 
-	private StoryTargetDBViewModel updateTargetDatabaseConnectionInfo(ExecutionInfoManager executionInfoMgr, int executionLogId, KTRManager ktrManager, String ktrLocation) throws Exception {
+	private StoryTargetDBViewModel updateTargetDatabaseConnectionInfo(final ExecutionInfoManager executionInfoMgr, final int executionLogId, final KTRManager ktrManager, final String ktrLocation) throws Exception {
 		try {
 			executionInfoMgr.appendLog(executionLogId, String.format("Starting to read traget database info from the KTR file located at %s", ktrLocation));
 			
@@ -275,7 +274,7 @@ public class DataLoadExecutorKTRImpl extends DataLoadExecutorBaseImpl implements
 	 * @param sourceDBInfo target database connection info.
 	 * @throws Exception
 	 */
-	private void updateLinkedServerInfo(ExecutionInfoManager executionInfoMgr, int executionLogId, StoryTargetDBViewModel sourceDBInfo) throws Exception {
+	private void updateLinkedServerInfo(final ExecutionInfoManager executionInfoMgr, final int executionLogId, final StoryTargetDBViewModel sourceDBInfo) throws Exception {
 		try {
 			
 			super.updateLinkedServer(executionInfoMgr, executionLogId, sourceDBInfo);

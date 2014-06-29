@@ -2,9 +2,17 @@ package edu.pitt.sis.exp.colfusion.dataModels.tableDataModel;
 
 import java.io.Serializable;
 
-public class Cell {
+import javax.xml.bind.annotation.XmlRootElement;
+
+import com.google.gson.annotations.Expose;
+
+import edu.pitt.sis.exp.colfusion.utils.Gsonazable;
+import edu.pitt.sis.exp.colfusion.utils.Gsonizer;
+
+@XmlRootElement
+public class Cell implements Gsonazable{
 	
-	private Serializable value;
+	@Expose private Serializable value;
 	
 	public Cell(final Serializable value) {
 		this.value = value;
@@ -21,5 +29,16 @@ public class Cell {
 	@Override
 	public String toString() {
 		return value.toString();
+	}
+
+	@Override
+	public String toJson() {
+		return Gsonizer.toJson(this, false);
+	}
+
+	@Override
+	public void fromJson() {
+		// TODO Auto-generated method stub
+		
 	}
 }

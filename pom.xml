@@ -78,7 +78,8 @@
 		<dependency>
 			<groupId>org.glassfish.jersey.media</groupId>
 			<artifactId>jersey-media-multipart</artifactId>
-			</dependency>
+			<version>2.5.1</version>
+		</dependency>
 
 		<dependency>
 			<groupId>com.thetransactioncompany</groupId>

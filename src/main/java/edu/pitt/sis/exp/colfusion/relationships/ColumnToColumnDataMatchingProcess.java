@@ -11,6 +11,8 @@ import org.apache.logging.log4j.Logger;
 
 import com.google.gson.annotations.Expose;
 
+import edu.pitt.sis.exp.colfusion.dataModels.tableDataModel.ColumnGroup;
+import edu.pitt.sis.exp.colfusion.dataModels.tableDataModel.Row;
 import edu.pitt.sis.exp.colfusion.dataModels.tableDataModel.Table;
 import edu.pitt.sis.exp.colfusion.persistence.databaseHandlers.DatabaseHandlerBase;
 import edu.pitt.sis.exp.colfusion.persistence.databaseHandlers.DatabaseHandlerFactory;
@@ -137,8 +139,8 @@ public class ColumnToColumnDataMatchingProcess extends ProcessBase {
 		Table joinResult = simJoin.join(allTuplesFrom, allTuplesTo, 
 				transformationFrom, transformationTo, similarityThreshold.doubleValue());
 		
-		double dataMathingRatioFrom = (double) joinResult.size() / allTuplesFrom.size();
-		double dataMathingRatioTo = (double) joinResult.size() / allTuplesTo.size();
+		double dataMathingRatioFrom = (double) intesectionSize(joinResult, allTuplesFrom) / allTuplesFrom.size(); //instead of joinResult use intesection(joinResult, allTuplesFrom).size()
+		double dataMathingRatioTo = (double) intesectionSize(joinResult, allTuplesTo) / allTuplesTo.size();
 		
 		similarityThreshold = this.similarityThreshold.setScale(3, RoundingMode.HALF_UP);
 		
@@ -160,6 +162,28 @@ public class ColumnToColumnDataMatchingProcess extends ProcessBase {
 		
 		logger.info(String.format("Finished execution of ColumnToColumnDataMatchingProcess process. RelId=%d, clFrom=%s, clTo=%s, similarityThreshold=%f", 
 				relId, clFrom, clTo, similarityThreshold));
+	}
+
+	private int intesectionSize(final Table joinResult, final Table allTuplesFrom) {
+		//TODO:
+		int result = 0;
+		int k = 0;
+		for (Row joinedRow : joinResult) {
+			for (int i = k; i <allTuplesFrom.size(); i++) {
+				for (ColumnGroup columnGroup : joinedRow) {
+					if (columnGroup.getTableName() == allTuplesFrom.get(i).get(0).getTableName()) {
+						if (columnGroup.get(0).getOriginalName().equals(allTuplesFrom.get(i).get(0).get(0).getOriginalName()) 
+								&& columnGroup.get(0).getCell().getValue().equals(allTuplesFrom.get(i).get(0).get(0).getCell().getValue())) {
+							result++;
+							k++;
+						}
+					}
+				}
+			}
+		}
+		
+		// TODO Auto-generated method stub
+		return result;
 	}
 
 }

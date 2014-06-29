@@ -2,10 +2,18 @@ package edu.pitt.sis.exp.colfusion.dataModels.tableDataModel;
 
 import java.util.ArrayList;
 
+import javax.xml.bind.annotation.XmlRootElement;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-public class ColumnGroup extends ArrayList<Column> {
+import com.google.gson.annotations.Expose;
+
+import edu.pitt.sis.exp.colfusion.utils.Gsonazable;
+import edu.pitt.sis.exp.colfusion.utils.Gsonizer;
+
+@XmlRootElement
+public class ColumnGroup extends ArrayList<Column> implements Gsonazable{
 	
 	/**
 	 * 
@@ -14,11 +22,11 @@ public class ColumnGroup extends ArrayList<Column> {
 
 	static Logger logger = LogManager.getLogger(ColumnGroup.class.getName());
 	
-	private final String tableName;
+	@Expose private final String tableName;
 	//private final int sid; 
 	
 	public ColumnGroup(final String tableName) {
-		
+		super();
 		
 	//	this.sid = sid;
 		
@@ -42,6 +50,17 @@ public class ColumnGroup extends ArrayList<Column> {
 	 */
 	public String getTableName() {
 		return tableName;
+	}
+
+	@Override
+	public String toJson() {
+		return Gsonizer.toJson(this, false);
+	}
+
+	@Override
+	public void fromJson() {
+		// TODO Auto-generated method stub
+		
 	}
 	
 	@Override

@@ -1,11 +1,19 @@
 package edu.pitt.sis.exp.colfusion.dataModels.tableDataModel;
 
-public class Column {
+import javax.xml.bind.annotation.XmlRootElement;
+
+import com.google.gson.annotations.Expose;
+
+import edu.pitt.sis.exp.colfusion.utils.Gsonazable;
+import edu.pitt.sis.exp.colfusion.utils.Gsonizer;
+
+@XmlRootElement
+public class Column implements Gsonazable {
 	
 	//private final int cid;
-	private final String originalName;
+	@Expose private final String originalName;
 	//private final String chosenName;
-	private final Cell cell;
+	@Expose private final Cell cell;
 	
 	public Column(final String originalName, final Cell cell) {
 	//	this.cid = cid;
@@ -59,6 +67,17 @@ public class Column {
 	 */
 	public Cell getCell() {
 		return cell;
+	}
+
+	@Override
+	public String toJson() {
+		return Gsonizer.toJson(this, false);
+	}
+
+	@Override
+	public void fromJson() {
+		// TODO Auto-generated method stub
+		
 	}
 	
 	@Override

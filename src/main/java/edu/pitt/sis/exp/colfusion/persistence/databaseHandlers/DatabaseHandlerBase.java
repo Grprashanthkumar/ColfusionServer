@@ -10,7 +10,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
 
-
 import org.apache.commons.lang3.StringUtils;
 //import org.apache.commons.lang.StringUtils;
 import org.apache.logging.log4j.LogManager;
@@ -263,5 +262,9 @@ public abstract class DatabaseHandlerBase {
 			logger.error("Something wrong happened when getAll tried to execute sql query.", e);
 			throw e;
 		}
+	}
+
+	public Table getAll(final String tableNameTo) {
+		throw new RuntimeException("Not implemented yet");
 	}	
 }
