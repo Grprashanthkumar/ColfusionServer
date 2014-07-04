@@ -24,12 +24,15 @@ import edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionLinks;
 import edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionSourceinfo;
 import edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionUserroles;
 import edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionUsers;
+import edu.pitt.sis.exp.colfusion.responseModels.AddColumnMetadataEditHistoryResponse;
 import edu.pitt.sis.exp.colfusion.responseModels.ColumnMetadataResponse;
+import edu.pitt.sis.exp.colfusion.responseModels.GetColumnMetadataEditHistoryResponse;
 import edu.pitt.sis.exp.colfusion.responseModels.StoryMetadataHistoryResponse;
 import edu.pitt.sis.exp.colfusion.responseModels.StoryMetadataResponse;
 import edu.pitt.sis.exp.colfusion.utils.MappingUtils;
 import edu.pitt.sis.exp.colfusion.viewmodels.DatasetVariableViewModel;
 import edu.pitt.sis.exp.colfusion.viewmodels.StoryAuthorViewModel;
+import edu.pitt.sis.exp.colfusion.viewmodels.StoryMetadataHistoryLogRecordViewModel;
 import edu.pitt.sis.exp.colfusion.viewmodels.StoryMetadataHistoryViewModel;
 import edu.pitt.sis.exp.colfusion.viewmodels.StoryMetadataViewModel;
 
@@ -255,6 +258,32 @@ public class StoryBL {
 						colfusionDnameinfo.getDnameValueFormat(), 
 						colfusionDnameinfo.getMissingValue(), false));
 			}
+			
+			result.isSuccessful = true;
+			result.message = "OK";	
+		}catch (Exception e){
+			result.isSuccessful = false;
+			result.message = "Could not fetch column metadata for the table. Please try again later.";
+		}
+		return result;
+	}
+	public AddColumnMetadataEditHistoryResponse addColumnMetaEditHistory(final int cid,final int userid,final String editAttribute,final String reason,final String editValue){
+		DNameInfoManager columnMetaHistoryManager = new DNameInfoManagerImpl();
+		columnMetaHistoryManager.addColumnMetaEditHistory(cid,userid,editAttribute,reason,editValue);
+		AddColumnMetadataEditHistoryResponse result = new AddColumnMetadataEditHistoryResponse();
+		result.isSuccessful = true;
+		result.message = "OK";
+		return result;
+	}
+	
+	public GetColumnMetadataEditHistoryResponse getColumnMetaEditHistory(final int cid,final String editAttribute){
+		GetColumnMetadataEditHistoryResponse result =  new GetColumnMetadataEditHistoryResponse();
+		
+	try{
+			
+			DNameInfoManager columnManager = new DNameInfoManagerImpl();
+			List<StoryMetadataHistoryLogRecordViewModel> columnsMetadataEditHistoryFromDB = columnManager.getColumnMetaEditHistory(cid, editAttribute);
+			result.setPayload(columnsMetadataEditHistoryFromDB);
 			
 			result.isSuccessful = true;
 			result.message = "OK";	

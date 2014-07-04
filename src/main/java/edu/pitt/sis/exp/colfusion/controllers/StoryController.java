@@ -18,7 +18,9 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import edu.pitt.sis.exp.colfusion.bll.StoryBL;
+import edu.pitt.sis.exp.colfusion.responseModels.AddColumnMetadataEditHistoryResponse;
 import edu.pitt.sis.exp.colfusion.responseModels.ColumnMetadataResponse;
+import edu.pitt.sis.exp.colfusion.responseModels.GetColumnMetadataEditHistoryResponse;
 import edu.pitt.sis.exp.colfusion.responseModels.StoryMetadataHistoryResponse;
 import edu.pitt.sis.exp.colfusion.responseModels.StoryMetadataResponse;
 import edu.pitt.sis.exp.colfusion.viewmodels.StoryMetadataViewModel;
@@ -39,8 +41,8 @@ public class StoryController extends BaseController {
      */
 	@OPTIONS
     @Path("metadata/new/{userId}")
-    public Response newStoryMetadata(@HeaderParam("Access-Control-Request-Headers") String requestH) {
-		return makeCORS(Response.ok()); //, requestH);
+    public Response newStoryMetadata(@HeaderParam("Access-Control-Request-Headers") final String requestH) {
+		return this.makeCORS(Response.ok()); //, requestH);
     }
 	
 	/**
@@ -52,19 +54,19 @@ public class StoryController extends BaseController {
 	@Path("metadata/new/{userId}")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response newStoryMetadata(@PathParam("userId") int userId) {
+    public Response newStoryMetadata(@PathParam("userId") final int userId) {
     	
 		StoryBL storyBL = new StoryBL();
 		
 		StoryMetadataResponse result = storyBL.createStory(userId);
     	
-    	return makeCORS(Response.status(200).entity(result)); //.build();
+    	return this.makeCORS(Response.status(200).entity(result)); //.build();
     }
 	
 	@OPTIONS
     @Path("metadata/{sid: [0-9]+}")
-    public Response getStoryMetadata(@HeaderParam("Access-Control-Request-Headers") String requestH) {
-		return makeCORS(Response.ok()); //, requestH);
+    public Response getStoryMetadata(@HeaderParam("Access-Control-Request-Headers") final String requestH) {
+		return this.makeCORS(Response.ok()); //, requestH);
     }
 	
 	/**
@@ -76,13 +78,13 @@ public class StoryController extends BaseController {
 	@Path("metadata/{sid: [0-9]+}")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getStoryMetadata(@PathParam("sid") int sid) {
+    public Response getStoryMetadata(@PathParam("sid") final int sid) {
     	
 		StoryBL storyBL = new StoryBL();
 		
 		StoryMetadataResponse result = storyBL.getStoryMetadata(sid);
     	
-    	return makeCORS(Response.status(200).entity(result)); //.build();
+    	return this.makeCORS(Response.status(200).entity(result)); //.build();
     }
 	
 	/**
@@ -95,19 +97,19 @@ public class StoryController extends BaseController {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response updateStoryMetadata(StoryMetadataViewModel metadata) {
+    public Response updateStoryMetadata(final StoryMetadataViewModel metadata) {
     	
 		StoryBL storyBL = new StoryBL();
 		
 		StoryMetadataResponse result = storyBL.updateStoryMetadata(metadata);
     	
-    	return makeCORS(Response.status(200).entity(result)); //.build();
+    	return this.makeCORS(Response.status(200).entity(result)); //.build();
     }
 	
 	@OPTIONS
     @Path("metadata/{sid: [0-9]+}/history/{historyItem}")
-    public Response getStoryMetadataHistory(@HeaderParam("Access-Control-Request-Headers") String requestH) {
-		return makeCORS(Response.ok()); //, requestH);
+    public Response getStoryMetadataHistory(@HeaderParam("Access-Control-Request-Headers") final String requestH) {
+		return this.makeCORS(Response.ok()); //, requestH);
     }
 	
 	/**
@@ -119,33 +121,70 @@ public class StoryController extends BaseController {
 	@Path("metadata/{sid: [0-9]+}/history/{historyItem}")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getStoryMetadataHistory(@PathParam("sid") int sid, @PathParam("historyItem") String historyItem) {
+    public Response getStoryMetadataHistory(@PathParam("sid") final int sid, @PathParam("historyItem") final String historyItem) {
     	
 		StoryBL storyBL = new StoryBL();
 		
 		StoryMetadataHistoryResponse result = storyBL.getStoryMetadataHistory(sid, historyItem);
+		
     	
-    	return makeCORS(Response.status(200).entity(result)); //.build();
+    	return this.makeCORS(Response.status(200).entity(result)); //.build();
     }
 	
 	@OPTIONS
     @Path("{sid}/{tableName}/metadata/columns")
-    public Response getColumnMetadata(@HeaderParam("Access-Control-Request-Headers") String requestH) {
-		return makeCORS(Response.ok()); //, requestH);
+    public Response getColumnMetadata(@HeaderParam("Access-Control-Request-Headers") final String requestH) {
+		return this.makeCORS(Response.ok()); //, requestH);
     }
 	
 	@Path("{sid}/{tableName}/metadata/columns")
 	@GET
 	@Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-	public Response getColumnMetadata(@PathParam("sid") int sid, @PathParam("tableName") String tableName){
+	public Response getColumnMetadata(@PathParam("sid") final int sid, @PathParam("tableName") final String tableName){
 		 StoryBL storyBL= new StoryBL();
 		 
 		 ColumnMetadataResponse result= storyBL.getColumnMetaData(sid, tableName);
 		
-		 return makeCORS(Response.status(200).entity(result));
+		 return this.makeCORS(Response.status(200).entity(result));
 	}
 	
+	
+	@OPTIONS
+    @Path("metadata/columns/addEditHistory/{cid}/{userid}/{editAttribute}/{reason}/{editValue}")
+    public Response addColumnMetadataEditHistory(@HeaderParam("Access-Control-Request-Headers") final String requestH) {
+		return this.makeCORS(Response.ok()); //, requestH);
+    }
+	
+	@Path("metadata/columns/addEditHistory/{cid}/{userid}/{editAttribute}/{reason}/{editValue}")
+	@GET
+	@Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+	public Response addColumnMetadataEditHistory(@PathParam("cid") final int cid, @PathParam("userid") final int userid, @PathParam("editAttribute") final String editAttribute, @PathParam("reason") final String reason, @PathParam("editValue") final String editValue){
+
+		StoryBL storyBL = new StoryBL();
+		AddColumnMetadataEditHistoryResponse result = storyBL.addColumnMetaEditHistory(cid,userid,editAttribute,reason,editValue);
+		 return this.makeCORS(Response.status(200).entity(result));
+	}
+	
+	
+	@OPTIONS
+    @Path("metadata/columns/getEditHistory/{cid}/{editAttribute}")
+    public Response getColumnMetadataEditHistory(@HeaderParam("Access-Control-Request-Headers") final String requestH) {
+		return this.makeCORS(Response.ok()); //, requestH);
+    }
+	
+	@Path("metadata/columns/getEditHistory/{cid}/{showAttribute}")
+	@GET
+	@Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+	public Response getColumnMetadataEditHistory(@PathParam("cid") final int cid, @PathParam("showAttribute") final String editAttribute){ 
+		StoryBL storyBL = new StoryBL();
+		GetColumnMetadataEditHistoryResponse result = storyBL.getColumnMetaEditHistory(cid,editAttribute);
+		
+	
+		 return this.makeCORS(Response.status(200).entity(result));
+	}
 	
 	
 }

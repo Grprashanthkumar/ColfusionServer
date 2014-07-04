@@ -3,10 +3,14 @@
  */
 package edu.pitt.sis.exp.colfusion.persistence.managers;
 
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.hibernate.Hibernate;
 import org.hibernate.HibernateException;
 import org.hibernate.NonUniqueResultException;
 import org.hibernate.Query;
@@ -21,8 +25,12 @@ import edu.pitt.sis.exp.colfusion.persistence.dao.SourceInfoDAO;
 import edu.pitt.sis.exp.colfusion.persistence.dao.SourceInfoDAOImpl;
 import edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionColumnTableInfo;
 import edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionDnameinfo;
+import edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionDnameinfoMetadataEditHistory;
 import edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionSourceinfo;
+import edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionUsers;
+import edu.pitt.sis.exp.colfusion.utils.MappingUtils;
 import edu.pitt.sis.exp.colfusion.viewmodels.DatasetVariableViewModel;
+import edu.pitt.sis.exp.colfusion.viewmodels.StoryMetadataHistoryLogRecordViewModel;
 import edu.pitt.sis.exp.colfusion.viewmodels.WorksheetViewModel;
 
 /**
@@ -83,7 +91,7 @@ public class DNameInfoManagerImpl extends GeneralManagerImpl<ColfusionDnameinfo,
 				if (variableMeta == null) {
 					//could not find the variable in the db, should we try to create it?
 					
-					ColfusionDnameinfo addedColumn = this.addVariable(variable, sid);
+					ColfusionDnameinfo addedColumn = this.addVariable(variable, sid, userId);
 					this.addOrUpdateTableNameRecordForNewVariable(addedColumn, tableNamePrefix + worksheet.getSheetName());
 				}
 				else {
@@ -96,7 +104,7 @@ public class DNameInfoManagerImpl extends GeneralManagerImpl<ColfusionDnameinfo,
 			else if (variable.getCid() == 0) {
 				//variable has not been saved to the db yet, need to save
 				
-				ColfusionDnameinfo addedColumn = this.addVariable(variable, sid);
+				ColfusionDnameinfo addedColumn = this.addVariable(variable, sid, userId);
 				this.addOrUpdateTableNameRecordForNewVariable(addedColumn, tableNamePrefix + worksheet.getSheetName());
 			}
 			else {
@@ -199,13 +207,13 @@ public class DNameInfoManagerImpl extends GeneralManagerImpl<ColfusionDnameinfo,
 	 * @return added columns as {@link ColfusionDnameinfo} object which is the id of created/inserted variable in the database.
 	 * @throws Exception if they story for which new variable is added cannot be found in the database, then the exception is thrown.
 	 */
-	private ColfusionDnameinfo addVariable(final DatasetVariableViewModel variable, final int sid) throws Exception {
+	private ColfusionDnameinfo addVariable(final DatasetVariableViewModel variable, final int sid, final int userId) throws Exception {
 		
 		ColfusionDnameinfo variableMeta = this.createVariableFromViewModel(variable, sid);
 		
 		//TODO:make sure cid is updated for the object)
 		this.save(variableMeta);
-		
+		this.CreateMetadataHistory(variableMeta, userId);
 		return variableMeta;
 	}
 
@@ -220,7 +228,6 @@ public class DNameInfoManagerImpl extends GeneralManagerImpl<ColfusionDnameinfo,
 			
 			throw new Exception("Could not find a story for which to create a variable");
 		}
-		
 		//TODO:update this when update database to add format
 		//TODO:update is constant when add it to the model
 		//TODO: the null will be deleted once update the db
@@ -232,7 +239,6 @@ public class DNameInfoManagerImpl extends GeneralManagerImpl<ColfusionDnameinfo,
 		variableMeta.setDnameValueFormat(variable.getVariableValueFormat());
 		variableMeta.setDnameValueDescription(variable.getDescription());
 		variableMeta.setMissingValue(variable.getMissingValue());
-		
 		return variableMeta;
 	}
 	
@@ -271,7 +277,6 @@ public class DNameInfoManagerImpl extends GeneralManagerImpl<ColfusionDnameinfo,
 	public List<ColfusionDnameinfo> getColumnsMetadata(final int sid, final String tableName) {
 		try {
             HibernateUtil.beginTransaction();
-                   
             SourceInfoDAO storyDAO = new SourceInfoDAOImpl();
             ColfusionSourceinfo story = storyDAO.findByID(ColfusionSourceinfo.class, sid);
             
@@ -301,4 +306,74 @@ public class DNameInfoManagerImpl extends GeneralManagerImpl<ColfusionDnameinfo,
         	throw ex;
         }	
 	}
+	
+	
+	private void CreateMetadataHistory(final ColfusionDnameinfo variable, final int userId){
+		 HibernateUtil.beginTransaction();
+		 ColfusionUsers uid = (ColfusionUsers) HibernateUtil.getSession().get(ColfusionUsers.class, userId);
+		 String time = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
+		 String reason = "";
+		 
+		 ColfusionDnameinfoMetadataEditHistory chosenName = new ColfusionDnameinfoMetadataEditHistory(variable, uid, new Date(), "chosen name", reason, variable.getDnameChosen());
+		 HibernateUtil.getSession().save(chosenName);
+		 
+		 ColfusionDnameinfoMetadataEditHistory valueType = new ColfusionDnameinfoMetadataEditHistory(variable, uid, new Date(), "data type", reason, variable.getDnameValueType());
+		 HibernateUtil.getSession().save(valueType);
+		 
+		 ColfusionDnameinfoMetadataEditHistory description = new ColfusionDnameinfoMetadataEditHistory(variable, uid, new Date(), "description", reason, variable.getDnameValueDescription()==null?"":variable.getDnameValueDescription());
+		 HibernateUtil.getSession().save(description);
+		
+		 
+		 ColfusionDnameinfoMetadataEditHistory variableMeasuringUnit = new ColfusionDnameinfoMetadataEditHistory(variable, uid, new Date(), "value unit", reason, variable.getDnameValueUnit()==null?"":variable.getDnameValueUnit());
+		 HibernateUtil.getSession().save(variableMeasuringUnit);
+		 
+		 ColfusionDnameinfoMetadataEditHistory variableValueFormat = new ColfusionDnameinfoMetadataEditHistory(variable, uid, new Date(), "format", reason, variable.getDnameValueFormat()==null?"":variable.getDnameValueFormat());
+		 HibernateUtil.getSession().save(variableValueFormat);
+		 
+		 ColfusionDnameinfoMetadataEditHistory missingValue = new ColfusionDnameinfoMetadataEditHistory(variable, uid, new Date(), "missing value", reason, variable.getMissingValue()==null?"":variable.getMissingValue());
+		 HibernateUtil.getSession().save(missingValue);
+		 
+		 HibernateUtil.commitTransaction();
+	}
+	
+	@Override
+	public void addColumnMetaEditHistory(final int cid,final int userid,final String editAttribute,final String reason,final String editValue){
+		HibernateUtil.beginTransaction();
+		ColfusionDnameinfo Cid = (ColfusionDnameinfo)  HibernateUtil.getSession().get(ColfusionDnameinfo.class, cid);
+		ColfusionUsers Uid = (ColfusionUsers) HibernateUtil.getSession().get(ColfusionUsers.class, userid);
+		ColfusionDnameinfoMetadataEditHistory newhistory = new ColfusionDnameinfoMetadataEditHistory(Cid,Uid,new Date(),editAttribute,reason=="null"?"":reason,editValue=="null"?"":editValue);
+		HibernateUtil.getSession().save(newhistory);
+		HibernateUtil.commitTransaction();
+		
+		
+	}
+	
+	@Override
+	public List<StoryMetadataHistoryLogRecordViewModel> getColumnMetaEditHistory(final int cid, final String editAttribute){
+		HibernateUtil.beginTransaction();
+		
+		ColfusionDnameinfo Cid = (ColfusionDnameinfo)  HibernateUtil.getSession().get(ColfusionDnameinfo.class, cid);
+
+		
+		 Query query = HibernateUtil.getSession().createQuery("SELECT di FROM ColfusionDnameinfoMetadataEditHistory di where di.colfusionDnameinfo = :cid AND di.editedAttribute = :editAttribute ORDER BY di.hid DESC");
+		 query.setParameter("cid", Cid);
+		 query.setParameter("editAttribute", editAttribute);
+		 
+
+         List<ColfusionDnameinfoMetadataEditHistory> edithistory =query.list();
+         
+         
+         List<StoryMetadataHistoryLogRecordViewModel> result = new ArrayList<StoryMetadataHistoryLogRecordViewModel>();
+         for (ColfusionDnameinfoMetadataEditHistory onehistory : edithistory){
+        	 Hibernate.initialize(onehistory.getColfusionUsers());
+        	 result.add(new StoryMetadataHistoryLogRecordViewModel(onehistory.getHid(),MappingUtils.getInstance().mapColfusionUserToStoryAuthorViewModel(onehistory.getColfusionUsers()),onehistory.getWhenSaved(),onehistory.getEditedAttribute(),onehistory.getReason(),onehistory.getValue()));
+         }
+         
+         HibernateUtil.commitTransaction();
+         return result;
+                
+         
+	}
 }
+
+

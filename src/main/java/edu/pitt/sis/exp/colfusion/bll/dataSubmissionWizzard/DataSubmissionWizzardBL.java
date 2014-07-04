@@ -64,8 +64,8 @@ public class DataSubmissionWizzardBL {
 	 * @param inputStreams the input streams of the files. 
 	 * @return the response message which will say if the upload was successful and if not what might be the reason.
 	 */
-	public AcceptedFilesResponse storeUploadedFiles(String sid, String uploadTimestamp, 
-    		String fileType, String dbType, Map<String, InputStream> inputStreams) {
+	public AcceptedFilesResponse storeUploadedFiles(final String sid, final String uploadTimestamp, 
+    		final String fileType, final String dbType, final Map<String, InputStream> inputStreams) {
 				
 		String uploadFilesLocation = IOUtils.getInstance().getAbsolutePathInColfutionRoot(ConfigManager.getInstance().getPropertyByName(PropertyKeys.uploadRawFileLocationKey));
 		String uploadFileAbsolutePath = uploadFilesLocation + File.separator + sid; 
@@ -102,13 +102,13 @@ public class DataSubmissionWizzardBL {
 			
 		} catch (IOException e) {
 			 
-			logger.error("StoreUploadedFiles failed!", e);
+			this.logger.error("StoreUploadedFiles failed!", e);
 			
 			result.isSuccessful = false;
 			result.message = "There seems to be an error, try later.";
 		} catch (ArchiveException e) {
 			
-			logger.error("StoreUploadedFiles failed!", e);
+			this.logger.error("StoreUploadedFiles failed!", e);
 			
 			result.isSuccessful = false;
 			result.message = "There seems to be an error, try later.";
@@ -122,7 +122,7 @@ public class DataSubmissionWizzardBL {
 	 * @param createTemplateViewModel is the model which describes uploaded files.
 	 * @return the response which has file content info in the payload field.
 	 */
-	public FileContentInfoReponse getFilesContentInfo(CreateTemplateViewModel createTemplateViewModel) {
+	public FileContentInfoReponse getFilesContentInfo(final CreateTemplateViewModel createTemplateViewModel) {
 		FileContentInfoReponse result = new FileContentInfoReponse();
 		
 		try {
@@ -159,7 +159,7 @@ public class DataSubmissionWizzardBL {
 			}
 			
 		} catch (Exception e) {
-			logger.error("getFilesContentInfo failed!", e);
+			this.logger.error("getFilesContentInfo failed!", e);
 			
 			result.isSuccessful = false;
 			result.message = "There seems to be an error, try later.";
@@ -175,7 +175,7 @@ public class DataSubmissionWizzardBL {
 	 * @param filesWithSelectedSheets info about files with selected sheets/tables.
 	 * @return response which has in payload into about variables from selected sheets/tables.
 	 */
-	public FileContentInfoReponse getFilesVariablesAndRecomendations(List<FileContentInfoViewModel> filesWithSelectedSheets) {
+	public FileContentInfoReponse getFilesVariablesAndRecomendations(final List<FileContentInfoViewModel> filesWithSelectedSheets) {
 		FileContentInfoReponse result = new FileContentInfoReponse();
 		
 		try {
@@ -201,7 +201,7 @@ public class DataSubmissionWizzardBL {
 			result.message = "OK";			
 			
 		} catch (Exception e) {
-			logger.error("getFilesContentInfo failed!", e);
+			this.logger.error("getFilesContentInfo failed!", e);
 			
 			result.isSuccessful = false;
 			result.message = "There seems to be an error, try later.";
@@ -216,7 +216,7 @@ public class DataSubmissionWizzardBL {
 	 * @param dataMatchingStepData {@link List} list of files info {@link FileContentInfoViewModel}
 	 * @return {@link FileContentInfoReponse} with success or error message no payload.
 	 */
-	public GeneralResponseImpl saveVariablesMetadata(FilesContentInfoViewModel filesInfo) {
+	public GeneralResponseImpl saveVariablesMetadata(final FilesContentInfoViewModel filesInfo) {
 		FileContentInfoReponse result = new FileContentInfoReponse();
 		
 		try {
@@ -225,7 +225,7 @@ public class DataSubmissionWizzardBL {
 			
 			for (FileContentInfoViewModel file : filesInfo.getFiles()) {
 				
-				//TODO: this should be done in some other place, because the same line is used KTRManager when creating ktr files.
+				//TODO: this should be done in some other place, because the same line is used KTRManager when creating ktr files
 				String tableNamePrefix = file.getWorksheets().size() > 1 ? file.getFileName() + " - " : "";
 				
 				for (WorksheetViewModel worksheet : file.getWorksheets()) {
@@ -237,7 +237,7 @@ public class DataSubmissionWizzardBL {
 			result.message = "OK";			
 			
 		} catch (Exception e) {
-			logger.error("getFilesContentInfo failed!", e);
+			this.logger.error("getFilesContentInfo failed!", e);
 			
 			result.isSuccessful = false;
 			result.message = "There seems to be an error, try later.";
@@ -251,7 +251,7 @@ public class DataSubmissionWizzardBL {
 	 * @param dataMatchingStepData
 	 * @return
 	 */
-	public GeneralResponseImpl generateKTR(FilesContentInfoViewModel dataMatchingStepData) {
+	public GeneralResponseImpl generateKTR(final FilesContentInfoViewModel dataMatchingStepData) {
 		
 		GeneralResponseImpl result = new GeneralResponseImpl();
 		result.isSuccessful = true;
@@ -266,7 +266,7 @@ public class DataSubmissionWizzardBL {
 				
 				String msg = String.format("create ktr failed for %s file", file.getFileName());
 				
-				logger.error(msg, e);
+				this.logger.error(msg, e);
 				result.message += "\n" + msg;
 				
 				result.isSuccessful = false;
@@ -281,7 +281,7 @@ public class DataSubmissionWizzardBL {
 	 * @param sid
 	 * @return
 	 */
-	public GeneralResponseImpl triggerDataLoadExecution(int sid) {
+	public GeneralResponseImpl triggerDataLoadExecution(final int sid) {
 		GeneralResponseImpl result = new GeneralResponseImpl();
 		
 		result.isSuccessful = true;
@@ -304,7 +304,7 @@ public class DataSubmissionWizzardBL {
 			result.isSuccessful = false;
 			result.message = "Couldn't trigger KTR execution";
 			
-			logger.error("triggerDataLoadExecution failed: Couldn't trigger KTR execution for " + sid);
+			this.logger.error("triggerDataLoadExecution failed: Couldn't trigger KTR execution for " + sid);
 		}
 		
 		
@@ -317,7 +317,7 @@ public class DataSubmissionWizzardBL {
 	 * @param previewFileViewModel has info about the data file and row rages.
 	 * @return the {@link PreviewFileResponse} response in which payload is the data read from the file.
 	 */
-	public PreviewFileResponse getDataPreviewFromFile(PreviewFileViewModel previewFileViewModel) {
+	public PreviewFileResponse getDataPreviewFromFile(final PreviewFileViewModel previewFileViewModel) {
 		
 		PreviewFileResponse result = new PreviewFileResponse();
 		result.isSuccessful = false;
@@ -327,7 +327,7 @@ public class DataSubmissionWizzardBL {
 		try {
 			importer = ImporterFactory.getImporter(importerType);
 		} catch (Exception e) {
-			logger.error(String.format("getDataPreviewFromFiles failed for %s", previewFileViewModel.toString()), e);
+			this.logger.error(String.format("getDataPreviewFromFiles failed for %s", previewFileViewModel.toString()), e);
 			
 			result.message = String.format("Couldn't read data from %s file.", previewFileViewModel.getFileName());
 			
@@ -335,7 +335,7 @@ public class DataSubmissionWizzardBL {
 		}
 		
 		if (importer == null) {
-			logger.error(String.format("getDataPreviewFromFiles failed for %s. The imported is null.", previewFileViewModel.toString()));
+			this.logger.error(String.format("getDataPreviewFromFiles failed for %s. The imported is null.", previewFileViewModel.toString()));
 			
 			result.message = String.format("Couldn't read data from %s file.", previewFileViewModel.getFileName());
 			
@@ -345,13 +345,13 @@ public class DataSubmissionWizzardBL {
 		try {
 			previewFileViewModel.setWorksheetsData(importer.readWorksheetData(previewFileViewModel));
 		} catch (FileNotFoundException e) {
-			logger.error(String.format("getDataPreviewFromFiles failed for %s. File not found.", previewFileViewModel.toString()), e);
+			this.logger.error(String.format("getDataPreviewFromFiles failed for %s. File not found.", previewFileViewModel.toString()), e);
 			
 			result.message = String.format("Couldn't read data from %s file. Could not find the file to read from.", previewFileViewModel.getFileName());
 			
 			return result;
 		} catch (IOException e) {
-			logger.error(String.format("getDataPreviewFromFiles failed for %s. File not found.", previewFileViewModel.toString()), e);
+			this.logger.error(String.format("getDataPreviewFromFiles failed for %s. File not found.", previewFileViewModel.toString()), e);
 			
 			result.message = String.format("Couldn't read data from %s file.", previewFileViewModel.getFileName());
 			
@@ -365,7 +365,7 @@ public class DataSubmissionWizzardBL {
 	}
 
 	
-	public OneNumberResponse estimateDataPreviewFromFile(PreviewFileViewModel previewFileViewModel) {
+	public OneNumberResponse estimateDataPreviewFromFile(final PreviewFileViewModel previewFileViewModel) {
 		
 		OneNumberResponse result = new OneNumberResponse();
 		

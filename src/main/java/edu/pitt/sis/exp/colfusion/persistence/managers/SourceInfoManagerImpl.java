@@ -107,7 +107,7 @@ public class SourceInfoManagerImpl extends GeneralManagerImpl<ColfusionSourceinf
 		try {
             HibernateUtil.beginTransaction();
             
-            result = _dao.findByID(ColfusionSourceinfo.class, id);
+            result = this._dao.findByID(ColfusionSourceinfo.class, id);
             
             if (result != null) { 
             
@@ -119,13 +119,13 @@ public class SourceInfoManagerImpl extends GeneralManagerImpl<ColfusionSourceinf
 
         	HibernateUtil.rollbackTransaction();
         	
-        	logger.error("findByID failed NonUniqueResultException", ex);
+        	this.logger.error("findByID failed NonUniqueResultException", ex);
         	throw ex;
         } catch (HibernateException ex) {
 
         	HibernateUtil.rollbackTransaction();
         	
-        	logger.error("findByID failed HibernateException", ex);
+        	this.logger.error("findByID failed HibernateException", ex);
         	throw ex;
         }
 		return result;		
@@ -154,7 +154,7 @@ public class SourceInfoManagerImpl extends GeneralManagerImpl<ColfusionSourceinf
         try {
             HibernateUtil.beginTransaction();
             
-            sourceinfo = ((SourceInfoDAO)_dao).findDatasetInfoBySid(sid, includeDraft);
+            sourceinfo = ((SourceInfoDAO)this._dao).findDatasetInfoBySid(sid, includeDraft);
             
             if (sourceinfo != null) {
             
@@ -175,13 +175,13 @@ public class SourceInfoManagerImpl extends GeneralManagerImpl<ColfusionSourceinf
 
         	HibernateUtil.rollbackTransaction();
         	
-        	logger.error("findDatasetInfoBySid failed NonUniqueResultException", ex);
+        	this.logger.error("findDatasetInfoBySid failed NonUniqueResultException", ex);
         	throw ex;
         } catch (HibernateException ex) {
 
         	HibernateUtil.rollbackTransaction();
         	
-        	logger.error("findDatasetInfoBySid failed HibernateException", ex);
+        	this.logger.error("findDatasetInfoBySid failed HibernateException", ex);
         	throw ex;
         }
         return sourceinfo;
@@ -192,7 +192,7 @@ public class SourceInfoManagerImpl extends GeneralManagerImpl<ColfusionSourceinf
 		try {
             HibernateUtil.beginTransaction();
             
-            List<ColfusionSourceinfo> result = ((SourceInfoDAO) _dao).lookupStories(searchTerm, limit);
+            List<ColfusionSourceinfo> result = ((SourceInfoDAO) this._dao).lookupStories(searchTerm, limit);
             
             for (ColfusionSourceinfo sourceinfo : result) {
             	
@@ -215,13 +215,13 @@ public class SourceInfoManagerImpl extends GeneralManagerImpl<ColfusionSourceinf
 
         	HibernateUtil.rollbackTransaction();
         	
-        	logger.error("save failed NonUniqueResultException", ex);
+        	this.logger.error("save failed NonUniqueResultException", ex);
             throw ex;
         } catch (HibernateException ex) {
 
         	HibernateUtil.rollbackTransaction();
         	
-        	logger.error("save failed HibernateException", ex);
+        	this.logger.error("save failed HibernateException", ex);
         	throw ex;
         }
 	}
@@ -257,7 +257,7 @@ public class SourceInfoManagerImpl extends GeneralManagerImpl<ColfusionSourceinf
             ColfusionUsers userCreator = usersDAO.findByID(ColfusionUsers.class, userId);
             
             if (userCreator == null) {
-            	logger.error(String.format("newStory failed: could not find user by %d id", userId));
+            	this.logger.error(String.format("newStory failed: could not find user by %d id", userId));
             	
             	throw new Exception(String.format("newStory failed: could not find user by %d id", userId));
             }
@@ -266,7 +266,7 @@ public class SourceInfoManagerImpl extends GeneralManagerImpl<ColfusionSourceinf
             
             newStoryEntity.setStatus(StoryStatusTypes.DRAFT.getValue());
             
-            int sid = _dao.save(newStoryEntity);
+            int sid = this._dao.save(newStoryEntity);
             
             //Add user as submitter/contributer for newly created story.
             
@@ -275,7 +275,7 @@ public class SourceInfoManagerImpl extends GeneralManagerImpl<ColfusionSourceinf
             ColfusionUserroles userRole = userRolesDAO.findByID(ColfusionUserroles.class, 1);
             
             if (userRole == null) {
-            	logger.error(String.format("newStory failed: could not find userRole by %d id", 1));
+            	this.logger.error(String.format("newStory failed: could not find userRole by %d id", 1));
             	
             	throw new Exception(String.format("newStory failed: could not find user by %d id", 1));
             }
@@ -300,13 +300,13 @@ public class SourceInfoManagerImpl extends GeneralManagerImpl<ColfusionSourceinf
 
         	HibernateUtil.rollbackTransaction();
         	
-        	logger.error("findDatasetInfoBySid failed NonUniqueResultException", ex);
+        	this.logger.error("findDatasetInfoBySid failed NonUniqueResultException", ex);
             throw ex;
         } catch (HibernateException ex) {
 
         	HibernateUtil.rollbackTransaction();
         	
-        	logger.error("findDatasetInfoBySid failed HibernateException", ex);
+        	this.logger.error("findDatasetInfoBySid failed HibernateException", ex);
         	throw ex;
         }
 	}
@@ -322,28 +322,28 @@ public class SourceInfoManagerImpl extends GeneralManagerImpl<ColfusionSourceinf
 		try {
             HibernateUtil.beginTransaction();
             
-            ColfusionSourceinfo addedUpdatedStory = updateSourceInfo(metadata);
-            updateUserRoles(addedUpdatedStory, metadata);
-            updateLink(metadata);
-            updateTags(metadata);
+            ColfusionSourceinfo addedUpdatedStory = this.updateSourceInfo(metadata);
+            this.updateUserRoles(addedUpdatedStory, metadata);
+            this.updateLink(metadata);
+            this.updateTags(metadata);
             
             HibernateUtil.commitTransaction();
         } catch (NonUniqueResultException ex) {
 
         	HibernateUtil.rollbackTransaction();
         	
-        	logger.error("findDatasetInfoBySid failed NonUniqueResultException", ex);
+        	this.logger.error("findDatasetInfoBySid failed NonUniqueResultException", ex);
             throw ex;
         } catch (HibernateException ex) {
 
         	HibernateUtil.rollbackTransaction();
         	
-        	logger.error("findDatasetInfoBySid failed HibernateException", ex);
+        	this.logger.error("findDatasetInfoBySid failed HibernateException", ex);
         	throw ex;
         } catch (Exception e) {
         	HibernateUtil.rollbackTransaction();
         	
-        	logger.error("findDatasetInfoBySid failed most probably because of updateSourceInfo failed", e);
+        	this.logger.error("findDatasetInfoBySid failed most probably because of updateSourceInfo failed", e);
         	throw e;
 		}
 	}
@@ -359,13 +359,13 @@ public class SourceInfoManagerImpl extends GeneralManagerImpl<ColfusionSourceinf
         newStoryEntity.setStatus(metadata.getStatus());
         
         try {
-			handleHistoryEdits(newStoryEntity, metadata.getUserId(), metadata.getEditReason());
+			this.handleHistoryEdits(newStoryEntity, metadata.getUserId(), metadata.getEditReason());
 		} catch (Exception e) {
-			logger.error(String.format("updateSourceInfo failed on handleHistoryEdits"));
+			this.logger.error(String.format("updateSourceInfo failed on handleHistoryEdits"));
 			
 			throw e;
 		}
-        _dao.merge(newStoryEntity);
+        this._dao.merge(newStoryEntity);
         
         return newStoryEntity;
 	}
@@ -382,7 +382,7 @@ public class SourceInfoManagerImpl extends GeneralManagerImpl<ColfusionSourceinf
 	private void handleHistoryEdits(final ColfusionSourceinfo newStory, final int userId, final String reason) throws Exception {
 		SourceInfoMetadataEditHistoryDAO editHistorDAO = new SourceInfoMetadataEditHistoryDAOImpl();
 		
-		ColfusionSourceinfo oldStory = _dao.findByID(ColfusionSourceinfo.class, newStory.getSid());
+		ColfusionSourceinfo oldStory = this._dao.findByID(ColfusionSourceinfo.class, newStory.getSid());
 		
 		try {
 			String oldValue = (oldStory == null) ? null : oldStory.getTitle();
@@ -392,7 +392,7 @@ public class SourceInfoManagerImpl extends GeneralManagerImpl<ColfusionSourceinf
 			editHistorDAO.saveHistoryIfChanged(newStory.getSid(), userId, oldValue, newStory.getStatus(), HistoryItem.STATUS,  reason);
 		
 		} catch (Exception e) {
-			logger.error(String.format("handleHistoryEdits for sourceinfo failed due to one of the two calls of editHistorDAO.saveHistoryIfChanged. userId = %d and reason is %s", userId, reason));
+			this.logger.error(String.format("handleHistoryEdits for sourceinfo failed due to one of the two calls of editHistorDAO.saveHistoryIfChanged. userId = %d and reason is %s", userId, reason));
 			
 			throw e;
 		}
@@ -419,7 +419,7 @@ public class SourceInfoManagerImpl extends GeneralManagerImpl<ColfusionSourceinf
 			oldValue = (oldLink == null) ? null : oldLink.getLinkTags();
 			editHistorDAO.saveHistoryIfChanged(newLink.getLinkId(), userId, oldValue, newLink.getLinkTags(), HistoryItem.TAGS, reason);
 		} catch (Exception e) {
-			logger.error(String.format("handleHistoryEdits for links failed due to one of the two calls of editHistorDAO.saveHistoryIfChanged. userId = %d and reason is %s", userId, reason));
+			this.logger.error(String.format("handleHistoryEdits for links failed due to one of the two calls of editHistorDAO.saveHistoryIfChanged. userId = %d and reason is %s", userId, reason));
 			
 			throw e;
 		}
@@ -436,7 +436,7 @@ public class SourceInfoManagerImpl extends GeneralManagerImpl<ColfusionSourceinf
 		SourceinfoUserRolesDAO userStoryRolesDAO = new SourceinfoUserRolesDAOImpl();
         UserRolesDAO userRolesDAO = new UserRolesDAOImpl();
 		
-        logger.info("started updatingUserRolesFor story");
+        this.logger.info("started updatingUserRolesFor story");
         
         //TODO: add checks if user or role could be found
 		for (StoryAuthorViewModel author : metadata.getStoryAuthors()) {
@@ -479,7 +479,7 @@ public class SourceInfoManagerImpl extends GeneralManagerImpl<ColfusionSourceinf
 			userStoryRolesDAO.delete(userRolesInStory);
 		}
 		
-        logger.info("finished updatingUserRolesFor story");
+        this.logger.info("finished updatingUserRolesFor story");
 	}
 
 	private void updateLink(final StoryMetadataViewModel metadata) throws Exception {
@@ -493,9 +493,9 @@ public class SourceInfoManagerImpl extends GeneralManagerImpl<ColfusionSourceinf
         newLink.setLinkTitleUrl(String.valueOf(metadata.getSid()));
         
         try {
-			handleHistoryEdits(newLink, metadata.getUserId(), metadata.getEditReason());
+			this.handleHistoryEdits(newLink, metadata.getUserId(), metadata.getEditReason());
 		} catch (Exception e) {
-			logger.error(String.format("updateLink failed on handleHistoryEdits"));
+			this.logger.error(String.format("updateLink failed on handleHistoryEdits"));
 			
 			throw e;
 		}
@@ -510,7 +510,7 @@ public class SourceInfoManagerImpl extends GeneralManagerImpl<ColfusionSourceinf
 		try {
 			tagsDAO.deleteAllBySid(metadata.getSid());
 		} catch (Exception e) {
-			logger.error(String.format("updateTags failed on tagsDAO.deleteAllBySid(metadata.getSid()); for sid = %d", metadata.getSid()));
+			this.logger.error(String.format("updateTags failed on tagsDAO.deleteAllBySid(metadata.getSid()); for sid = %d", metadata.getSid()));
 			
 			throw e;
 		}
@@ -530,7 +530,7 @@ public class SourceInfoManagerImpl extends GeneralManagerImpl<ColfusionSourceinf
 		try {
 			tagsCacheDAO.deleteAll();
 		} catch (Exception e) {
-			logger.error(String.format("updateTags failed on tagsCacheDAO.deleteAll();for sid = %d", metadata.getSid()));
+			this.logger.error(String.format("updateTags failed on tagsCacheDAO.deleteAll();for sid = %d", metadata.getSid()));
 			
 			throw e;
 		}
@@ -582,14 +582,16 @@ public class SourceInfoManagerImpl extends GeneralManagerImpl<ColfusionSourceinf
 	public StoryMetadataHistoryViewModel getStoryMetadataHistory(final int sid, final String historyItem) {
 		try {
             HibernateUtil.beginTransaction();
+        	
             
             SourceInfoMetadataEditHistoryDAO metadataHistoryDAO = new SourceInfoMetadataEditHistoryDAOImpl();
 
             //TODO: this should be moved to hitory manager
             String sql = "select h from ColfusionSourceinfoMetadataEditHistory h where h.colfusionSourceinfo = :sid and h.item = :item ORDER BY h.hid DESC";
-            ColfusionSourceinfo sourceInfo = _dao.findByID(ColfusionSourceinfo.class, sid);
+            ColfusionSourceinfo sourceInfo = this._dao.findByID(ColfusionSourceinfo.class, sid);
             Query query = HibernateUtil.getSession().createQuery(sql).setParameter("sid", sourceInfo).setParameter("item", historyItem);
             ArrayList<ColfusionSourceinfoMetadataEditHistory> historyLog = (ArrayList<ColfusionSourceinfoMetadataEditHistory>) metadataHistoryDAO.findMany(query);
+           
             
             StoryMetadataHistoryViewModel result = new StoryMetadataHistoryViewModel();
             result.setHistoryItem(historyItem);
@@ -621,13 +623,13 @@ public class SourceInfoManagerImpl extends GeneralManagerImpl<ColfusionSourceinf
 
         	HibernateUtil.rollbackTransaction();
         	
-        	logger.error("findDatasetInfoBySid failed NonUniqueResultException", ex);
+        	this.logger.error("findDatasetInfoBySid failed NonUniqueResultException", ex);
             throw ex;
         } catch (HibernateException ex) {
 
         	HibernateUtil.rollbackTransaction();
         	
-        	logger.error("findDatasetInfoBySid failed HibernateException", ex);
+        	this.logger.error("findDatasetInfoBySid failed HibernateException", ex);
         	throw ex;
         }
 	}
@@ -640,7 +642,7 @@ public class SourceInfoManagerImpl extends GeneralManagerImpl<ColfusionSourceinf
 			return DataSourceTypes.fromString(story.getSourceType());
 		}
 		else {
-			logger.error(String.format("getStorySourceType failed: Story with %d sid not found", sid));
+			this.logger.error(String.format("getStorySourceType failed: Story with %d sid not found", sid));
 			
 			//TODO: create custom exception StoryNotFound
 			throw new Exception(String.format("Story with %d sid not found", sid));
@@ -654,10 +656,10 @@ public class SourceInfoManagerImpl extends GeneralManagerImpl<ColfusionSourceinf
 		try {
             HibernateUtil.beginTransaction();
             
-            ColfusionSourceinfo story = _dao.findByID(ColfusionSourceinfo.class, sourceDBInfo.getSid());
+            ColfusionSourceinfo story = this._dao.findByID(ColfusionSourceinfo.class, sourceDBInfo.getSid());
             
             if (story == null) {
-            	logger.error(String.format("saveOrUpdateSourceInfoDB failed: could not find story with %d sid", sourceDBInfo.getSid()));
+            	this.logger.error(String.format("saveOrUpdateSourceInfoDB failed: could not find story with %d sid", sourceDBInfo.getSid()));
             	
             	throw new Exception(String.format("saveOrUpdateSourceInfoDB failed: could not find story with %d sid", sourceDBInfo.getSid()));
             }
@@ -692,13 +694,13 @@ public class SourceInfoManagerImpl extends GeneralManagerImpl<ColfusionSourceinf
 
         	HibernateUtil.rollbackTransaction();
         	
-        	logger.error("findDatasetInfoBySid failed NonUniqueResultException", ex);
+        	this.logger.error("findDatasetInfoBySid failed NonUniqueResultException", ex);
             throw ex;
         } catch (HibernateException ex) {
 
         	HibernateUtil.rollbackTransaction();
         	
-        	logger.error("findDatasetInfoBySid failed HibernateException", ex);
+        	this.logger.error("findDatasetInfoBySid failed HibernateException", ex);
         	throw ex;
         }
 	}
@@ -727,16 +729,16 @@ public class SourceInfoManagerImpl extends GeneralManagerImpl<ColfusionSourceinf
 
         	HibernateUtil.rollbackTransaction();
         	
-        	logger.error("findDatasetInfoBySid failed NonUniqueResultException", ex);
+        	this.logger.error("findDatasetInfoBySid failed NonUniqueResultException", ex);
             throw ex;
         } catch (HibernateException ex) {
 
         	HibernateUtil.rollbackTransaction();
         	
-        	logger.error("findDatasetInfoBySid failed HibernateException", ex);
+        	this.logger.error("findDatasetInfoBySid failed HibernateException", ex);
         	throw ex;
         } catch (Exception e) {
-			logger.error(String.format("getStoryKTRLocations faild on most probably sourceTableKTRDAO.getKTRLocationsBySid(sid); for sid = %d", sid));
+			this.logger.error(String.format("getStoryKTRLocations faild on most probably sourceTableKTRDAO.getKTRLocationsBySid(sid); for sid = %d", sid));
 			
 			throw e;
 		}		
@@ -770,13 +772,13 @@ public class SourceInfoManagerImpl extends GeneralManagerImpl<ColfusionSourceinf
 
         	HibernateUtil.rollbackTransaction();
         	
-        	logger.error("findDatasetInfoBySid failed NonUniqueResultException", ex);
+        	this.logger.error("findDatasetInfoBySid failed NonUniqueResultException", ex);
             throw ex;
         } catch (HibernateException ex) {
 
         	HibernateUtil.rollbackTransaction();
         	
-        	logger.error("findDatasetInfoBySid failed HibernateException", ex);
+        	this.logger.error("findDatasetInfoBySid failed HibernateException", ex);
         	throw ex;
         }	
 	}
@@ -799,13 +801,13 @@ public class SourceInfoManagerImpl extends GeneralManagerImpl<ColfusionSourceinf
 
         	HibernateUtil.rollbackTransaction();
         	
-        	logger.error("findDatasetInfoBySid failed NonUniqueResultException", ex);
+        	this.logger.error("findDatasetInfoBySid failed NonUniqueResultException", ex);
             throw ex;
         } catch (HibernateException ex) {
 
         	HibernateUtil.rollbackTransaction();
         	
-        	logger.error("findDatasetInfoBySid failed HibernateException", ex);
+        	this.logger.error("findDatasetInfoBySid failed HibernateException", ex);
         	throw ex;
         }	
 	}
