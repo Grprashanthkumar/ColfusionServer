@@ -5,6 +5,8 @@ package edu.pitt.sis.exp.colfusion.relationships;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -123,10 +125,14 @@ public class ColumnToColumnDataMatchingProcess extends ProcessBase {
 				relId, clFrom, clTo, similarityThreshold));
 		
 		RelationshipTransformation transformationFrom = new RelationshipTransformation(this.getClFrom());
+		List<RelationshipTransformation> transformationFromList = new ArrayList<RelationshipTransformation>();
+		transformationFromList.add(transformationFrom);
 		
 		DatabaseHandlerBase dbHandlerFrom = DatabaseHandlerFactory.getDatabaseHandler(transformationFrom.getTargetDbConnectionInfo());
 		
 		RelationshipTransformation transformationTo = new RelationshipTransformation(this.getClTo());
+		List<RelationshipTransformation> transformationToList = new ArrayList<RelationshipTransformation>();
+		transformationToList.add(transformationTo);
 		
 		DatabaseHandlerBase dbHandlerTo = DatabaseHandlerFactory.getDatabaseHandler(transformationTo.getTargetDbConnectionInfo());
 		
@@ -137,7 +143,7 @@ public class ColumnToColumnDataMatchingProcess extends ProcessBase {
 		NestedLoopSimilarityJoin simJoin = new NestedLoopSimilarityJoin(new NormalizedDistance(new LevenshteinDistance()), null, null);
 		
 		Table joinResult = simJoin.join(allTuplesFrom, allTuplesTo, 
-				transformationFrom, transformationTo, similarityThreshold.doubleValue());
+				transformationFromList, transformationToList, similarityThreshold.doubleValue());
 		
 		double dataMathingRatioFrom = (double) intesectionSize(joinResult, allTuplesFrom) / allTuplesFrom.size(); //instead of joinResult use intesection(joinResult, allTuplesFrom).size()
 		double dataMathingRatioTo = (double) intesectionSize(joinResult, allTuplesTo) / allTuplesTo.size();

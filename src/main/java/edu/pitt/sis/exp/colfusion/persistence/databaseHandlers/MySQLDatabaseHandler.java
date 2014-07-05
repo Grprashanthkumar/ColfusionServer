@@ -6,6 +6,7 @@ package edu.pitt.sis.exp.colfusion.persistence.databaseHandlers;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
@@ -257,5 +258,31 @@ public class MySQLDatabaseHandler extends DatabaseHandlerBase {
 		
 		logger.info(String.format("Generated index name %s", indexName));
 		return indexName;
+	}
+
+	@Override
+	public List<String> getAllColumnsInTable(final String tableName) throws SQLException {
+		logger.info(String.format("Getting all columns in table '%s'", tableName));
+		
+		String sql = "SELECT `COLUMN_NAME` as columnName FROM `INFORMATION_SCHEMA`.`COLUMNS` WHERE `TABLE_SCHEMA`= ? AND `TABLE_NAME`= ?";
+		
+		try (java.sql.PreparedStatement statement = connection.prepareStatement(sql)) {
+			statement.setString(1, this.getDatabase());
+			statement.setString(2, tableName);
+			
+			ResultSet rs = statement.executeQuery();
+			List<String> result = new ArrayList<String>(); 
+			while (rs.next()) {
+				result.add(rs.getString("columnName"));				
+			}
+			
+			logger.info(String.format("Got %d columns in table '%s'", result.size(), tableName));
+			
+			return result;
+		} catch (SQLException e) {
+			logger.error(String.format("getAllColumnsInTable FAILED on table '%s'", tableName), e);
+			
+			throw e;
+		}
 	}
 }

@@ -3,6 +3,8 @@
  */
 package edu.pitt.sis.exp.colfusion.similarityJoins;
 
+import java.util.List;
+
 import edu.pitt.sis.exp.colfusion.dataModels.tableDataModel.Table;
 import edu.pitt.sis.exp.colfusion.relationships.transformation.RelationshipTransformation;
 import edu.pitt.sis.exp.colfusion.similarityMeasures.FilterBase;
@@ -27,5 +29,5 @@ public abstract class SimilarityJoinBase {
 	
 	
 	public abstract Table join(final Table table1, final Table table2, 
-			RelationshipTransformation transformationTable1, RelationshipTransformation transformationTable2, double similarityThreshold);
+			List<RelationshipTransformation> transformationTable1, List<RelationshipTransformation> transformationTable2, double similarityThreshold);
 }

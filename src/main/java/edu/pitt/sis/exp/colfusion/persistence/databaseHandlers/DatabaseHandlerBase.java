@@ -264,7 +264,12 @@ public abstract class DatabaseHandlerBase {
 		}
 	}
 
-	public Table getAll(final String tableNameTo) {
-		throw new RuntimeException("Not implemented yet");
-	}	
+	public Table getAll(final String tableNameTo) throws SQLException {
+		
+		List<String> allColumnsInTable = getAllColumnsInTable(tableNameTo);
+		
+		return getAll(tableNameTo, allColumnsInTable);
+	}
+
+	public abstract List<String> getAllColumnsInTable(String tableNameTo) throws SQLException;
 }

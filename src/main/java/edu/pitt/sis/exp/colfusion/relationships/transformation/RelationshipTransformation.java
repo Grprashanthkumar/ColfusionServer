@@ -127,4 +127,15 @@ public class RelationshipTransformation {
 		return story.getColfusionSourceinfoDb();
 	}
 	
+	@Override
+	public boolean equals(final Object other) {
+		
+		if (other instanceof RelationshipTransformation) {
+			RelationshipTransformation typedOther = (RelationshipTransformation) other;
+			
+			return this.transformationInCids.equals(typedOther.getTransformation());
+		}
+		
+		return false;
+	}
 }
