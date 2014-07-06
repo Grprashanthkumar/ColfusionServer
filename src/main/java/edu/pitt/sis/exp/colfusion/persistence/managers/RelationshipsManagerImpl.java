@@ -3,6 +3,8 @@
  */
 package edu.pitt.sis.exp.colfusion.persistence.managers;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
@@ -17,7 +19,11 @@ import edu.pitt.sis.exp.colfusion.persistence.dao.RelationshipsDAOImpl;
 import edu.pitt.sis.exp.colfusion.persistence.dao.SourceInfoDAO;
 import edu.pitt.sis.exp.colfusion.persistence.dao.SourceInfoDAOImpl;
 import edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionRelationships;
+import edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionRelationshipsColumns;
+import edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionRelationshipsColumnsDataMathingRatios;
+import edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionRelationshipsColumnsDataMathingRatiosId;
 import edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionSourceinfo;
+import edu.pitt.sis.exp.colfusion.viewmodels.RelationshipLinkViewModel;
 
 /**
  * @author Evgeny
@@ -125,5 +131,31 @@ public class RelationshipsManagerImpl extends GeneralManagerImpl<ColfusionRelati
         	logger.error("findByID failed HibernateException", e);
         	throw e;
 		}
+	}
+
+	@Override
+	public List<RelationshipLinkViewModel> getRelationshipLinks(final int relId, final BigDecimal similarityThreshold) throws Exception {
+		ColfusionRelationships relationship = findByID(relId);
+		
+		if (relationship == null) {
+			return null;
+		}
+		
+		List<RelationshipLinkViewModel> result = new ArrayList<>();
+		
+		RelationshipsColumnsDataMathingRatiosManager relColDataMatchMng = new RelationshipsColumnsDataMathingRatiosManagerImpl();
+		
+		for (Object linkObj : relationship.getColfusionRelationshipsColumnses()) {
+			ColfusionRelationshipsColumns link = (ColfusionRelationshipsColumns) linkObj;
+						
+			ColfusionRelationshipsColumnsDataMathingRatios colDataMatch = 
+					relColDataMatchMng.findByID(new ColfusionRelationshipsColumnsDataMathingRatiosId(link.getId().getClFrom(), link.getId().getClTo(), similarityThreshold));
+			
+			result.add(new RelationshipLinkViewModel(colDataMatch.getId().getClFrom(), colDataMatch.getId().getClTo(), 
+					colDataMatch.getDataMatchingFromRatio().doubleValue(), colDataMatch.getDataMatchingToRatio().doubleValue()));
+			
+		}
+		
+		return result;
 	}
 }

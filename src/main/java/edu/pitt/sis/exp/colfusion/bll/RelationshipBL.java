@@ -4,6 +4,7 @@
 package edu.pitt.sis.exp.colfusion.bll;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Set;
 
 import org.apache.logging.log4j.LogManager;
@@ -32,6 +33,8 @@ import edu.pitt.sis.exp.colfusion.relationships.transformation.RelationshipTrans
 import edu.pitt.sis.exp.colfusion.responseModels.GeneralResponse;
 import edu.pitt.sis.exp.colfusion.responseModels.GeneralResponseGen;
 import edu.pitt.sis.exp.colfusion.responseModels.GeneralResponseGenImpl;
+import edu.pitt.sis.exp.colfusion.responseModels.RelationshipLinksResponse;
+import edu.pitt.sis.exp.colfusion.viewmodels.RelationshipLinkViewModel;
 import edu.pitt.sis.exp.colfusion.viewmodels.RelationshipMiningViewModel;
 
 /**
@@ -242,5 +245,20 @@ public class RelationshipBL {
 			}
 			
 		}		
+	}
+
+	public RelationshipLinksResponse getDataMatchingRatios(final int relId, final BigDecimal similarityThreshold) throws Exception {
+		
+		RelationshipLinksResponse result = new RelationshipLinksResponse();
+		
+		RelationshipsManager relMng = new RelationshipsManagerImpl();
+		
+		List<RelationshipLinkViewModel> payload = relMng.getRelationshipLinks(relId, similarityThreshold);
+		
+		result.isSuccessful = true;
+		result.message = "OK";
+		result.setPayload(payload);
+		
+		return result;
 	}
 }

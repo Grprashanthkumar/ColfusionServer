@@ -3,9 +3,11 @@
  */
 package edu.pitt.sis.exp.colfusion.persistence.managers;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionRelationships;
+import edu.pitt.sis.exp.colfusion.viewmodels.RelationshipLinkViewModel;
 
 /**
  * @author Evgeny
@@ -34,4 +36,15 @@ public interface RelationshipsManager extends GeneralManager<ColfusionRelationsh
      */
      @Override
      public ColfusionRelationships findByID(Integer id) throws Exception;
+
+     /**
+      * Get all links of a relationships including data matching ratios at given similarity threshold.
+      *  
+      * @param relId
+      * @param similarityThreshold
+      * @return
+     * @throws Exception 
+      */
+     List<RelationshipLinkViewModel> getRelationshipLinks(int relId,
+			BigDecimal similarityThreshold) throws Exception;
 }

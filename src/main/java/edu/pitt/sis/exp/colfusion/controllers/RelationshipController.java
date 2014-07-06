@@ -20,6 +20,7 @@ import org.apache.logging.log4j.Logger;
 import edu.pitt.sis.exp.colfusion.bll.RelationshipBL;
 import edu.pitt.sis.exp.colfusion.responseModels.GeneralResponse;
 import edu.pitt.sis.exp.colfusion.responseModels.GeneralResponseGenImpl;
+import edu.pitt.sis.exp.colfusion.responseModels.RelationshipLinksResponse;
 
 /**
  * @author Evgeny
@@ -63,6 +64,44 @@ public class RelationshipController extends BaseController {
 			
 			result.setMessage("Something went wrong. " + e.getMessage());
 			result.setSuccessful(false);
+		}
+    	
+    	return makeCORS(Response.status(200).entity(result)); //.build();
+    }
+	
+	/**
+     * Because we do cross domain AJAX calls, we need to use CORS. Actually it worked for me from simple form, but didn't work from file upload.
+     * @param requestH
+     * @return
+     */
+	@OPTIONS
+    @Path("{relId}/dataMatchingRatios/{similarityThreshold}")
+    public Response dataMatchingRatios(@HeaderParam("Access-Control-Request-Headers") final String requestH) {
+		return makeCORS(Response.ok()); //, requestH);
+    }
+	
+	/**
+     * Starts background process to mine for relationships for a given story by sid.
+     * If the mining is in progress, then new process will not be started and the response with status set as running will be returned.
+     * 
+     * @param sid is the id of the story for which to perform mining.
+     * @return response mining status.
+     */
+	@Path("{relId}/dataMatchingRatios/{similarityThreshold}")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response dataMatchingRatios(@PathParam("relId") final int relId, @PathParam("similarityThreshold") final BigDecimal similarityThreshold) {
+    	
+		RelationshipBL relationshipBL = new RelationshipBL();
+		
+		RelationshipLinksResponse result = new RelationshipLinksResponse();
+		try {
+			result = relationshipBL.getDataMatchingRatios(relId, similarityThreshold);
+		} catch (Exception e) {
+			logger.error(String.format("dataMatchingRatios FAILED for relId %d and similarity threshold %s", relId, similarityThreshold.toPlainString()), e);
+			
+			result.message = "Something went wrong. " + e.getMessage();
+			result.isSuccessful = false;
 		}
     	
     	return makeCORS(Response.status(200).entity(result)); //.build();
