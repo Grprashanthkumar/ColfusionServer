@@ -161,11 +161,15 @@ public class StoryController extends BaseController {
 	@Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
 	public Response addColumnMetadataEditHistory(@PathParam("cid") final int cid, @PathParam("userid") final int userid, @PathParam("editAttribute") final String editAttribute, @PathParam("reason") final String reason, @PathParam("editValue") final String editValue){
-
+		String changedreason = reason.replace("*!~~!*", "/");
+		String changededitValue = editValue.replace("*!~~!*", "/");
 		StoryBL storyBL = new StoryBL();
-		AddColumnMetadataEditHistoryResponse result = storyBL.addColumnMetaEditHistory(cid,userid,editAttribute,reason,editValue);
+		AddColumnMetadataEditHistoryResponse result = storyBL.addColumnMetaEditHistory(cid,userid,editAttribute,changedreason,changededitValue);
 		 return this.makeCORS(Response.status(200).entity(result));
 	}
+	
+	
+	
 	
 	
 	@OPTIONS
