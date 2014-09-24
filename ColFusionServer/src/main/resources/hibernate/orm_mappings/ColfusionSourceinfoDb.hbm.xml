@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 2014-6-10 16:18:00 by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionSourceinfoDb" table="colfusion_sourceinfo_DB" catalog="colfusion">
+        <id name="sid" type="int">
+            <column name="sid" />
+            <generator class="foreign">
+                <param name="property">colfusionSourceinfo</param>
+            </generator>
+        </id>
+        <one-to-one name="colfusionSourceinfo" class="edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionSourceinfo" constrained="true"></one-to-one>
+        <property name="serverAddress" type="string">
+            <column name="server_address" not-null="true" />
+        </property>
+        <property name="port" type="int">
+            <column name="port" not-null="true" />
+        </property>
+        <property name="userName" type="string">
+            <column name="user_name" not-null="true" />
+        </property>
+        <property name="password" type="string">
+            <column name="password" not-null="true" />
+        </property>
+        <property name="sourceDatabase" type="string">
+            <column name="source_database" not-null="true" />
+        </property>
+        <property name="driver" type="string">
+            <column name="driver" not-null="true" />
+        </property>
+        <property name="isLocal" type="java.lang.Integer">
+            <column name="is_local">
+                <comment>1 - means database was created from dump file and is stored on our server, 0 - means that database was submitted as remote database and the data is stored
+                somewhere not on our server</comment>
+            </column>
+        </property>
+        <property name="linkedServerName" type="string">
+            <column name="linked_server_name">
+                <comment>Stores linked server name of the database. This value will be different only for remotely submitted databases because we give collusion internal name for
+                them when create a linked server.</comment>
+            </column>
+        </property>
+    </class>
+</hibernate-mapping>

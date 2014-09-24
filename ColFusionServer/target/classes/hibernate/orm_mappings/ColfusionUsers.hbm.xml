@@ -1,0 +1,205 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 2014-6-10 16:18:00 by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionUsers" table="colfusion_users" catalog="colfusion">
+        <id name="userId" type="java.lang.Integer">
+            <column name="user_id" />
+            <generator class="identity" />
+        </id>
+        <property name="userLogin" type="string">
+            <column name="user_login" length="32" unique="true" />
+        </property>
+        <property name="userLevel" type="string">
+            <column name="user_level" length="7" />
+        </property>
+        <property name="userModification" type="timestamp">
+            <column name="user_modification" length="19" not-null="true" />
+        </property>
+        <property name="userDate" type="timestamp">
+            <column name="user_date" length="19" not-null="true" />
+        </property>
+        <property name="userPass" type="string">
+            <column name="user_pass" length="64" />
+        </property>
+        <property name="userEmail" type="string">
+            <column name="user_email" length="128" />
+        </property>
+        <property name="userNames" type="string">
+            <column name="user_names" length="128" />
+        </property>
+        <property name="userKarma" type="big_decimal">
+            <column name="user_karma" precision="10" />
+        </property>
+        <property name="userUrl" type="string">
+            <column name="user_url" length="128" />
+        </property>
+        <property name="userLastlogin" type="timestamp">
+            <column name="user_lastlogin" length="19" not-null="true" />
+        </property>
+        <property name="userAim" type="string">
+            <column name="user_aim" length="64" />
+        </property>
+        <property name="userMsn" type="string">
+            <column name="user_msn" length="64" />
+        </property>
+        <property name="userYahoo" type="string">
+            <column name="user_yahoo" length="64" />
+        </property>
+        <property name="userGtalk" type="string">
+            <column name="user_gtalk" length="64" />
+        </property>
+        <property name="userSkype" type="string">
+            <column name="user_skype" length="64" />
+        </property>
+        <property name="userIrc" type="string">
+            <column name="user_irc" length="64" />
+        </property>
+        <property name="publicEmail" type="string">
+            <column name="public_email" length="64" />
+        </property>
+        <property name="userAvatarSource" type="string">
+            <column name="user_avatar_source" />
+        </property>
+        <property name="userIp" type="string">
+            <column name="user_ip" length="20" />
+        </property>
+        <property name="userLastip" type="string">
+            <column name="user_lastip" length="20" />
+        </property>
+        <property name="lastResetRequest" type="timestamp">
+            <column name="last_reset_request" length="19" not-null="true" />
+        </property>
+        <property name="lastEmailFriend" type="timestamp">
+            <column name="last_email_friend" length="19" not-null="true" />
+        </property>
+        <property name="lastResetCode" type="string">
+            <column name="last_reset_code" />
+        </property>
+        <property name="userLocation" type="string">
+            <column name="user_location" />
+        </property>
+        <property name="userOccupation" type="string">
+            <column name="user_occupation" />
+        </property>
+        <property name="userCategories" type="string">
+            <column name="user_categories" length="1024" />
+        </property>
+        <property name="userEnabled" type="boolean">
+            <column name="user_enabled" not-null="true" />
+        </property>
+        <property name="userLanguage" type="string">
+            <column name="user_language" length="32" />
+        </property>
+        <property name="statusSwitch" type="java.lang.Boolean">
+            <column name="status_switch" />
+        </property>
+        <property name="statusFriends" type="java.lang.Boolean">
+            <column name="status_friends" />
+        </property>
+        <property name="statusStory" type="java.lang.Boolean">
+            <column name="status_story" />
+        </property>
+        <property name="statusComment" type="java.lang.Boolean">
+            <column name="status_comment" />
+        </property>
+        <property name="statusEmail" type="java.lang.Boolean">
+            <column name="status_email" />
+        </property>
+        <property name="statusGroup" type="java.lang.Boolean">
+            <column name="status_group" />
+        </property>
+        <property name="statusAllFriends" type="java.lang.Boolean">
+            <column name="status_all_friends" />
+        </property>
+        <property name="statusFriendList" type="string">
+            <column name="status_friend_list" length="65535" />
+        </property>
+        <property name="statusExcludes" type="string">
+            <column name="status_excludes" length="65535" />
+        </property>
+        <set name="colfusionSourceinfoUsers" table="colfusion_sourceinfo_user" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="uid" not-null="true" />
+            </key>
+            <one-to-many class="edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionSourceinfoUser" />
+        </set>
+        <set name="colfusionDnameinfoMetadataEditHistories" table="colfusion_dnameinfo_metadata_edit_history" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="uid" not-null="true">
+                    <comment>userid who made edit</comment>
+                </column>
+            </key>
+            <one-to-many class="edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionDnameinfoMetadataEditHistory" />
+        </set>
+        <set name="colfusionCanvaseses" table="colfusion_canvases" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="user_id" />
+            </key>
+            <one-to-many class="edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionCanvases" />
+        </set>
+        <set name="colfusionShareses" table="colfusion_shares" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="user_id" />
+            </key>
+            <one-to-many class="edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionShares" />
+        </set>
+        <set name="colfusionNotificationses" table="colfusion_notifications" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="sender_id" />
+            </key>
+            <one-to-many class="edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionNotifications" />
+        </set>
+        <set name="colfusionSourceinfoMetadataEditHistories" table="colfusion_sourceinfo_metadata_edit_history" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="uid" not-null="true">
+                    <comment>userid who made edit</comment>
+                </column>
+            </key>
+            <one-to-many class="edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionSourceinfoMetadataEditHistory" />
+        </set>
+        <set name="colfusionSourceinfos" table="colfusion_sourceinfo" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="UserId" not-null="true" />
+            </key>
+            <one-to-many class="edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionSourceinfo" />
+        </set>
+        <set name="colfusionUserRelationshipVerdicts" table="colfusion_user_relationship_verdict" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="user_id" not-null="true" />
+            </key>
+            <one-to-many class="edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionUserRelationshipVerdict" />
+        </set>
+        <set name="colfusionSourceinfos_1" table="colfusion_sourceinfo" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="UserId" not-null="true" />
+            </key>
+            <one-to-many class="edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionSourceinfo" />
+        </set>
+        <set name="colfusionSynonymsFroms" table="colfusion_synonyms_from" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="userId" not-null="true" />
+            </key>
+            <one-to-many class="edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionSynonymsFrom" />
+        </set>
+        <set name="colfusionDesAttachmentses" table="colfusion_des_attachments" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="UserId" not-null="true" />
+            </key>
+            <one-to-many class="edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionDesAttachments" />
+        </set>
+        <set name="colfusionRelationshipses" table="colfusion_relationships" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="creator" not-null="true" />
+            </key>
+            <one-to-many class="edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionRelationships" />
+        </set>
+        <set name="colfusionSynonymsTos" table="colfusion_synonyms_to" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="userId" not-null="true" />
+            </key>
+            <one-to-many class="edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionSynonymsTo" />
+        </set>
+    </class>
+</hibernate-mapping>

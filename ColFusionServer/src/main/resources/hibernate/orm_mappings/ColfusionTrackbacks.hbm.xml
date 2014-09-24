@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 2014-6-10 16:18:00 by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionTrackbacks" table="colfusion_trackbacks" catalog="colfusion">
+        <id name="trackbackId" type="java.lang.Integer">
+            <column name="trackback_id" />
+            <generator class="identity" />
+        </id>
+        <property name="trackbackLinkId" type="int">
+            <column name="trackback_link_id" not-null="true" />
+        </property>
+        <property name="trackbackUserId" type="int">
+            <column name="trackback_user_id" not-null="true" />
+        </property>
+        <property name="trackbackType" type="string">
+            <column name="trackback_type" length="3" />
+        </property>
+        <property name="trackbackStatus" type="string">
+            <column name="trackback_status" length="7" />
+        </property>
+        <property name="trackbackModified" type="timestamp">
+            <column name="trackback_modified" length="19" not-null="true" />
+        </property>
+        <property name="trackbackDate" type="timestamp">
+            <column name="trackback_date" length="19" />
+        </property>
+        <property name="trackbackUrl" type="string">
+            <column name="trackback_url" length="200" />
+        </property>
+        <property name="trackbackTitle" type="string">
+            <column name="trackback_title" length="65535" />
+        </property>
+        <property name="trackbackContent" type="string">
+            <column name="trackback_content" length="65535" />
+        </property>
+    </class>
+</hibernate-mapping>

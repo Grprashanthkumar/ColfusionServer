@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 2014-6-10 16:18:00 by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionGroupMember" table="colfusion_group_member" catalog="colfusion">
+        <id name="memberId" type="java.lang.Integer">
+            <column name="member_id" />
+            <generator class="identity" />
+        </id>
+        <property name="memberUserId" type="int">
+            <column name="member_user_id" not-null="true" />
+        </property>
+        <property name="memberGroupId" type="int">
+            <column name="member_group_id" not-null="true" />
+        </property>
+        <property name="memberRole" type="string">
+            <column name="member_role" length="9" not-null="true" />
+        </property>
+        <property name="memberStatus" type="string">
+            <column name="member_status" length="8" not-null="true" />
+        </property>
+    </class>
+</hibernate-mapping>
