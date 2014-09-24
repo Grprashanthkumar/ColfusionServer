@@ -13,6 +13,13 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 
+	<repositories>
+		<repository>
+			<id>repo</id>
+			<url>file://${project.basedir}/repo</url>
+		</repository>
+	</repositories>
+
 	<modules>
 		<module>ColFusionServer</module>
 	</modules>
