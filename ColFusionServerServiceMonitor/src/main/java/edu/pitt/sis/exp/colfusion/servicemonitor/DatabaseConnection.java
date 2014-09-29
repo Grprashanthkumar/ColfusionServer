@@ -43,9 +43,9 @@ public class DatabaseConnection {
 			System.out.println(sqe.toString()+" "+sqe.getErrorCode()+" "+sqe.getSQLState());
 			return queryResult;
 		}	
-		catch(Exception ioe){
+		catch(Exception excep){
 			System.out.println("in queryServieExistance:other");
-			System.out.println(ioe.toString()+" "+ioe.getMessage()+" "+ioe.getCause());
+			System.out.println(excep.toString()+" "+excep.getMessage()+" "+excep.getCause());
 			return queryResult;
 		}	
 	}
@@ -85,9 +85,9 @@ public class DatabaseConnection {
 			System.out.println(sqe.toString()+" "+sqe.getErrorCode()+" "+sqe.getSQLState());
 			return null;
 		}	
-		catch(Exception ioe){
+		catch(Exception excep){
 			System.out.println("in queryAllServies:other");
-			System.out.println(ioe.toString()+" "+ioe.getMessage()+" "+ioe.getCause());
+			System.out.println(excep.toString()+" "+excep.getMessage()+" "+excep.getCause());
 			return null;
 		}	
 	}
@@ -117,9 +117,9 @@ public class DatabaseConnection {
 			System.out.println(sqe.toString()+" "+sqe.getErrorCode()+" "+sqe.getSQLState());
 			return queryResult;
 		}	
-		catch(Exception ioe){
+		catch(Exception excep){
 			System.out.println("in queryServiceStatus:other");
-			System.out.println(ioe.toString()+" "+ioe.getMessage()+" "+ioe.getCause());
+			System.out.println(excep.toString()+" "+excep.getMessage()+" "+excep.getCause());
 			return queryResult;
 		}	
 	}
@@ -152,9 +152,9 @@ public class DatabaseConnection {
 			System.out.println(sqe.toString()+" "+sqe.getErrorCode()+" "+sqe.getSQLState());
 			return updateResult; 
 		}	
-		catch(Exception ioe){
+		catch(Exception excep){
 			System.out.println("in updateServiceStatus:other");
-			System.out.println(ioe.toString()+" "+ioe.getMessage()+" "+ioe.getCause());
+			System.out.println(excep.toString()+" "+excep.getMessage()+" "+excep.getCause());
 			return updateResult;
 		}	
 	}

@@ -18,20 +18,19 @@ public class ServiceMonitorMain extends TimerTask{
 	
 	public void run(){
 		List<Service> servlist= new ArrayList<Service>();
-		try{
-			
+		try{	
 			servlist= sermoncon.getServicesStatus();
 			if(servlist!= null){
 				for(int i=0; i<servlist.size() ; i++)
 					System.out.println(servlist.get(i).getServiceName()+": "+servlist.get(i).getServiceStatus());
 				roundCount++;
+				/*roundCount is used for controlling stop process*/
 				if(roundCount==20){
 					sermoncon.stopServiceMonitor();
 					System.out.println("Services Monitoring process stopped!");
 					timer.cancel();
 				}
 			}
-
 		}
 		catch(Exception excep){
 			System.out.println(excep.toString()+" "+ excep.getMessage()+" "+ excep.getCause());

@@ -72,7 +72,7 @@ public class ServiceMonitor extends TimerTask{
             client.disconnect();
             return true;
         }
-        catch(Exception e){
+        catch(Exception excep){
         	return false;
         }
 	}
@@ -112,7 +112,7 @@ public class ServiceMonitor extends TimerTask{
 		}
 	}
 	
-	/* Below are functions unused
+	/* Below are functions unavailable yet.
 	 * */
 	/*
 	 * This function starts the service which is currently
@@ -145,8 +145,8 @@ public class ServiceMonitor extends TimerTask{
 	            
 				return 2;
 			}
-			catch(Exception e){
-				e.printStackTrace();
+			catch(Exception excep){
+				excep.printStackTrace();
 				return 3;
 			}
 		}

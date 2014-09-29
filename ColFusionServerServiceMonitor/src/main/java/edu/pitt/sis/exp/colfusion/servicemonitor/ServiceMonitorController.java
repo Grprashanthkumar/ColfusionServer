@@ -74,7 +74,7 @@ public class ServiceMonitorController{
 	}
 	
 	/*
-	 * This function returns all six services's status
+	 * This function returns all six services's status 
 	 * with other information in a Service list.
 	 * Note: Either the name or the function of this function
 	 * is different from getServiceStatus() in Service.java
