@@ -21,6 +21,7 @@
 	</repositories>
 
 	<modules>
+		<module>ColFusionServerDAL</module>
 		<module>ColFusionServer</module>
 		<module>ColFusionServerServiceMonitor</module>
 	</modules>
