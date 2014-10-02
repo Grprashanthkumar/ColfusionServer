@@ -3,6 +3,8 @@
  */
 package edu.pitt.sis.exp.colfusion.controllers;
 
+import java.util.List;
+
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
@@ -17,12 +19,17 @@ import javax.ws.rs.core.Response;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import edu.pitt.sis.exp.colfusion.bll.BasicTableBL;
 import edu.pitt.sis.exp.colfusion.bll.StoryBL;
+import edu.pitt.sis.exp.colfusion.dataModels.tableDataModel.Table;
 import edu.pitt.sis.exp.colfusion.responseModels.AddColumnMetadataEditHistoryResponse;
+import edu.pitt.sis.exp.colfusion.responseModels.BasicTableResponseModel;
 import edu.pitt.sis.exp.colfusion.responseModels.ColumnMetadataResponse;
 import edu.pitt.sis.exp.colfusion.responseModels.GetColumnMetadataEditHistoryResponse;
+import edu.pitt.sis.exp.colfusion.responseModels.JointTableByRelationshipsResponeModel;
 import edu.pitt.sis.exp.colfusion.responseModels.StoryMetadataHistoryResponse;
 import edu.pitt.sis.exp.colfusion.responseModels.StoryMetadataResponse;
+import edu.pitt.sis.exp.colfusion.viewmodels.BasicTableInfoViewModel;
 import edu.pitt.sis.exp.colfusion.viewmodels.StoryMetadataViewModel;
 
 /**
@@ -190,5 +197,42 @@ public class StoryController extends BaseController {
 		 return this.makeCORS(Response.status(200).entity(result));
 	}
 	
+	@OPTIONS
+    @Path("{sid}/{tableName}/tableInfo")
+    public Response tableInfo(@HeaderParam("Access-Control-Request-Headers") final String requestH) {
+		return makeCORS(Response.ok()); //, requestH);
+    }
 	
+	
+	@Path("{sid}/{tableName}/tableInfo")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response tableInfo(@PathParam("sid") final int sid, @PathParam("tableName") final String tableName) {
+    	
+		BasicTableBL basicBL=new BasicTableBL();
+		BasicTableResponseModel result= basicBL.getTableInfo(sid, tableName);
+		return this.makeCORS(Response.status(200).entity(result));
+    }
+	
+	@OPTIONS
+    @Path("{sid}/{tableName}/tableData/{perPage}/{pageNumber}")
+    public Response getTableDataBySidAndName(@HeaderParam("Access-Control-Request-Headers") final String requestH) {
+		return makeCORS(Response.ok()); //, requestH);
+    }
+	
+	
+	@Path("{sid}/{tableName}/tableData/{perPage}/{pageNumber}")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getTableDataBySidAndName(@PathParam("sid") final int sid, @PathParam("tableName") final String tableName, 
+    		@PathParam("perPage") final int perPage, @PathParam("pageNumber") final int pageNumber) {
+		
+		BasicTableBL basicBL=new BasicTableBL();
+		JointTableByRelationshipsResponeModel result= basicBL.getTableDataBySidAndName(sid, tableName, perPage, pageNumber);
+		
+		String json = result.toJson();
+		
+		return this.makeCORS(Response.status(200).entity(json));
+//		return null;
+    }
 }

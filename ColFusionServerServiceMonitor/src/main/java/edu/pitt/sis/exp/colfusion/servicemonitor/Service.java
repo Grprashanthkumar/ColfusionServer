@@ -12,7 +12,7 @@ public class Service {
 	/*
 	 * Service Attributes include: 1)name, 2)IP address, 3)port #,
 	 * 4)the director under which the service is installed,
-	 * 5)the command(s) by which the service can be 
+	 * 5)the command(s) by which the service can be
 	 * started, stopped, renewed or suspended etc,
 	 * and the status of service, which could be: stopped, started.
 	 */
@@ -84,10 +84,6 @@ public class Service {
 	
 	public void setServiceStatus(int statusNum){
 		this.serviceStatus= serviceStatusType[statusNum];
-	}
-	
-	public void setServiceStatus(String status){
-		this.serviceStatus= status;
 	}
 	
 	public String getServiceStatus(){

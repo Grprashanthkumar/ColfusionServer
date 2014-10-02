@@ -29,14 +29,26 @@ public class JoinTablesByRelationshipsViewModel implements Serializable{
 	
 	@Expose private Table jointTable;
 	
+	@Expose private int perPage;
+	
+	@Expose private int pageNo;
+	
+	@Expose private int totalPage;
+	
 	public JoinTablesByRelationshipsViewModel() {
 		
 	}
 	
-	public JoinTablesByRelationshipsViewModel(final List<Integer> relationshipIds, final double similarityThreshold, final Table jointTable) {
+	public JoinTablesByRelationshipsViewModel(final List<Integer> relationshipIds, 
+			final double similarityThreshold, final Table jointTable,
+			int perPage, int pageNo, int totalPage) {
 		this.relationshipIds = relationshipIds;
 		this.similarityThreshold = similarityThreshold;
 		this.setJointTable(jointTable);
+		this.setPerPage(perPage);
+		this.setPageNo(pageNo);
+		this.setTotalPage(totalPage);
+		
 	}
 	
 	/**
@@ -79,5 +91,29 @@ public class JoinTablesByRelationshipsViewModel implements Serializable{
 	 */
 	public void setSimilarityThreshold(final double similarityThreshold) {
 		this.similarityThreshold = similarityThreshold;
+	}
+
+	public int getPerPage() {
+		return perPage;
+	}
+
+	public void setPerPage(int perPage) {
+		this.perPage = perPage;
+	}
+
+	public int getPageNo() {
+		return pageNo;
+	}
+
+	public void setPageNo(int pageNo) {
+		this.pageNo = pageNo;
+	}
+
+	public int getTotalPage() {
+		return totalPage;
+	}
+
+	public void setTotalPage(int totalPage) {
+		this.totalPage = totalPage;
 	}
 }

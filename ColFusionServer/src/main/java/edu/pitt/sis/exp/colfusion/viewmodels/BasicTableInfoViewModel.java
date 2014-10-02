@@ -1,0 +1,80 @@
+/**
+ * 
+ */
+package edu.pitt.sis.exp.colfusion.viewmodels;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.xml.bind.annotation.XmlRootElement;
+
+import com.google.gson.annotations.Expose;
+
+import edu.pitt.sis.exp.colfusion.dataModels.tableDataModel.Table;
+
+/**
+ * @author Weichuan Hong
+ *
+ */
+
+@XmlRootElement
+public class BasicTableInfoViewModel {
+	private String cid;
+	private String dname_chosen;
+	private String dname_value_type;
+	private String dname_value_unit;
+	private String dname_value_description;
+	private String dname_original_name;
+	
+	public BasicTableInfoViewModel() {
+		
+	}
+
+	public String getCid() {
+		return cid;
+	}
+
+	public void setCid(String cid) {
+		this.cid = cid;
+	}
+
+	public String getDname_chosen() {
+		return dname_chosen;
+	}
+
+	public void setDname_chosen(String dname_chosen) {
+		this.dname_chosen = dname_chosen;
+	}
+
+	public String getDname_value_type() {
+		return dname_value_type;
+	}
+
+	public void setDname_value_type(String dname_value_type) {
+		this.dname_value_type = dname_value_type;
+	}
+
+	public String getDname_value_unit() {
+		return dname_value_unit;
+	}
+
+	public void setDname_value_unit(String dname_value_unit) {
+		this.dname_value_unit = dname_value_unit;
+	}
+
+	public String getDname_value_description() {
+		return dname_value_description;
+	}
+
+	public void setDname_value_description(String dname_value_description) {
+		this.dname_value_description = dname_value_description;
+	}
+
+	public String getDname_original_name() {
+		return dname_original_name;
+	}
+
+	public void setDname_original_name(String dname_original_name) {
+		this.dname_original_name = dname_original_name;
+	}
+
+}
