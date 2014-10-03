@@ -2,8 +2,8 @@ package edu.pitt.sis.exp.colfusion.servicemonitor;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Timer;
 import java.util.TimerTask;
+
 
 /**
  * Apache Commons Net library implements the client side of many basic Internet protocols. 
@@ -23,30 +23,30 @@ import org.apache.commons.net.telnet.TelnetClient;
  */
 public class ServiceMonitor extends TimerTask{
 	
-	private static List<Service> serviceList;
-	private int monitorPeriod;
+	private List<Service> serviceList;
 	private int timeOut;
+	DatabaseConnection dbconn;
 	
 	/**
 	 * Set the default time out as 3 seconds.
 	 */
 	public ServiceMonitor(){
-		serviceList= new ArrayList<Service>();
-		this.monitorPeriod= 10000;
+		this.serviceList= new ArrayList<Service>();
 		this.timeOut= 3000;
+		dbconn= new DatabaseConnection();
 	}
 	
-	public ServiceMonitor(int period, int timeout){
-		this.monitorPeriod= period;
+	public ServiceMonitor(List<Service> serv_list, int timeout){
+		this.serviceList= serv_list;
 		this.timeOut= timeout;
 	}
 	
-	public void setMonitorPeriod(int period){
-		this.monitorPeriod= period;
+	public void setServiceList(List<Service> serv_list){
+		this.serviceList= serv_list;
 	}
 	
-	public int getMonitorPeriod(){
-		return this.monitorPeriod;
+	public List<Service> getServiceList(){
+		return this.serviceList;
 	}
 	
 	public void setTimeOut(int timeout){
@@ -72,8 +72,7 @@ public class ServiceMonitor extends TimerTask{
             client.disconnect();
             return true;
         }
-        catch(Exception e){
-            //e.printStackTrace();
+        catch(Exception excep){
         	return false;
         }
 	}
@@ -91,37 +90,21 @@ public class ServiceMonitor extends TimerTask{
 		}
 	}
 	
+	/*
+	 * This TimerTask run() function gets services' information
+	 * from database, and monitor status of all the six services.
+	 * If status of some service is changed, this function also 
+	 * update the display information as well as the status data
+	 * in database.
+	 */
 	public void run(){
 		try{
-			Service ser_1= new Service("Carte", "127.0.0.1", 8081);
-			Service ser_2= new Service("Apache", "127.0.0.1", 80);
-			Service ser_3= new Service("MySQL", "127.0.0.1", 3306);
-			Service ser_4= new Service("Tomcat", "127.0.0.1", 8080);
-			Service ser_5= new Service("OpenRefine", "127.0.0.1", 3333);
-			Service ser_6= new Service("Neo4j", "127.0.0.1", 7474);
-			
-			this.updateServiceStatus(ser_1);
-			this.updateServiceStatus(ser_2);
-			this.updateServiceStatus(ser_3);
-			this.updateServiceStatus(ser_4);
-			this.updateServiceStatus(ser_5);
-			this.updateServiceStatus(ser_6);
-			
-			if(serviceList.isEmpty()==true){
-				serviceList.add(0, ser_1);
-				serviceList.add(1, ser_2);
-				serviceList.add(2, ser_3);
-				serviceList.add(3, ser_4);
-				serviceList.add(4, ser_5);
-				serviceList.add(5, ser_6);
-			}
-			else{
-				serviceList.set(0, ser_1);
-				serviceList.set(1, ser_2);
-				serviceList.set(2, ser_3);
-				serviceList.set(3, ser_4);
-				serviceList.set(4, ser_5);
-				serviceList.set(5, ser_6);
+			if(this.serviceList.isEmpty()==true)
+				this.serviceList= this.dbconn.queryAllServies();
+			for(Service serv: serviceList){
+				this.updateServiceStatus(serv);
+				this.dbconn.updateServiceStatus(serv);
+				serviceList.set(serviceList.indexOf(serv), serv);
 			}
 		}
 		catch(Exception excep){
@@ -129,51 +112,7 @@ public class ServiceMonitor extends TimerTask{
 		}
 	}
 	
-	/*
-	 * This function starts the process of service monitoring.
-	 * If monitoring is started successfully, returns true.
-	 * Otherwise, returns false.
-	 */
-	public boolean startServiceMonitor(){
-		Timer timer= new Timer();
-		try{
-			/*executes task as schedule(task, initial delay, delay period)*/
-			timer.schedule(new ServiceMonitor(), 0, this.monitorPeriod);
-			return true;
-		}
-		catch(Exception excep){
-			System.out.println(excep.toString()+" "+ excep.getMessage()+" "+ excep.getCause());
-			return false;
-		}
-	}
-	
-	/*
-	 * This function stops the process of service monitoring.
-	 * If monitoring is stopped successfully, returns true.
-	 * Otherwise, returns false.
-	 */
-	//public boolean stopServiceMonitor(){
-		
-	//}
-	
-	/*
-	 * This function returns all six services's status
-	 * in a list of string, as <"stopped","started"...>
-	 * Note: Either the name or the function of this function
-	 * is different from getServiceStatus() in Service.java
-	 */
-	public List<Service> getServicesStatus(){
-		
-		if(serviceList.isEmpty()==true || serviceList.size()<6){
-			System.out.println("abc");
-			return null;
-		}
-		for(Service item: serviceList)
-			System.out.println(item.getServiceName());
-		return serviceList;
-	}
-	
-	/* Below are functions unused
+	/* Below are functions unavailable yet.
 	 * */
 	/*
 	 * This function starts the service which is currently
@@ -206,8 +145,8 @@ public class ServiceMonitor extends TimerTask{
 	            
 				return 2;
 			}
-			catch(Exception e){
-				e.printStackTrace();
+			catch(Exception excep){
+				excep.printStackTrace();
 				return 3;
 			}
 		}

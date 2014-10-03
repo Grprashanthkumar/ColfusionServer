@@ -25,7 +25,7 @@ public class ServiceMonitorMain extends TimerTask{
 					System.out.println(servlist.get(i).getServiceName()+": "+servlist.get(i).getServiceStatus());
 				roundCount++;
 				/*roundCount is used for controlling stop process*/
-				if(roundCount==20){
+				if(roundCount==100){
 					sermoncon.stopServiceMonitor();
 					System.out.println("Services Monitoring process stopped!");
 					timer.cancel();
