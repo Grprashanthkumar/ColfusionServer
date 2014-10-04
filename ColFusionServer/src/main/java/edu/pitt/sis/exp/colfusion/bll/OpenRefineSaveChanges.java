@@ -8,9 +8,9 @@ import java.util.Properties;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import edu.pitt.sis.exp.colfusion.persistence.dao.DatabaseHandler;
-import edu.pitt.sis.exp.colfusion.persistence.dao.MetadataDbHandler;
-import edu.pitt.sis.exp.colfusion.persistence.dao.TargetDatabaseHandlerFactory;
+import edu.pitt.sis.exp.colfusion.persistence.databaseHandlers.DatabaseHandler;
+import edu.pitt.sis.exp.colfusion.persistence.databaseHandlers.MetadataDbHandler;
+import edu.pitt.sis.exp.colfusion.persistence.databaseHandlers.TargetDatabaseHandlerFactory;
 import edu.pitt.sis.exp.colfusion.responseModels.GeneralResponseGen;
 import edu.pitt.sis.exp.colfusion.responseModels.GeneralResponseGenImpl;
 
