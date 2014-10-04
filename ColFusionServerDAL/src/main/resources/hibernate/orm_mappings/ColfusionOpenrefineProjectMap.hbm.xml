@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 2014-6-10 16:18:00 by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionOpenrefineProjectMap" table="colfusion_openrefine_project_map" catalog="colfusion">
+        <composite-id name="id" class="edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionOpenrefineProjectMapId">
+            <key-property name="sid" type="int">
+                <column name="sid" />
+            </key-property>
+            <key-property name="tableName" type="string">
+                <column name="tableName" />
+            </key-property>
+        </composite-id>
+        <property name="projectId" type="string">
+            <column name="projectId" not-null="true" />
+        </property>
+    </class>
+</hibernate-mapping>

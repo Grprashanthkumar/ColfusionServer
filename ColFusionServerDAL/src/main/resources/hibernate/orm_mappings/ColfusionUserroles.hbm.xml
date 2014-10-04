@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 2014-6-10 16:18:00 by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionUserroles" table="colfusion_userroles" catalog="colfusion">
+        <id name="roleId" type="int">
+            <column name="role_id" />
+            <generator class="assigned" />
+        </id>
+        <property name="role" type="string">
+            <column name="role" length="45" not-null="true" />
+        </property>
+        <property name="description" type="string">
+            <column name="description" length="545" />
+        </property>
+        <set name="colfusionSourceinfoUsers" table="colfusion_sourceinfo_user" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="rid" not-null="true" />
+            </key>
+            <one-to-many class="edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionSourceinfoUser" />
+        </set>
+    </class>
+</hibernate-mapping>

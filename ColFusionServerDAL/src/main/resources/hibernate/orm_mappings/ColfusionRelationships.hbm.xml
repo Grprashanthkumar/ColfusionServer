@@ -1,0 +1,53 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 2014-6-10 16:18:00 by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionRelationships" table="colfusion_relationships" catalog="colfusion">
+        <id name="relId" type="java.lang.Integer">
+            <column name="rel_id" />
+            <generator class="identity" />
+        </id>
+        <many-to-one name="colfusionSourceinfoBySid1" class="edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionSourceinfo" fetch="select">
+            <column name="sid1" not-null="true" />
+        </many-to-one>
+        <many-to-one name="colfusionUsers" class="edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionUsers" fetch="select">
+            <column name="creator" not-null="true" />
+        </many-to-one>
+        <many-to-one name="colfusionSourceinfoBySid2" class="edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionSourceinfo" fetch="select">
+            <column name="sid2" not-null="true" />
+        </many-to-one>
+        <property name="name" type="string">
+            <column name="name" />
+        </property>
+        <property name="description" type="string">
+            <column name="description" length="65535" />
+        </property>
+        <property name="creationTime" type="timestamp">
+            <column name="creation_time" length="19" not-null="true" />
+        </property>
+        <property name="tableName1" type="string">
+            <column name="tableName1" />
+        </property>
+        <property name="tableName2" type="string">
+            <column name="tableName2" />
+        </property>
+        <property name="status" type="int">
+            <column name="status" not-null="true">
+                <comment>0-&gt;valid, 1-&gt;deleted, 2-&gt;new, indexes on the columns are not created yet.</comment>
+            </column>
+        </property>
+        <set name="colfusionRelationshipsColumnses" table="colfusion_relationships_columns" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="rel_id" not-null="true" />
+            </key>
+            <one-to-many class="edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionRelationshipsColumns" />
+        </set>
+        <set name="colfusionUserRelationshipVerdicts" table="colfusion_user_relationship_verdict" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="rel_id" not-null="true" />
+            </key>
+            <one-to-many class="edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionUserRelationshipVerdict" />
+        </set>
+    </class>
+</hibernate-mapping>

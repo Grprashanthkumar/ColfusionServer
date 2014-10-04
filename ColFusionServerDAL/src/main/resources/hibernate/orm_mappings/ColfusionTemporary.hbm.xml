@@ -1,0 +1,51 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 2014-6-10 16:18:00 by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionTemporary" table="colfusion_temporary" catalog="colfusion">
+        <id name="tid" type="java.lang.Integer">
+            <column name="Tid" />
+            <generator class="identity" />
+        </id>
+        <many-to-one name="colfusionSourceinfo" class="edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionSourceinfo" fetch="select">
+            <column name="Sid" not-null="true" />
+        </many-to-one>
+        <property name="spd" type="date">
+            <column name="Spd" length="10" />
+        </property>
+        <property name="drd" type="date">
+            <column name="Drd" length="10" />
+        </property>
+        <property name="dname" type="string">
+            <column name="Dname" length="80" />
+        </property>
+        <property name="location" type="string">
+            <column name="Location" />
+        </property>
+        <property name="aggrType" type="string">
+            <column name="AggrType" />
+        </property>
+        <property name="start" type="date">
+            <column name="Start" length="10" />
+        </property>
+        <property name="end" type="date">
+            <column name="End" length="10" />
+        </property>
+        <property name="value" type="string">
+            <column name="Value" length="500" />
+        </property>
+        <property name="eid" type="int">
+            <column name="Eid" not-null="true" />
+        </property>
+        <property name="rownum" type="java.lang.Integer">
+            <column name="rownum" />
+        </property>
+        <property name="columnnum" type="java.lang.Integer">
+            <column name="columnnum" />
+        </property>
+        <property name="cid" type="string">
+            <column name="cid" length="45" />
+        </property>
+    </class>
+</hibernate-mapping>

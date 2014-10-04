@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 2014-6-10 16:18:00 by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionExecuteinfo" table="colfusion_executeinfo" catalog="colfusion">
+        <id name="eid" type="java.lang.Integer">
+            <column name="Eid" />
+            <generator class="identity" />
+        </id>
+        <many-to-one name="colfusionSourceinfo" class="edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionSourceinfo" fetch="select">
+            <column name="Sid" not-null="true" />
+        </many-to-one>
+        <property name="userId" type="string">
+            <column name="UserId" length="30" />
+        </property>
+        <property name="timeStart" type="timestamp">
+            <column name="TimeStart" length="19" />
+        </property>
+        <property name="timeEnd" type="timestamp">
+            <column name="TimeEnd" length="19" />
+        </property>
+        <property name="exitStatus" type="string">
+            <column name="ExitStatus" length="20" />
+        </property>
+        <property name="errorMessage" type="string">
+            <column name="ErrorMessage" length="16777215" />
+        </property>
+        <property name="recordsProcessed" type="java.lang.Integer">
+            <column name="RecordsProcessed" />
+        </property>
+        <property name="status" type="string">
+            <column name="status" />
+        </property>
+        <property name="panCommand" type="string">
+            <column name="pan_command" length="555" />
+        </property>
+        <property name="tableName" type="string">
+            <column name="tableName" length="300" not-null="true" />
+        </property>
+        <property name="log" type="string">
+            <column name="log" />
+        </property>
+    </class>
+</hibernate-mapping>

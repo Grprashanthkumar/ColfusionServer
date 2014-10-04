@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 2014-6-10 16:18:00 by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionOldUrls" table="colfusion_old_urls" catalog="colfusion">
+        <id name="oldId" type="java.lang.Integer">
+            <column name="old_id" />
+            <generator class="identity" />
+        </id>
+        <property name="oldLinkId" type="int">
+            <column name="old_link_id" not-null="true" />
+        </property>
+        <property name="oldTitleUrl" type="string">
+            <column name="old_title_url" not-null="true" />
+        </property>
+    </class>
+</hibernate-mapping>
