@@ -24,7 +24,7 @@ public interface ExecutionInfoManager extends GeneralManager<ColfusionExecuteinf
 	 * @return
 	 * @throws Exception 
 	 */
-	int getExecutionLogId(int sid, String tableName) throws Exception;
+	ColfusionExecuteinfo getExecutionInfo(int sid, String tableName) throws Exception;
 
 	/**
 	 * Updates status attribute with a given value for a specific execution info record.

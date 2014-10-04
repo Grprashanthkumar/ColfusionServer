@@ -14,7 +14,6 @@ import org.hibernate.Query;
 
 import edu.pitt.sis.exp.colfusion.dataLoadExecutors.DataLoadExecutionStatus;
 import edu.pitt.sis.exp.colfusion.persistence.HibernateUtil;
-import edu.pitt.sis.exp.colfusion.persistence.dao.ExecutionInfoDAO;
 import edu.pitt.sis.exp.colfusion.persistence.dao.ExecutionInfoDAOImpl;
 import edu.pitt.sis.exp.colfusion.persistence.dao.SourceInfoDAO;
 import edu.pitt.sis.exp.colfusion.persistence.dao.SourceInfoDAOImpl;
@@ -40,7 +39,7 @@ public class ExecutionInfoManagerImpl extends GeneralManagerImpl<ColfusionExecut
 	//***************************************
 	
 	@Override
-	public int getExecutionLogId(int sid, String tableName) throws Exception {
+	public ColfusionExecuteinfo getExecutionInfo(final int sid, final String tableName) throws Exception {
 	
 		logger.info(String.format("Started getExecutionLogId for %d sid and %s table. Checking if executioninfo record already exists", sid, tableName));
 		
@@ -58,7 +57,7 @@ public class ExecutionInfoManagerImpl extends GeneralManagerImpl<ColfusionExecut
 			
 			logger.info(String.format("getExecutionLogId for %d sid and %s table: Not Found any execution info records - so creating one", sid, tableName));
 			
-			return getNewExecutionLogId(sid, tableName);
+			return getNewExecutionInfo(sid, tableName);
 		}
 		else {
 			//TODO: the table should not have more than one record for a given pair of sid and table name, however it is not restricted on the db level
@@ -67,7 +66,7 @@ public class ExecutionInfoManagerImpl extends GeneralManagerImpl<ColfusionExecut
 			logger.info(String.format("getExecutionLogId for %d sid and %s table: Found %d execution info records - use the first one. The eid is %d", 
 					sid, tableName, executeInfoRecords.size(), executeInfoRecords.get(0).getEid()));
 			
-			return executeInfoRecords.get(0).getEid();
+			return executeInfoRecords.get(0);
 		}
 	}
 
@@ -77,7 +76,7 @@ public class ExecutionInfoManagerImpl extends GeneralManagerImpl<ColfusionExecut
 	 * @param tableName is the table name.
 	 * @return list of executioninfo records {@link ColfusionExecuteinfo}.
 	 */
-	private List<ColfusionExecuteinfo> getExistingExecutionLogId(int sid, String tableName) {
+	private List<ColfusionExecuteinfo> getExistingExecutionLogId(final int sid, final String tableName) {
 		try {
             HibernateUtil.beginTransaction();
             
@@ -119,7 +118,7 @@ public class ExecutionInfoManagerImpl extends GeneralManagerImpl<ColfusionExecut
 	 * @return the id of the executioninfo record (logid).
 	 * @throws Exception 
 	 */
-	private int getNewExecutionLogId(int sid, String tableName) throws Exception {
+	private ColfusionExecuteinfo getNewExecutionInfo(final int sid, final String tableName) throws Exception {
 		
 		//TODO: this will run separate transaction to find sid, maybe we need to run it together within one transaction, need to test and see.
 		SourceInfoManager storyMgr = new SourceInfoManagerImpl();
@@ -136,11 +135,13 @@ public class ExecutionInfoManagerImpl extends GeneralManagerImpl<ColfusionExecut
 		newExecutionInfoRecord.setTimeStart(new Date());
 		newExecutionInfoRecord.setLog("");
 		
-		return save(newExecutionInfoRecord);
+		save(newExecutionInfoRecord);
+		
+		return newExecutionInfoRecord;
 	}
 
 	@Override
-	public void updateStatus(int executionLogId, DataLoadExecutionStatus statusValue) throws Exception {
+	public void updateStatus(final int executionLogId, final DataLoadExecutionStatus statusValue) throws Exception {
 		try {
             HibernateUtil.beginTransaction();
             
@@ -176,7 +177,7 @@ public class ExecutionInfoManagerImpl extends GeneralManagerImpl<ColfusionExecut
 	}
 
 	@Override
-	public void appendLog(int executionLogId, String logValueToAppend) throws Exception {
+	public void appendLog(final int executionLogId, final String logValueToAppend) throws Exception {
 		try {
             HibernateUtil.beginTransaction();
             

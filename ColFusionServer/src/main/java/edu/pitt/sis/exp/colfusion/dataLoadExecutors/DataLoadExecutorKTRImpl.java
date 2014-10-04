@@ -29,6 +29,7 @@ import edu.pitt.sis.exp.colfusion.persistence.managers.ExecutionInfoManager;
 import edu.pitt.sis.exp.colfusion.persistence.managers.ExecutionInfoManagerImpl;
 import edu.pitt.sis.exp.colfusion.persistence.managers.SourceInfoManager;
 import edu.pitt.sis.exp.colfusion.persistence.managers.SourceInfoManagerImpl;
+import edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionExecuteinfo;
 import edu.pitt.sis.exp.colfusion.viewmodels.StoryTargetDBViewModel;
 
 /**
@@ -80,7 +81,9 @@ public class DataLoadExecutorKTRImpl extends DataLoadExecutorBaseImpl implements
 			
 			logger.info(String.format("DataLoadExecutorKTR, execute: Loaded this ktr: ", ktrLocation));
 			
-			int executionLogId = executionInfoMgr.getExecutionLogId(sid, ktrManager.getTableName());
+			ColfusionExecuteinfo executionInfo = executionInfoMgr.getExecutionInfo(sid, ktrManager.getTableName());
+			
+			int executionLogId = executionInfo.getEid();
 			
 			executionInfoMgr.updateStatus(executionLogId, DataLoadExecutionStatus.IN_PROGRESS);
 			
