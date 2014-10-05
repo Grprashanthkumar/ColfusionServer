@@ -7,15 +7,16 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import junit.framework.TestCase;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import edu.pitt.sis.exp.colfusion.ConfigManager;
-import edu.pitt.sis.exp.colfusion.persistence.databaseHandlers.DatabaseHanderType;
-import edu.pitt.sis.exp.colfusion.persistence.databaseHandlers.DatabaseHandlerBase;
-import edu.pitt.sis.exp.colfusion.persistence.databaseHandlers.DatabaseHandlerFactory;
-import edu.pitt.sis.exp.colfusion.tests.PropertyKeysTest;
-import junit.framework.TestCase;
+import edu.pitt.sis.exp.colfusion.dal.databaseHandlers.DatabaseHanderType;
+import edu.pitt.sis.exp.colfusion.dal.databaseHandlers.DatabaseHandlerBase;
+import edu.pitt.sis.exp.colfusion.dal.databaseHandlers.DatabaseHandlerFactory;
+import edu.pitt.sis.exp.colfusion.utils.ConfigManager;
+import edu.pitt.sis.exp.colfusion.utils.PropertyKeysTest;
 
 /**
  * @author Evgeny
@@ -25,7 +26,7 @@ public class DatabaseHandlerFactoryTest extends TestCase {
 	Logger logger = LogManager.getLogger(DatabaseHandlerFactoryTest.class.getName());
 	ConfigManager configManager = ConfigManager.getInstance();
 	
-	public DatabaseHandlerFactoryTest(String name) {
+	public DatabaseHandlerFactoryTest(final String name) {
 		super(name);
 	}
 	

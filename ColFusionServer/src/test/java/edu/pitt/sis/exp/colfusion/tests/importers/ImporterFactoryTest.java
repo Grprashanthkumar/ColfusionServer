@@ -8,21 +8,22 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 
+import junit.framework.TestCase;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import edu.pitt.sis.exp.colfusion.ConfigManager;
+import edu.pitt.sis.exp.colfusion.dal.viewmodels.DatasetVariableViewModel;
+import edu.pitt.sis.exp.colfusion.dal.viewmodels.FileContentInfoViewModel;
+import edu.pitt.sis.exp.colfusion.dal.viewmodels.PreviewFileViewModel;
+import edu.pitt.sis.exp.colfusion.dal.viewmodels.WorksheetDataViewModel;
+import edu.pitt.sis.exp.colfusion.dal.viewmodels.WorksheetViewModel;
 import edu.pitt.sis.exp.colfusion.importers.Importer;
 import edu.pitt.sis.exp.colfusion.importers.ImporterFactory;
 import edu.pitt.sis.exp.colfusion.importers.ImporterType;
-import edu.pitt.sis.exp.colfusion.tests.PropertyKeysTest;
+import edu.pitt.sis.exp.colfusion.utils.ConfigManager;
+import edu.pitt.sis.exp.colfusion.utils.PropertyKeysTest;
 import edu.pitt.sis.exp.colfusion.utils.models.IOUtilsStoredFileInfoModel;
-import edu.pitt.sis.exp.colfusion.viewmodels.DatasetVariableViewModel;
-import edu.pitt.sis.exp.colfusion.viewmodels.FileContentInfoViewModel;
-import edu.pitt.sis.exp.colfusion.viewmodels.PreviewFileViewModel;
-import edu.pitt.sis.exp.colfusion.viewmodels.WorksheetDataViewModel;
-import edu.pitt.sis.exp.colfusion.viewmodels.WorksheetViewModel;
-import junit.framework.TestCase;
 
 /**
  * @author Evgeny
@@ -33,11 +34,11 @@ public class ImporterFactoryTest extends TestCase {
 	Logger logger = LogManager.getLogger(ImporterFactoryTest.class.getName());
 	ConfigManager configManager = ConfigManager.getInstance();
 	
-	public ImporterFactoryTest(String name) {
+	public ImporterFactoryTest(final String name) {
 		super(name);
 	}
 	
-	private Importer getImporter(ImporterType importerType) throws Exception {
+	private Importer getImporter(final ImporterType importerType) throws Exception {
 		try {
 			return ImporterFactory.getImporter(importerType);
 		} catch (Exception e1) {

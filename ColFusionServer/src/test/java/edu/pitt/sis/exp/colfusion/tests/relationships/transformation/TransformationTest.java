@@ -12,7 +12,7 @@ import org.apache.logging.log4j.Logger;
 import org.junit.Test;
 
 import edu.pitt.sis.exp.colfusion.bll.RelationshipBL;
-import edu.pitt.sis.exp.colfusion.relationships.transformation.TransofmationCidsExtractor;
+import edu.pitt.sis.exp.colfusion.dal.utils.TransofmationCidsExtractor;
 
 /**
  * @author Evgeny

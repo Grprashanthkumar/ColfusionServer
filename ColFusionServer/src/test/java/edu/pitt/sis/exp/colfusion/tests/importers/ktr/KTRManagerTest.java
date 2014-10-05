@@ -6,35 +6,29 @@ package edu.pitt.sis.exp.colfusion.tests.importers.ktr;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPathExpressionException;
+
+import junit.framework.TestCase;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.xml.sax.SAXException;
 
-import edu.pitt.sis.exp.colfusion.ConfigManager;
-import edu.pitt.sis.exp.colfusion.PropertyKeys;
+import edu.pitt.sis.exp.colfusion.dal.managers.SourceInfoManager;
+import edu.pitt.sis.exp.colfusion.dal.managers.SourceInfoManagerImpl;
+import edu.pitt.sis.exp.colfusion.dal.viewmodels.DatasetVariableViewModel;
+import edu.pitt.sis.exp.colfusion.dal.viewmodels.FileContentInfoViewModel;
+import edu.pitt.sis.exp.colfusion.dal.viewmodels.StoryTargetDBViewModel;
+import edu.pitt.sis.exp.colfusion.dal.viewmodels.WorksheetViewModel;
 import edu.pitt.sis.exp.colfusion.importers.ktr.KTRManager;
-import edu.pitt.sis.exp.colfusion.importers.utils.DataSourceTypes;
-import edu.pitt.sis.exp.colfusion.persistence.managers.SourceInfoManager;
-import edu.pitt.sis.exp.colfusion.persistence.managers.SourceInfoManagerImpl;
-import edu.pitt.sis.exp.colfusion.persistence.managers.UserManager;
-import edu.pitt.sis.exp.colfusion.persistence.managers.UserManagerImpl;
-import edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionSourceinfo;
-import edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionUsers;
-import edu.pitt.sis.exp.colfusion.tests.PropertyKeysTest;
 import edu.pitt.sis.exp.colfusion.tests.Utils;
 import edu.pitt.sis.exp.colfusion.tests.bll.dataSubmissionWizard.DataSubmissionWizzardTest;
+import edu.pitt.sis.exp.colfusion.utils.ConfigManager;
 import edu.pitt.sis.exp.colfusion.utils.IOUtils;
-import edu.pitt.sis.exp.colfusion.viewmodels.DatasetVariableViewModel;
-import edu.pitt.sis.exp.colfusion.viewmodels.FileContentInfoViewModel;
-import edu.pitt.sis.exp.colfusion.viewmodels.StoryTargetDBViewModel;
-import edu.pitt.sis.exp.colfusion.viewmodels.WorksheetViewModel;
-import junit.framework.TestCase;
+import edu.pitt.sis.exp.colfusion.utils.PropertyKeys;
+import edu.pitt.sis.exp.colfusion.utils.PropertyKeysTest;
 
 /**
  * @author Evgeny
@@ -44,7 +38,7 @@ public class KTRManagerTest extends TestCase {
 	Logger logger = LogManager.getLogger(KTRManagerTest.class.getName());
 	ConfigManager configManager = ConfigManager.getInstance();
 	
-	public KTRManagerTest(String name) {
+	public KTRManagerTest(final String name) {
 		super(name);
 	}
 	

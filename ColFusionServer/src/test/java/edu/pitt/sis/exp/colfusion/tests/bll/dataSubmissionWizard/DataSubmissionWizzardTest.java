@@ -10,19 +10,19 @@ import junit.framework.TestCase;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import edu.pitt.sis.exp.colfusion.ConfigManager;
 import edu.pitt.sis.exp.colfusion.bll.dataSubmissionWizzard.DataSubmissionWizzardBL;
+import edu.pitt.sis.exp.colfusion.dal.viewmodels.OneUploadedItemViewModel;
 import edu.pitt.sis.exp.colfusion.responseModels.AcceptedFilesResponse;
-import edu.pitt.sis.exp.colfusion.tests.PropertyKeysTest;
 import edu.pitt.sis.exp.colfusion.tests.Utils;
-import edu.pitt.sis.exp.colfusion.viewmodels.OneUploadedItemViewModel;
+import edu.pitt.sis.exp.colfusion.utils.ConfigManager;
+import edu.pitt.sis.exp.colfusion.utils.PropertyKeysTest;
 
 public class DataSubmissionWizzardTest extends TestCase {
 	
 	Logger logger = LogManager.getLogger(DataSubmissionWizzardTest.class.getName());
 	ConfigManager configManager = ConfigManager.getInstance();
 	
-	public DataSubmissionWizzardTest(String name) {
+	public DataSubmissionWizzardTest(final String name) {
 		super(name);
 	}
 	

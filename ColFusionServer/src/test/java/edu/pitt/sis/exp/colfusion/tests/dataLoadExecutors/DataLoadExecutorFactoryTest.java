@@ -6,24 +6,25 @@ package edu.pitt.sis.exp.colfusion.tests.dataLoadExecutors;
 import java.util.ArrayList;
 import java.util.Random;
 
+import junit.framework.TestCase;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import junit.framework.TestCase;
-import edu.pitt.sis.exp.colfusion.ConfigManager;
-import edu.pitt.sis.exp.colfusion.PropertyKeys;
+import edu.pitt.sis.exp.colfusion.dal.managers.SourceInfoManager;
+import edu.pitt.sis.exp.colfusion.dal.managers.SourceInfoManagerImpl;
+import edu.pitt.sis.exp.colfusion.dal.utils.DataSourceTypes;
+import edu.pitt.sis.exp.colfusion.dal.viewmodels.StoryTargetDBViewModel;
 import edu.pitt.sis.exp.colfusion.dataLoadExecutors.DataLoadExecutor;
 import edu.pitt.sis.exp.colfusion.dataLoadExecutors.DataLoadExecutorFactory;
 import edu.pitt.sis.exp.colfusion.importers.ktr.KTRManager;
-import edu.pitt.sis.exp.colfusion.importers.utils.DataSourceTypes;
-import edu.pitt.sis.exp.colfusion.persistence.managers.SourceInfoManager;
-import edu.pitt.sis.exp.colfusion.persistence.managers.SourceInfoManagerImpl;
 import edu.pitt.sis.exp.colfusion.process.ProcessManager;
 import edu.pitt.sis.exp.colfusion.process.ProcessStatusEnum;
 import edu.pitt.sis.exp.colfusion.tests.Utils;
 import edu.pitt.sis.exp.colfusion.tests.bll.dataSubmissionWizard.DataSubmissionWizzardTest;
 import edu.pitt.sis.exp.colfusion.tests.importers.ktr.KTRManagerTest;
-import edu.pitt.sis.exp.colfusion.viewmodels.StoryTargetDBViewModel;
+import edu.pitt.sis.exp.colfusion.utils.ConfigManager;
+import edu.pitt.sis.exp.colfusion.utils.PropertyKeys;
 
 /**
  * @author Evgeny
@@ -33,7 +34,7 @@ public class DataLoadExecutorFactoryTest  extends TestCase {
 
 	Logger logger = LogManager.getLogger(DataLoadExecutorFactoryTest.class.getName());
 	
-	public DataLoadExecutorFactoryTest(String name) {
+	public DataLoadExecutorFactoryTest(final String name) {
 		super(name);
 	}
 	
@@ -136,7 +137,7 @@ public class DataLoadExecutorFactoryTest  extends TestCase {
 		return sid;
 	}
 
-	private void alterKTR(int sid, int alterValue) throws Exception {
+	private void alterKTR(final int sid, final int alterValue) throws Exception {
 		SourceInfoManager storyMgr = new SourceInfoManagerImpl();
 		ArrayList<String> ktrLocations = storyMgr.getStoryKTRLocations(sid);
 		

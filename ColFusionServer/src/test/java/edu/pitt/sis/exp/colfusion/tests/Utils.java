@@ -6,14 +6,15 @@ package edu.pitt.sis.exp.colfusion.tests;
 import java.util.Date;
 import java.util.List;
 
-import edu.pitt.sis.exp.colfusion.ConfigManager;
-import edu.pitt.sis.exp.colfusion.importers.utils.DataSourceTypes;
-import edu.pitt.sis.exp.colfusion.persistence.managers.SourceInfoManager;
-import edu.pitt.sis.exp.colfusion.persistence.managers.SourceInfoManagerImpl;
-import edu.pitt.sis.exp.colfusion.persistence.managers.UserManager;
-import edu.pitt.sis.exp.colfusion.persistence.managers.UserManagerImpl;
-import edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionSourceinfo;
-import edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionUsers;
+import edu.pitt.sis.exp.colfusion.dal.managers.SourceInfoManager;
+import edu.pitt.sis.exp.colfusion.dal.managers.SourceInfoManagerImpl;
+import edu.pitt.sis.exp.colfusion.dal.managers.UserManager;
+import edu.pitt.sis.exp.colfusion.dal.managers.UserManagerImpl;
+import edu.pitt.sis.exp.colfusion.dal.orm.ColfusionSourceinfo;
+import edu.pitt.sis.exp.colfusion.dal.orm.ColfusionUsers;
+import edu.pitt.sis.exp.colfusion.dal.utils.DataSourceTypes;
+import edu.pitt.sis.exp.colfusion.utils.ConfigManager;
+import edu.pitt.sis.exp.colfusion.utils.PropertyKeysTest;
 
 /**
  * @author Evgeny

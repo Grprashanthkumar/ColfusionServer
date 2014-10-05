@@ -9,8 +9,8 @@ import org.apache.logging.log4j.Logger;
 import org.junit.Test;
 
 import edu.pitt.sis.exp.colfusion.bll.JoinTablesBL;
+import edu.pitt.sis.exp.colfusion.dal.viewmodels.JoinTablesByRelationshipsViewModel;
 import edu.pitt.sis.exp.colfusion.responseModels.JointTableByRelationshipsResponeModel;
-import edu.pitt.sis.exp.colfusion.viewmodels.JoinTablesByRelationshipsViewModel;
 
 public class JoinTablesBLTest extends TestCase {
 	private static Logger logger = LogManager.getLogger(JoinTablesBLTest.class.getName());

@@ -5,22 +5,23 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
+import junit.framework.TestCase;
+
 import org.apache.commons.compress.archivers.ArchiveException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import edu.pitt.sis.exp.colfusion.ConfigManager;
-import edu.pitt.sis.exp.colfusion.tests.PropertyKeysTest;
+import edu.pitt.sis.exp.colfusion.utils.ConfigManager;
 import edu.pitt.sis.exp.colfusion.utils.IOUtils;
+import edu.pitt.sis.exp.colfusion.utils.PropertyKeysTest;
 import edu.pitt.sis.exp.colfusion.utils.models.IOUtilsStoredFileInfoModel;
-import junit.framework.TestCase;
 
 public class IOUtilsTest extends TestCase {
 	
 	Logger logger = LogManager.getLogger(IOUtilsTest.class.getName());
 	ConfigManager configManager = ConfigManager.getInstance();
 	
-	public IOUtilsTest(String name) {
+	public IOUtilsTest(final String name) {
 		super(name);
 	}
 	

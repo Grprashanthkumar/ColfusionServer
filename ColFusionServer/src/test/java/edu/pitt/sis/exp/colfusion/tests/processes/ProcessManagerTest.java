@@ -3,24 +3,17 @@
  */
 package edu.pitt.sis.exp.colfusion.tests.processes;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import junit.framework.TestCase;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.google.gson.Gson;
-
-import edu.pitt.sis.exp.colfusion.ConfigManager;
+import edu.pitt.sis.exp.colfusion.dal.utils.DataSourceTypes;
 import edu.pitt.sis.exp.colfusion.dataLoadExecutors.DataLoadExecutor;
 import edu.pitt.sis.exp.colfusion.dataLoadExecutors.DataLoadExecutorFactory;
-import edu.pitt.sis.exp.colfusion.importers.utils.DataSourceTypes;
 import edu.pitt.sis.exp.colfusion.process.ProcessBase;
 import edu.pitt.sis.exp.colfusion.process.ProcessManager;
-import junit.framework.TestCase;
+import edu.pitt.sis.exp.colfusion.utils.ConfigManager;
 
 /**
  * @author Evgeny
@@ -31,7 +24,7 @@ public class ProcessManagerTest extends TestCase {
 	Logger logger = LogManager.getLogger(ProcessManagerTest.class.getName());
 	ConfigManager configManager = ConfigManager.getInstance();
 	
-	public ProcessManagerTest(String name) {
+	public ProcessManagerTest(final String name) {
 		super(name);
 	}
 	

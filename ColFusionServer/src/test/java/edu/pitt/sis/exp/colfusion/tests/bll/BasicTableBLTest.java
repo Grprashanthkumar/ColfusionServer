@@ -1,16 +1,11 @@
 package edu.pitt.sis.exp.colfusion.tests.bll;
 
-import java.util.List;
-
 import junit.framework.TestCase;
 
 import org.junit.Test;
 
 import edu.pitt.sis.exp.colfusion.bll.BasicTableBL;
-import edu.pitt.sis.exp.colfusion.dataModels.tableDataModel.Table;
-import edu.pitt.sis.exp.colfusion.responseModels.BasicTableResponseModel;
 import edu.pitt.sis.exp.colfusion.responseModels.JointTableByRelationshipsResponeModel;
-import edu.pitt.sis.exp.colfusion.viewmodels.BasicTableInfoViewModel;
 
 public class BasicTableBLTest extends TestCase {
 	

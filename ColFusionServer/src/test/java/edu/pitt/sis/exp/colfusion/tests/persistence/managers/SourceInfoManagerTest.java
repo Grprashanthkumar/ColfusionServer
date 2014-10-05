@@ -3,15 +3,16 @@
  */
 package edu.pitt.sis.exp.colfusion.tests.persistence.managers;
 
+import junit.framework.TestCase;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import edu.pitt.sis.exp.colfusion.importers.utils.DataSourceTypes;
-import edu.pitt.sis.exp.colfusion.persistence.managers.SourceInfoManager;
-import edu.pitt.sis.exp.colfusion.persistence.managers.SourceInfoManagerImpl;
-import edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionSourceinfo;
+import edu.pitt.sis.exp.colfusion.dal.managers.SourceInfoManager;
+import edu.pitt.sis.exp.colfusion.dal.managers.SourceInfoManagerImpl;
+import edu.pitt.sis.exp.colfusion.dal.orm.ColfusionSourceinfo;
+import edu.pitt.sis.exp.colfusion.dal.utils.DataSourceTypes;
 import edu.pitt.sis.exp.colfusion.tests.Utils;
-import junit.framework.TestCase;
 
 /**
  * @author Evgeny
@@ -21,7 +22,7 @@ public class SourceInfoManagerTest extends TestCase {
 	
 	Logger logger = LogManager.getLogger(SourceInfoManagerTest.class.getName());
 	
-	public SourceInfoManagerTest(String name) {
+	public SourceInfoManagerTest(final String name) {
 		super(name);
 	}
 	
