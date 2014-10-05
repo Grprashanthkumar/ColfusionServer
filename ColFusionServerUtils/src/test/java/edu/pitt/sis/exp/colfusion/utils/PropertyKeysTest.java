@@ -1,4 +1,4 @@
-package edu.pitt.sis.exp.colfusion.tests;
+package edu.pitt.sis.exp.colfusion.utils;
 
 public class PropertyKeysTest {
 	

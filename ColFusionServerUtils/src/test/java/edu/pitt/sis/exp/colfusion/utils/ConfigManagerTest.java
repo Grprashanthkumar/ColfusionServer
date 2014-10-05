@@ -1,16 +1,15 @@
-package edu.pitt.sis.exp.colfusion.tests;
+package edu.pitt.sis.exp.colfusion.utils;
+
+import junit.framework.TestCase;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-import edu.pitt.sis.exp.colfusion.ConfigManager;
-import junit.framework.TestCase;
 
 public class ConfigManagerTest extends TestCase {
 	
 	Logger logger = LogManager.getLogger(ConfigManagerTest.class.getName());
 	
-	public ConfigManagerTest(String name) {
+	public ConfigManagerTest(final String name) {
 		super(name);
 	}
 	
