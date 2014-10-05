@@ -1,25 +1,28 @@
 package edu.pitt.sis.exp.colfusion.bll;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-import edu.pitt.sis.exp.colfusion.dataModels.tableDataModel.Table;
-import edu.pitt.sis.exp.colfusion.persistence.databaseHandlers.DatabaseHandlerBase;
-import edu.pitt.sis.exp.colfusion.persistence.databaseHandlers.DatabaseHandlerFactory;
-import edu.pitt.sis.exp.colfusion.persistence.managers.SourceInfoManagerImpl;
+import edu.pitt.sis.exp.colfusion.dal.dataModels.tableDataModel.Table;
+import edu.pitt.sis.exp.colfusion.dal.databaseHandlers.DatabaseHandlerBase;
+import edu.pitt.sis.exp.colfusion.dal.databaseHandlers.DatabaseHandlerFactory;
+import edu.pitt.sis.exp.colfusion.dal.managers.SourceInfoManagerImpl;
+import edu.pitt.sis.exp.colfusion.dal.viewmodels.BasicTableInfoViewModel;
+import edu.pitt.sis.exp.colfusion.dal.viewmodels.JoinTablesByRelationshipsViewModel;
+import edu.pitt.sis.exp.colfusion.dal.viewmodels.StoryTargetDBViewModel;
 import edu.pitt.sis.exp.colfusion.responseModels.BasicTableResponseModel;
 import edu.pitt.sis.exp.colfusion.responseModels.JointTableByRelationshipsResponeModel;
-import edu.pitt.sis.exp.colfusion.viewmodels.BasicTableInfoViewModel;
-import edu.pitt.sis.exp.colfusion.viewmodels.JoinTablesByRelationshipsViewModel;
-import edu.pitt.sis.exp.colfusion.viewmodels.StoryMetadataViewModel;
-import edu.pitt.sis.exp.colfusion.viewmodels.StoryTargetDBViewModel;
 
 public class BasicTableBL {
 
 	BasicTableResponseModel result=new BasicTableResponseModel();
 	 
-	public BasicTableResponseModel getTableInfo(int sid, String tableName ){
+	public BasicTableResponseModel getTableInfo(final int sid, final String tableName ){
 		
         String driver = "com.mysql.jdbc.Driver";
 
@@ -79,8 +82,8 @@ public class BasicTableBL {
 		
 	}
 	
-	public JointTableByRelationshipsResponeModel getTableDataBySidAndName(int sid, String tableName,
-			int perPage, int pageNumber ){
+	public JointTableByRelationshipsResponeModel getTableDataBySidAndName(final int sid, final String tableName,
+			final int perPage, final int pageNumber ){
 		SourceInfoManagerImpl sourceInfo = new SourceInfoManagerImpl();
 		StoryTargetDBViewModel storyTargetDBViewModel = sourceInfo.getStorySourceInfoDB(sid);
 		try {

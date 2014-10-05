@@ -15,8 +15,8 @@ import edu.pitt.sis.exp.colfusion.controllers.UserController;
 import edu.pitt.sis.exp.colfusion.controllers.WizardController;
 
 public class ApplicationConfig extends Application {
-
-    @Override
+	
+	@Override
 	public Set<Class<?>> getClasses() {
         final Set<Class<?>> resources = new HashSet<Class<?>>();
 

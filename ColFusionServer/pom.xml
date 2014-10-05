@@ -15,7 +15,6 @@
 
 	<properties>
 		<jersey.version>2.5.1</jersey.version>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
 		<artifact.id>ColFusionServer</artifact.id>
 		<version>1.0</version>
@@ -26,17 +25,6 @@
 	<build>
 		<finalName>ColFusionServer</finalName>
 		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<version>2.5.1</version>
-				<inherited>true</inherited>
-				<configuration>
-					<source>1.7</source>
-					<target>1.7</target>
-				</configuration>
-			</plugin>
-
 			<plugin>
 				<artifactId>maven-war-plugin</artifactId>
 				<version>2.3</version>
@@ -63,6 +51,13 @@
 
 		<dependency>
 			<groupId>edu.pitt.sis.exp.colfusion</groupId>
+			<artifactId>colfusionserverutils</artifactId>
+			<version>1.0-SNAPSHOT</version>
+			<scope>compile</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>edu.pitt.sis.exp.colfusion</groupId>
 			<artifactId>colfusionserverdal</artifactId>
 			<version>1.0-SNAPSHOT</version>
 			<scope>compile</scope>
@@ -80,7 +75,6 @@
 			<artifactId>jersey-media-moxy</artifactId>
 		</dependency>
 
-
 		<dependency>
 			<groupId>com.sun.jersey</groupId>
 			<artifactId>jersey-json</artifactId>
@@ -97,24 +91,6 @@
 			<groupId>com.thetransactioncompany</groupId>
 			<artifactId>cors-filter</artifactId>
 			<version>1.7.1</version>
-		</dependency>
-
-		<dependency>
-			<groupId>org.apache.logging.log4j</groupId>
-			<artifactId>log4j-api</artifactId>
-			<version>2.0-rc1</version>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.logging.log4j</groupId>
-			<artifactId>log4j-core</artifactId>
-			<version>2.0-rc1</version>
-		</dependency>
-
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>4.8.1</version>
-			<scope>test</scope>
 		</dependency>
 
 		<dependency>
@@ -200,15 +176,5 @@
 			<artifactId>mail</artifactId>
 			<version>1.4.7</version>
 		</dependency>
-
-		<dependency>
-			<groupId>com.google.code.gson</groupId>
-			<artifactId>gson</artifactId>
-			<version>2.2.4</version>
-		</dependency>
 	</dependencies>
-
-	
-
-	<url>colfusion.exp.sis.pitt.edu/colfusion</url>
 </project>

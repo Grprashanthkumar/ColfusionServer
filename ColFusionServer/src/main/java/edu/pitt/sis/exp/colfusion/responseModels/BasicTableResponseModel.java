@@ -3,7 +3,7 @@ package edu.pitt.sis.exp.colfusion.responseModels;
 import java.util.ArrayList;
 import java.util.List;
 
-import edu.pitt.sis.exp.colfusion.viewmodels.BasicTableInfoViewModel;
+import edu.pitt.sis.exp.colfusion.dal.viewmodels.BasicTableInfoViewModel;
 
 public class BasicTableResponseModel extends GeneralResponseImpl{
 	private List<BasicTableInfoViewModel> payload = new ArrayList<BasicTableInfoViewModel>();

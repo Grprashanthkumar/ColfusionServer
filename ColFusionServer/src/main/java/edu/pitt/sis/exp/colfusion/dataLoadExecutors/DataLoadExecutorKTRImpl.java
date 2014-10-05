@@ -21,6 +21,7 @@ import org.apache.logging.log4j.Logger;
 
 import edu.pitt.sis.exp.colfusion.ConfigManager;
 import edu.pitt.sis.exp.colfusion.PropertyKeys;
+import edu.pitt.sis.exp.colfusion.dal.viewmodels.StoryTargetDBViewModel;
 import edu.pitt.sis.exp.colfusion.importers.ktr.KTRManager;
 import edu.pitt.sis.exp.colfusion.persistence.databaseHandlers.DatabaseHanderType;
 import edu.pitt.sis.exp.colfusion.persistence.databaseHandlers.DatabaseHandlerBase;
@@ -30,7 +31,6 @@ import edu.pitt.sis.exp.colfusion.persistence.managers.ExecutionInfoManagerImpl;
 import edu.pitt.sis.exp.colfusion.persistence.managers.SourceInfoManager;
 import edu.pitt.sis.exp.colfusion.persistence.managers.SourceInfoManagerImpl;
 import edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionExecuteinfo;
-import edu.pitt.sis.exp.colfusion.viewmodels.StoryTargetDBViewModel;
 
 /**
  * @author Evgeny
@@ -269,27 +269,7 @@ public class DataLoadExecutorKTRImpl extends DataLoadExecutorBaseImpl implements
 			throw e;
 		}	
 	}
-	
-	/**
-	 * Creates or updates Linked server for the given target database.
-	 * @param executionInfoMgr execution info manager that will be used to log the progress/log message.
-	 * @param executionLogId the id of the execution info record where log should be recorded.
-	 * @param sourceDBInfo target database connection info.
-	 * @throws Exception
-	 */
-	private void updateLinkedServerInfo(final ExecutionInfoManager executionInfoMgr, final int executionLogId, final StoryTargetDBViewModel sourceDBInfo) throws Exception {
-		try {
-			
-			super.updateLinkedServer(executionInfoMgr, executionLogId, sourceDBInfo);
-			
-		} catch (Exception e) {
-			
-			executionInfoMgr.updateStatus(executionLogId, DataLoadExecutionStatus.FAILED);
-			
-			throw e;
-		}		
-	}
-
+		
 	@Override
 	protected Runnable getRunnable() {
 		return this;

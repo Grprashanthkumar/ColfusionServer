@@ -13,9 +13,9 @@ import org.apache.logging.log4j.Logger;
 
 import com.google.gson.annotations.Expose;
 
-import edu.pitt.sis.exp.colfusion.dataModels.tableDataModel.ColumnGroup;
-import edu.pitt.sis.exp.colfusion.dataModels.tableDataModel.Row;
-import edu.pitt.sis.exp.colfusion.dataModels.tableDataModel.Table;
+import edu.pitt.sis.exp.colfusion.dal.dataModels.tableDataModel.ColumnGroup;
+import edu.pitt.sis.exp.colfusion.dal.dataModels.tableDataModel.Row;
+import edu.pitt.sis.exp.colfusion.dal.dataModels.tableDataModel.Table;
 import edu.pitt.sis.exp.colfusion.persistence.databaseHandlers.DatabaseHandlerBase;
 import edu.pitt.sis.exp.colfusion.persistence.databaseHandlers.DatabaseHandlerFactory;
 import edu.pitt.sis.exp.colfusion.persistence.managers.ProcessPersistantManager;

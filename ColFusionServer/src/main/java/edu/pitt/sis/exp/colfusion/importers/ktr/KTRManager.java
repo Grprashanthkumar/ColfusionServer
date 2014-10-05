@@ -24,12 +24,16 @@ import org.apache.logging.log4j.Logger;
 import org.apache.poi.hssf.util.CellReference;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
 import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 import edu.pitt.sis.exp.colfusion.ConfigManager;
 import edu.pitt.sis.exp.colfusion.PropertyKeys;
+import edu.pitt.sis.exp.colfusion.dal.viewmodels.DatasetVariableViewModel;
+import edu.pitt.sis.exp.colfusion.dal.viewmodels.FileContentInfoViewModel;
+import edu.pitt.sis.exp.colfusion.dal.viewmodels.StoryTargetDBViewModel;
+import edu.pitt.sis.exp.colfusion.dal.viewmodels.WorksheetViewModel;
 import edu.pitt.sis.exp.colfusion.persistence.managers.SourceInfoManager;
 import edu.pitt.sis.exp.colfusion.persistence.managers.SourceInfoManagerImpl;
 import edu.pitt.sis.exp.colfusion.persistence.managers.SourceInfoTableKTRManager;
@@ -40,10 +44,6 @@ import edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionSourceinfoTableKtrId;
 import edu.pitt.sis.exp.colfusion.utils.IOUtils;
 import edu.pitt.sis.exp.colfusion.utils.StoryUtils;
 import edu.pitt.sis.exp.colfusion.utils.models.IOUtilsStoredFileInfoModel;
-import edu.pitt.sis.exp.colfusion.viewmodels.DatasetVariableViewModel;
-import edu.pitt.sis.exp.colfusion.viewmodels.FileContentInfoViewModel;
-import edu.pitt.sis.exp.colfusion.viewmodels.StoryTargetDBViewModel;
-import edu.pitt.sis.exp.colfusion.viewmodels.WorksheetViewModel;
 
 /**
  * The class to manage one KTR file or files if uploaded file has more than one sheet: create, read, write, modify.
@@ -60,7 +60,7 @@ public class KTRManager {
 
 	private String ktrAbsoluteName;
 	
-	public KTRManager(int sid) {
+	public KTRManager(final int sid) {
 		setSid(sid);
 	}
 	
@@ -75,7 +75,7 @@ public class KTRManager {
 	 * @param file
 	 * @throws Exception 
 	 */
-	public void createTemplate(FileContentInfoViewModel file) throws Exception {
+	public void createTemplate(final FileContentInfoViewModel file) throws Exception {
 		
 		logger.info(String.format("Starting to create KTR file(s) for %s sid", sid));
 		
@@ -111,8 +111,8 @@ public class KTRManager {
 	 * @param tableName the name of the table into which the data from the worksheet will be imported.
 	 * @throws Exception 
 	 */
-	private void fillKTRFile(String ktrAbsoluteName, String dataFileExtension, ArrayList<String> filesAbsoluteNames, WorksheetViewModel worksheet, 
-			String tableName) 
+	private void fillKTRFile(final String ktrAbsoluteName, final String dataFileExtension, final ArrayList<String> filesAbsoluteNames, final WorksheetViewModel worksheet, 
+			final String tableName) 
 			throws Exception {
 		
 		if (ktrDocument == null) {
@@ -156,7 +156,7 @@ public class KTRManager {
 	 * @param transformationName the name to set.
 	 * @throws Exception
 	 */
-	private void ktrDocumentChangeTransformationName(String transformationName) throws Exception {
+	private void ktrDocumentChangeTransformationName(final String transformationName) throws Exception {
 		logger.info("starting change transformation name in the KTR document");
  		
  		//XPath to get fields node to populate with selected variables
@@ -171,7 +171,7 @@ public class KTRManager {
  			throw new Exception("nameTag failed, no /transformation/info/name tag");
  		}
  		
- 		Node nameNode = (Node) nameTag.item(0);
+ 		Node nameNode = nameTag.item(0);
  		
  		removeAllChildNodes(nameNode);
  		
@@ -184,7 +184,7 @@ public class KTRManager {
 	 * Removes all child nodes from the given node of the XML {@link Document}
 	 * @param node parent node from which the children should be deleted.
 	 */
-	public void removeAllChildNodes(Node node) 
+	public void removeAllChildNodes(final Node node) 
     {
 		NodeList children = node.getChildNodes();
 		
@@ -199,7 +199,7 @@ public class KTRManager {
 	 * @param tableName the name of the table.
 	 * @throws Exception
 	 */
-	private void ktrDocumentAddTableNateIntoTargetSchemaStep(String tableName) throws Exception {
+	private void ktrDocumentAddTableNateIntoTargetSchemaStep(final String tableName) throws Exception {
 		logger.info("starting add table name into KTR document into Target Schema step");
 		
 		//XPath to get fields node to populate with selected variables
@@ -214,7 +214,7 @@ public class KTRManager {
 			throw new Exception("fieldsTag failed, no /transformation/step[name = 'Target Schema'] tag");
 		}
 		
-		Node stepNode = (Node) stepTag.item(0);
+		Node stepNode = stepTag.item(0);
 		
 		Element table = ktrDocument.createElement("table");
 		table.appendChild(ktrDocument.createTextNode(tableName));
@@ -231,7 +231,7 @@ public class KTRManager {
 	 * @param variables the info about variables
 	 * @throws Exception
 	 */
-	private void ktrDocumentAddVariablesIntoTargetSchemaStep(ArrayList<DatasetVariableViewModel> variables) throws Exception {
+	private void ktrDocumentAddVariablesIntoTargetSchemaStep(final ArrayList<DatasetVariableViewModel> variables) throws Exception {
 		logger.info("starting add variables into KTR document into Target Schema step");
 		
 		//XPath to get fields node to populate with selected variables
@@ -246,7 +246,7 @@ public class KTRManager {
 			throw new Exception("fieldsTag failed, no /transformation/step[name = 'Target Schema']/fields tag");
 		}
 		
-		Node fieldsNode = (Node) fieldsTag.item(0);
+		Node fieldsNode = fieldsTag.item(0);
 		
 		for(DatasetVariableViewModel variable : variables) {
 			
@@ -278,7 +278,7 @@ public class KTRManager {
 	 * @param variables the info about variables
 	 * @throws Exception
 	 */
-	private void ktrDocumentAddVariablesIntoInputInputSourceStep(String dataFileExtension, ArrayList<DatasetVariableViewModel> variables) throws Exception {
+	private void ktrDocumentAddVariablesIntoInputInputSourceStep(final String dataFileExtension, final ArrayList<DatasetVariableViewModel> variables) throws Exception {
 		
 		logger.info("starting add variables into KTR document into Input Source step");
 		
@@ -297,7 +297,7 @@ public class KTRManager {
 			throw new Exception("fieldsTag failed, no /trasformation/step/fields tag");
 		}
 		
-		Node fieldsNode = (Node) fieldsTag.item(0);
+		Node fieldsNode = fieldsTag.item(0);
 		
 		for(DatasetVariableViewModel variable : variables) {
 			
@@ -355,7 +355,7 @@ public class KTRManager {
 	 * @param filesAbsoluteNames the extension of the data file without dot.
 	 * @throws Exception
 	 */
-	private void ktrDocumentAddFiles(String dataFileExtension, ArrayList<String> filesAbsoluteNames) throws Exception {
+	private void ktrDocumentAddFiles(final String dataFileExtension, final ArrayList<String> filesAbsoluteNames) throws Exception {
 		
 		//TODO: the CSV type as a string is not good, should be an enum.
 		String stepName = dataFileExtension.equals("csv") ? "CSV file input" : "Excel Input File";
@@ -372,7 +372,7 @@ public class KTRManager {
 			throw new Exception("fileTag failed, no /trasformation/step/file tag");
 		}
 		
-		Node fileNode = (Node) fileTag.item(0);
+		Node fileNode = fileTag.item(0);
 		
 		for(String fileName : filesAbsoluteNames) {
 			Element name = ktrDocument.createElement("name");
@@ -387,7 +387,7 @@ public class KTRManager {
 	 * @param worksheet the sheet info.
 	 * @throws Exception
 	 */
-	private void ktrDocumentAddSheets(WorksheetViewModel worksheet) throws Exception {
+	private void ktrDocumentAddSheets(final WorksheetViewModel worksheet) throws Exception {
 		//XPath to get connection node for the database to load data to
 		String expression = "/transformation/step[name = 'Excel Input File']/sheets";
 		
@@ -400,7 +400,7 @@ public class KTRManager {
 			throw new Exception("ktrDocumentAddSheets failed, no excel/Step/Sheets tag for the connection to the database");
 		}
 		
-		Node excelStepSheetsNode = (Node) excelStepSheetsTag.item(0);
+		Node excelStepSheetsNode = excelStepSheetsTag.item(0);
 		
 		Element sheetTag = ktrDocument.createElement("sheet");;
 		Element sheetNameTag = ktrDocument.createElement("name");
@@ -440,7 +440,7 @@ public class KTRManager {
 			throw new Exception("ktrDocumentChangeConnection failed, no connection tag for the connection to the database");
 		}
 	
-		Node connectionNode = (Node) connectionTag.item(0);
+		Node connectionNode = connectionTag.item(0);
 		
 		ConfigManager configManager = ConfigManager.getInstance();
 		
@@ -464,7 +464,7 @@ public class KTRManager {
 			throw new Exception("ktrDocumentChangeConnection failed, no connection tag for the connection to the database");
 		}
 	
-		connectionNode = (Node) connectionTag.item(0);
+		connectionNode = connectionTag.item(0);
 		
 		setConnectionNode(connectionNode, configManager.getPropertyByName(PropertyKeys.logginDatabase_DatabaseNamePrefix),
 				configManager.getPropertyByName(PropertyKeys.logginDatabase_UserName),
@@ -487,8 +487,8 @@ public class KTRManager {
 	 * @param type the vendor of the database, e.g. MySQL.
 	 * @throws Exception
 	 */
-	public void updateTargetDBConnectionInfo(String databaseName, String userName, String password, String server, String port, 
-			String type) throws Exception{
+	public void updateTargetDBConnectionInfo(final String databaseName, final String userName, final String password, final String server, final String port, 
+			final String type) throws Exception{
 		
 		if (ktrDocument == null) {
 			//TODO: create appropriate exception.
@@ -509,7 +509,7 @@ public class KTRManager {
 			throw new Exception("updateTargetDBConnectionInfo failed, no connection tag for the connection to the database");
 		}
 	
-		Node connectionNode = (Node) connectionTag.item(0);
+		Node connectionNode = connectionTag.item(0);
 		
 		setConnectionNode(connectionNode, databaseName, userName, password, server, port, type);
 		
@@ -527,28 +527,30 @@ public class KTRManager {
 	 * @param port on which database is listening.
 	 * @param type the vendor of the database, e.g. MySQL.
 	 */
-	private void setConnectionNode(Node connectionNode, String databaseName, String userName, String password, String server, String port, 
-			String type) {
+	private void setConnectionNode(final Node connectionNode, final String databaseName, final String userName, final String password, final String server, final String port, 
+			final String type) {
 		//TODO there must be a better way to do that
 		NodeList childNodes = connectionNode.getChildNodes();
 		for (int i = 0; i < childNodes.getLength(); i++)
 		{
 		    Node child = childNodes.item(i);
-		    if (!(child instanceof Element))
-		        continue;
+		    if (!(child instanceof Element)) {
+				continue;
+			}
 
-		    if (child.getNodeName().equals("database"))
-		        child.getFirstChild().setNodeValue(databaseName);
-		    else if (child.getNodeName().equals("username"))
-		        child.getFirstChild().setNodeValue(userName);
-		    else if (child.getNodeName().equals("password"))
-		        child.getFirstChild().setNodeValue(password);
-		    else if (child.getNodeName().equals("server"))
-		        child.getFirstChild().setNodeValue(server);
-		    else if (child.getNodeName().equals("port"))
-		        child.getFirstChild().setNodeValue(port);
-		    else if (child.getNodeName().equals("type"))
-		        child.getFirstChild().setNodeValue(type);
+		    if (child.getNodeName().equals("database")) {
+				child.getFirstChild().setNodeValue(databaseName);
+			} else if (child.getNodeName().equals("username")) {
+				child.getFirstChild().setNodeValue(userName);
+			} else if (child.getNodeName().equals("password")) {
+				child.getFirstChild().setNodeValue(password);
+			} else if (child.getNodeName().equals("server")) {
+				child.getFirstChild().setNodeValue(server);
+			} else if (child.getNodeName().equals("port")) {
+				child.getFirstChild().setNodeValue(port);
+			} else if (child.getNodeName().equals("type")) {
+				child.getFirstChild().setNodeValue(type);
+			}
 		}
 	}
 
@@ -560,7 +562,7 @@ public class KTRManager {
 	 * @param ktrAbsoluteFileName absolute location of the KTR file.
 	 * @throws Exception 
 	 */
-	private void saveKTRFileLocationToDB(int sid, String tableName, String ktrAbsoluteFileName) throws Exception {
+	private void saveKTRFileLocationToDB(final int sid, final String tableName, final String ktrAbsoluteFileName) throws Exception {
 		
 		SourceInfoTableKTRManager sourceInfoTableKTRManager = new SourceInfoTableKTRManagerImpl();
 		SourceInfoManager sourceInoMgr = new SourceInfoManagerImpl();
@@ -596,7 +598,7 @@ public class KTRManager {
 	 * @return info about created KTR file.
 	 * @throws IOException
 	 */
-	private IOUtilsStoredFileInfoModel createKTRFileFromTemplate(int sid, String dataFileExtension, String tableName) throws IOException {
+	private IOUtilsStoredFileInfoModel createKTRFileFromTemplate(final int sid, final String dataFileExtension, final String tableName) throws IOException {
 		
 		String ktrBaseDirLocation = IOUtils.getInstance().getAbsolutePathInColfutionRoot(ConfigManager.getInstance().getPropertyByName(PropertyKeys.ktrFielsBaseLocation));
 		String ktrDirectoryLocation = ktrBaseDirLocation + File.separator +	sid;
@@ -626,7 +628,7 @@ public class KTRManager {
 	/**
 	 * @param sid the sid to set
 	 */
-	public void setSid(int sid) {
+	public void setSid(final int sid) {
 		this.sid = sid;
 	}
 
@@ -637,7 +639,7 @@ public class KTRManager {
 	 * @throws SAXException 
 	 * @throws ParserConfigurationException 
 	 */
-	public void loadKTR(String ktrLocation) throws ParserConfigurationException, SAXException, IOException {
+	public void loadKTR(final String ktrLocation) throws ParserConfigurationException, SAXException, IOException {
 		ktrDocument = IOUtils.getInstance().readXMLDocument(ktrLocation);		
 		this.ktrAbsoluteName = ktrLocation;
 	}
@@ -669,7 +671,7 @@ public class KTRManager {
 			throw new Exception("ktrDocumentChangeConnection failed, no connection tag for the connection to the database");
 		}
 	
-		Node connectionNode = (Node) connectionTag.item(0);
+		Node connectionNode = connectionTag.item(0);
 		
 		StoryTargetDBViewModel result = new StoryTargetDBViewModel();
 		
@@ -726,7 +728,7 @@ public class KTRManager {
 			throw new Exception("getTableName failed, no /transformation/step[name = 'Target Schema'] tag");
 		}
 	
-		Node targetSchemaStepNode = (Node) targetSchemaStep.item(0);
+		Node targetSchemaStepNode = targetSchemaStep.item(0);
 		
 		if (targetSchemaStepNode.getNodeType() == Node.ELEMENT_NODE) {
 			Element targetSchemaStepElement = (Element) targetSchemaStepNode;
@@ -756,7 +758,7 @@ public class KTRManager {
 	 * @param transformationName the name to set.
 	 * @throws Exception 
 	 */
-	public void changeTransformaitonName(String transformationName) throws Exception {
+	public void changeTransformaitonName(final String transformationName) throws Exception {
 		
 		if (ktrDocument == null) {
 			//TODO: create appropriate exception.
