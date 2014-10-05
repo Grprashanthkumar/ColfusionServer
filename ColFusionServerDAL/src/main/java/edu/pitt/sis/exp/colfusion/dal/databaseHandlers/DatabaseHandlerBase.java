@@ -223,21 +223,27 @@ public abstract class DatabaseHandlerBase {
 	public abstract void createIndecesIfNotExist(String tableName, String columnNames) throws SQLException;
 
 	public Table getAll(final String tableName, final List<String> columnDbNames) throws SQLException {
-		StringBuilder sql = new StringBuilder();
+		String sqlString = constructSelectFromSQL(tableName, columnDbNames);
 		
-		sql.append("SELECT " + this.getDbCharToWrapNamesWithSpaces());
+		return runQuery(tableName, columnDbNames, sqlString);
+	}
+	
+	public Table getAll(final String tableName, final List<String> columnDbNames, final int perPage, final int pageNumber) throws SQLException {
+		String sqlString = constructSelectFromSQL(tableName, columnDbNames);
 		
-		String columnDbNamesCSV = StringUtils.join(columnDbNames, String.format("%c, %c", this.getDbCharToWrapNamesWithSpaces(), this.getDbCharToWrapNamesWithSpaces()));
+		String sqlWithLimit = wrapSQLIntoLimit(sqlString, perPage, pageNumber);
 		
-		sql.append(String.format("%s%c FROM %s", columnDbNamesCSV, this.getDbCharToWrapNamesWithSpaces(), tableName));
-		
-		String sqlString = sql.toString();
-		
-		logger.info(String.format("About to execute this query: %s", sqlString));
+		return runQuery(tableName, columnDbNames, sqlWithLimit);
+	}
+
+	private Table runQuery(final String tableName,
+			final List<String> columnDbNames, final String sqlWithLimit)
+			throws SQLException {
+		logger.info(String.format("About to execute this query: %s", sqlWithLimit));
 		
 		try (Statement statement = connection.createStatement()) {
 			
-			ResultSet resultSet = statement.executeQuery(sqlString);
+			ResultSet resultSet = statement.executeQuery(sqlWithLimit);
 			
 			Table result = new Table();
 			
@@ -264,12 +270,43 @@ public abstract class DatabaseHandlerBase {
 		}
 	}
 
+	protected abstract String wrapSQLIntoLimit(String sqlString, int perPage,
+			int pageNumber);
+
+	private String constructSelectFromSQL(final String tableName,
+			final List<String> columnDbNames) {
+		StringBuilder sql = new StringBuilder();
+		
+		sql.append("SELECT " + this.getDbCharToWrapNamesWithSpaces());
+		
+		String columnDbNamesCSV = StringUtils.join(columnDbNames, String.format("%c, %c", this.getDbCharToWrapNamesWithSpaces(), this.getDbCharToWrapNamesWithSpaces()));
+		
+		sql.append(String.format("%s%c FROM %s", columnDbNamesCSV, this.getDbCharToWrapNamesWithSpaces(), tableName));
+		
+		String sqlString = sql.toString();
+		return sqlString;
+	}
+
 	public Table getAll(final String tableNameTo) throws SQLException {
 		
 		List<String> allColumnsInTable = getAllColumnsInTable(tableNameTo);
 		
 		return getAll(tableNameTo, allColumnsInTable);
 	}
+	
+	public Table getAll(final String tableNameTo, final int perPage, final int pageNumber) throws SQLException {
+		
+		List<String> allColumnsInTable = getAllColumnsInTable(tableNameTo);
+		
+		return getAll(tableNameTo, allColumnsInTable, perPage, pageNumber);
+	}
 
 	public abstract List<String> getAllColumnsInTable(String tableNameTo) throws SQLException;
+
+	public abstract int getCount(String tableName) throws SQLException;
+	
+	protected String wrapInEscapeChars(final String tableName) {
+		return String.format("%s%s%s", getDbCharToWrapNamesWithSpaces(), 
+				tableName, getDbCharToWrapNamesWithSpaces());
+	}
 }

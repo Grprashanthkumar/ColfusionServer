@@ -285,4 +285,32 @@ public class MySQLDatabaseHandler extends DatabaseHandlerBase {
 			throw e;
 		}
 	}
+	
+	@Override
+	protected String wrapSQLIntoLimit(final String sqlString, final int perPage,
+			final int pageNumber) {
+		int startPoint = (pageNumber - 1) * perPage;
+		
+		return String.format("%s LIMIT %d, %d", sqlString, startPoint, perPage);
+	}
+
+	@Override
+	public int getCount(final String tableName) throws SQLException {
+		String sql = String.format("SELECT COUNT(*) as ct from %s", wrapInEscapeChars(tableName));
+		
+		try (Statement statement = connection.createStatement()) {
+			
+			ResultSet rs = statement.executeQuery(sql);
+			
+			while (rs.next()) {
+				return rs.getInt("ct");				
+			}
+			
+			return 0;
+		} catch (SQLException e) {
+			logger.error(String.format("getAllColumnsInTable FAILED on table '%s'", tableName), e);
+			
+			throw e;
+		}
+	}
 }
