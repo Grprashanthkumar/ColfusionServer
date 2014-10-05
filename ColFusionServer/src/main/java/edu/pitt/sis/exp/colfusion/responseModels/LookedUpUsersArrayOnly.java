@@ -7,7 +7,7 @@ import java.util.ArrayList;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
-import edu.pitt.sis.exp.colfusion.viewmodels.StoryAuthorViewModel;
+import edu.pitt.sis.exp.colfusion.dal.viewmodels.StoryAuthorViewModel;
 
 /**
  * @author Evgeny
@@ -27,7 +27,7 @@ public class LookedUpUsersArrayOnly {
 	/**
 	 * @param payload the payload to set
 	 */
-	public void setPayload(ArrayList<StoryAuthorViewModel> payload) {
+	public void setPayload(final ArrayList<StoryAuthorViewModel> payload) {
 		this.payload = payload;
 	}
 }

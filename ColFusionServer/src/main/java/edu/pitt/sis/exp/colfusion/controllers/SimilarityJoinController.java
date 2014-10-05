@@ -16,10 +16,10 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import edu.pitt.sis.exp.colfusion.bll.JoinTablesBL;
+import edu.pitt.sis.exp.colfusion.dal.viewmodels.JoinTablesByRelationshipsViewModel;
+import edu.pitt.sis.exp.colfusion.dal.viewmodels.TwoJointTablesViewModel;
 import edu.pitt.sis.exp.colfusion.responseModels.JointTableByRelationshipsResponeModel;
 import edu.pitt.sis.exp.colfusion.responseModels.JointTableResponeModel;
-import edu.pitt.sis.exp.colfusion.viewmodels.JoinTablesByRelationshipsViewModel;
-import edu.pitt.sis.exp.colfusion.viewmodels.TwoJointTablesViewModel;
 
 /**
  * @author Evgeny

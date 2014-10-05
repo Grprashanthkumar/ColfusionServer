@@ -5,8 +5,8 @@ package edu.pitt.sis.exp.colfusion.similarityJoins;
 
 import java.util.List;
 
-import edu.pitt.sis.exp.colfusion.dataModels.tableDataModel.Table;
-import edu.pitt.sis.exp.colfusion.relationships.transformation.RelationshipTransformation;
+import edu.pitt.sis.exp.colfusion.dal.dataModels.relationships.transformation.RelationshipTransformation;
+import edu.pitt.sis.exp.colfusion.dal.dataModels.tableDataModel.Table;
 import edu.pitt.sis.exp.colfusion.similarityMeasures.FilterBase;
 import edu.pitt.sis.exp.colfusion.similarityMeasures.SimilarityDistanceMeasure;
 

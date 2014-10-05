@@ -8,9 +8,9 @@ import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import edu.pitt.sis.exp.colfusion.dataModels.tableDataModel.Row;
-import edu.pitt.sis.exp.colfusion.dataModels.tableDataModel.Table;
-import edu.pitt.sis.exp.colfusion.relationships.transformation.RelationshipTransformation;
+import edu.pitt.sis.exp.colfusion.dal.dataModels.relationships.transformation.RelationshipTransformation;
+import edu.pitt.sis.exp.colfusion.dal.dataModels.tableDataModel.Row;
+import edu.pitt.sis.exp.colfusion.dal.dataModels.tableDataModel.Table;
 import edu.pitt.sis.exp.colfusion.similarityMeasures.FilterBase;
 import edu.pitt.sis.exp.colfusion.similarityMeasures.SimilarityDistanceMeasure;
 

@@ -7,24 +7,24 @@ import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import edu.pitt.sis.exp.colfusion.dataModels.tableDataModel.Table;
-import edu.pitt.sis.exp.colfusion.persistence.databaseHandlers.DatabaseHandlerBase;
-import edu.pitt.sis.exp.colfusion.persistence.databaseHandlers.DatabaseHandlerFactory;
-import edu.pitt.sis.exp.colfusion.persistence.managers.RelationshipsManager;
-import edu.pitt.sis.exp.colfusion.persistence.managers.RelationshipsManagerImpl;
-import edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionRelationships;
-import edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionRelationshipsColumns;
-import edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionSourceinfoDb;
-import edu.pitt.sis.exp.colfusion.relationships.transformation.Relationship;
-import edu.pitt.sis.exp.colfusion.relationships.transformation.RelationshipLink;
-import edu.pitt.sis.exp.colfusion.relationships.transformation.RelationshipTransformation;
+import edu.pitt.sis.exp.colfusion.dal.dataModels.relationships.Relationship;
+import edu.pitt.sis.exp.colfusion.dal.dataModels.relationships.RelationshipLink;
+import edu.pitt.sis.exp.colfusion.dal.dataModels.relationships.transformation.RelationshipTransformation;
+import edu.pitt.sis.exp.colfusion.dal.dataModels.tableDataModel.Table;
+import edu.pitt.sis.exp.colfusion.dal.databaseHandlers.DatabaseHandlerBase;
+import edu.pitt.sis.exp.colfusion.dal.databaseHandlers.DatabaseHandlerFactory;
+import edu.pitt.sis.exp.colfusion.dal.managers.RelationshipsManager;
+import edu.pitt.sis.exp.colfusion.dal.managers.RelationshipsManagerImpl;
+import edu.pitt.sis.exp.colfusion.dal.orm.ColfusionRelationships;
+import edu.pitt.sis.exp.colfusion.dal.orm.ColfusionRelationshipsColumns;
+import edu.pitt.sis.exp.colfusion.dal.orm.ColfusionSourceinfoDb;
+import edu.pitt.sis.exp.colfusion.dal.viewmodels.JoinTablesByRelationshipsViewModel;
+import edu.pitt.sis.exp.colfusion.dal.viewmodels.TwoJointTablesViewModel;
 import edu.pitt.sis.exp.colfusion.responseModels.JointTableByRelationshipsResponeModel;
 import edu.pitt.sis.exp.colfusion.responseModels.JointTableResponeModel;
 import edu.pitt.sis.exp.colfusion.similarityJoins.NestedLoopSimilarityJoin;
 import edu.pitt.sis.exp.colfusion.similarityMeasures.LevenshteinDistance;
 import edu.pitt.sis.exp.colfusion.similarityMeasures.NormalizedDistance;
-import edu.pitt.sis.exp.colfusion.viewmodels.JoinTablesByRelationshipsViewModel;
-import edu.pitt.sis.exp.colfusion.viewmodels.TwoJointTablesViewModel;
 
 public class JoinTablesBL {
 

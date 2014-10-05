@@ -23,13 +23,13 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
+import edu.pitt.sis.exp.colfusion.dal.viewmodels.DatasetVariableViewModel;
+import edu.pitt.sis.exp.colfusion.dal.viewmodels.FileContentInfoViewModel;
+import edu.pitt.sis.exp.colfusion.dal.viewmodels.PreviewFileViewModel;
+import edu.pitt.sis.exp.colfusion.dal.viewmodels.WorksheetDataRowViewModel;
+import edu.pitt.sis.exp.colfusion.dal.viewmodels.WorksheetDataViewModel;
+import edu.pitt.sis.exp.colfusion.dal.viewmodels.WorksheetViewModel;
 import edu.pitt.sis.exp.colfusion.utils.models.IOUtilsStoredFileInfoModel;
-import edu.pitt.sis.exp.colfusion.viewmodels.DatasetVariableViewModel;
-import edu.pitt.sis.exp.colfusion.viewmodels.FileContentInfoViewModel;
-import edu.pitt.sis.exp.colfusion.viewmodels.PreviewFileViewModel;
-import edu.pitt.sis.exp.colfusion.viewmodels.WorksheetDataRowViewModel;
-import edu.pitt.sis.exp.colfusion.viewmodels.WorksheetDataViewModel;
-import edu.pitt.sis.exp.colfusion.viewmodels.WorksheetViewModel;
 
 /**
  * @author Evgeny
@@ -40,7 +40,7 @@ public class ExcelImporter implements Importer {
 	final Logger logger = LogManager.getLogger(ExcelImporter.class.getName());
 	
 	@Override
-	public Collection<WorksheetViewModel> getTables(IOUtilsStoredFileInfoModel fileModel) throws IOException, IllegalArgumentException, POIXMLException {
+	public Collection<WorksheetViewModel> getTables(final IOUtilsStoredFileInfoModel fileModel) throws IOException, IllegalArgumentException, POIXMLException {
 		try {
 	    	ArrayList<WorksheetViewModel> result = new ArrayList<>();
 			
@@ -86,7 +86,7 @@ public class ExcelImporter implements Importer {
 	}
 	
 	@Override
-	public HashMap<String, ArrayList<DatasetVariableViewModel>> readVariables(FileContentInfoViewModel fileAndSheetsInfo) throws Exception {
+	public HashMap<String, ArrayList<DatasetVariableViewModel>> readVariables(final FileContentInfoViewModel fileAndSheetsInfo) throws Exception {
 		
 		try {
 			HashMap<String, ArrayList<DatasetVariableViewModel>> result = new HashMap<>();
@@ -173,7 +173,7 @@ public class ExcelImporter implements Importer {
 	 * 
 	 */
 	//TODO: change method to return cell value and type, not the dataset view model.
-	private DatasetVariableViewModel extractVariableCell(org.apache.poi.ss.usermodel.Cell cell) {
+	private DatasetVariableViewModel extractVariableCell(final org.apache.poi.ss.usermodel.Cell cell) {
 		DatasetVariableViewModel result = new DatasetVariableViewModel();
 		
 		//TODO: try to also extract other metadata about the value/column
@@ -211,8 +211,9 @@ public class ExcelImporter implements Importer {
             result.setVariableValueType("text");
         }
         
-        if (value == null)
-        	return null;
+        if (value == null) {
+			return null;
+		}
         
         result.setOriginalName(value.toString());
         result.setChosenName(value.toString());
@@ -221,7 +222,7 @@ public class ExcelImporter implements Importer {
 	}
 
 	@Override
-	public ArrayList<WorksheetDataViewModel> readWorksheetData(PreviewFileViewModel previewFileViewModel) throws IOException {
+	public ArrayList<WorksheetDataViewModel> readWorksheetData(final PreviewFileViewModel previewFileViewModel) throws IOException {
 		
 		ArrayList<WorksheetDataViewModel> result = new ArrayList<WorksheetDataViewModel>();
 		

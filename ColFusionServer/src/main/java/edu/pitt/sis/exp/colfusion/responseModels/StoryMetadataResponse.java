@@ -3,7 +3,7 @@
  */
 package edu.pitt.sis.exp.colfusion.responseModels;
 
-import edu.pitt.sis.exp.colfusion.viewmodels.StoryMetadataViewModel;
+import edu.pitt.sis.exp.colfusion.dal.viewmodels.StoryMetadataViewModel;
 
 
 /**
@@ -23,7 +23,7 @@ public class StoryMetadataResponse extends GeneralResponseImpl {
 	/**
 	 * @param payload the payload to set
 	 */
-	public void setPayload(StoryMetadataViewModel payload) {
+	public void setPayload(final StoryMetadataViewModel payload) {
 		this.payload = payload;
 	}
 }

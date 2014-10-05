@@ -2,9 +2,9 @@ package edu.pitt.sis.exp.colfusion.responseModels;
 
 import com.google.gson.annotations.Expose;
 
+import edu.pitt.sis.exp.colfusion.dal.viewmodels.JoinTablesByRelationshipsViewModel;
 import edu.pitt.sis.exp.colfusion.utils.Gsonazable;
 import edu.pitt.sis.exp.colfusion.utils.Gsonizer;
-import edu.pitt.sis.exp.colfusion.viewmodels.JoinTablesByRelationshipsViewModel;
 
 public class JointTableByRelationshipsResponeModel extends GeneralResponseImpl implements Gsonazable{
 	@Expose private JoinTablesByRelationshipsViewModel payload = new JoinTablesByRelationshipsViewModel();

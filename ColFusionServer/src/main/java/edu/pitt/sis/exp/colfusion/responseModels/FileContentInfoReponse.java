@@ -7,7 +7,7 @@ import java.util.ArrayList;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
-import edu.pitt.sis.exp.colfusion.viewmodels.FileContentInfoViewModel;
+import edu.pitt.sis.exp.colfusion.dal.viewmodels.FileContentInfoViewModel;
 
 /**
  * @author Evgeny
@@ -24,7 +24,7 @@ public class FileContentInfoReponse extends GeneralResponseImpl {
 		setPayload(new ArrayList<FileContentInfoViewModel>());
 	}
 	
-	public FileContentInfoReponse(ArrayList<FileContentInfoViewModel> payload) {
+	public FileContentInfoReponse(final ArrayList<FileContentInfoViewModel> payload) {
 		setPayload(payload);
 	}
 
@@ -38,7 +38,7 @@ public class FileContentInfoReponse extends GeneralResponseImpl {
 	/**
 	 * @param payload the payload to set
 	 */
-	public void setPayload(ArrayList<FileContentInfoViewModel> payload) {
+	public void setPayload(final ArrayList<FileContentInfoViewModel> payload) {
 		this.payload = payload;
 	}
 }

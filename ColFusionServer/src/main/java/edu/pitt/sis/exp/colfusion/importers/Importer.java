@@ -9,12 +9,12 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 
+import edu.pitt.sis.exp.colfusion.dal.viewmodels.DatasetVariableViewModel;
+import edu.pitt.sis.exp.colfusion.dal.viewmodels.FileContentInfoViewModel;
+import edu.pitt.sis.exp.colfusion.dal.viewmodels.PreviewFileViewModel;
+import edu.pitt.sis.exp.colfusion.dal.viewmodels.WorksheetDataViewModel;
+import edu.pitt.sis.exp.colfusion.dal.viewmodels.WorksheetViewModel;
 import edu.pitt.sis.exp.colfusion.utils.models.IOUtilsStoredFileInfoModel;
-import edu.pitt.sis.exp.colfusion.viewmodels.DatasetVariableViewModel;
-import edu.pitt.sis.exp.colfusion.viewmodels.FileContentInfoViewModel;
-import edu.pitt.sis.exp.colfusion.viewmodels.PreviewFileViewModel;
-import edu.pitt.sis.exp.colfusion.viewmodels.WorksheetDataViewModel;
-import edu.pitt.sis.exp.colfusion.viewmodels.WorksheetViewModel;
 
 /**
  * @author Evgeny

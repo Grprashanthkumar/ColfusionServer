@@ -7,7 +7,7 @@ import java.util.ArrayList;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
-import edu.pitt.sis.exp.colfusion.viewmodels.OneUploadedItemViewModel;
+import edu.pitt.sis.exp.colfusion.dal.viewmodels.OneUploadedItemViewModel;
 
 /**
  * Represents the model which returned by the storeUploadedFiles method.
@@ -27,7 +27,7 @@ public class AcceptedFilesResponse extends GeneralResponseImpl {
 		setPayload(new ArrayList<OneUploadedItemViewModel>());
 	}
 	
-	public AcceptedFilesResponse(ArrayList<OneUploadedItemViewModel> payload) {
+	public AcceptedFilesResponse(final ArrayList<OneUploadedItemViewModel> payload) {
 		setPayload(payload);
 	}
 
@@ -41,7 +41,7 @@ public class AcceptedFilesResponse extends GeneralResponseImpl {
 	/**
 	 * @param payload the payload to set
 	 */
-	public void setPayload(ArrayList<OneUploadedItemViewModel> payload) {
+	public void setPayload(final ArrayList<OneUploadedItemViewModel> payload) {
 		this.payload = payload;
 	}
 

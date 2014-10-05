@@ -9,11 +9,11 @@ import java.util.Map;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import edu.pitt.sis.exp.colfusion.ConfigManager;
-import edu.pitt.sis.exp.colfusion.PropertyKeys;
-import edu.pitt.sis.exp.colfusion.persistence.managers.ProcessPersistantManager;
-import edu.pitt.sis.exp.colfusion.persistence.managers.ProcessPersistantManagerImpl;
-import edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionProcesses;
+import edu.pitt.sis.exp.colfusion.dal.managers.ProcessPersistantManager;
+import edu.pitt.sis.exp.colfusion.dal.managers.ProcessPersistantManagerImpl;
+import edu.pitt.sis.exp.colfusion.dal.orm.ColfusionProcesses;
+import edu.pitt.sis.exp.colfusion.utils.ConfigManager;
+import edu.pitt.sis.exp.colfusion.utils.PropertyKeys;
 
 /**
  * @author Evgeny
@@ -31,7 +31,7 @@ public class ProcessManager {
 	
 	private final int _maxNumberOfConcurrentProceses; 
 	
-	private ProcessPersistantManager processPersistantManager;
+	private final ProcessPersistantManager processPersistantManager;
 	
 	
 	private static ProcessManager instance = null;
@@ -76,7 +76,7 @@ public class ProcessManager {
      * @return the process id is retured which can be used to get the actually process which was added to the queue.
      * @throws Exception if something goes wrong.
      */
-    public int queueProcess(Process process) throws Exception {
+    public int queueProcess(final Process process) throws Exception {
         
         int processId = addProcessToDB(process);
         
@@ -103,7 +103,7 @@ public class ProcessManager {
      * 
      * @param process {@link Process} to save in the db.
      */
-    private int addProcessToDB(Process process) throws Exception {
+    private int addProcessToDB(final Process process) throws Exception {
     	
     	String processJson = ProcessBase.toJson(process);
     	
@@ -138,7 +138,7 @@ public class ProcessManager {
      * Removes the process from the list of running processes, updates process status and json ser in db, and run update method to trigger other processes if there are any in the db.
      * @param p the process which need to be updated. 
      */
-	public void onDoneProcess(Process p) {
+	public void onDoneProcess(final Process p) {
 
 		logger.info(String.format("About to the delete process %d from the list of running processes because the process is done. Actual status of the process is %b", p.getID(), p.isDone()));
 		
@@ -151,7 +151,7 @@ public class ProcessManager {
      * Removes the process from the list of running processes, updates process status and json ser in db, and run update method to trigger other processes if there are any in the db.
      * @param p the process which need to be updated. 
      */
-	public void onFailedProcess(Process p, Exception exception) {
+	public void onFailedProcess(final Process p, final Exception exception) {
         //TODO: maybe exceptions should be kept somewhere, they used be added into a list.
 		
 		logger.info(String.format("About to the delete process %d from the list of running processes because the process is failed. Actual status of the process is %b", p.getID(), p.isDone()));
@@ -161,7 +161,7 @@ public class ProcessManager {
 		updateRunningProcessesQueue();
     }
 	
-	private void updateProcess(Process p, ProcessStatusEnum status, String reasonForStatus) {
+	private void updateProcess(final Process p, final ProcessStatusEnum status, final String reasonForStatus) {
 		//TODO: do we need to stop the thread associated with given colfusion process???
 		
 		updateProcessInDB(p, status, reasonForStatus);
@@ -181,7 +181,7 @@ public class ProcessManager {
      * @param status the {@link ProcessStatusEnum} status to set.
      * @param reasonForStatus is the text that specify why the given statu is set.
      */
-    private void updateProcessInDB(Process p, ProcessStatusEnum status, String reasonForStatus) {
+    private void updateProcessInDB(final Process p, final ProcessStatusEnum status, final String reasonForStatus) {
 		logger.info(String.format("A process - %d - has finished, setting its status as done in the db.", p.getID()));
 		
 		if (p.getID() == -1) {
@@ -263,7 +263,7 @@ public class ProcessManager {
         }
     }
 
-	private void updateColfusionProcessStatusOnlyFromDB(ColfusionProcesses processFromDB, ProcessStatusEnum status, String reasonForStatus) {
+	private void updateColfusionProcessStatusOnlyFromDB(final ColfusionProcesses processFromDB, final ProcessStatusEnum status, final String reasonForStatus) {
 		try {
 					
 			processFromDB.setStatus(status.getValue());
@@ -288,7 +288,7 @@ public class ProcessManager {
 		return process;
 	}
 
-	public ProcessStatusEnum getProcessStatus(int processId) throws Exception {
+	public ProcessStatusEnum getProcessStatus(final int processId) throws Exception {
 		
 		if (_runningProcesses.containsKey(processId)) {
 			return ProcessStatusEnum.RUNNING;

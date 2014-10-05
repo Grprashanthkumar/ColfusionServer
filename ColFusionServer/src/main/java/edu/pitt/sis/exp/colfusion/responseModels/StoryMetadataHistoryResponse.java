@@ -3,7 +3,7 @@
  */
 package edu.pitt.sis.exp.colfusion.responseModels;
 
-import edu.pitt.sis.exp.colfusion.viewmodels.StoryMetadataHistoryViewModel;
+import edu.pitt.sis.exp.colfusion.dal.viewmodels.StoryMetadataHistoryViewModel;
 
 /**
  * @author Evgeny
@@ -22,7 +22,7 @@ public class StoryMetadataHistoryResponse extends GeneralResponseImpl {
 	/**
 	 * @param payload the payload to set
 	 */
-	public void setPayload(StoryMetadataHistoryViewModel payload) {
+	public void setPayload(final StoryMetadataHistoryViewModel payload) {
 		this.payload = payload;
 	}
 }

@@ -5,10 +5,10 @@ package edu.pitt.sis.exp.colfusion.dataLoadExecutors;
 
 import com.google.gson.annotations.Expose;
 
+import edu.pitt.sis.exp.colfusion.dal.managers.ExecutionInfoManager;
+import edu.pitt.sis.exp.colfusion.dal.managers.SourceInfoManager;
+import edu.pitt.sis.exp.colfusion.dal.managers.SourceInfoManagerImpl;
 import edu.pitt.sis.exp.colfusion.dal.viewmodels.StoryTargetDBViewModel;
-import edu.pitt.sis.exp.colfusion.persistence.managers.ExecutionInfoManager;
-import edu.pitt.sis.exp.colfusion.persistence.managers.SourceInfoManager;
-import edu.pitt.sis.exp.colfusion.persistence.managers.SourceInfoManagerImpl;
 import edu.pitt.sis.exp.colfusion.process.ProcessBase;
 
 /**

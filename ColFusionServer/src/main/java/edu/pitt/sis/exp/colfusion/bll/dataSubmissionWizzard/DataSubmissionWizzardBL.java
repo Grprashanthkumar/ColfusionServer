@@ -14,34 +14,34 @@ import org.apache.commons.io.FilenameUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import edu.pitt.sis.exp.colfusion.ConfigManager;
-import edu.pitt.sis.exp.colfusion.PropertyKeys;
+import edu.pitt.sis.exp.colfusion.dal.managers.DNameInfoManager;
+import edu.pitt.sis.exp.colfusion.dal.managers.DNameInfoManagerImpl;
+import edu.pitt.sis.exp.colfusion.dal.managers.SourceInfoManager;
+import edu.pitt.sis.exp.colfusion.dal.managers.SourceInfoManagerImpl;
+import edu.pitt.sis.exp.colfusion.dal.utils.DataSourceTypes;
+import edu.pitt.sis.exp.colfusion.dal.viewmodels.CreateTemplateViewModel;
+import edu.pitt.sis.exp.colfusion.dal.viewmodels.DatasetVariableViewModel;
+import edu.pitt.sis.exp.colfusion.dal.viewmodels.FileContentInfoViewModel;
+import edu.pitt.sis.exp.colfusion.dal.viewmodels.FilesContentInfoViewModel;
+import edu.pitt.sis.exp.colfusion.dal.viewmodels.OneUploadedItemViewModel;
+import edu.pitt.sis.exp.colfusion.dal.viewmodels.PreviewFileViewModel;
+import edu.pitt.sis.exp.colfusion.dal.viewmodels.WorksheetViewModel;
 import edu.pitt.sis.exp.colfusion.dataLoadExecutors.DataLoadExecutor;
 import edu.pitt.sis.exp.colfusion.dataLoadExecutors.DataLoadExecutorFactory;
 import edu.pitt.sis.exp.colfusion.importers.Importer;
 import edu.pitt.sis.exp.colfusion.importers.ImporterFactory;
 import edu.pitt.sis.exp.colfusion.importers.ImporterType;
 import edu.pitt.sis.exp.colfusion.importers.ktr.KTRManager;
-import edu.pitt.sis.exp.colfusion.importers.utils.DataSourceTypes;
-import edu.pitt.sis.exp.colfusion.persistence.managers.DNameInfoManager;
-import edu.pitt.sis.exp.colfusion.persistence.managers.DNameInfoManagerImpl;
-import edu.pitt.sis.exp.colfusion.persistence.managers.SourceInfoManager;
-import edu.pitt.sis.exp.colfusion.persistence.managers.SourceInfoManagerImpl;
 import edu.pitt.sis.exp.colfusion.process.ProcessManager;
 import edu.pitt.sis.exp.colfusion.responseModels.AcceptedFilesResponse;
 import edu.pitt.sis.exp.colfusion.responseModels.FileContentInfoReponse;
 import edu.pitt.sis.exp.colfusion.responseModels.GeneralResponseImpl;
 import edu.pitt.sis.exp.colfusion.responseModels.OneNumberResponse;
 import edu.pitt.sis.exp.colfusion.responseModels.PreviewFileResponse;
+import edu.pitt.sis.exp.colfusion.utils.ConfigManager;
 import edu.pitt.sis.exp.colfusion.utils.IOUtils;
+import edu.pitt.sis.exp.colfusion.utils.PropertyKeys;
 import edu.pitt.sis.exp.colfusion.utils.models.IOUtilsStoredFileInfoModel;
-import edu.pitt.sis.exp.colfusion.viewmodels.CreateTemplateViewModel;
-import edu.pitt.sis.exp.colfusion.viewmodels.DatasetVariableViewModel;
-import edu.pitt.sis.exp.colfusion.viewmodels.FileContentInfoViewModel;
-import edu.pitt.sis.exp.colfusion.viewmodels.FilesContentInfoViewModel;
-import edu.pitt.sis.exp.colfusion.viewmodels.OneUploadedItemViewModel;
-import edu.pitt.sis.exp.colfusion.viewmodels.PreviewFileViewModel;
-import edu.pitt.sis.exp.colfusion.viewmodels.WorksheetViewModel;
 
 
 /**

@@ -3,7 +3,7 @@ package edu.pitt.sis.exp.colfusion.responseModels;
 import java.util.ArrayList;
 import java.util.List;
 
-import edu.pitt.sis.exp.colfusion.viewmodels.DatasetVariableViewModel;
+import edu.pitt.sis.exp.colfusion.dal.viewmodels.DatasetVariableViewModel;
 
 public class ColumnMetadataResponse extends GeneralResponseImpl {
   

@@ -3,7 +3,7 @@
  */
 package edu.pitt.sis.exp.colfusion.responseModels;
 
-import edu.pitt.sis.exp.colfusion.viewmodels.PreviewFileViewModel;
+import edu.pitt.sis.exp.colfusion.dal.viewmodels.PreviewFileViewModel;
 
 /**
  * @author Evgeny
@@ -22,7 +22,7 @@ public class PreviewFileResponse extends GeneralResponseImpl {
 	/**
 	 * @param payload the payload to set
 	 */
-	public void setPayload(PreviewFileViewModel payload) {
+	public void setPayload(final PreviewFileViewModel payload) {
 		this.payload = payload;
 	}
 }

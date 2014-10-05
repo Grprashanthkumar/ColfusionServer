@@ -3,7 +3,7 @@ package edu.pitt.sis.exp.colfusion.responseModels;
 import java.util.ArrayList;
 import java.util.List;
 
-import edu.pitt.sis.exp.colfusion.viewmodels.StoryMetadataHistoryLogRecordViewModel;
+import edu.pitt.sis.exp.colfusion.dal.viewmodels.StoryMetadataHistoryLogRecordViewModel;
 
 
 public class GetColumnMetadataEditHistoryResponse extends GeneralResponseImpl {

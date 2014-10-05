@@ -23,15 +23,15 @@ import org.glassfish.jersey.media.multipart.FormDataBodyPart;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 
 import edu.pitt.sis.exp.colfusion.bll.dataSubmissionWizzard.DataSubmissionWizzardBL;
+import edu.pitt.sis.exp.colfusion.dal.viewmodels.CreateTemplateViewModel;
+import edu.pitt.sis.exp.colfusion.dal.viewmodels.FileContentInfoViewModel;
+import edu.pitt.sis.exp.colfusion.dal.viewmodels.FilesContentInfoViewModel;
+import edu.pitt.sis.exp.colfusion.dal.viewmodels.PreviewFileViewModel;
 import edu.pitt.sis.exp.colfusion.responseModels.AcceptedFilesResponse;
 import edu.pitt.sis.exp.colfusion.responseModels.FileContentInfoReponse;
 import edu.pitt.sis.exp.colfusion.responseModels.GeneralResponseImpl;
 import edu.pitt.sis.exp.colfusion.responseModels.OneNumberResponse;
 import edu.pitt.sis.exp.colfusion.responseModels.PreviewFileResponse;
-import edu.pitt.sis.exp.colfusion.viewmodels.CreateTemplateViewModel;
-import edu.pitt.sis.exp.colfusion.viewmodels.FileContentInfoViewModel;
-import edu.pitt.sis.exp.colfusion.viewmodels.FilesContentInfoViewModel;
-import edu.pitt.sis.exp.colfusion.viewmodels.PreviewFileViewModel;
 
 @Path("Wizard/")
 public class WizardController extends BaseController {
@@ -64,7 +64,7 @@ public class WizardController extends BaseController {
      */
 	@OPTIONS
     @Path("acceptFileFromWizard")
-    public Response acceptFileFromWizardOption(@HeaderParam("Access-Control-Request-Headers") String requestH) {
+    public Response acceptFileFromWizardOption(@HeaderParam("Access-Control-Request-Headers") final String requestH) {
 		return makeCORS(Response.ok()); //, requestH);
     }
 	
@@ -79,11 +79,11 @@ public class WizardController extends BaseController {
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     @Produces(MediaType.APPLICATION_JSON)
     public Response acceptFileFromWizard(
-    		@FormDataParam("sid") String sid, 
-    		@FormDataParam("uploadTimestamp") String uploadTimestamp, 
-    		@FormDataParam("fileType") String fileType,
-    		@FormDataParam("dbType") String dbType,
-    		@FormDataParam("upload_file") List<FormDataBodyPart> files) {
+    		@FormDataParam("sid") final String sid, 
+    		@FormDataParam("uploadTimestamp") final String uploadTimestamp, 
+    		@FormDataParam("fileType") final String fileType,
+    		@FormDataParam("dbType") final String dbType,
+    		@FormDataParam("upload_file") final List<FormDataBodyPart> files) {
     	
 		// Extract files names and files from the input parameter.
 		Map<String, InputStream> inputStreams = new HashMap<String, InputStream>();
@@ -105,7 +105,7 @@ public class WizardController extends BaseController {
      */
 	@OPTIONS
     @Path("createTemplate")
-    public Response createTemplateOption(@HeaderParam("Access-Control-Request-Headers") String requestH) {
+    public Response createTemplateOption(@HeaderParam("Access-Control-Request-Headers") final String requestH) {
 		return makeCORS(Response.ok()); //, requestH);
     }
 	
@@ -122,7 +122,7 @@ public class WizardController extends BaseController {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response createTemplate(CreateTemplateViewModel createTemplateViewModel) {
+    public Response createTemplate(final CreateTemplateViewModel createTemplateViewModel) {
 		    	
 		GeneralResponseImpl result = new GeneralResponseImpl();
     	result.isSuccessful = true;
@@ -138,7 +138,7 @@ public class WizardController extends BaseController {
      */
 	@OPTIONS
     @Path("getFilesContentInfo")
-    public Response getFilesContentInfo(@HeaderParam("Access-Control-Request-Headers") String requestH) {
+    public Response getFilesContentInfo(@HeaderParam("Access-Control-Request-Headers") final String requestH) {
 		return makeCORS(Response.ok()); //, requestH);
     }
 	
@@ -154,7 +154,7 @@ public class WizardController extends BaseController {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getFilesContentInfo(CreateTemplateViewModel createTemplateViewModel) {
+    public Response getFilesContentInfo(final CreateTemplateViewModel createTemplateViewModel) {
 		    	
 		DataSubmissionWizzardBL wizardBLL = new DataSubmissionWizzardBL();
 		
@@ -171,7 +171,7 @@ public class WizardController extends BaseController {
      */
 	@OPTIONS
     @Path("getFilesVariablesAndNameRecommendations")
-    public Response getFilesVariablesAndNameRecommendations(@HeaderParam("Access-Control-Request-Headers") String requestH) {
+    public Response getFilesVariablesAndNameRecommendations(@HeaderParam("Access-Control-Request-Headers") final String requestH) {
 		return makeCORS(Response.ok()); //, requestH);
     }
 	
@@ -190,7 +190,7 @@ public class WizardController extends BaseController {
     @Produces(MediaType.APPLICATION_JSON)
 	//TODO: this need to be changed. it should accept the source type and source settings as a JSON object, then that object will be passed to source importer which will know how to process it.
     //TODO: change input param type to {@link FilesContentInfoViewModel} first.
-	public Response getFilesVariablesAndNameRecommendations(List<FileContentInfoViewModel> filesWithSelectedSheets) {
+	public Response getFilesVariablesAndNameRecommendations(final List<FileContentInfoViewModel> filesWithSelectedSheets) {
 		    	
 	DataSubmissionWizzardBL wizardBLL = new DataSubmissionWizzardBL();
 		
@@ -206,7 +206,7 @@ public class WizardController extends BaseController {
      */
 	@OPTIONS
     @Path("putDataMatchingStepData")
-    public Response putDataMatchingStepDataOption(@HeaderParam("Access-Control-Request-Headers") String requestH) {
+    public Response putDataMatchingStepDataOption(@HeaderParam("Access-Control-Request-Headers") final String requestH) {
 		return makeCORS(Response.ok()); //, requestH);
     }
 	
@@ -224,7 +224,7 @@ public class WizardController extends BaseController {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
 	//TODO: this need to be changed. it should accept the source type and source settings as a JSON object, then that object will be passed to source importer which will know how to process it.
-    public Response putDataMatchingStepData(FilesContentInfoViewModel dataMatchingStepData) {
+    public Response putDataMatchingStepData(final FilesContentInfoViewModel dataMatchingStepData) {
 		    	
 		DataSubmissionWizzardBL wizardBLL = new DataSubmissionWizzardBL();
 					
@@ -244,7 +244,7 @@ public class WizardController extends BaseController {
      */
 	@OPTIONS
     @Path("triggerDataLoad/{sid}")
-    public Response triggerDataLoad(@HeaderParam("Access-Control-Request-Headers") String requestH) {
+    public Response triggerDataLoad(@HeaderParam("Access-Control-Request-Headers") final String requestH) {
 		return makeCORS(Response.ok()); //, requestH);
     }
 	
@@ -261,7 +261,7 @@ public class WizardController extends BaseController {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
 	//TODO: this need to be changed. it should accept the source type and source settings as a JSON object, then that object will be passed to source importer which will know how to process it.
-    public Response triggerDataLoad(@PathParam("sid") int sid) {
+    public Response triggerDataLoad(@PathParam("sid") final int sid) {
 		    	
 		DataSubmissionWizzardBL wizardBLL = new DataSubmissionWizzardBL();
 		
@@ -277,7 +277,7 @@ public class WizardController extends BaseController {
      */
 	@OPTIONS
     @Path("getDataPreviewFromFile")
-    public Response getDataPreviewFromFile(@HeaderParam("Access-Control-Request-Headers") String requestH) {
+    public Response getDataPreviewFromFile(@HeaderParam("Access-Control-Request-Headers") final String requestH) {
 		return makeCORS(Response.ok()); //, requestH);
     }
 	
@@ -294,7 +294,7 @@ public class WizardController extends BaseController {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-	public Response getDataPreviewFromFile(PreviewFileViewModel previewFileViewModel) {
+	public Response getDataPreviewFromFile(final PreviewFileViewModel previewFileViewModel) {
 		    	
 		DataSubmissionWizzardBL wizardBLL = new DataSubmissionWizzardBL();
 		
@@ -310,7 +310,7 @@ public class WizardController extends BaseController {
      */
 	@OPTIONS
     @Path("estimateDataPreviewFromFile")
-    public Response estimateDataPreviewFromFile(@HeaderParam("Access-Control-Request-Headers") String requestH) {
+    public Response estimateDataPreviewFromFile(@HeaderParam("Access-Control-Request-Headers") final String requestH) {
 		return makeCORS(Response.ok()); //, requestH);
     }
 	
@@ -327,7 +327,7 @@ public class WizardController extends BaseController {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-	public Response estimateDataPreviewFromFile(PreviewFileViewModel previewFileViewModel) {
+	public Response estimateDataPreviewFromFile(final PreviewFileViewModel previewFileViewModel) {
 		    	
 		DataSubmissionWizzardBL wizardBLL = new DataSubmissionWizzardBL();
 		

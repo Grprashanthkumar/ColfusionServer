@@ -6,7 +6,7 @@ package edu.pitt.sis.exp.colfusion.similarityJoins;
 import java.util.List;
 import java.util.Map;
 
-import edu.pitt.sis.exp.colfusion.relationships.transformation.RelationshipTransformation;
+import edu.pitt.sis.exp.colfusion.dal.dataModels.relationships.transformation.RelationshipTransformation;
 
 /**
  * @author Evgeny

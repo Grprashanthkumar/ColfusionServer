@@ -18,13 +18,13 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import au.com.bytecode.opencsv.CSVParser;
+import edu.pitt.sis.exp.colfusion.dal.viewmodels.DatasetVariableViewModel;
+import edu.pitt.sis.exp.colfusion.dal.viewmodels.FileContentInfoViewModel;
+import edu.pitt.sis.exp.colfusion.dal.viewmodels.PreviewFileViewModel;
+import edu.pitt.sis.exp.colfusion.dal.viewmodels.WorksheetDataRowViewModel;
+import edu.pitt.sis.exp.colfusion.dal.viewmodels.WorksheetDataViewModel;
+import edu.pitt.sis.exp.colfusion.dal.viewmodels.WorksheetViewModel;
 import edu.pitt.sis.exp.colfusion.utils.models.IOUtilsStoredFileInfoModel;
-import edu.pitt.sis.exp.colfusion.viewmodels.DatasetVariableViewModel;
-import edu.pitt.sis.exp.colfusion.viewmodels.FileContentInfoViewModel;
-import edu.pitt.sis.exp.colfusion.viewmodels.PreviewFileViewModel;
-import edu.pitt.sis.exp.colfusion.viewmodels.WorksheetDataRowViewModel;
-import edu.pitt.sis.exp.colfusion.viewmodels.WorksheetDataViewModel;
-import edu.pitt.sis.exp.colfusion.viewmodels.WorksheetViewModel;
 
 /**
  * @author Evgeny
@@ -35,7 +35,7 @@ public class CSVImporter implements Importer {
 	final Logger logger = LogManager.getLogger(CSVImporter.class.getName());
 	
 	@Override
-	public Collection<WorksheetViewModel> getTables(IOUtilsStoredFileInfoModel fileModel) throws Exception {
+	public Collection<WorksheetViewModel> getTables(final IOUtilsStoredFileInfoModel fileModel) throws Exception {
 		WorksheetViewModel worksheet = new WorksheetViewModel();
 		worksheet.setSheetName(fileModel.getFileName());
 		worksheet.setHeaderRow(1);
@@ -48,7 +48,7 @@ public class CSVImporter implements Importer {
 	}
 
 	@Override
-	public HashMap<String, ArrayList<DatasetVariableViewModel>> readVariables(FileContentInfoViewModel fileAndSheetsInfo) throws Exception {
+	public HashMap<String, ArrayList<DatasetVariableViewModel>> readVariables(final FileContentInfoViewModel fileAndSheetsInfo) throws Exception {
 		
 		if (fileAndSheetsInfo.getWorksheets().size() != 1) {
     		logger.error("readVariables in CSV importer failed: CSV file must have exacly one sheet specified in the model");
@@ -93,7 +93,7 @@ public class CSVImporter implements Importer {
 	 * @return array of values from the read line.
 	 * @throws Exception
 	 */
-	private String[] readOneLine(String fileAbsoluteName, int lineNumber) throws Exception {
+	private String[] readOneLine(final String fileAbsoluteName, final int lineNumber) throws Exception {
 		
 		ArrayList<WorksheetDataRowViewModel> result = readLinesFromTo(fileAbsoluteName, lineNumber, lineNumber);
 		
@@ -118,7 +118,7 @@ public class CSVImporter implements Importer {
 	 * @return array of values from the read line.
 	 * @throws IOException
 	 */
-	private ArrayList<WorksheetDataRowViewModel> readLinesFromTo(String fileAbsoluteName, int startLine, int endLine) throws IOException  {
+	private ArrayList<WorksheetDataRowViewModel> readLinesFromTo(final String fileAbsoluteName, final int startLine, final int endLine) throws IOException  {
 		Reader reader = new FileReader(new File(fileAbsoluteName));
 		
 		final LineNumberReader lnReader = new LineNumberReader(reader);
@@ -169,7 +169,7 @@ public class CSVImporter implements Importer {
 	 * @return array of values read from line.
 	 * @throws IOException
 	 */
-	static protected ArrayList<String> getCells(String line, CSVParser parser, LineNumberReader lnReader)
+	static protected ArrayList<String> getCells(final String line, final CSVParser parser, final LineNumberReader lnReader)
 	        throws IOException{
 	        
 	        ArrayList<String> cells = new ArrayList<>();
@@ -183,7 +183,7 @@ public class CSVImporter implements Importer {
 	    }
 
 	@Override
-	public ArrayList<WorksheetDataViewModel> readWorksheetData(PreviewFileViewModel previewFileViewModel) throws FileNotFoundException, IOException {
+	public ArrayList<WorksheetDataViewModel> readWorksheetData(final PreviewFileViewModel previewFileViewModel) throws FileNotFoundException, IOException {
 		
 		ArrayList<WorksheetDataViewModel> result = new ArrayList<WorksheetDataViewModel>();
 		

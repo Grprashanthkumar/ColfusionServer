@@ -3,7 +3,7 @@ package edu.pitt.sis.exp.colfusion.responseModels;
 import java.util.ArrayList;
 import java.util.List;
 
-import edu.pitt.sis.exp.colfusion.viewmodels.RelationshipLinkViewModel;
+import edu.pitt.sis.exp.colfusion.dal.viewmodels.RelationshipLinkViewModel;
 
 public class RelationshipLinksResponse extends GeneralResponseImpl {
 	private List<RelationshipLinkViewModel> payload = new ArrayList<>();

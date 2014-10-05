@@ -19,18 +19,18 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import edu.pitt.sis.exp.colfusion.ConfigManager;
-import edu.pitt.sis.exp.colfusion.PropertyKeys;
+import edu.pitt.sis.exp.colfusion.dal.databaseHandlers.DatabaseHanderType;
+import edu.pitt.sis.exp.colfusion.dal.databaseHandlers.DatabaseHandlerBase;
+import edu.pitt.sis.exp.colfusion.dal.databaseHandlers.DatabaseHandlerFactory;
+import edu.pitt.sis.exp.colfusion.dal.managers.ExecutionInfoManager;
+import edu.pitt.sis.exp.colfusion.dal.managers.ExecutionInfoManagerImpl;
+import edu.pitt.sis.exp.colfusion.dal.managers.SourceInfoManager;
+import edu.pitt.sis.exp.colfusion.dal.managers.SourceInfoManagerImpl;
+import edu.pitt.sis.exp.colfusion.dal.orm.ColfusionExecuteinfo;
 import edu.pitt.sis.exp.colfusion.dal.viewmodels.StoryTargetDBViewModel;
 import edu.pitt.sis.exp.colfusion.importers.ktr.KTRManager;
-import edu.pitt.sis.exp.colfusion.persistence.databaseHandlers.DatabaseHanderType;
-import edu.pitt.sis.exp.colfusion.persistence.databaseHandlers.DatabaseHandlerBase;
-import edu.pitt.sis.exp.colfusion.persistence.databaseHandlers.DatabaseHandlerFactory;
-import edu.pitt.sis.exp.colfusion.persistence.managers.ExecutionInfoManager;
-import edu.pitt.sis.exp.colfusion.persistence.managers.ExecutionInfoManagerImpl;
-import edu.pitt.sis.exp.colfusion.persistence.managers.SourceInfoManager;
-import edu.pitt.sis.exp.colfusion.persistence.managers.SourceInfoManagerImpl;
-import edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionExecuteinfo;
+import edu.pitt.sis.exp.colfusion.utils.ConfigManager;
+import edu.pitt.sis.exp.colfusion.utils.PropertyKeys;
 
 /**
  * @author Evgeny
@@ -85,7 +85,7 @@ public class DataLoadExecutorKTRImpl extends DataLoadExecutorBaseImpl implements
 			
 			int executionLogId = executionInfo.getEid();
 			
-			executionInfoMgr.updateStatus(executionLogId, DataLoadExecutionStatus.IN_PROGRESS);
+			executionInfoMgr.updateStatus(executionLogId, DataLoadExecutionStatus.IN_PROGRESS.getValue());
 			
 			logger.info(String.format("DataLoadExecutorKTR, execute: Set execution status to IN_PROGRESS for eid = %d", executionLogId));
 			
@@ -207,7 +207,7 @@ public class DataLoadExecutorKTRImpl extends DataLoadExecutorBaseImpl implements
 			logger.error(String.format("doHTTPCallToCarteServer failed: got following status code in response", statusCode));
 			
 			//TODO: not sure if it is good
-			executionInfoMgr.updateStatus(executionLogId, DataLoadExecutionStatus.FAILED);
+			executionInfoMgr.updateStatus(executionLogId, DataLoadExecutionStatus.FAILED.getValue());
 			
 			throw new RuntimeException("Failed : HTTP error code : " + response.getStatusLine().getStatusCode());
 		}
@@ -245,7 +245,7 @@ public class DataLoadExecutorKTRImpl extends DataLoadExecutorBaseImpl implements
 			
 			executionInfoMgr.appendLog(executionLogId, String.format("Finished to change the name for the KTR file located at %s", ktrLocation));
 		} catch (Exception e) {
-			executionInfoMgr.updateStatus(executionLogId, DataLoadExecutionStatus.FAILED);
+			executionInfoMgr.updateStatus(executionLogId, DataLoadExecutionStatus.FAILED.getValue());
 			
 			throw e;
 		}
@@ -264,7 +264,7 @@ public class DataLoadExecutorKTRImpl extends DataLoadExecutorBaseImpl implements
 			return sourceDBInfo;
 		} catch (Exception e) {
 			
-			executionInfoMgr.updateStatus(executionLogId, DataLoadExecutionStatus.FAILED);
+			executionInfoMgr.updateStatus(executionLogId, DataLoadExecutionStatus.FAILED.getValue());
 			
 			throw e;
 		}	

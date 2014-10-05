@@ -3,8 +3,6 @@
  */
 package edu.pitt.sis.exp.colfusion.controllers;
 
-import java.util.List;
-
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
@@ -21,7 +19,7 @@ import org.apache.logging.log4j.Logger;
 
 import edu.pitt.sis.exp.colfusion.bll.BasicTableBL;
 import edu.pitt.sis.exp.colfusion.bll.StoryBL;
-import edu.pitt.sis.exp.colfusion.dataModels.tableDataModel.Table;
+import edu.pitt.sis.exp.colfusion.dal.viewmodels.StoryMetadataViewModel;
 import edu.pitt.sis.exp.colfusion.responseModels.AddColumnMetadataEditHistoryResponse;
 import edu.pitt.sis.exp.colfusion.responseModels.BasicTableResponseModel;
 import edu.pitt.sis.exp.colfusion.responseModels.ColumnMetadataResponse;
@@ -29,8 +27,6 @@ import edu.pitt.sis.exp.colfusion.responseModels.GetColumnMetadataEditHistoryRes
 import edu.pitt.sis.exp.colfusion.responseModels.JointTableByRelationshipsResponeModel;
 import edu.pitt.sis.exp.colfusion.responseModels.StoryMetadataHistoryResponse;
 import edu.pitt.sis.exp.colfusion.responseModels.StoryMetadataResponse;
-import edu.pitt.sis.exp.colfusion.viewmodels.BasicTableInfoViewModel;
-import edu.pitt.sis.exp.colfusion.viewmodels.StoryMetadataViewModel;
 
 /**
  * @author Evgeny
