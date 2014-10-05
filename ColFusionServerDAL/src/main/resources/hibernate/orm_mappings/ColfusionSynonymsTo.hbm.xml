@@ -3,8 +3,8 @@
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 <!-- Generated 2014-6-10 16:18:00 by Hibernate Tools 3.4.0.CR1 -->
 <hibernate-mapping>
-    <class name="edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionSynonymsTo" table="colfusion_synonyms_to" catalog="colfusion">
-        <composite-id name="id" class="edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionSynonymsToId">
+    <class name="edu.pitt.sis.exp.colfusion.dal.orm.ColfusionSynonymsTo" table="colfusion_synonyms_to" catalog="colfusion">
+        <composite-id name="id" class="edu.pitt.sis.exp.colfusion.dal.orm.ColfusionSynonymsToId">
             <key-property name="synId" type="int">
                 <column name="syn_id" />
             </key-property>
@@ -24,10 +24,10 @@
                 <column name="value" />
             </key-property>
         </composite-id>
-        <many-to-one name="colfusionSourceinfo" class="edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionSourceinfo" update="false" insert="false" fetch="select">
+        <many-to-one name="colfusionSourceinfo" class="edu.pitt.sis.exp.colfusion.dal.orm.ColfusionSourceinfo" update="false" insert="false" fetch="select">
             <column name="sid" not-null="true" />
         </many-to-one>
-        <many-to-one name="colfusionUsers" class="edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionUsers" update="false" insert="false" fetch="select">
+        <many-to-one name="colfusionUsers" class="edu.pitt.sis.exp.colfusion.dal.orm.ColfusionUsers" update="false" insert="false" fetch="select">
             <column name="userId" not-null="true" />
         </many-to-one>
     </class>

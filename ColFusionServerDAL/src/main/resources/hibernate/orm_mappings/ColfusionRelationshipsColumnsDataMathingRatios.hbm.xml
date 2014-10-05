@@ -3,9 +3,9 @@
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 <!-- Generated 2014-6-10 16:18:00 by Hibernate Tools 3.4.0.CR1 -->
 <hibernate-mapping>
-    <class name="edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionRelationshipsColumnsDataMathingRatios" table="colfusion_relationships_columns_dataMathing_ratios"
+    <class name="edu.pitt.sis.exp.colfusion.dal.orm.ColfusionRelationshipsColumnsDataMathingRatios" table="colfusion_relationships_columns_dataMathing_ratios"
     catalog="colfusion">
-        <composite-id name="id" class="edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionRelationshipsColumnsDataMathingRatiosId">
+        <composite-id name="id" class="edu.pitt.sis.exp.colfusion.dal.orm.ColfusionRelationshipsColumnsDataMathingRatiosId">
             <key-property name="clFrom" type="string">
                 <column name="cl_from" />
             </key-property>
@@ -16,7 +16,7 @@
                 <column name="similarity_threshold" precision="4" scale="3" />
             </key-property>
         </composite-id>
-        <many-to-one name="colfusionProcesses" class="edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionProcesses" fetch="select">
+        <many-to-one name="colfusionProcesses" class="edu.pitt.sis.exp.colfusion.dal.orm.ColfusionProcesses" fetch="select">
             <column name="pid" not-null="true" />
         </many-to-one>
         <property name="dataMatchingFromRatio" type="big_decimal">

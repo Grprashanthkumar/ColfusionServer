@@ -3,7 +3,7 @@
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 <!-- Generated 2014-6-10 16:18:00 by Hibernate Tools 3.4.0.CR1 -->
 <hibernate-mapping>
-    <class name="edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionUsers" table="colfusion_users" catalog="colfusion">
+    <class name="edu.pitt.sis.exp.colfusion.dal.orm.ColfusionUsers" table="colfusion_users" catalog="colfusion">
         <id name="userId" type="java.lang.Integer">
             <column name="user_id" />
             <generator class="identity" />
@@ -123,7 +123,7 @@
             <key>
                 <column name="uid" not-null="true" />
             </key>
-            <one-to-many class="edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionSourceinfoUser" />
+            <one-to-many class="edu.pitt.sis.exp.colfusion.dal.orm.ColfusionSourceinfoUser" />
         </set>
         <set name="colfusionDnameinfoMetadataEditHistories" table="colfusion_dnameinfo_metadata_edit_history" inverse="true" lazy="true" fetch="select">
             <key>
@@ -131,25 +131,25 @@
                     <comment>userid who made edit</comment>
                 </column>
             </key>
-            <one-to-many class="edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionDnameinfoMetadataEditHistory" />
+            <one-to-many class="edu.pitt.sis.exp.colfusion.dal.orm.ColfusionDnameinfoMetadataEditHistory" />
         </set>
         <set name="colfusionCanvaseses" table="colfusion_canvases" inverse="true" lazy="true" fetch="select">
             <key>
                 <column name="user_id" />
             </key>
-            <one-to-many class="edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionCanvases" />
+            <one-to-many class="edu.pitt.sis.exp.colfusion.dal.orm.ColfusionCanvases" />
         </set>
         <set name="colfusionShareses" table="colfusion_shares" inverse="true" lazy="true" fetch="select">
             <key>
                 <column name="user_id" />
             </key>
-            <one-to-many class="edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionShares" />
+            <one-to-many class="edu.pitt.sis.exp.colfusion.dal.orm.ColfusionShares" />
         </set>
         <set name="colfusionNotificationses" table="colfusion_notifications" inverse="true" lazy="true" fetch="select">
             <key>
                 <column name="sender_id" />
             </key>
-            <one-to-many class="edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionNotifications" />
+            <one-to-many class="edu.pitt.sis.exp.colfusion.dal.orm.ColfusionNotifications" />
         </set>
         <set name="colfusionSourceinfoMetadataEditHistories" table="colfusion_sourceinfo_metadata_edit_history" inverse="true" lazy="true" fetch="select">
             <key>
@@ -157,49 +157,49 @@
                     <comment>userid who made edit</comment>
                 </column>
             </key>
-            <one-to-many class="edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionSourceinfoMetadataEditHistory" />
+            <one-to-many class="edu.pitt.sis.exp.colfusion.dal.orm.ColfusionSourceinfoMetadataEditHistory" />
         </set>
         <set name="colfusionSourceinfos" table="colfusion_sourceinfo" inverse="true" lazy="true" fetch="select">
             <key>
                 <column name="UserId" not-null="true" />
             </key>
-            <one-to-many class="edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionSourceinfo" />
+            <one-to-many class="edu.pitt.sis.exp.colfusion.dal.orm.ColfusionSourceinfo" />
         </set>
         <set name="colfusionUserRelationshipVerdicts" table="colfusion_user_relationship_verdict" inverse="true" lazy="true" fetch="select">
             <key>
                 <column name="user_id" not-null="true" />
             </key>
-            <one-to-many class="edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionUserRelationshipVerdict" />
+            <one-to-many class="edu.pitt.sis.exp.colfusion.dal.orm.ColfusionUserRelationshipVerdict" />
         </set>
         <set name="colfusionSourceinfos_1" table="colfusion_sourceinfo" inverse="true" lazy="true" fetch="select">
             <key>
                 <column name="UserId" not-null="true" />
             </key>
-            <one-to-many class="edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionSourceinfo" />
+            <one-to-many class="edu.pitt.sis.exp.colfusion.dal.orm.ColfusionSourceinfo" />
         </set>
         <set name="colfusionSynonymsFroms" table="colfusion_synonyms_from" inverse="true" lazy="true" fetch="select">
             <key>
                 <column name="userId" not-null="true" />
             </key>
-            <one-to-many class="edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionSynonymsFrom" />
+            <one-to-many class="edu.pitt.sis.exp.colfusion.dal.orm.ColfusionSynonymsFrom" />
         </set>
         <set name="colfusionDesAttachmentses" table="colfusion_des_attachments" inverse="true" lazy="true" fetch="select">
             <key>
                 <column name="UserId" not-null="true" />
             </key>
-            <one-to-many class="edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionDesAttachments" />
+            <one-to-many class="edu.pitt.sis.exp.colfusion.dal.orm.ColfusionDesAttachments" />
         </set>
         <set name="colfusionRelationshipses" table="colfusion_relationships" inverse="true" lazy="true" fetch="select">
             <key>
                 <column name="creator" not-null="true" />
             </key>
-            <one-to-many class="edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionRelationships" />
+            <one-to-many class="edu.pitt.sis.exp.colfusion.dal.orm.ColfusionRelationships" />
         </set>
         <set name="colfusionSynonymsTos" table="colfusion_synonyms_to" inverse="true" lazy="true" fetch="select">
             <key>
                 <column name="userId" not-null="true" />
             </key>
-            <one-to-many class="edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionSynonymsTo" />
+            <one-to-many class="edu.pitt.sis.exp.colfusion.dal.orm.ColfusionSynonymsTo" />
         </set>
     </class>
 </hibernate-mapping>

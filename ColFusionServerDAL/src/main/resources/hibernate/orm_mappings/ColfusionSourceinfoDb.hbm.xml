@@ -3,14 +3,14 @@
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 <!-- Generated 2014-6-10 16:18:00 by Hibernate Tools 3.4.0.CR1 -->
 <hibernate-mapping>
-    <class name="edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionSourceinfoDb" table="colfusion_sourceinfo_DB" catalog="colfusion">
+    <class name="edu.pitt.sis.exp.colfusion.dal.orm.ColfusionSourceinfoDb" table="colfusion_sourceinfo_DB" catalog="colfusion">
         <id name="sid" type="int">
             <column name="sid" />
             <generator class="foreign">
                 <param name="property">colfusionSourceinfo</param>
             </generator>
         </id>
-        <one-to-one name="colfusionSourceinfo" class="edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionSourceinfo" constrained="true"></one-to-one>
+        <one-to-one name="colfusionSourceinfo" class="edu.pitt.sis.exp.colfusion.dal.orm.ColfusionSourceinfo" constrained="true"></one-to-one>
         <property name="serverAddress" type="string">
             <column name="server_address" not-null="true" />
         </property>

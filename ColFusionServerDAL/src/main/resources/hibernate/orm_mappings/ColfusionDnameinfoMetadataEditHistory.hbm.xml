@@ -3,17 +3,17 @@
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 <!-- Generated 2014-6-10 16:18:00 by Hibernate Tools 3.4.0.CR1 -->
 <hibernate-mapping>
-    <class name="edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionDnameinfoMetadataEditHistory" table="colfusion_dnameinfo_metadata_edit_history" catalog="colfusion">
+    <class name="edu.pitt.sis.exp.colfusion.dal.orm.ColfusionDnameinfoMetadataEditHistory" table="colfusion_dnameinfo_metadata_edit_history" catalog="colfusion">
         <id name="hid" type="java.lang.Integer">
             <column name="hid" />
             <generator class="identity" />
         </id>
-        <many-to-one name="colfusionDnameinfo" class="edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionDnameinfo" fetch="select">
+        <many-to-one name="colfusionDnameinfo" class="edu.pitt.sis.exp.colfusion.dal.orm.ColfusionDnameinfo" fetch="select">
             <column name="cid" not-null="true">
                 <comment>column id</comment>
             </column>
         </many-to-one>
-        <many-to-one name="colfusionUsers" class="edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionUsers" fetch="select">
+        <many-to-one name="colfusionUsers" class="edu.pitt.sis.exp.colfusion.dal.orm.ColfusionUsers" fetch="select">
             <column name="uid" not-null="true">
                 <comment>userid who made edit</comment>
             </column>

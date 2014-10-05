@@ -3,12 +3,12 @@
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 <!-- Generated 2014-6-10 16:18:00 by Hibernate Tools 3.4.0.CR1 -->
 <hibernate-mapping>
-    <class name="edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionDnameinfo" table="colfusion_dnameinfo" catalog="colfusion">
+    <class name="edu.pitt.sis.exp.colfusion.dal.orm.ColfusionDnameinfo" table="colfusion_dnameinfo" catalog="colfusion">
         <id name="cid" type="java.lang.Integer">
             <column name="cid" />
             <generator class="identity" />
         </id>
-        <many-to-one name="colfusionSourceinfo" class="edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionSourceinfo" fetch="select">
+        <many-to-one name="colfusionSourceinfo" class="edu.pitt.sis.exp.colfusion.dal.orm.ColfusionSourceinfo" fetch="select">
             <column name="sid" not-null="true" />
         </many-to-one>
         <property name="dnameChosen" type="string">
@@ -50,8 +50,8 @@
                     <comment>column id</comment>
                 </column>
             </key>
-            <one-to-many class="edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionDnameinfoMetadataEditHistory" />
+            <one-to-many class="edu.pitt.sis.exp.colfusion.dal.orm.ColfusionDnameinfoMetadataEditHistory" />
         </set>
-        <one-to-one name="colfusionColumnTableInfo" class="edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionColumnTableInfo"></one-to-one>
+        <one-to-one name="colfusionColumnTableInfo" class="edu.pitt.sis.exp.colfusion.dal.orm.ColfusionColumnTableInfo"></one-to-one>
     </class>
 </hibernate-mapping>

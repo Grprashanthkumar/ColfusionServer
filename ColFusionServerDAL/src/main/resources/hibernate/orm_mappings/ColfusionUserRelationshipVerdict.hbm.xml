@@ -3,8 +3,8 @@
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 <!-- Generated 2014-6-10 16:18:00 by Hibernate Tools 3.4.0.CR1 -->
 <hibernate-mapping>
-    <class name="edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionUserRelationshipVerdict" table="colfusion_user_relationship_verdict" catalog="colfusion">
-        <composite-id name="id" class="edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionUserRelationshipVerdictId">
+    <class name="edu.pitt.sis.exp.colfusion.dal.orm.ColfusionUserRelationshipVerdict" table="colfusion_user_relationship_verdict" catalog="colfusion">
+        <composite-id name="id" class="edu.pitt.sis.exp.colfusion.dal.orm.ColfusionUserRelationshipVerdictId">
             <key-property name="relId" type="int">
                 <column name="rel_id" />
             </key-property>
@@ -12,10 +12,10 @@
                 <column name="user_id" />
             </key-property>
         </composite-id>
-        <many-to-one name="colfusionUsers" class="edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionUsers" update="false" insert="false" fetch="select">
+        <many-to-one name="colfusionUsers" class="edu.pitt.sis.exp.colfusion.dal.orm.ColfusionUsers" update="false" insert="false" fetch="select">
             <column name="user_id" not-null="true" />
         </many-to-one>
-        <many-to-one name="colfusionRelationships" class="edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionRelationships" update="false" insert="false" fetch="select">
+        <many-to-one name="colfusionRelationships" class="edu.pitt.sis.exp.colfusion.dal.orm.ColfusionRelationships" update="false" insert="false" fetch="select">
             <column name="rel_id" not-null="true" />
         </many-to-one>
         <property name="confidence" type="big_decimal">

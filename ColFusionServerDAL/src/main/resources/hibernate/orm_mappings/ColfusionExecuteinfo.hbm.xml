@@ -3,12 +3,12 @@
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 <!-- Generated 2014-6-10 16:18:00 by Hibernate Tools 3.4.0.CR1 -->
 <hibernate-mapping>
-    <class name="edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionExecuteinfo" table="colfusion_executeinfo" catalog="colfusion">
+    <class name="edu.pitt.sis.exp.colfusion.dal.orm.ColfusionExecuteinfo" table="colfusion_executeinfo" catalog="colfusion">
         <id name="eid" type="java.lang.Integer">
             <column name="Eid" />
             <generator class="identity" />
         </id>
-        <many-to-one name="colfusionSourceinfo" class="edu.pitt.sis.exp.colfusion.persistence.orm.ColfusionSourceinfo" fetch="select">
+        <many-to-one name="colfusionSourceinfo" class="edu.pitt.sis.exp.colfusion.dal.orm.ColfusionSourceinfo" fetch="select">
             <column name="Sid" not-null="true" />
         </many-to-one>
         <property name="userId" type="string">
