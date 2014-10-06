@@ -11,7 +11,6 @@
   <table-filter match-catalog="colfusion" match-name="colfusion_comments"/>
   <table-filter match-catalog="colfusion" match-name="colfusion_config"/>
   <table-filter match-catalog="colfusion" match-name="colfusion_des_attachments"/>
-  <table-filter match-catalog="colfusion" match-name="colfusion_dname_meta_data"/>
   <table-filter match-catalog="colfusion" match-name="colfusion_dnameinfo"/>
   <table-filter match-catalog="colfusion" match-name="colfusion_dnameinfo_metadata_edit_history"/>
   <table-filter match-catalog="colfusion" match-name="colfusion_executeinfo"/>
@@ -20,6 +19,7 @@
   <table-filter match-catalog="colfusion" match-name="colfusion_group_member"/>
   <table-filter match-catalog="colfusion" match-name="colfusion_group_shared"/>
   <table-filter match-catalog="colfusion" match-name="colfusion_groups"/>
+  <table-filter match-catalog="colfusion" match-name="colfusion_license"/>
   <table-filter match-catalog="colfusion" match-name="colfusion_likes"/>
   <table-filter match-catalog="colfusion" match-name="colfusion_links"/>
   <table-filter match-catalog="colfusion" match-name="colfusion_login_attempts"/>
@@ -29,6 +29,7 @@
   <table-filter match-catalog="colfusion" match-name="colfusion_notifications"/>
   <table-filter match-catalog="colfusion" match-name="colfusion_notifications_unread"/>
   <table-filter match-catalog="colfusion" match-name="colfusion_old_urls"/>
+  <table-filter match-catalog="colfusion" match-name="colfusion_openrefine_history_helper"/>
   <table-filter match-catalog="colfusion" match-name="colfusion_openrefine_project_map"/>
   <table-filter match-catalog="colfusion" match-name="colfusion_pentaho_log_logging_channels"/>
   <table-filter match-catalog="colfusion" match-name="colfusion_pentaho_log_performance"/>
@@ -49,6 +50,7 @@
   <table-filter match-catalog="colfusion" match-name="colfusion_sourceinfo_user"/>
   <table-filter match-catalog="colfusion" match-name="colfusion_synonyms_from"/>
   <table-filter match-catalog="colfusion" match-name="colfusion_synonyms_to"/>
+  <table-filter match-catalog="colfusion" match-name="colfusion_table_change_log"/>
   <table-filter match-catalog="colfusion" match-name="colfusion_tag_cache"/>
   <table-filter match-catalog="colfusion" match-name="colfusion_tags"/>
   <table-filter match-catalog="colfusion" match-name="colfusion_target"/>
@@ -63,5 +65,4 @@
   <table-filter match-catalog="colfusion" match-name="colfusion_visualization"/>
   <table-filter match-catalog="colfusion" match-name="colfusion_votes"/>
   <table-filter match-catalog="colfusion" match-name="colfusion_widgets"/>
-  <table-filter match-catalog="colfusion" match-name="statonverdicts"/>
 </hibernate-reverse-engineering>

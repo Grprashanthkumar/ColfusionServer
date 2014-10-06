@@ -1,14 +1,17 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
-<!-- Generated 2014-6-10 16:18:00 by Hibernate Tools 3.4.0.CR1 -->
+<!-- Generated Oct 6, 2014 2:04:13 PM by Hibernate Tools 3.4.0.CR1 -->
 <hibernate-mapping>
-    <class name="edu.pitt.sis.exp.colfusion.dal.orm.ColfusionSourceinfo" table="colfusion_sourceinfo" catalog="colfusion">
+    <class name="ColfusionSourceinfo" table="colfusion_sourceinfo" catalog="colfusion">
         <id name="sid" type="java.lang.Integer">
             <column name="Sid" />
             <generator class="identity" />
         </id>
-        <many-to-one name="colfusionUsers" class="edu.pitt.sis.exp.colfusion.dal.orm.ColfusionUsers" fetch="select">
+        <many-to-one name="colfusionLicense" class="ColfusionLicense" fetch="select">
+            <column name="license_ID" />
+        </many-to-one>
+        <many-to-one name="colfusionUsers" class="ColfusionUsers" fetch="select">
             <column name="UserId" not-null="true" />
         </many-to-one>
         <property name="title" type="string">
@@ -37,80 +40,80 @@
         <property name="provenance" type="string">
             <column name="provenance" length="65535" />
         </property>
+        <set name="colfusionSynonymsFroms" table="colfusion_synonyms_from" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="sid" not-null="true" />
+            </key>
+            <one-to-many class="ColfusionSynonymsFrom" />
+        </set>
         <set name="colfusionExecuteinfos" table="colfusion_executeinfo" inverse="true" lazy="true" fetch="select">
             <key>
                 <column name="Sid" not-null="true" />
             </key>
-            <one-to-many class="edu.pitt.sis.exp.colfusion.dal.orm.ColfusionExecuteinfo" />
+            <one-to-many class="ColfusionExecuteinfo" />
+        </set>
+        <set name="colfusionSourceinfoUsers" table="colfusion_sourceinfo_user" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="sid" not-null="true" />
+            </key>
+            <one-to-many class="ColfusionSourceinfoUser" />
+        </set>
+        <set name="colfusionTemporaries" table="colfusion_temporary" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="Sid" not-null="true" />
+            </key>
+            <one-to-many class="ColfusionTemporary" />
+        </set>
+        <set name="colfusionSynonymsTos" table="colfusion_synonyms_to" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="sid" not-null="true" />
+            </key>
+            <one-to-many class="ColfusionSynonymsTo" />
         </set>
         <set name="colfusionSourceinfoTableKtrs" table="colfusion_sourceinfo_table_ktr" inverse="true" lazy="true" fetch="select">
             <key>
                 <column name="sid" not-null="true" />
             </key>
-            <one-to-many class="edu.pitt.sis.exp.colfusion.dal.orm.ColfusionSourceinfoTableKtr" />
+            <one-to-many class="ColfusionSourceinfoTableKtr" />
+        </set>
+        <set name="colfusionRelationshipsesForSid1" table="colfusion_relationships" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="sid1" not-null="true" />
+            </key>
+            <one-to-many class="ColfusionRelationships" />
+        </set>
+        <set name="colfusionDesAttachmentses" table="colfusion_des_attachments" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="Sid" not-null="true" />
+            </key>
+            <one-to-many class="ColfusionDesAttachments" />
+        </set>
+        <set name="colfusionRelationshipsesForSid2" table="colfusion_relationships" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="sid2" not-null="true" />
+            </key>
+            <one-to-many class="ColfusionRelationships" />
         </set>
         <set name="colfusionDnameinfos" table="colfusion_dnameinfo" inverse="true" lazy="true" fetch="select">
             <key>
                 <column name="sid" not-null="true" />
             </key>
-            <one-to-many class="edu.pitt.sis.exp.colfusion.dal.orm.ColfusionDnameinfo" />
+            <one-to-many class="ColfusionDnameinfo" />
         </set>
+        <one-to-one name="colfusionSourceinfoDb" class="ColfusionSourceinfoDb"></one-to-one>
         <set name="colfusionSourceinfoMetadataEditHistories" table="colfusion_sourceinfo_metadata_edit_history" inverse="true" lazy="true" fetch="select">
             <key>
                 <column name="sid" not-null="true">
                     <comment>source info id</comment>
                 </column>
             </key>
-            <one-to-many class="edu.pitt.sis.exp.colfusion.dal.orm.ColfusionSourceinfoMetadataEditHistory" />
+            <one-to-many class="ColfusionSourceinfoMetadataEditHistory" />
         </set>
-        <set name="colfusionSynonymsFroms" table="colfusion_synonyms_from" inverse="true" lazy="true" fetch="select">
-            <key>
-                <column name="sid" not-null="true" />
-            </key>
-            <one-to-many class="edu.pitt.sis.exp.colfusion.dal.orm.ColfusionSynonymsFrom" />
-        </set>
-        <set name="colfusionSourceinfoUsers" table="colfusion_sourceinfo_user" inverse="true" lazy="true" fetch="select">
-            <key>
-                <column name="sid" not-null="true" />
-            </key>
-            <one-to-many class="edu.pitt.sis.exp.colfusion.dal.orm.ColfusionSourceinfoUser" />
-        </set>
-        <set name="colfusionSynonymsTos" table="colfusion_synonyms_to" inverse="true" lazy="true" fetch="select">
-            <key>
-                <column name="sid" not-null="true" />
-            </key>
-            <one-to-many class="edu.pitt.sis.exp.colfusion.dal.orm.ColfusionSynonymsTo" />
-        </set>
-        <set name="colfusionTemporaries" table="colfusion_temporary" inverse="true" lazy="true" fetch="select">
-            <key>
-                <column name="Sid" not-null="true" />
-            </key>
-            <one-to-many class="edu.pitt.sis.exp.colfusion.dal.orm.ColfusionTemporary" />
-        </set>
-        <set name="colfusionDesAttachmentses" table="colfusion_des_attachments" inverse="true" lazy="true" fetch="select">
-            <key>
-                <column name="Sid" not-null="true" />
-            </key>
-            <one-to-many class="edu.pitt.sis.exp.colfusion.dal.orm.ColfusionDesAttachments" />
-        </set>
-        <set name="colfusionRelationshipsesForSid1" table="colfusion_relationships" inverse="true" lazy="true" fetch="select">
-            <key>
-                <column name="sid1" not-null="true" />
-            </key>
-            <one-to-many class="edu.pitt.sis.exp.colfusion.dal.orm.ColfusionRelationships" />
-        </set>
-        <set name="colfusionRelationshipsesForSid2" table="colfusion_relationships" inverse="true" lazy="true" fetch="select">
-            <key>
-                <column name="sid2" not-null="true" />
-            </key>
-            <one-to-many class="edu.pitt.sis.exp.colfusion.dal.orm.ColfusionRelationships" />
-        </set>
-        <one-to-one name="colfusionSourceinfoDb" class="edu.pitt.sis.exp.colfusion.dal.orm.ColfusionSourceinfoDb"></one-to-one>
         <set name="colfusionVisualizations" table="colfusion_visualization" inverse="true" lazy="true" fetch="select">
             <key>
                 <column name="titleno" not-null="true" />
             </key>
-            <one-to-many class="edu.pitt.sis.exp.colfusion.dal.orm.ColfusionVisualization" />
+            <one-to-many class="ColfusionVisualization" />
         </set>
     </class>
 </hibernate-mapping>

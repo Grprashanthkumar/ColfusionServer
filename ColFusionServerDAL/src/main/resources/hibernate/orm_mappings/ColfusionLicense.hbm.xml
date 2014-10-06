@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Oct 6, 2014 2:04:13 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="ColfusionLicense" table="colfusion_license" catalog="colfusion">
+        <id name="licenseId" type="java.lang.Integer">
+            <column name="license_ID" />
+            <generator class="identity" />
+        </id>
+        <property name="licenseName" type="string">
+            <column name="license_Name" length="40" not-null="true" />
+        </property>
+        <property name="licenseDes" type="string">
+            <column name="license_Des" length="65535" />
+        </property>
+        <property name="licenseUrl" type="string">
+            <column name="license_URL" length="65535" />
+        </property>
+        <set name="colfusionSourceinfos" table="colfusion_sourceinfo" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="license_ID" />
+            </key>
+            <one-to-many class="ColfusionSourceinfo" />
+        </set>
+    </class>
+</hibernate-mapping>

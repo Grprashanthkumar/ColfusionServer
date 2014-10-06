@@ -40,6 +40,7 @@
   <mapping resource="hibernate/orm_mappings/ColfusionGroupMember.hbm.xml"/>
   <mapping resource="hibernate/orm_mappings/ColfusionGroups.hbm.xml"/>
   <mapping resource="hibernate/orm_mappings/ColfusionGroupShared.hbm.xml"/>
+  <mapping resource="hibernate/orm_mappings/ColfusionLicense.hbm.xml"/>
   <mapping resource="hibernate/orm_mappings/ColfusionLikes.hbm.xml"/>
   <mapping resource="hibernate/orm_mappings/ColfusionLinks.hbm.xml"/>
   <mapping resource="hibernate/orm_mappings/ColfusionLoginAttempts.hbm.xml"/>
