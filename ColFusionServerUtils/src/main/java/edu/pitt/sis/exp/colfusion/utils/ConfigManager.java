@@ -33,7 +33,7 @@ public class ConfigManager {
 		 
 			try {
 		 
-				prop.load(Thread.currentThread().getContextClassLoader().getResourceAsStream(configFileLocation));
+				prop.load(ResourceUtils.getResourceAsStream(configFileLocation));
 		 
 				instance.properties = prop;
 		 
