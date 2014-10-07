@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="ERROR">
+  <Appenders>
+    <Console name="Console" target="SYSTEM_OUT">
+      <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
+    </Console>
+    
+   <!--   <File name="MyFile" fileName="${web:rootDir}/logs/app.log">
+        <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
+    </File>   -->
+    
+    <!-- 
+    <SMTP name="Mail" subject="Col*Fusion Error Log" to="Karataev.Evgeny@gmail.com" from="support@chia.pitt.edu"
+          smtpHost="localhost" smtpPort="25" bufferSize="50">
+    </SMTP>
+    
+    <Async name="AsyncMail">
+            <AppenderRef ref="Mail" />
+    </Async>
+    
+    
+    <Async name="Async">
+      <AppenderRef ref="MyFile"/>
+    </Async>-->
+    
+  </Appenders>
+  <Loggers>
+    <Root level="info">
+      <AppenderRef ref="Console"/>
+    <!--    
+      <AppenderRef ref="Async"/>
+      
+     <AppenderRef ref="AsyncMail" level="error"/> -->
+    </Root>
+  </Loggers>
+</Configuration>
