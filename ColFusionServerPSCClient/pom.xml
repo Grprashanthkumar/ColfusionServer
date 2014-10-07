@@ -3,9 +3,9 @@
 
 	<modelVersion>4.0.0</modelVersion>
 
-	<artifactId>colfusionserverpscserver</artifactId>
+	<artifactId>colfusionserverpscclient</artifactId>
 	<packaging>jar</packaging>
-	<name>ColFusionServerPSCServer</name>
+	<name>ColFusionServerPSCClient</name>
 
 	<parent>
 		<groupId>edu.pitt.sis.exp.colfusion</groupId>

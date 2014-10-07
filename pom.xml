@@ -25,7 +25,8 @@
 		<module>ColFusionServerDAL</module>
 		<module>ColFusionServer</module>
 		<module>ColFusionServerServiceMonitor</module>
-		<module>ColFusionServerPSCServer</module>		
+		<module>ColFusionServerPSCServer</module>	
+		<module>ColFusionServerPSCClient</module>	
 	</modules>
 	
 	<build>
