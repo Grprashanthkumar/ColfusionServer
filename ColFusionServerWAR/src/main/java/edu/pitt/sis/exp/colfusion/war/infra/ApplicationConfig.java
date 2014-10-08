@@ -7,12 +7,12 @@ import javax.ws.rs.core.Application;
 
 import org.glassfish.jersey.media.multipart.MultiPartFeature;
 
-import edu.pitt.sis.exp.colfusion.war.rest.OpenRefineRestService;
-import edu.pitt.sis.exp.colfusion.war.rest.RelationshipRestService;
-import edu.pitt.sis.exp.colfusion.war.rest.SimilarityJoinRestService;
-import edu.pitt.sis.exp.colfusion.war.rest.StoryRestService;
-import edu.pitt.sis.exp.colfusion.war.rest.UserRestService;
-import edu.pitt.sis.exp.colfusion.war.rest.WizardRestService;
+import edu.pitt.sis.exp.colfusion.war.rest.impl.OpenRefineRestServiceImpl;
+import edu.pitt.sis.exp.colfusion.war.rest.impl.RelationshipRestServiceImpl;
+import edu.pitt.sis.exp.colfusion.war.rest.impl.SimilarityJoinRestServiceImpl;
+import edu.pitt.sis.exp.colfusion.war.rest.impl.StoryRestServiceImpl;
+import edu.pitt.sis.exp.colfusion.war.rest.impl.UserRestServiceImpl;
+import edu.pitt.sis.exp.colfusion.war.rest.impl.WizardRestServiceImpl;
 
 
 
@@ -23,12 +23,12 @@ public class ApplicationConfig extends Application {
         final Set<Class<?>> resources = new HashSet<Class<?>>();
 
         // Add your resources.
-        resources.add(WizardRestService.class);
-        resources.add(StoryRestService.class);
-        resources.add(UserRestService.class);
-        resources.add(RelationshipRestService.class);
-        resources.add(OpenRefineRestService.class);
-        resources.add(SimilarityJoinRestService.class);
+        resources.add(WizardRestServiceImpl.class);
+        resources.add(StoryRestServiceImpl.class);
+        resources.add(UserRestServiceImpl.class);
+        resources.add(RelationshipRestServiceImpl.class);
+        resources.add(OpenRefineRestServiceImpl.class);
+        resources.add(SimilarityJoinRestServiceImpl.class);
        
         // Add additional features such as support for Multipart.
         resources.add(MultiPartFeature.class);
