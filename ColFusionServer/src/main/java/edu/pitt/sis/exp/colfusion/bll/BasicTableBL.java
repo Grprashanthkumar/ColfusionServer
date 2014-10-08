@@ -11,12 +11,15 @@ import java.util.List;
 import edu.pitt.sis.exp.colfusion.dal.dataModels.tableDataModel.Table;
 import edu.pitt.sis.exp.colfusion.dal.databaseHandlers.DatabaseHandlerBase;
 import edu.pitt.sis.exp.colfusion.dal.databaseHandlers.DatabaseHandlerFactory;
+import edu.pitt.sis.exp.colfusion.dal.managers.ExecutionInfoManagerImpl;
 import edu.pitt.sis.exp.colfusion.dal.managers.SourceInfoManagerImpl;
+import edu.pitt.sis.exp.colfusion.dal.orm.ColfusionExecuteinfo;
 import edu.pitt.sis.exp.colfusion.dal.viewmodels.BasicTableInfoViewModel;
 import edu.pitt.sis.exp.colfusion.dal.viewmodels.JoinTablesByRelationshipsViewModel;
 import edu.pitt.sis.exp.colfusion.dal.viewmodels.StoryTargetDBViewModel;
 import edu.pitt.sis.exp.colfusion.responseModels.BasicTableResponseModel;
 import edu.pitt.sis.exp.colfusion.responseModels.JointTableByRelationshipsResponeModel;
+import edu.pitt.sis.exp.colfusion.responseModels.StoryStatusResponseModel;
 
 public class BasicTableBL {
 
@@ -113,6 +116,33 @@ public class BasicTableBL {
 		}
 		return null;
 	}
+	
+	public StoryStatusResponseModel getStoryStatus(int sid){
+		StoryStatusResponseModel result = new StoryStatusResponseModel();
+		List<ColfusionExecuteinfo> contents = new ArrayList<ColfusionExecuteinfo>();
+		try {
+			SourceInfoManagerImpl sourceInfoManagerImpl = new SourceInfoManagerImpl();
+			
+			//I cannot get tableNames list from database by Hibernate!!!!!!
+			List<String> tableNames = sourceInfoManagerImpl.getTableNames(sid);
+			
+			ExecutionInfoManagerImpl executionInfoManagerImpl = new ExecutionInfoManagerImpl();
+			for(int i=0;i<tableNames.size();i++){
+				ColfusionExecuteinfo content = executionInfoManagerImpl.getExecutionInfo(sid,tableNames.get(i));
+				contents.add(content);
+			}
+			result.setPayload(contents);
+			result.isSuccessful=true;
+		}
+		catch(Exception e) {
+			result.isSuccessful=false;
+			result.message = "Get StoryStatus failed";
+		}
+		
+		
+		return result;
+	}
+	
 	
 
 }
