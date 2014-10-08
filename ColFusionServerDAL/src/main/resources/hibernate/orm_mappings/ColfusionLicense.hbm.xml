@@ -3,7 +3,7 @@
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 <!-- Generated Oct 6, 2014 2:04:13 PM by Hibernate Tools 3.4.0.CR1 -->
 <hibernate-mapping>
-    <class name="ColfusionLicense" table="colfusion_license" catalog="colfusion">
+    <class name="edu.pitt.sis.exp.colfusion.dal.orm.ColfusionLicense" table="colfusion_license" catalog="colfusion">
         <id name="licenseId" type="java.lang.Integer">
             <column name="license_ID" />
             <generator class="identity" />
@@ -21,7 +21,7 @@
             <key>
                 <column name="license_ID" />
             </key>
-            <one-to-many class="ColfusionSourceinfo" />
+            <one-to-many class="edu.pitt.sis.exp.colfusion.dal.orm.ColfusionSourceinfo" />
         </set>
     </class>
 </hibernate-mapping>
