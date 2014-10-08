@@ -13,12 +13,15 @@ import org.apache.logging.log4j.Logger;
 
 import edu.pitt.sis.exp.colfusion.dal.managers.DNameInfoManager;
 import edu.pitt.sis.exp.colfusion.dal.managers.DNameInfoManagerImpl;
+import edu.pitt.sis.exp.colfusion.dal.managers.LicenseInfoManager;
+import edu.pitt.sis.exp.colfusion.dal.managers.LicenseInfoManagerImpl;
 import edu.pitt.sis.exp.colfusion.dal.managers.LinksManager;
 import edu.pitt.sis.exp.colfusion.dal.managers.LinksManagerImpl;
 import edu.pitt.sis.exp.colfusion.dal.managers.SourceInfoManager;
 import edu.pitt.sis.exp.colfusion.dal.managers.SourceInfoManagerImpl;
 import edu.pitt.sis.exp.colfusion.dal.managers.SourceInfoManagerImpl.HistoryItem;
 import edu.pitt.sis.exp.colfusion.dal.orm.ColfusionDnameinfo;
+import edu.pitt.sis.exp.colfusion.dal.orm.ColfusionLicense;
 import edu.pitt.sis.exp.colfusion.dal.orm.ColfusionLinks;
 import edu.pitt.sis.exp.colfusion.dal.orm.ColfusionSourceinfo;
 import edu.pitt.sis.exp.colfusion.dal.orm.ColfusionUserroles;
@@ -33,6 +36,7 @@ import edu.pitt.sis.exp.colfusion.dal.viewmodels.StoryMetadataViewModel;
 import edu.pitt.sis.exp.colfusion.responseModels.AddColumnMetadataEditHistoryResponse;
 import edu.pitt.sis.exp.colfusion.responseModels.ColumnMetadataResponse;
 import edu.pitt.sis.exp.colfusion.responseModels.GetColumnMetadataEditHistoryResponse;
+import edu.pitt.sis.exp.colfusion.responseModels.GetLicenseResponse;
 import edu.pitt.sis.exp.colfusion.responseModels.StoryMetadataHistoryResponse;
 import edu.pitt.sis.exp.colfusion.responseModels.StoryMetadataResponse;
 
@@ -291,6 +295,30 @@ public class StoryBL {
 			result.isSuccessful = false;
 			result.message = "Could not fetch column metadata for the table. Please try again later.";
 		}
+		return result;
+	}
+	
+	//license
+	public GetLicenseResponse getLicense(){
+		GetLicenseResponse result = new GetLicenseResponse();
+		
+		try{
+			LicenseInfoManager licenseMgr = new LicenseInfoManagerImpl();
+			List<ColfusionLicense> licenseFromDB = licenseMgr.getLicenseFromDB();
+			System.out.println("LicenseFrom DB size:"+licenseFromDB.size());
+			//for (int i =0;i<licenseFromDB.size();i++){
+			//	System.out.println("printFuck"+licenseFromDB.get(i).getLicenseName());
+			//}
+			result.setPayload(licenseFromDB);
+			result.isSuccessful =true;
+			result.message="OK";
+		}catch(Exception e){
+			System.out.println("StoryBL error license");
+			this.logger.error(String.format("Can't load licenses Info from database"), e);
+			result.isSuccessful = false;
+			result.message = "Could not load licenses from database,Please try again later.";
+		}
+		
 		return result;
 	}
 }
