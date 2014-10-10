@@ -16,6 +16,7 @@ import edu.pitt.sis.exp.colfusion.responseModels.AddColumnMetadataEditHistoryRes
 import edu.pitt.sis.exp.colfusion.responseModels.BasicTableResponseModel;
 import edu.pitt.sis.exp.colfusion.responseModels.ColumnMetadataResponse;
 import edu.pitt.sis.exp.colfusion.responseModels.GetColumnMetadataEditHistoryResponse;
+import edu.pitt.sis.exp.colfusion.responseModels.GetLicenseResponse;
 import edu.pitt.sis.exp.colfusion.responseModels.JointTableByRelationshipsResponeModel;
 import edu.pitt.sis.exp.colfusion.responseModels.StoryMetadataHistoryResponse;
 import edu.pitt.sis.exp.colfusion.responseModels.StoryMetadataResponse;
@@ -158,4 +159,11 @@ public class StoryRestServiceImpl extends BaseController implements StoryRestSer
 		
 		return this.makeCORS(Response.status(200).entity(json));
     }
+	@Override
+	public Response getLicense(){
+		StoryBL storyBL = new StoryBL();
+		GetLicenseResponse  result = storyBL.getLicense();
+		System.out.println("StoryControler error licese");
+		return this.makeCORS(Response.status(200).entity(result));
+}
 }

@@ -128,4 +128,7 @@ public interface StoryRestService {
     public abstract Response getTableDataBySidAndName(@PathParam("sid") int sid,
     		@PathParam("tableName") String tableName, @PathParam("perPage") int perPage, @PathParam("pageNumber") int pageNumber);
 
+	@Path("metadata/license")
+	@GET
+	public abstract Response getLicense();
 }
