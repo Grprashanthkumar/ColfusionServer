@@ -811,4 +811,39 @@ public class SourceInfoManagerImpl extends GeneralManagerImpl<ColfusionSourceinf
         	throw ex;
         }	
 	}
+	
+	//I don't know how to get data from hibernate........
+	@Override
+	public List<String> getTableNames(int sid) {
+		try {
+            HibernateUtil.beginTransaction();
+            
+            SourceInfoDAO storyDao = new SourceInfoDAOImpl();
+            ColfusionSourceinfo story = storyDao.findByID(ColfusionSourceinfo.class, sid);
+            
+            String hql = "SELECT distinct di.colfusionColumnTableInfo.tableName FROM ColfusionDnameinfo di join di.colfusionColumnTableInfo where di.colfusionSourceinfo =:sid";
+            
+            Query query = HibernateUtil.getSession().createQuery(hql);
+            query.setParameter("sid", story);
+            
+            List<String> tableNames = query.list();
+                        
+            HibernateUtil.commitTransaction();
+            
+            return tableNames;
+		
+        } catch (NonUniqueResultException ex) {
+
+        	HibernateUtil.rollbackTransaction();
+        	
+        	this.logger.error("getTableNames failed NonUniqueResultException", ex);
+            throw ex;
+        } catch (HibernateException ex) {
+
+        	HibernateUtil.rollbackTransaction();
+        	
+        	this.logger.error("getTableNames failed HibernateException", ex);
+        	throw ex;
+        }	
+	}
 }

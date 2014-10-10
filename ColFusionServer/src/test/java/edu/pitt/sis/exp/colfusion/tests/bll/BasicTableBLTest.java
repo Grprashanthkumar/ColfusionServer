@@ -6,6 +6,7 @@ import org.junit.Test;
 
 import edu.pitt.sis.exp.colfusion.bll.BasicTableBL;
 import edu.pitt.sis.exp.colfusion.responseModels.JointTableByRelationshipsResponeModel;
+import edu.pitt.sis.exp.colfusion.responseModels.StoryStatusResponseModel;
 
 public class BasicTableBLTest extends TestCase {
 	
@@ -29,16 +30,35 @@ public class BasicTableBLTest extends TestCase {
 //		}	
 //	}
 	
+//	@Test
+//	public void testGetTableDataBySidAndName(){
+//		int sid = 1751;
+//		String tableName="Sheet1";
+//		
+//		BasicTableBL basicBL=new BasicTableBL();
+//		JointTableByRelationshipsResponeModel result= basicBL.getTableDataBySidAndName(sid, tableName, 10, 1);
+//		try {
+//			System.out.println("111111111111");
+//			System.out.println(result);
+//			System.out.println("111111111111");
+//			assertEquals(true, true);
+//		} catch (Exception e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//			
+//			fail(e.getMessage());
+//		}	
+//	}
+	
 	@Test
-	public void testGetTableDataBySidAndName(){
+	public void testGetStoryStatus(){
 		int sid = 1751;
-		String tableName="Sheet1";
-		
 		BasicTableBL basicBL=new BasicTableBL();
-		JointTableByRelationshipsResponeModel result= basicBL.getTableDataBySidAndName(sid, tableName, 10, 1);
+		StoryStatusResponseModel result= basicBL.getStoryStatus(sid);
 		try {
 			System.out.println("111111111111");
 			System.out.println(result);
+			System.out.println(result.getPayload().get(0).getStatus());
 			System.out.println("111111111111");
 			assertEquals(true, true);
 		} catch (Exception e) {

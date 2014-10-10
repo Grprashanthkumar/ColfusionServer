@@ -137,4 +137,12 @@ public interface SourceInfoManager extends GeneralManager<ColfusionSourceinfo, I
 	 * @return story that contains that column.
 	 */
 	public ColfusionSourceinfo findStoryByCid(Integer integer);
+	
+
+	/**
+	 * Find a tableName  by the sid
+	 * @param integer sid.
+	 * @return tableName List.
+	 */
+	public List<String> getTableNames(int sid);
 }
