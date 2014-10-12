@@ -5,8 +5,8 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSerializer;
 
 public class Gsonizer {
-	private static final Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
-	private static final GsonBuilder gsonBuilder = new GsonBuilder();
+	private static final Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().serializeNulls().create();
+	private static final GsonBuilder gsonBuilder = new GsonBuilder().serializeNulls();
 	private static Gson gsonAll = new GsonBuilder().create();
 	
 	public static final Gsonizer instance = new Gsonizer();
