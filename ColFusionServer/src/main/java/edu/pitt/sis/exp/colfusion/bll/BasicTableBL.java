@@ -117,7 +117,31 @@ public class BasicTableBL {
 		return null;
 	}
 	
-	public StoryStatusResponseModel getStoryStatus(int sid){
+	//TODO: need to be refactored
+	public JointTableByRelationshipsResponeModel getTableDataBySidAndName(final int sid, final String tableName){
+		SourceInfoManagerImpl sourceInfo = new SourceInfoManagerImpl();
+		StoryTargetDBViewModel storyTargetDBViewModel = sourceInfo.getStorySourceInfoDB(sid);
+		try {
+			DatabaseHandlerBase databaseHandlerBase = DatabaseHandlerFactory.getDatabaseHandler(storyTargetDBViewModel);
+			Table table = databaseHandlerBase.getAll(tableName);
+			
+			JointTableByRelationshipsResponeModel result = new JointTableByRelationshipsResponeModel(); 
+			
+			JoinTablesByRelationshipsViewModel payload = new JoinTablesByRelationshipsViewModel();
+			payload.setJointTable(table);
+			result.setPayload(payload);
+			
+			result.isSuccessful = true;
+			
+			return result;
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	public StoryStatusResponseModel getStoryStatus(final int sid){
 		StoryStatusResponseModel result = new StoryStatusResponseModel();
 		List<ColfusionExecuteinfo> contents = new ArrayList<ColfusionExecuteinfo>();
 		try {

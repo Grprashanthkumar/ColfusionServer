@@ -46,7 +46,7 @@ public class JoinTablesBL {
 			Table jointTable = joinTables(links.getId().getClFrom(), links.getId().getClTo(), joinTablesInfo.getSimilarityThreshold());
 			
 			TwoJointTablesViewModel resultPayload = new TwoJointTablesViewModel(joinTablesInfo.getSid1(), joinTablesInfo.getTableName1(), 
-					joinTablesInfo.getSid2(), joinTablesInfo.getTableName2(), joinTablesInfo.getSimilarityThreshold(), jointTable);
+					joinTablesInfo.getSid2(), joinTablesInfo.getTableName2(), joinTablesInfo.getSimilarityThreshold(), jointTable, null, null);
 			
 			JointTableResponeModel result = new JointTableResponeModel();
 			result.message = "OK";

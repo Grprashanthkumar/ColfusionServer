@@ -8,7 +8,7 @@ public class ConfigManager {
 	private static ConfigManager instance = null;
 	private Properties properties = null;
 	
-	final static String configFileLocation = "config.properties";
+	final static String CONFIG_FILE_NAME = "config.properties";
 	
 	protected ConfigManager() {
 		
@@ -33,7 +33,7 @@ public class ConfigManager {
 		 
 			try {
 		 
-				prop.load(ResourceUtils.getResourceAsStream(configFileLocation));
+				prop.load(ResourceUtils.getResourceAsStream(CONFIG_FILE_NAME));
 		 
 				instance.properties = prop;
 		 
