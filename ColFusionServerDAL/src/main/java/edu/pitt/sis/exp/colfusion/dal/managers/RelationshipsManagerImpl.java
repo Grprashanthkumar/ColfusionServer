@@ -158,4 +158,40 @@ public class RelationshipsManagerImpl extends GeneralManagerImpl<ColfusionRelati
 		
 		return result;
 	}
+
+	@Override
+	public List<ColfusionRelationships> findRelationshipsBySid(final int sid) throws Exception {
+		SourceInfoManager storyMng = new SourceInfoManagerImpl();
+		
+		ColfusionSourceinfo story = null;
+		
+		try {
+			story = storyMng.findByID(sid);			
+		} catch (Exception e) {
+			String msg = String.format("FAILED to find story by sid %d", sid);
+			
+			logger.error(msg, e);
+			
+			throw e;
+		}
+		
+		if (story == null) {
+			String msg = String.format("Found a story but it is null for sid %d", sid);
+			
+			logger.error(msg);
+			
+			throw new NullPointerException(msg);
+		}
+		
+		List<ColfusionRelationships> result = new ArrayList<>();
+		
+		//TODO: it might be better/faster to execute hql query to find all with where condition.
+		story = GeneralManagerImpl.initializeField(story, "colfusionRelationshipsesForSid1");
+		result.addAll(story.getColfusionRelationshipsesForSid1());
+		
+		story = GeneralManagerImpl.initializeField(story, "colfusionRelationshipsesForSid2");
+		result.addAll(story.getColfusionRelationshipsesForSid2());
+		
+		return result;
+	}
 }

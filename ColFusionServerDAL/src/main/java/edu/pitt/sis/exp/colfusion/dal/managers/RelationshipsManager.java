@@ -18,13 +18,14 @@ public interface RelationshipsManager extends GeneralManager<ColfusionRelationsh
 	List<ColfusionRelationships> findByTables(int sid1, String tableName1,
 			int sid2, String tableName2) throws Exception;
 
-	//TODO:should it be here or just use ColfusionStory which should have reference to relationships
+	
 	/**
 	 * Find relationships by given sid. The found relationships are those that have a story with given id at either end.
 	 * @param sid is id of the story for which to find relationships.
 	 * @return all relationships of given story.
+	 * @throws Exception 
 	 */
-	//List<ColfusionRelationships> findRelationshipsBySid(int sid);
+	List<ColfusionRelationships> findRelationshipsBySid(int sid) throws Exception;
 	
 	/**
      * Find only one entity by id.
