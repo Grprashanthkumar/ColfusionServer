@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.TimerTask;
 
 
+
+
 /**
  * Apache Commons Net library implements the client side of many basic Internet protocols. 
  * The purpose of the library is to provide fundamental protocol access, 
@@ -13,6 +15,11 @@ import java.util.TimerTask;
  * 	and build paths for them.
  */
 import org.apache.commons.net.telnet.TelnetClient;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import edu.pitt.sis.exp.colfusion.utils.ConfigManager;
+import edu.pitt.sis.exp.colfusion.utils.PropertyKeys;
 
 /**
  * @author Hao Bai
@@ -25,24 +32,28 @@ public class ServiceMonitor extends TimerTask{
 	
 	private List<Service> serviceList;
 	private int timeOut;
-	DatabaseConnection dbconn;
+	DatabaseConnection dataBaseconnection;
+	EmailNotifier emailNotifier;
+	
+	private Logger logger = LogManager.getLogger(ServiceMonitor.class.getName());
 	
 	/**
 	 * Set the default time out as 3 seconds.
 	 */
 	public ServiceMonitor(){
-		this.serviceList= new ArrayList<Service>();
-		this.timeOut= 3000;
-		dbconn= new DatabaseConnection();
+		this.serviceList = new ArrayList<Service>();
+		this.timeOut = Integer.parseInt(ConfigManager.getInstance().getPropertyByName(PropertyKeys.ServiceMonitorTimeOut));;
+		dataBaseconnection = new DatabaseConnection();
+		emailNotifier = new EmailNotifier();
 	}
 	
-	public ServiceMonitor(List<Service> serv_list, int timeout){
-		this.serviceList= serv_list;
-		this.timeOut= timeout;
+	public ServiceMonitor(List<Service> servicelist, int timeout){
+		this.serviceList = servicelist;
+		this.timeOut = timeout;
 	}
 	
-	public void setServiceList(List<Service> serv_list){
-		this.serviceList= serv_list;
+	public void setServiceList(List<Service> servicelist){
+		this.serviceList = servicelist;
 	}
 	
 	public List<Service> getServiceList(){
@@ -50,11 +61,15 @@ public class ServiceMonitor extends TimerTask{
 	}
 	
 	public void setTimeOut(int timeout){
-		this.timeOut= timeout;
+		this.timeOut = timeout;
 	}
 	
 	public int getTimeOut(){
 		return this.timeOut;
+	}
+	
+	public int getServiceNumInDatabase(){
+		return this.dataBaseconnection.queryAllServies().size();
 	}
 	
 	/**
@@ -64,30 +79,30 @@ public class ServiceMonitor extends TimerTask{
 	 * If the service is connected, returns true;
 	 * Else, connect() reports connect exceptions, thus, returns false.
 	 */
-	public boolean isServiceConnected(Service serv){	
+	public boolean isServiceConnected(Service service){	
         try{
-            TelnetClient client= new TelnetClient();
+            TelnetClient client = new TelnetClient();
             client.setDefaultTimeout(this.getTimeOut());
-            client.connect(serv.getServiceAddress(), serv.getPortNumber());
+            client.connect(service.getServiceAddress(), service.getPortNumber());
             client.disconnect();
             return true;
         }
-        catch(Exception excep){
+        catch(Exception exception){
         	return false;
         }
 	}
 	
 	/**
-	 * Return current service's status:
-	 * 0 is stopped, 2 is running.
+	 * Return current service's status.
 	 */
-	public void updateServiceStatus(Service serv){
-		if(this.isServiceConnected(serv)==true){
-			serv.setServiceStatus(2);
+	public String updateServiceStatus(Service service){
+		if(this.isServiceConnected(service) == true){
+			service.setServiceStatus(ServiceStatusEnum.RUNNING.getValue());
 		}
 		else{
-			serv.setServiceStatus(0);
+			service.setServiceStatus(ServiceStatusEnum.STOPPED.getValue());
 		}
+		return service.getServiceStatus();
 	}
 	
 	/*
@@ -98,17 +113,29 @@ public class ServiceMonitor extends TimerTask{
 	 * in database.
 	 */
 	public void run(){
+		String currentStatus = null;
 		try{
-			if(this.serviceList.isEmpty()==true)
-				this.serviceList= this.dbconn.queryAllServies();
-			for(Service serv: serviceList){
-				this.updateServiceStatus(serv);
-				this.dbconn.updateServiceStatus(serv);
-				serviceList.set(serviceList.indexOf(serv), serv);
+			if(this.serviceList.isEmpty() == true)
+				this.serviceList = this.dataBaseconnection.queryAllServies();
+			for(Service service : serviceList){
+				currentStatus = this.updateServiceStatus(service);
+				this.dataBaseconnection.updateServiceStatus(service);
+				serviceList.set(serviceList.indexOf(service), service);
+				if(currentStatus == ServiceStatusEnum.STOPPED.getValue()){
+					for(String userLevel : ConfigManager.getInstance().getPropertyByName(PropertyKeys.userLevel).split(",")){
+						for(String emailAddress : this.dataBaseconnection.queryUserEmails(userLevel)){
+							emailNotifier.sendMail(emailAddress, 
+												   "Service Status changed: " + service.getServiceName(), 
+												   service.getServiceName() + " has been stopped!");
+						}
+					}
+				}
+				currentStatus = null;
 			}
 		}
-		catch(Exception excep){
-			System.out.println(excep.toString()+" "+ excep.getMessage()+" "+ excep.getCause());
+		catch(Exception exception){
+			logger.error("In ServiceMonitor.run()\n"
+					+exception.toString()+" "+exception.getMessage()+" "+exception.getCause());
 		}
 	}
 	
@@ -123,12 +150,12 @@ public class ServiceMonitor extends TimerTask{
 	 *   2: successfully started
 	 *   3: Other Exceptions
 	 */
-	public int startService(Service serv){
-		if(serv.getServiceName()==null|| serv.getServiceName()=="")
+	public int startService(Service service){
+		if(service.getServiceName() == null || service.getServiceName() == "")
 			return 0;
-		else if(serv.getServiceStatus()== "running")
+		else if(service.getServiceStatus() == ServiceStatusEnum.RUNNING.getValue())
 			return 1;
-		else if(serv.getServiceStatus()== "stopped"){
+		else if(service.getServiceStatus() == ServiceStatusEnum.STOPPED.getValue()){
 			try{
 				
 				//String s;
@@ -145,8 +172,9 @@ public class ServiceMonitor extends TimerTask{
 	            
 				return 2;
 			}
-			catch(Exception excep){
-				excep.printStackTrace();
+			catch(Exception exception){
+				logger.error("In ServiceMonitor.startService()\n"
+						+exception.toString()+" "+exception.getMessage()+" "+exception.getCause());
 				return 3;
 			}
 		}

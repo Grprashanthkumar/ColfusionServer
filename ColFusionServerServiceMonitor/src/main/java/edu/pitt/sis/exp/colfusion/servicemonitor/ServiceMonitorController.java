@@ -3,6 +3,12 @@ package edu.pitt.sis.exp.colfusion.servicemonitor;
 import java.util.List;
 import java.util.Timer;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import edu.pitt.sis.exp.colfusion.utils.ConfigManager;
+import edu.pitt.sis.exp.colfusion.utils.PropertyKeys;
+
 /**
  * @author Hao Bai
  * 
@@ -13,24 +19,26 @@ import java.util.Timer;
  */
 public class ServiceMonitorController{
 
-	private ServiceMonitor serv_mon;
+	private ServiceMonitor serviceMonitor;
 	private int monitorPeriod;
 	Timer timer;
 	
+	private Logger logger = LogManager.getLogger(ServiceMonitorController.class.getName());
+	
 	public ServiceMonitorController(){
-		timer= new Timer();
-		this.serv_mon= new ServiceMonitor();
-		this.monitorPeriod= 5000;
+		timer = new Timer();
+		this.serviceMonitor = new ServiceMonitor();
+		this.monitorPeriod = Integer.parseInt(ConfigManager.getInstance().getPropertyByName(PropertyKeys.ServiceMonitorPeriod));;
 	}
 	
-	public ServiceMonitorController(ServiceMonitor servmon, int period, Timer timer_t){
-		this.serv_mon= servmon;
-		this.monitorPeriod= period;
-		this.timer= timer_t;
+	public ServiceMonitorController(ServiceMonitor servicemonitor, int period, Timer timerParameter){
+		this.serviceMonitor = servicemonitor;
+		this.monitorPeriod = period;
+		this.timer = timerParameter;
 	}
 	
 	public void setMonitorPeriod(int period){
-		this.monitorPeriod= period;
+		this.monitorPeriod = period;
 	}
 	
 	public int getMonitorPeriod(){
@@ -45,11 +53,12 @@ public class ServiceMonitorController{
 	public boolean startServiceMonitor(){
 		try{
 			/*executes task as schedule(task, initial delay, delay period)*/
-			this.timer.schedule(this.serv_mon, 0, this.monitorPeriod);
+			this.timer.schedule(this.serviceMonitor, 0, this.monitorPeriod);
 			return true;
 		}
-		catch(Exception excep){
-			System.out.println(excep.toString()+" "+ excep.getMessage()+" "+ excep.getCause());
+		catch(Exception exception){
+			logger.error("In ServiceMonitorController.startServiceMonitor()\n"
+					+exception.toString()+" "+exception.getMessage()+" "+exception.getCause());
 			return false;
 		}
 	}
@@ -60,15 +69,16 @@ public class ServiceMonitorController{
 	 * Otherwise, returns false.
 	 */
 	public boolean stopServiceMonitor(){
-		if(this.timer==null)
+		if(this.timer == null)
 			return true;
 		try{
 			this.timer.cancel();
-			this.serv_mon= null;
+			this.serviceMonitor = null;
 			return true;
 		}
-		catch(Exception excep){
-			System.out.println(excep.toString()+" "+ excep.getMessage()+" "+ excep.getCause());			
+		catch(Exception exception){
+			logger.error("In ServiceMonitorController.stopServiceMonitor()\n"
+					+exception.toString()+" "+exception.getMessage()+" "+exception.getCause());		
 			return false;
 		}
 	}
@@ -80,10 +90,11 @@ public class ServiceMonitorController{
 	 * is different from getServiceStatus() in Service.java
 	 */
 	public List<Service> getServicesStatus(){
-		if(this.serv_mon.getServiceList().isEmpty()==true || this.serv_mon.getServiceList().size()<6)
+		if(this.serviceMonitor.getServiceList().isEmpty() == true ||
+		   this.serviceMonitor.getServiceList().size() < this.serviceMonitor.getServiceNumInDatabase())
 			return null;
 		
-		return this.serv_mon.getServiceList();
+		return this.serviceMonitor.getServiceList();
 	}
 	
 }

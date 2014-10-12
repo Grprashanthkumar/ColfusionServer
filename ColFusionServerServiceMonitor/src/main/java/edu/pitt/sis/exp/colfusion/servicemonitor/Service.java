@@ -23,19 +23,18 @@ public class Service {
 	private String serviceDir;
 	private String serviceCommand;
 	private String serviceStatus;
-	private static final String[] serviceStatusType= {"stopped", "started", "running"};
 	
 	public Service(){
 	}
 	
 	public Service(String servicename, String address, int portnum){
-		this.serviceName= servicename;
-		this.serviceAddress= address;
-		this.portNumber= portnum;
+		this.serviceName = servicename;
+		this.serviceAddress = address;
+		this.portNumber = portnum;
 	}
 	
 	public void setServiceID(int id){
-		this.serviceID= id;
+		this.serviceID = id;
 	}
 	
 	public int getServiceID(){
@@ -43,7 +42,7 @@ public class Service {
 	}
 	
 	public void setServiceName(String servicename){
-		this.serviceName= servicename;
+		this.serviceName = servicename;
 	}
 	
 	public String getServiceName(){
@@ -51,7 +50,7 @@ public class Service {
 	}
 	
 	public void setServiceAddress(String address){
-		this.serviceAddress= address;
+		this.serviceAddress = address;
 	}
 	
 	public String getServiceAddress(){
@@ -59,7 +58,7 @@ public class Service {
 	}
 	
 	public void setPortNumber(int portnum){
-		this.portNumber= portnum;
+		this.portNumber = portnum;
 	}
 	
 	public int getPortNumber(){
@@ -67,7 +66,7 @@ public class Service {
 	}
 	
 	public void setServiceDir(String dir){
-		this.serviceDir= dir;
+		this.serviceDir = dir;
 	}
 	
 	public String getServiceDir(){
@@ -75,19 +74,15 @@ public class Service {
 	}
 	
 	public void setServiceCommand(String command){
-		this.serviceCommand= command;
+		this.serviceCommand = command;
 	}
 	
 	public String getServiceCommand(){
 		return this.serviceCommand;
 	}
 	
-	public void setServiceStatus(int statusNum){
-		this.serviceStatus= serviceStatusType[statusNum];
-	}
-	
 	public void setServiceStatus(String status){
-		this.serviceStatus= status;
+		this.serviceStatus = status;
 	}
 	
 	public String getServiceStatus(){
@@ -95,7 +90,7 @@ public class Service {
 	}
 	
 	public String toString(){
-		return this.getServiceID()+ this.getServiceName()+ this.getServiceAddress()+ this.getPortNumber()
-				+ this.getServiceDir()+ this.getServiceCommand()+ this.getServiceStatus();
+		return this.getServiceID() + this.getServiceName() + this.getServiceAddress() + this.getPortNumber()
+				+ this.getServiceDir() + this.getServiceCommand() + this.getServiceStatus();
 	}
 }

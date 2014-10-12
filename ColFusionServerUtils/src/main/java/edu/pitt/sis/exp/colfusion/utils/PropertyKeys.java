@@ -149,4 +149,31 @@ public class PropertyKeys {
 
 	public static String maxNumberOfConcurrentProceses = "maxNumberOfConcurrentProceses";
 	
+	/*Appended by Hao Bai
+	 * This value is used for setting timeout for connecting services 
+	 * in ServiceMonitor.java of colfusionserverservicemonitor project
+	*/
+	public static String ServiceMonitorTimeOut = "ServiceMonitorTimeOut";
+	/*Appended by Hao Bai
+	 * This value is used for setting period for monitoring services 
+	 * in ServiceMonitorController.java of colfusionserverservicemonitor project
+	*/
+	public static String ServiceMonitorPeriod = "ServiceMonitorPeriod";
+	/*Appended by Hao Bai
+	 * This value is used for setting email sender's address.
+	*/
+	public static String emailSenderAddress = "emailSenderAddress";
+	/*Appended by Hao Bai
+	 * This value is used for setting email sender's password.
+	*/
+	public static String emailSenderPassword = "emailSenderPassword";
+	/*Appended by Hao Bai
+	 * This value is used for setting email smtp server host.
+	*/
+	public static String smtpHost = "smtpHost";
+	/*Appended by Hao Bai
+	 * This value is used for setting email receiver's userLevel.
+	*/
+	public static String userLevel = "userLevel";
+	
 }
