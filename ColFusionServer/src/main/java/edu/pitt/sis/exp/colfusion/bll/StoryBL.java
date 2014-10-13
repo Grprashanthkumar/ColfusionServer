@@ -29,6 +29,7 @@ import edu.pitt.sis.exp.colfusion.dal.orm.ColfusionUsers;
 import edu.pitt.sis.exp.colfusion.dal.utils.DataSourceTypes;
 import edu.pitt.sis.exp.colfusion.dal.utils.MappingUtils;
 import edu.pitt.sis.exp.colfusion.dal.viewmodels.DatasetVariableViewModel;
+import edu.pitt.sis.exp.colfusion.dal.viewmodels.GetLicenseViewModal;
 import edu.pitt.sis.exp.colfusion.dal.viewmodels.StoryAuthorViewModel;
 import edu.pitt.sis.exp.colfusion.dal.viewmodels.StoryMetadataHistoryLogRecordViewModel;
 import edu.pitt.sis.exp.colfusion.dal.viewmodels.StoryMetadataHistoryViewModel;
@@ -309,7 +310,9 @@ public class StoryBL {
 			//for (int i =0;i<licenseFromDB.size();i++){
 			//	System.out.println("printFuck"+licenseFromDB.get(i).getLicenseName());
 			//}
-			result.setPayload(licenseFromDB);
+			GetLicenseViewModal newModal = new GetLicenseViewModal();
+			newModal.setLicenseList(licenseFromDB);
+			result.setPayload(newModal);
 			result.isSuccessful =true;
 			result.message="OK";
 		}catch(Exception e){

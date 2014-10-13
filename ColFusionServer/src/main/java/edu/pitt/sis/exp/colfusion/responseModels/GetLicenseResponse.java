@@ -4,15 +4,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 import edu.pitt.sis.exp.colfusion.dal.orm.ColfusionLicense;
+import edu.pitt.sis.exp.colfusion.dal.viewmodels.GetLicenseViewModal;
 
 public class GetLicenseResponse extends GeneralResponseImpl {
-	private List<ColfusionLicense> payload = new ArrayList<ColfusionLicense>();
+	private GetLicenseViewModal payload = new GetLicenseViewModal();
 	  
-	  public List<ColfusionLicense> getPayload() {
+	  public GetLicenseViewModal getPayload() {
 			return this.payload;
 		}
 	  
-	  public void setPayload(final List<ColfusionLicense> payload) {
+	  public void setPayload(final GetLicenseViewModal payload) {
 			this.payload = payload; 
 		}
 }
