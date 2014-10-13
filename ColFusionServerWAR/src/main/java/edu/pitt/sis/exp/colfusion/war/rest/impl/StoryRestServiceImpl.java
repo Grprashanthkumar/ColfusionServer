@@ -153,7 +153,7 @@ public class StoryRestServiceImpl extends BaseController implements StoryRestSer
     		final int perPage, final int pageNumber) {
 		
 		BasicTableBL basicBL=new BasicTableBL();
-		JointTableByRelationshipsResponeModel result= basicBL.getTableDataBySidAndName(sid, tableName, perPage, pageNumber);
+		JointTableByRelationshipsResponeModel result = basicBL.getTableDataBySidAndName(sid, tableName, perPage, pageNumber);
 		
 		String json = result.toJson();
 		

@@ -14,7 +14,7 @@ public class RowSerializer implements JsonSerializer<Row> {
 			final JsonSerializationContext context) {
 		final JsonObject jsonObject = new JsonObject();
 		
-		JsonElement jsonColumnGroups = context.serialize(row.toArray());
+		JsonElement jsonColumnGroups = context.serialize(row.getColumnGroups().toArray());
 		jsonObject.add("columnGroups", jsonColumnGroups);
 		
 		return jsonObject;

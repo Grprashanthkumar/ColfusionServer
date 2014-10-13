@@ -15,7 +15,7 @@ public class ColumnGroupSerializer implements JsonSerializer<ColumnGroup> {
 		final JsonObject jsonObject = new JsonObject();
 		
 		jsonObject.addProperty("tableName", columnGroup.getTableName());
-		JsonElement jsonColumns = context.serialize(columnGroup.toArray());
+		JsonElement jsonColumns = context.serialize(columnGroup.getColumns().toArray());
 		jsonObject.add("columns", jsonColumns);
 		
 		return jsonObject;

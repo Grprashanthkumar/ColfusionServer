@@ -7,16 +7,20 @@ import java.util.Map;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
+import com.google.gson.annotations.Expose;
+
 import edu.pitt.sis.exp.colfusion.dal.dataModels.relationships.transformation.RelationshipTransformation;
 import edu.pitt.sis.exp.colfusion.utils.Gsonazable;
 import edu.pitt.sis.exp.colfusion.utils.Gsonizer;
 
 @XmlRootElement
-public class Row extends ArrayList<ColumnGroup> implements Gsonazable {
+public class Row implements Gsonazable {
 	
-	static {
-		Gsonizer.registerTypeAdapter(Row.class, new RowSerializer());
-	}
+//	static {
+//		Gsonizer.registerTypeAdapter(Row.class, new RowSerializer());
+//	}
+	
+	@Expose private List<ColumnGroup> columnGroups = new ArrayList<ColumnGroup>();
 	
 	/**
 	 * 
@@ -24,9 +28,13 @@ public class Row extends ArrayList<ColumnGroup> implements Gsonazable {
 	private static final long serialVersionUID = 1L;
 
 	public Row() {
-		super();
+//		super();
 	}
 
+	public Row(final List<ColumnGroup> columnGroups) {
+		this.setColumnGroups(columnGroups);
+	}
+	
 	public String getByTransformation(final RelationshipTransformation transformationTable1) {
        
         // TODO:for now just take one column, later need to be able to actually
@@ -43,8 +51,8 @@ public class Row extends ArrayList<ColumnGroup> implements Gsonazable {
 		Map<String, String> result = new HashMap<>();
 		
 		for (String columnDbName : columnDbNames) {
-			for (ColumnGroup columnGroup : this) {
-				for (Column column : columnGroup) {
+			for (ColumnGroup columnGroup : this.getColumnGroups()) {
+				for (Column column : columnGroup.getColumns()) {
 					if (column.getOriginalName().equals(columnDbName)) {
 						result.put(columnDbName, (String) column.getCell().getValue());
 					}
@@ -72,11 +80,25 @@ public class Row extends ArrayList<ColumnGroup> implements Gsonazable {
 		
 		result.append(String.format("Row: "));
 		
-		for (ColumnGroup columnGroup : this) {
+		for (ColumnGroup columnGroup : this.getColumnGroups()) {
 			result.append(columnGroup.toString());
 			result.append(System.getProperty("line.separator"));
 		}
 		
 		return result.toString();
+	}
+
+	/**
+	 * @return the columnGroups
+	 */
+	public List<ColumnGroup> getColumnGroups() {
+		return columnGroups;
+	}
+
+	/**
+	 * @param columnGroups the columnGroups to set
+	 */
+	public void setColumnGroups(final List<ColumnGroup> columnGroups) {
+		this.columnGroups = columnGroups;
 	}
 }

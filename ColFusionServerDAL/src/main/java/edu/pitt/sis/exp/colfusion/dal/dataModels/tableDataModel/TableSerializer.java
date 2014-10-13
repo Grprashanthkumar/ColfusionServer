@@ -14,7 +14,7 @@ public class TableSerializer implements JsonSerializer<Table> {
 			final JsonSerializationContext context) {
 		final JsonObject jsonObject = new JsonObject();
 		
-		JsonElement jsonRows = context.serialize(table.toArray());
+		JsonElement jsonRows = context.serialize(table.getRows().toArray());
 		jsonObject.add("rows", jsonRows);
 		
 		return jsonObject;

@@ -1,9 +1,5 @@
 package edu.pitt.sis.exp.colfusion.psc.server;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Properties;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.eclipse.jetty.server.Server;
@@ -23,9 +19,6 @@ public class ColfusionPSCServer implements Runnable{
 	
 	// nice blog: http://jlunaquiroga.blogspot.com/2014/01/restful-web-services-with-jetty-and.html
 	
-	private final static String CONFIG_FILE_NAME = "config.properties";
-	public Properties properties = null;
-	
 	private static final int DEFAULT_PORT = 7473;
 	
 	private static final Logger logger = LogManager.getLogger(ColfusionPSCServer.class.getName());
@@ -41,30 +34,6 @@ public class ColfusionPSCServer implements Runnable{
 		ColfusionPSCServer server = new ColfusionPSCServer(args);
 		server.run();
     }
-
-	private void loadProperties() {
-		Properties prop = new Properties();
-		InputStream input = null;
-		
-		try {
-			input = ColfusionPSCServer.class.getClassLoader().getResourceAsStream(CONFIG_FILE_NAME);
-			
-			prop.load(input);
-	 
-			properties = prop;
-	 
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		} finally {
-			if (input != null) {
-				try {
-					input.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-		}
-	}
 
 	/**
 	 * @param args
@@ -97,8 +66,6 @@ public class ColfusionPSCServer implements Runnable{
 	@Override
 	public void run() {
 		logger.info("Starting Jetty Server");
-		
-		loadProperties();
 		
 		ServletHolder sh = new ServletHolder(ServletContainer.class);    
 

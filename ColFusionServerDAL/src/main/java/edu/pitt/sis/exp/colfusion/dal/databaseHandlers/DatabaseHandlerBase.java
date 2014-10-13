@@ -254,12 +254,12 @@ public abstract class DatabaseHandlerBase {
 					
 					Column colfusionColumn = new Column(column, new Cell(resultSet.getString(column)));
 					
-					columnGroup.add(colfusionColumn);
+					columnGroup.getColumns().add(colfusionColumn);
 				}
 				
 				Row row = new Row();
-				row.add(columnGroup);
-				result.add(row);
+				row.getColumnGroups().add(columnGroup);
+				result.getRows().add(row);
 			}
 			
 			return result;

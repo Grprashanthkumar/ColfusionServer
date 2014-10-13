@@ -34,7 +34,7 @@ public class NestedLoopSimilarityJoin extends SimilarityJoinBase {
 		
 		Table result = new Table();
 		
-		for (Row rowTable1 : table1) {
+		for (Row rowTable1 : table1.getRows()) {
 			
 			StringBuilder valueKeyRow1 = new StringBuilder();
 			
@@ -43,7 +43,7 @@ public class NestedLoopSimilarityJoin extends SimilarityJoinBase {
 			}
 			
 						
-			for (Row rowTable2 : table2) {
+			for (Row rowTable2 : table2.getRows()) {
 				
 				StringBuilder valueKeyRow2 = new StringBuilder();
 				
@@ -63,13 +63,13 @@ public class NestedLoopSimilarityJoin extends SimilarityJoinBase {
 				
 				if (this.upperBoundFilter != null && upperBoundFilter.calculate(valueKeyRow1.toString(), valueKeyRow2.toString()) >= similarityThreshold) {
 					
-					result.add(constructJointTuple(rowTable1, rowTable2));
+					result.getRows().add(constructJointTuple(rowTable1, rowTable2));
 				}
 				else if (this.lowerBoundFilter != null && lowerBoundFilter.calculate(valueKeyRow1.toString(), valueKeyRow2.toString()) < similarityThreshold) {
 					
 				}
 				else if (this.simDisMeasure != null && simDisMeasure.computeSimilarity(valueKeyRow1.toString(), valueKeyRow2.toString()) >= similarityThreshold) {
-					result.add(constructJointTuple(rowTable1, rowTable2));
+					result.getRows().add(constructJointTuple(rowTable1, rowTable2));
 				}
 			}
 		}
@@ -80,8 +80,8 @@ public class NestedLoopSimilarityJoin extends SimilarityJoinBase {
 
 	private Row constructJointTuple(final Row rowTable1, final Row rowTable2) {
 		Row result = new Row();
-		result.addAll(rowTable1);
-		result.addAll(rowTable2);
+		result.getColumnGroups().addAll(rowTable1.getColumnGroups());
+		result.getColumnGroups().addAll(rowTable2.getColumnGroups());
 		
 		return result;
 	}

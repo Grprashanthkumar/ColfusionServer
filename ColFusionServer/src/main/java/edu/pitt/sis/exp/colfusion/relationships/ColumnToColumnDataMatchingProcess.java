@@ -145,8 +145,8 @@ public class ColumnToColumnDataMatchingProcess extends ProcessBase {
 		Table joinResult = simJoin.join(allTuplesFrom, allTuplesTo, 
 				transformationFromList, transformationToList, similarityThreshold.doubleValue());
 		
-		double dataMathingRatioFrom = (double) intesectionSize(joinResult, allTuplesFrom) / allTuplesFrom.size(); //instead of joinResult use intesection(joinResult, allTuplesFrom).size()
-		double dataMathingRatioTo = (double) intesectionSize(joinResult, allTuplesTo) / allTuplesTo.size();
+		double dataMathingRatioFrom = (double) intesectionSize(joinResult, allTuplesFrom) / allTuplesFrom.getRows().size(); //instead of joinResult use intesection(joinResult, allTuplesFrom).size()
+		double dataMathingRatioTo = (double) intesectionSize(joinResult, allTuplesTo) / allTuplesTo.getRows().size();
 		
 		similarityThreshold = this.similarityThreshold.setScale(3, RoundingMode.HALF_UP);
 		
@@ -174,12 +174,12 @@ public class ColumnToColumnDataMatchingProcess extends ProcessBase {
 		//TODO:
 		int result = 0;
 		int k = 0;
-		for (Row joinedRow : joinResult) {
-			for (int i = k; i <allTuplesFrom.size(); i++) {
-				for (ColumnGroup columnGroup : joinedRow) {
-					if (columnGroup.getTableName() == allTuplesFrom.get(i).get(0).getTableName()) {
-						if (columnGroup.get(0).getOriginalName().equals(allTuplesFrom.get(i).get(0).get(0).getOriginalName()) 
-								&& columnGroup.get(0).getCell().getValue().equals(allTuplesFrom.get(i).get(0).get(0).getCell().getValue())) {
+		for (Row joinedRow : joinResult.getRows()) {
+			for (int i = k; i <allTuplesFrom.getRows().size(); i++) {
+				for (ColumnGroup columnGroup : joinedRow.getColumnGroups()) {
+					if (columnGroup.getTableName() == allTuplesFrom.getRows().get(i).getColumnGroups().get(0).getTableName()) {
+						if (columnGroup.getColumns().get(0).getOriginalName().equals(allTuplesFrom.getRows().get(i).getColumnGroups().get(0).getColumns().get(0).getOriginalName()) 
+								&& columnGroup.getColumns().get(0).getCell().getValue().equals(allTuplesFrom.getRows().get(i).getColumnGroups().get(0).getColumns().get(0).getCell().getValue())) {
 							result++;
 							k++;
 						}

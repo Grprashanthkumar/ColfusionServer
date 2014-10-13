@@ -1,6 +1,7 @@
 package edu.pitt.sis.exp.colfusion.dal.dataModels.tableDataModel;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -13,7 +14,7 @@ import edu.pitt.sis.exp.colfusion.utils.Gsonazable;
 import edu.pitt.sis.exp.colfusion.utils.Gsonizer;
 
 @XmlRootElement
-public class ColumnGroup extends ArrayList<Column> implements Gsonazable{
+public class ColumnGroup implements Gsonazable{
 	
 	static {
 		Gsonizer.registerTypeAdapter(ColumnGroup.class, new ColumnGroupSerializer());
@@ -26,13 +27,17 @@ public class ColumnGroup extends ArrayList<Column> implements Gsonazable{
 
 	static Logger logger = LogManager.getLogger(ColumnGroup.class.getName());
 	
-	@Expose private final String tableName;
+	@Expose private String tableName;
 	//private final int sid; 
 	
-	public ColumnGroup(final String tableName) {
-		super();
+	@Expose private List<Column> columns = new ArrayList<Column>();
+	
+	public ColumnGroup() {
 		
-	//	this.sid = sid;
+	}
+	
+	public ColumnGroup(final String tableName) {
+	//	super();
 		
 		if (tableName.length() == 0) {
 			logger.error("ColumnGroup(): Table name cannot be empty.");
@@ -41,7 +46,17 @@ public class ColumnGroup extends ArrayList<Column> implements Gsonazable{
 		
 		this.tableName = tableName;
 	}
-
+	
+	public ColumnGroup(final String tableName, final List<Column> columns) {
+		if (tableName.length() == 0) {
+			logger.error("ColumnGroup(): Table name cannot be empty.");
+			throw new IllegalArgumentException("Table name cannot be empty.");
+		}
+		
+		this.tableName = tableName;
+		this.setColumns(columns);
+	}
+	
 	/**
 	 * @return the sid
 	 */
@@ -73,11 +88,25 @@ public class ColumnGroup extends ArrayList<Column> implements Gsonazable{
 		
 		result.append(String.format("Table Name: %s. Column Group: ", tableName));
 		
-		for (Column column : this) {
+		for (Column column : this.getColumns()) {
 			result.append(column.toString());
 			result.append(System.getProperty("line.separator"));
 		}
 		
 		return result.toString();
+	}
+
+	/**
+	 * @return the columns
+	 */
+	public List<Column> getColumns() {
+		return columns;
+	}
+
+	/**
+	 * @param columns the columns to set
+	 */
+	public void setColumns(final List<Column> columns) {
+		this.columns = columns;
 	}
 }

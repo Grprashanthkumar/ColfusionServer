@@ -11,9 +11,13 @@ import edu.pitt.sis.exp.colfusion.utils.Gsonizer;
 public class Column implements Gsonazable {
 	
 	//private final int cid;
-	@Expose private final String originalName;
+	@Expose private String originalName;
 	//private final String chosenName;
-	@Expose private final Cell cell;
+	@Expose private Cell cell;
+	
+	public Column() {
+		
+	}
 	
 	public Column(final String originalName, final Cell cell) {
 	//	this.cid = cid;

@@ -14,6 +14,10 @@ public class Cell implements Gsonazable{
 	
 	@Expose private Serializable value;
 	
+	public Cell() {
+		
+	}
+	
 	public Cell(final Serializable value) {
 		this.value = value;
 	}

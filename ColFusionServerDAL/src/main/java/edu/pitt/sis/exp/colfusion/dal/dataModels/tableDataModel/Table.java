@@ -1,18 +1,23 @@
 package edu.pitt.sis.exp.colfusion.dal.dataModels.tableDataModel;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.xml.bind.annotation.XmlRootElement;
+
+import com.google.gson.annotations.Expose;
 
 import edu.pitt.sis.exp.colfusion.utils.Gsonazable;
 import edu.pitt.sis.exp.colfusion.utils.Gsonizer;
 
 @XmlRootElement
-public class Table extends ArrayList<Row> implements Gsonazable{
+public class Table implements Gsonazable{
 	
-	static {
-		Gsonizer.registerTypeAdapter(Table.class, new TableSerializer());
-	}
+//	static {
+//		Gsonizer.registerTypeAdapter(Table.class, new TableSerializer());
+//	}
+	
+	@Expose private List<Row> rows = new ArrayList<Row>();
 	
 	/**
 	 * 
@@ -20,7 +25,11 @@ public class Table extends ArrayList<Row> implements Gsonazable{
 	private static final long serialVersionUID = 1L;
 		
 	public Table() {
-		super();
+		
+	}
+	
+	public Table(final List<Row> rows) {
+		this.setRows(rows);
 	}
 
 	@Override
@@ -40,11 +49,25 @@ public class Table extends ArrayList<Row> implements Gsonazable{
 		
 		result.append(String.format("Table: "));
 		
-		for (Row row : this) {
+		for (Row row : this.getRows()) {
 			result.append(row.toString());
 			result.append(System.getProperty("line.separator"));
 		}
 		
 		return result.toString();
+	}
+
+	/**
+	 * @return the rows
+	 */
+	public List<Row> getRows() {
+		return rows;
+	}
+
+	/**
+	 * @param rows the rows to set
+	 */
+	public void setRows(final List<Row> rows) {
+		this.rows = rows;
 	}
 }

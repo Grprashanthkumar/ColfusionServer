@@ -8,16 +8,19 @@ import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
 
+import edu.pitt.sis.exp.colfusion.psc.server.util.ServerType;
+import edu.pitt.sis.exp.colfusion.psc.server.util.Utils;
+
 public class ColfuseionPSCServerTest {
 	@Test
 	public void testSendRequest() {
-		Thread serverThread1 = startServer("7373");
-		Thread serverThread2 = startServer("7472");
+		Thread serverThread1 = startServer(Utils.getPort(ServerType.JOINER));
+		Thread serverThread2 = startServer(Utils.getPort(ServerType.FETCHER));
 		
 		
 		Client client = Client.create();
-
-		String resourceURL = String.format("http://%s:%s/rest/TableJoin/join/%d/%s/%d/%s/%f", "localhost", "7472", 1, "t1", 2, "t2", 0.5);
+		
+		String resourceURL = String.format("%s/TableJoin/join/%d/%s/%d/%s/%f", Utils.getBaseRestURL(ServerType.FETCHER), 1746, "CompanyYear", 1745, "CompanyProfit", 0.5);
 		
 		WebResource webResource = client.resource(resourceURL);
 		   
