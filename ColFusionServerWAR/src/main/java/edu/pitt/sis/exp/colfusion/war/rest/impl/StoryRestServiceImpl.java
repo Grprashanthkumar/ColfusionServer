@@ -163,7 +163,7 @@ public class StoryRestServiceImpl extends BaseController implements StoryRestSer
 	public Response getLicense(){
 		StoryBL storyBL = new StoryBL();
 		GetLicenseResponse  result = storyBL.getLicense();
-		System.out.println("StoryControler error licese");
+		//System.out.println(result.getPayload().toString());
 		return this.makeCORS(Response.status(200).entity(result));
 }
 }

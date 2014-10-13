@@ -130,5 +130,6 @@ public interface StoryRestService {
 
 	@Path("metadata/license")
 	@GET
+	@Produces(MediaType.APPLICATION_JSON)
 	public abstract Response getLicense();
 }
