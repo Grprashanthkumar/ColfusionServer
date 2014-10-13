@@ -9,8 +9,6 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import edu.pitt.sis.exp.colfusion.dal.viewmodels.TwoJointTablesViewModel;
-
 public interface TableJoinService {
 	
 	@Path("join/{sid1}/{tableName1}/{sid2}/{tableName2}/{similarityThreshold}")
@@ -23,5 +21,5 @@ public interface TableJoinService {
 	@POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-	public abstract Response joinTables(TwoJointTablesViewModel twoJointTables);
+	public abstract Response joinTables(String twoJointTables);
 }

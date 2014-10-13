@@ -14,6 +14,11 @@ public class Cell implements Gsonazable{
 	
 	@Expose private Serializable value;
 	
+	static {
+		Gsonizer.registerTypeAdapter(Cell.class, new CellSerializer());
+		Gsonizer.registerTypeAdapter(Cell.class, new CellDeserializer());
+	}
+	
 	public Cell() {
 		
 	}

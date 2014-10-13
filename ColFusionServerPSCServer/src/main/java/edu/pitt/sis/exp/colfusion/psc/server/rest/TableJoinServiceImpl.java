@@ -13,6 +13,9 @@ import org.apache.logging.log4j.Logger;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
+import com.sun.jersey.api.client.config.ClientConfig;
+import com.sun.jersey.api.client.config.DefaultClientConfig;
+import com.sun.jersey.api.json.JSONConfiguration;
 
 import edu.pitt.sis.exp.colfusion.bll.BasicTableBL;
 import edu.pitt.sis.exp.colfusion.dal.dataModels.tableDataModel.Table;
@@ -20,6 +23,7 @@ import edu.pitt.sis.exp.colfusion.dal.viewmodels.TwoJointTablesViewModel;
 import edu.pitt.sis.exp.colfusion.psc.server.util.ServerType;
 import edu.pitt.sis.exp.colfusion.psc.server.util.Utils;
 import edu.pitt.sis.exp.colfusion.responseModels.JointTableByRelationshipsResponeModel;
+import edu.pitt.sis.exp.colfusion.utils.Gsonizer;
 
 /**
  * @author Evgeny
@@ -31,9 +35,11 @@ public class TableJoinServiceImpl implements TableJoinService {
 	private static final Logger logger = LogManager.getLogger(TableJoinServiceImpl.class.getName());
 	
 	@Override
-	public Response joinTables(final TwoJointTablesViewModel twoJointTables) {
+	public Response joinTables(final String twoJointTables) {
 		
 		logger.info("Got request");
+		
+		TwoJointTablesViewModel model = Gsonizer.fromJson(twoJointTables, TwoJointTablesViewModel.class);
 		
 		return Response.status(200).entity("test2").build();
 	}
@@ -54,14 +60,18 @@ public class TableJoinServiceImpl implements TableJoinService {
 		
 		TwoJointTablesViewModel model = new TwoJointTablesViewModel(sid1, tableName1, sid2, tableName2, similarityThreshold, null, table1, table2);
 		
-		Client client = Client.create();
+		String modelStr = Gsonizer.toJson(model, true);
+		
+		ClientConfig clientConfit = new DefaultClientConfig();
+		clientConfit.getFeatures().put(JSONConfiguration.FEATURE_POJO_MAPPING, Boolean.TRUE);
+		Client client = Client.create(clientConfit);
 
 		String resourceURL = String.format("%s/TableJoin/join", Utils.getBaseRestURL(ServerType.JOINER));
 		
 		WebResource webResource = client.resource(resourceURL);
 		   
 		ClientResponse response = webResource.
-				type(MediaType.APPLICATION_JSON_TYPE).post(ClientResponse.class, model);
+				type(MediaType.APPLICATION_JSON).post(ClientResponse.class, modelStr);
 		
 		return Response.status(200).entity("test").build();
 	}

@@ -16,9 +16,9 @@ import edu.pitt.sis.exp.colfusion.utils.Gsonizer;
 @XmlRootElement
 public class ColumnGroup implements Gsonazable{
 	
-	static {
-		Gsonizer.registerTypeAdapter(ColumnGroup.class, new ColumnGroupSerializer());
-	}
+//	static {
+//		Gsonizer.registerTypeAdapter(ColumnGroup.class, new ColumnGroupSerializer());
+//	}
 	
 	/**
 	 * 
