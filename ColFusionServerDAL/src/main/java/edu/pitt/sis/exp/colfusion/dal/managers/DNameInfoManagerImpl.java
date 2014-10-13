@@ -370,9 +370,7 @@ public class DNameInfoManagerImpl extends GeneralManagerImpl<ColfusionDnameinfo,
          }
          
          HibernateUtil.commitTransaction();
-         return result;
-                
-         
+         return result;         
 	}
 }
 
