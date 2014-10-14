@@ -76,7 +76,7 @@ public class DataSubmissionWizzardBL {
 		
 			for (Map.Entry<String, InputStream> inputStream : inputStreams.entrySet()){
 				
-				IOUtilsStoredFileInfoModel fileInfo = IOUtils.getInstance().writeInputStreamToFile(inputStream.getValue(), uploadFileAbsolutePath, inputStream.getKey());
+				IOUtilsStoredFileInfoModel fileInfo = IOUtils.getInstance().writeInputStreamToFile(inputStream.getValue(), uploadFileAbsolutePath, inputStream.getKey(), false);
 				
 				if (fileInfo.isArchive()) {
 					ArrayList<IOUtilsStoredFileInfoModel> filesInfo = IOUtils.getInstance().unarchive(fileInfo.getAbsoluteFileName());

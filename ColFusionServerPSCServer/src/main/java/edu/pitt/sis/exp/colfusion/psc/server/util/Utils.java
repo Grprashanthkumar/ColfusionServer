@@ -8,6 +8,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import edu.pitt.sis.exp.colfusion.psc.server.ColfusionPSCServer;
+import edu.pitt.sis.exp.colfusion.utils.ResourceUtils;
 
 public class Utils {
 	
@@ -30,7 +31,7 @@ public class Utils {
 		InputStream input = null;
 		
 		try {
-			input = ColfusionPSCServer.class.getClassLoader().getResourceAsStream(CONFIG_FILE_NAME);
+			input = ResourceUtils.getResourceAsStream(ColfusionPSCServer.class, CONFIG_FILE_NAME);
 			
 			prop.load(input);
 	 

@@ -74,7 +74,7 @@ public class JoinTablesBL {
 			
 			RelationshipTransformation transformationTo = new RelationshipTransformation(clTo);
 			List<RelationshipTransformation> transformationToList = new ArrayList<RelationshipTransformation>();
-			transformationFromList.add(transformationTo);
+			transformationToList.add(transformationTo);
 			
 			DatabaseHandlerBase dbHandlerTo = DatabaseHandlerFactory.getDatabaseHandler(transformationTo.getTargetDbConnectionInfo());
 			

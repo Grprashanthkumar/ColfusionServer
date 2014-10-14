@@ -64,7 +64,7 @@ public class KTRManagerTest extends TestCase {
 		String uploadFilesLocation = IOUtils.getInstance().getAbsolutePathInColfutionRoot(ConfigManager.getInstance().getPropertyByName(PropertyKeys.uploadRawFileLocationKey));
 		String uploadFileAbsolutePath = uploadFilesLocation + File.separator + sid; 
 		
-		String textExcelFileNameLocation =  uploadFileAbsolutePath + File.separator + textExcelFileName;//Thread.currentThread().getContextClassLoader().getResource(textExcelFileName).getFile();
+		String textExcelFileNameLocation =  uploadFileAbsolutePath + File.separator + textExcelFileName;
 		
 		File testFile = new File(textExcelFileNameLocation);
 		

@@ -61,19 +61,12 @@ public class IOUtils {
 	 */
 	public IOUtilsStoredFileInfoModel copyFileContent(final String originalFileLocation, final String dirLocation, final String fileName) throws IOException{
 		
-		InputStream io = null;
-		
 		try {
-			io = new FileInputStream(new File(originalFileLocation));
+			InputStream io = new FileInputStream(new File(originalFileLocation));
 			
-			return IOUtils.getInstance().writeInputStreamToFile(io, dirLocation, fileName);
+			return IOUtils.getInstance().writeInputStreamToFile(io, dirLocation, fileName, true);
 		} catch (IOException e) {
 			throw e;
-		}
-		finally {
-			if (io != null) {
-				io.close();
-			}
 		}
 	}
 
@@ -93,7 +86,7 @@ public class IOUtils {
 	 *             if file wasn't written to the disk successfully.
 	 */
 	public IOUtilsStoredFileInfoModel writeInputStreamToFile(
-			final InputStream uploadedInputStream, final String dirLocation, String fileName)
+			final InputStream uploadedInputStream, final String dirLocation, String fileName, final boolean closeStream)
 			throws IOException {
 
 		try {
@@ -125,6 +118,14 @@ public class IOUtils {
 			logger.error("writeInputStreamToFile failed!", e);
 
 			throw e;
+		}
+		finally {
+			if (closeStream && uploadedInputStream != null) {
+				try {
+					uploadedInputStream.close();
+				}
+				catch (IOException ignore) {}
+			}
 		}
 	}
 
@@ -191,7 +192,7 @@ public class IOUtils {
 						directory));
 
 				IOUtilsStoredFileInfoModel savedFileInfo = writeInputStreamToFile(
-						in, directory, entry.getName());
+						in, directory, entry.getName(), false);
 
 				result.add(savedFileInfo);
 			}

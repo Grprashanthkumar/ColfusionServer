@@ -5,7 +5,7 @@ package edu.pitt.sis.exp.colfusion.importers.ktr;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.URLDecoder;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,6 +42,7 @@ import edu.pitt.sis.exp.colfusion.dal.viewmodels.WorksheetViewModel;
 import edu.pitt.sis.exp.colfusion.utils.ConfigManager;
 import edu.pitt.sis.exp.colfusion.utils.IOUtils;
 import edu.pitt.sis.exp.colfusion.utils.PropertyKeys;
+import edu.pitt.sis.exp.colfusion.utils.ResourceUtils;
 import edu.pitt.sis.exp.colfusion.utils.StoryUtils;
 import edu.pitt.sis.exp.colfusion.utils.models.IOUtilsStoredFileInfoModel;
 
@@ -608,10 +609,9 @@ public class KTRManager {
 				? ConfigManager.getInstance().getPropertyByName(PropertyKeys.csvToDatabaseKTRTemplate) 
 				: ConfigManager.getInstance().getPropertyByName(PropertyKeys.excelToDatabaseKTRTemplate);
 				
-		String ktrTemplateNameLocation = Thread.currentThread().getContextClassLoader().getResource(ktrTemplateName).getFile();
-		ktrTemplateNameLocation = URLDecoder.decode(ktrTemplateNameLocation, "UTF-8");
-		
-		IOUtilsStoredFileInfoModel result = IOUtils.getInstance().copyFileContent(ktrTemplateNameLocation, ktrDirectoryLocation, tableName + ".ktr");
+		InputStream ktrTemplate = ResourceUtils.getResourceAsStream(this.getClass(), ktrTemplateName);
+			
+		IOUtilsStoredFileInfoModel result = IOUtils.getInstance().writeInputStreamToFile(ktrTemplate, ktrDirectoryLocation, tableName + ".ktr", true);
 		
 		logger.info(String.format("Copied KTR file for table name %s", tableName));
 		

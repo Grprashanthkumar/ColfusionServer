@@ -16,6 +16,7 @@ import edu.pitt.sis.exp.colfusion.responseModels.AcceptedFilesResponse;
 import edu.pitt.sis.exp.colfusion.tests.Utils;
 import edu.pitt.sis.exp.colfusion.utils.ConfigManager;
 import edu.pitt.sis.exp.colfusion.utils.PropertyKeysTest;
+import edu.pitt.sis.exp.colfusion.utils.ResourceUtils;
 
 public class DataSubmissionWizzardTest extends TestCase {
 	
@@ -35,8 +36,8 @@ public class DataSubmissionWizzardTest extends TestCase {
 		String testFileName = configManager.getPropertyByName(PropertyKeysTest.testExcelFileNameInResourceFolder);
 		String testArchiveFileName = configManager.getPropertyByName(PropertyKeysTest.testZipArchive);
 		
-		InputStream testFileNameIS = Thread.currentThread().getContextClassLoader().getResourceAsStream(testFileName);
-		InputStream testArchiveFileIS = Thread.currentThread().getContextClassLoader().getResourceAsStream(testArchiveFileName);
+		InputStream testFileNameIS = ResourceUtils.getResourceAsStream(this.getClass(), testFileName);
+		InputStream testArchiveFileIS = ResourceUtils.getResourceAsStream(this.getClass(), testArchiveFileName);
 		
 		Map<String, InputStream> inputStreams = new HashMap<String, InputStream>();
 							

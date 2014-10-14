@@ -53,7 +53,7 @@ public class ImporterFactoryTest extends TestCase {
 		
 		String testFileName = configManager.getPropertyByName(PropertyKeysTest.testCSVFileNameInResourceFolder);
 				
-		String testFileNameAbsolute = Thread.currentThread().getContextClassLoader().getResource(testFileName).getFile();
+		String testFileNameAbsolute = this.getClass().getResource(testFileName).getFile();
 		
 		IOUtilsStoredFileInfoModel fileModel = new IOUtilsStoredFileInfoModel();
 		fileModel.setAbsoluteFileName(testFileNameAbsolute);
@@ -76,7 +76,7 @@ public class ImporterFactoryTest extends TestCase {
 		
 		String testFileName = configManager.getPropertyByName(PropertyKeysTest.testExcelFileNameInResourceFolder);
 				
-		String testFileNameAbsolute = Thread.currentThread().getContextClassLoader().getResource(testFileName).getFile();
+		String testFileNameAbsolute = this.getClass().getResource(testFileName).getFile();
 		
 		IOUtilsStoredFileInfoModel fileModel = new IOUtilsStoredFileInfoModel();
 		fileModel.setAbsoluteFileName(testFileNameAbsolute);
@@ -153,7 +153,7 @@ public class ImporterFactoryTest extends TestCase {
 		
 		String testFileName = configManager.getPropertyByName(PropertyKeysTest.testCSVFileNameInResourceFolder);
 				
-		String testFileNameAbsolute = Thread.currentThread().getContextClassLoader().getResource(testFileName).getFile();
+		String testFileNameAbsolute = this.getClass().getResource(testFileName).getFile();
 		
 		FileContentInfoViewModel fileAndSheetsInfo = new FileContentInfoViewModel();
 		fileAndSheetsInfo.setExtension("csv");
@@ -176,7 +176,7 @@ public class ImporterFactoryTest extends TestCase {
 		
 		String testFileName = configManager.getPropertyByName(PropertyKeysTest.testExcelFileNameInResourceFolder);
 				
-		String testFileNameAbsolute = Thread.currentThread().getContextClassLoader().getResource(testFileName).getFile();
+		String testFileNameAbsolute = this.getClass().getResource(testFileName).getFile();
 		
 		FileContentInfoViewModel fileAndSheetsInfo = new FileContentInfoViewModel();
 		fileAndSheetsInfo.setExtension("xlsx");
@@ -282,7 +282,7 @@ public class ImporterFactoryTest extends TestCase {
 			
 			String testFileName = configManager.getPropertyByName(PropertyKeysTest.testCSVFileNameInResourceFolder);
 			
-			String testFileNameAbsolute = Thread.currentThread().getContextClassLoader().getResource(testFileName).getFile();
+			String testFileNameAbsolute = this.getClass().getResource(testFileName).getFile();
 			
 			PreviewFileViewModel previewFileViewModel = new PreviewFileViewModel();
 			previewFileViewModel.setFileAbsoluteName(testFileNameAbsolute);
@@ -343,7 +343,7 @@ public class ImporterFactoryTest extends TestCase {
 			
 			String testFileName = configManager.getPropertyByName(PropertyKeysTest.testExcelFileNameInResourceFolder);
 			
-			String testFileNameAbsolute = Thread.currentThread().getContextClassLoader().getResource(testFileName).getFile();
+			String testFileNameAbsolute = this.getClass().getResource(testFileName).getFile();
 			
 			PreviewFileViewModel previewFileViewModel = new PreviewFileViewModel();
 			previewFileViewModel.setFileAbsoluteName(testFileNameAbsolute);

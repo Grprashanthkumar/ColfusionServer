@@ -12,6 +12,7 @@ import edu.pitt.sis.exp.colfusion.psc.server.util.ServerType;
 import edu.pitt.sis.exp.colfusion.psc.server.util.Utils;
 
 public class ColfuseionPSCServerTest {
+	
 	@Test
 	public void testSendRequest() {
 		Thread serverThread1 = startServer(Utils.getPort(ServerType.JOINER));

@@ -36,7 +36,7 @@ public class IOUtilsTest extends TestCase {
 		
 		assertEquals("testExcelFile.xlsx", testEcelFileName);
 		
-		InputStream testExcelFileInputStream = Thread.currentThread().getContextClassLoader().getResourceAsStream(testEcelFileName);
+		InputStream testExcelFileInputStream = this.getClass().getResourceAsStream(testEcelFileName);
 		
 		IOUtilsStoredFileInfoModel testFileInfo = new IOUtilsStoredFileInfoModel();
 		
@@ -44,7 +44,7 @@ public class IOUtilsTest extends TestCase {
 		testFileInfo.setFileExtension("xlsx");
 		
 		try {
-			IOUtilsStoredFileInfoModel fileInfo = IOUtils.getInstance().writeInputStreamToFile(testExcelFileInputStream, testFileUploadDir, testEcelFileName);
+			IOUtilsStoredFileInfoModel fileInfo = IOUtils.getInstance().writeInputStreamToFile(testExcelFileInputStream, testFileUploadDir, testEcelFileName, true);
 			
 			assertEquals(testFileInfo.getFileName(), fileInfo.getFileName());
 			assertEquals(testFileInfo.getFileExtension(), fileInfo.getFileExtension());
@@ -64,7 +64,7 @@ public class IOUtilsTest extends TestCase {
 		
 		assertEquals("testTarGzArchive.tar.gz", testFileName);
 		
-		InputStream testInputStream = Thread.currentThread().getContextClassLoader().getResourceAsStream(testFileName);
+		InputStream testInputStream = this.getClass().getResourceAsStream(testFileName);
 		
 		IOUtilsStoredFileInfoModel testFileInfo = new IOUtilsStoredFileInfoModel();
 		
@@ -72,7 +72,7 @@ public class IOUtilsTest extends TestCase {
 		testFileInfo.setFileExtension("gz");
 		
 		try {
-			IOUtilsStoredFileInfoModel fileInfo = IOUtils.getInstance().writeInputStreamToFile(testInputStream, testFileUploadDir, testFileName);
+			IOUtilsStoredFileInfoModel fileInfo = IOUtils.getInstance().writeInputStreamToFile(testInputStream, testFileUploadDir, testFileName, true);
 			
 			assertEquals(testFileInfo.getFileName(), fileInfo.getFileName());
 			assertEquals(testFileInfo.getFileExtension(), fileInfo.getFileExtension());
@@ -92,7 +92,7 @@ public class IOUtilsTest extends TestCase {
 		
 		assertEquals("testZipArchive.zip", testFileName);
 		
-		String testFileNameAbsolutePath = Thread.currentThread().getContextClassLoader().getResource(testFileName).getFile();
+		String testFileNameAbsolutePath = this.getClass().getResource(testFileName).getFile();
 		
 		
 		
@@ -114,7 +114,7 @@ public class IOUtilsTest extends TestCase {
 		String testKTRBaseDirLocation = IOUtils.getInstance().getAbsolutePathInColfutionRoot(configManager.getPropertyByName(PropertyKeysTest.testKtrFielsBaseLocation));
 		
 		String fileToCopyName = configManager.getPropertyByName(PropertyKeysTest.testCsvToDatabaseKTRTemplate);
-		String fileToCopyLocation = Thread.currentThread().getContextClassLoader().getResource(fileToCopyName).getFile();
+		String fileToCopyLocation = this.getClass().getResource(fileToCopyName).getFile();
 		
 		try {
 			IOUtilsStoredFileInfoModel result =  IOUtils.getInstance().copyFileContent(fileToCopyLocation, testKTRBaseDirLocation + File.separator + 

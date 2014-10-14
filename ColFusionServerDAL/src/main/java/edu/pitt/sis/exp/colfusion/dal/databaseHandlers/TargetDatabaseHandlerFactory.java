@@ -32,14 +32,12 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 package edu.pitt.sis.exp.colfusion.dal.databaseHandlers;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.sql.SQLException;
-import java.util.Properties;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import edu.pitt.sis.exp.colfusion.utils.ConfigManager;
 
 /**
  * @author xxl
@@ -50,21 +48,12 @@ public class TargetDatabaseHandlerFactory {
 
     final static Logger logger = LogManager.getLogger(TargetDatabaseHandlerFactory.class.getName());
     
-    static {
-    	Properties p = new Properties();
-        String fileName="/config.properties";
-        InputStream in = TargetDatabaseHandlerFactory.class.getResourceAsStream(fileName);
-        try {
-			p.load(in);
-			in.close();
-		} catch (IOException e1) {
-			e1.printStackTrace();
-		}  
-        String host = p.getProperty("mysql_host");
-        int port = Integer.valueOf(p.getProperty("mysql_port"));
-        String user = p.getProperty("mysql_user");
-        String password = p.getProperty("mysql_password");
-        String database = p.getProperty("mysql_database");
+    static { 
+        String host = ConfigManager.getInstance().getPropertyByName("mysql_host");
+        int port = Integer.valueOf(ConfigManager.getInstance().getPropertyByName("mysql_port"));
+        String user = ConfigManager.getInstance().getPropertyByName("mysql_user"); 
+        String password = ConfigManager.getInstance().getPropertyByName("mysql_password"); 
+        String database = ConfigManager.getInstance().getPropertyByName("mysql_database"); 
     	
         //TODO:　Read host,port, etc. from config file and/or system properties
         DatabaseConnectionInfo connectioInfo = new DatabaseConnectionInfo(host, port, user, password, database);
@@ -75,7 +64,7 @@ public class TargetDatabaseHandlerFactory {
         }
     }
     
-    public static DatabaseHandler getTargetDatabaseHandler(int sid) throws SQLException, ClassNotFoundException {
+    public static DatabaseHandler getTargetDatabaseHandler(final int sid) throws SQLException, ClassNotFoundException {
         DatabaseConnectionInfo connectioInfo = metadataDbHandler.getTargetDbConnectionInfo(sid);
         
        //TODO: this whole thing should be in a separate project and be shared with ColFusion
