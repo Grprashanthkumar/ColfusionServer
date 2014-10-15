@@ -859,7 +859,7 @@ public class SourceInfoManagerImpl extends GeneralManagerImpl<ColfusionSourceinf
 		//Hibernate.initialize(relationship.getColfusionSourceinfoBySid1());
 		ColfusionSourceinfo storyFrom = relationship.getColfusionSourceinfoBySid1();
 		
-		storyFrom = GeneralManagerImpl.initializeField(storyFrom, "colfusionSourceinfoDb");
+		//storyFrom = GeneralManagerImpl.initializeField(storyFrom, "colfusionSourceinfoDb");
 		
 		//Hibernate.initialize(storyFrom.getColfusionSourceinfoDb());
 		
@@ -876,7 +876,7 @@ public class SourceInfoManagerImpl extends GeneralManagerImpl<ColfusionSourceinf
 		//Hibernate.initialize(relationship.getColfusionSourceinfoBySid2());
 		ColfusionSourceinfo storyTo = relationship.getColfusionSourceinfoBySid2();
 
-		storyTo = GeneralManagerImpl.initializeField(storyTo, "colfusionSourceinfoDb");
+		//storyTo = GeneralManagerImpl.initializeField(storyTo, "colfusionSourceinfoDb");
 		
 		//Hibernate.initialize(storyTo.getColfusionSourceinfoDb());
 		
