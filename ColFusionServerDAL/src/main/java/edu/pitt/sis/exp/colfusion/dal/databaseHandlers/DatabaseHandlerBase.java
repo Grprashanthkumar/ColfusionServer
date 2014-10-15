@@ -3,6 +3,7 @@
  */
 package edu.pitt.sis.exp.colfusion.dal.databaseHandlers;
 
+import java.io.Closeable;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -26,7 +27,7 @@ import edu.pitt.sis.exp.colfusion.dal.managers.ExecutionInfoManager;
  * @author Evgeny
  *
  */
-public abstract class DatabaseHandlerBase {
+public abstract class DatabaseHandlerBase implements Closeable {
 	private String host;
     private int port;
     private String user;
@@ -37,7 +38,7 @@ public abstract class DatabaseHandlerBase {
     private final char dbCharToWrapNamesWithSpaces;
     private final char dbCharToWrapStrings;
     
-    protected Connection connection;
+    private Connection connection;
     
     protected ExecutionInfoManager executionInfoMgr; 
     protected int executionLogId;
@@ -152,14 +153,18 @@ public abstract class DatabaseHandlerBase {
 	 * @return the connection.
 	 * @throws Exception 
 	 */
-	protected void openConnection(final String connectionString) throws Exception {
+	protected void openConnection() throws SQLException {
 		try {
-			connection = DriverManager.getConnection(connectionString, getUser(), getPassword());
+			connection = DriverManager.getConnection(getConnectionString(), getUser(), getPassword());
 			
 		} catch (SQLException e) {
 			
 			if (executionInfoMgr != null) {
-				executionInfoMgr.appendLog(executionLogId, String.format("[ERROR] openConnection failed. Error: %s", e.toString()));
+				try {
+					executionInfoMgr.appendLog(executionLogId, String.format("[ERROR] openConnection failed. Error: %s", e.toString()));
+				} catch (Exception e1) {
+					logger.error("getConnection failed in MySQLDatabaseHandler", e1);
+				}
 			}
 			
 			logger.error("getConnection failed in MySQLDatabaseHandler", e);
@@ -167,11 +172,20 @@ public abstract class DatabaseHandlerBase {
 		} 
 	}
 	
+	protected Connection getConnection() throws SQLException {
+		if (connection == null || connection.isClosed()) {
+			openConnection();
+		}
+	
+		return connection;
+	}
+	
 	/**
 	 * Closes the connection.
 	 * @throws SQLException 
 	 */
-	public void close() throws SQLException {
+	@Override
+	public void close() {
 		if (connection != null) {
 			try { 
 				connection.close(); 
@@ -241,7 +255,7 @@ public abstract class DatabaseHandlerBase {
 			throws SQLException {
 		logger.info(String.format("About to execute this query: %s", sqlWithLimit));
 		
-		try (Statement statement = connection.createStatement()) {
+		try (Statement statement = getConnection().createStatement()) {
 			
 			ResultSet resultSet = statement.executeQuery(sqlWithLimit);
 			

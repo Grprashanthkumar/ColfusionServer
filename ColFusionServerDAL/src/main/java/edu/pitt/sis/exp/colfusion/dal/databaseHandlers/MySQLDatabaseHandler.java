@@ -53,8 +53,6 @@ public class MySQLDatabaseHandler extends DatabaseHandlerBase {
 			logger.error("MySQLDatabaseHandler failed: Could not load MySQL JDBC driver", e);
 			throw e;
 		}
-		
-		openConnection(getConnectionString());
 	}
 
 	@Override
@@ -69,7 +67,7 @@ public class MySQLDatabaseHandler extends DatabaseHandlerBase {
 		String sql = "";
 		
 		try {
-			statement = connection.createStatement();
+			statement = getConnection().createStatement();
 			//TODO: is SQL injection possible here? because we just put database name without any checks and the database name can come from user (or not?)
 			sql = String.format("CREATE DATABASE IF NOT EXISTS `%s`", databaseName);
 			
@@ -79,7 +77,7 @@ public class MySQLDatabaseHandler extends DatabaseHandlerBase {
 			
 			setDatabase(databaseName);
 			
-			openConnection(getConnectionString());
+			openConnection();
 			
 			return true;
 		} catch (SQLException e) {
@@ -110,7 +108,7 @@ public class MySQLDatabaseHandler extends DatabaseHandlerBase {
 		String sql = "";
 		
 		try {
-			statement = connection.createStatement();
+			statement = getConnection().createStatement();
 			//TODO: is SQL injection possible here? because we just put database name without any checks and the database name can come from user (or not?)
 			
 			StringBuilder sqlBuilder = new StringBuilder();
@@ -162,7 +160,7 @@ public class MySQLDatabaseHandler extends DatabaseHandlerBase {
 		String sql = "";
 		
 		try {
-			statement = connection.createStatement();
+			statement = getConnection().createStatement();
 			//TODO: is SQL injection possible here? because we just put database name without any checks and the database name can come from user (or not?)
 			sql = String.format("DROP DATABASE IF EXISTS `%s`", databaseName);
 			
@@ -172,7 +170,7 @@ public class MySQLDatabaseHandler extends DatabaseHandlerBase {
 			
 			setDatabase("");
 			
-			openConnection(getConnectionString());
+			openConnection();
 			
 			return true;
 		} catch (SQLException e) {
@@ -206,7 +204,7 @@ public class MySQLDatabaseHandler extends DatabaseHandlerBase {
 			return;
 		}
 		
-		try (Statement statement = connection.createStatement()) {
+		try (Statement statement = getConnection().createStatement()) {
 			//TODO: escape query, SQL injection is possible. See if it is possible to use prepared statement.
 			sql = String.format("ALTER TABLE `%s` ADD INDEX `%s` (`%s`(%d));", tableName, indexName, columnName, MYSQL_INDEX_KEY_LENGTH);
 			
@@ -230,7 +228,7 @@ public class MySQLDatabaseHandler extends DatabaseHandlerBase {
 		
 		String sql = "SELECT COUNT(*) as cnt FROM INFORMATION_SCHEMA.STATISTICS WHERE table_name = ? and index_name = ?";
 		
-		try (java.sql.PreparedStatement statement = connection.prepareStatement(sql)) {
+		try (java.sql.PreparedStatement statement = getConnection().prepareStatement(sql)) {
 			statement.setString(1, tableName);
 			statement.setString(2, indexName);
 			
@@ -266,7 +264,7 @@ public class MySQLDatabaseHandler extends DatabaseHandlerBase {
 		
 		String sql = "SELECT `COLUMN_NAME` as columnName FROM `INFORMATION_SCHEMA`.`COLUMNS` WHERE `TABLE_SCHEMA`= ? AND `TABLE_NAME`= ?";
 		
-		try (java.sql.PreparedStatement statement = connection.prepareStatement(sql)) {
+		try (java.sql.PreparedStatement statement = getConnection().prepareStatement(sql)) {
 			statement.setString(1, this.getDatabase());
 			statement.setString(2, tableName);
 			
@@ -298,7 +296,7 @@ public class MySQLDatabaseHandler extends DatabaseHandlerBase {
 	public int getCount(final String tableName) throws SQLException {
 		String sql = String.format("SELECT COUNT(*) as ct from %s", wrapInEscapeChars(tableName));
 		
-		try (Statement statement = connection.createStatement()) {
+		try (Statement statement = getConnection().createStatement()) {
 			
 			ResultSet rs = statement.executeQuery(sql);
 			

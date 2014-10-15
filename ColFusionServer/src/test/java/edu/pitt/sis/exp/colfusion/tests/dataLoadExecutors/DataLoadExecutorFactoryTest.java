@@ -13,8 +13,8 @@ import org.apache.logging.log4j.Logger;
 
 import edu.pitt.sis.exp.colfusion.dal.managers.SourceInfoManager;
 import edu.pitt.sis.exp.colfusion.dal.managers.SourceInfoManagerImpl;
+import edu.pitt.sis.exp.colfusion.dal.orm.ColfusionSourceinfoDb;
 import edu.pitt.sis.exp.colfusion.dal.utils.DataSourceTypes;
-import edu.pitt.sis.exp.colfusion.dal.viewmodels.StoryTargetDBViewModel;
 import edu.pitt.sis.exp.colfusion.dataLoadExecutors.DataLoadExecutor;
 import edu.pitt.sis.exp.colfusion.dataLoadExecutors.DataLoadExecutorFactory;
 import edu.pitt.sis.exp.colfusion.importers.ktr.KTRManager;
@@ -77,12 +77,12 @@ public class DataLoadExecutorFactoryTest  extends TestCase {
 				status = ProcessManager.getInstance().getProcessStatus(processId);
 			}
 			
-			StoryTargetDBViewModel storyTargetDB = storyMng.getStorySourceInfoDB(sid);
+			ColfusionSourceinfoDb storyTargetDB = storyMng.getStorySourceInfoDB(sid);
 			
 			ConfigManager configManager = ConfigManager.getInstance();
 			
 			assertEquals(configManager.getPropertyByName(PropertyKeys.targetFileToDBDatabase_DatabaseNamePrefix) + sid, // + alterValue
-					storyTargetDB.getDatabaseName());
+					storyTargetDB.getSourceDatabase());
 			
 			assertEquals(configManager.getPropertyByName(PropertyKeys.targetFileToDBDatabase_UserName), // + alterValue
 					storyTargetDB.getUserName());

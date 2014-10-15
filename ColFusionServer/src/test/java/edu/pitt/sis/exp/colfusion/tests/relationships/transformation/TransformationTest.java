@@ -12,7 +12,7 @@ import org.apache.logging.log4j.Logger;
 import org.junit.Test;
 
 import edu.pitt.sis.exp.colfusion.bll.RelationshipBL;
-import edu.pitt.sis.exp.colfusion.dal.utils.TransofmationCidsExtractor;
+import edu.pitt.sis.exp.colfusion.dal.dataModels.relationships.transformation.RelationshipTransofmationUtil;
 
 /**
  * @author Evgeny
@@ -34,7 +34,7 @@ public class TransformationTest extends TestCase {
 		RelationshipBL relBL = new RelationshipBL();
 		
 		try {
-			List<Integer> result = TransofmationCidsExtractor.extractCids(transformationString);
+			List<Integer> result = RelationshipTransofmationUtil.extractCids(transformationString);
 			
 			assertEquals(1, result.size());
 			assertEquals(123, (int)result.get(0));
@@ -49,7 +49,7 @@ public class TransformationTest extends TestCase {
 		relBL = new RelationshipBL();
 		
 		try {
-			List<Integer> result = TransofmationCidsExtractor.extractCids(transformationString);
+			List<Integer> result = RelationshipTransofmationUtil.extractCids(transformationString);
 			
 			assertEquals(1, result.size());
 			assertEquals(123, (int)result.get(0));
@@ -64,7 +64,7 @@ public class TransformationTest extends TestCase {
 		relBL = new RelationshipBL();
 		
 		try {
-			List<Integer> result = TransofmationCidsExtractor.extractCids(transformationString);
+			List<Integer> result = RelationshipTransofmationUtil.extractCids(transformationString);
 			
 			assertEquals(2, result.size());
 			assertEquals(123, (int)result.get(0));
@@ -80,7 +80,7 @@ public class TransformationTest extends TestCase {
 		relBL = new RelationshipBL();
 		
 		try {
-			List<Integer> result = TransofmationCidsExtractor.extractCids(transformationString);
+			List<Integer> result = RelationshipTransofmationUtil.extractCids(transformationString);
 			
 			assertEquals(2, result.size());
 			assertEquals(123, (int)result.get(0));

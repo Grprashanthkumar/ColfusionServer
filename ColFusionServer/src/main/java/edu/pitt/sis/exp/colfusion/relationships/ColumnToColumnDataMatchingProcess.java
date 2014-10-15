@@ -14,6 +14,7 @@ import org.apache.logging.log4j.Logger;
 import com.google.gson.annotations.Expose;
 
 import edu.pitt.sis.exp.colfusion.dal.dataModels.relationships.transformation.RelationshipTransformation;
+import edu.pitt.sis.exp.colfusion.dal.dataModels.relationships.transformation.RelationshipTransofmationUtil;
 import edu.pitt.sis.exp.colfusion.dal.dataModels.tableDataModel.ColumnGroup;
 import edu.pitt.sis.exp.colfusion.dal.dataModels.tableDataModel.Row;
 import edu.pitt.sis.exp.colfusion.dal.dataModels.tableDataModel.Table;
@@ -23,9 +24,12 @@ import edu.pitt.sis.exp.colfusion.dal.managers.ProcessPersistantManager;
 import edu.pitt.sis.exp.colfusion.dal.managers.ProcessPersistantManagerImpl;
 import edu.pitt.sis.exp.colfusion.dal.managers.RelationshipsColumnsDataMathingRatiosManager;
 import edu.pitt.sis.exp.colfusion.dal.managers.RelationshipsColumnsDataMathingRatiosManagerImpl;
+import edu.pitt.sis.exp.colfusion.dal.managers.SourceInfoManager;
+import edu.pitt.sis.exp.colfusion.dal.managers.SourceInfoManagerImpl;
 import edu.pitt.sis.exp.colfusion.dal.orm.ColfusionProcesses;
 import edu.pitt.sis.exp.colfusion.dal.orm.ColfusionRelationshipsColumnsDataMathingRatios;
 import edu.pitt.sis.exp.colfusion.dal.orm.ColfusionRelationshipsColumnsDataMathingRatiosId;
+import edu.pitt.sis.exp.colfusion.dal.orm.ColfusionSourceinfoDb;
 import edu.pitt.sis.exp.colfusion.process.ProcessBase;
 import edu.pitt.sis.exp.colfusion.similarityJoins.NestedLoopSimilarityJoin;
 import edu.pitt.sis.exp.colfusion.similarityMeasures.LevenshteinDistance;
@@ -124,17 +128,22 @@ public class ColumnToColumnDataMatchingProcess extends ProcessBase {
 		logger.info(String.format("Started execution of ColumnToColumnDataMatchingProcess process. RelId=%d, clFrom=%s, clTo=%s, similarityThreshold=%f", 
 				relId, clFrom, clTo, similarityThreshold));
 		
-		RelationshipTransformation transformationFrom = new RelationshipTransformation(this.getClFrom());
+		SourceInfoManager sourceMng = new SourceInfoManagerImpl();
+		
+		ColfusionSourceinfoDb srouceInfoDBFrom = sourceMng.getColfusionSourceinfoDbFrom(relId);
+		ColfusionSourceinfoDb srouceInfoDBTo = sourceMng.getColfusionSourceinfoDbTo(relId);
+		
+		RelationshipTransformation transformationFrom = RelationshipTransofmationUtil.makeRelationshipTransformation(relId, this.getClFrom());
 		List<RelationshipTransformation> transformationFromList = new ArrayList<RelationshipTransformation>();
 		transformationFromList.add(transformationFrom);
 		
-		DatabaseHandlerBase dbHandlerFrom = DatabaseHandlerFactory.getDatabaseHandler(transformationFrom.getTargetDbConnectionInfo());
+		DatabaseHandlerBase dbHandlerFrom = DatabaseHandlerFactory.getDatabaseHandler(srouceInfoDBFrom);
 		
-		RelationshipTransformation transformationTo = new RelationshipTransformation(this.getClTo());
+		RelationshipTransformation transformationTo = RelationshipTransofmationUtil.makeRelationshipTransformation(relId, this.getClTo());
 		List<RelationshipTransformation> transformationToList = new ArrayList<RelationshipTransformation>();
 		transformationToList.add(transformationTo);
 		
-		DatabaseHandlerBase dbHandlerTo = DatabaseHandlerFactory.getDatabaseHandler(transformationTo.getTargetDbConnectionInfo());
+		DatabaseHandlerBase dbHandlerTo = DatabaseHandlerFactory.getDatabaseHandler(srouceInfoDBTo);
 		
 		Table allTuplesFrom = dbHandlerFrom.getAll(transformationFrom.getTableName(), transformationFrom.getColumnDbNames());
 		
@@ -165,6 +174,8 @@ public class ColumnToColumnDataMatchingProcess extends ProcessBase {
 		RelationshipsColumnsDataMathingRatiosManager dataMatchingRatioMng = new RelationshipsColumnsDataMathingRatiosManagerImpl();
 		dataMatchingRatioMng.saveOrUpdate(dataMathingRatio);
 		
+		dbHandlerFrom.close();
+		dbHandlerTo.close();
 		
 		logger.info(String.format("Finished execution of ColumnToColumnDataMatchingProcess process. RelId=%d, clFrom=%s, clTo=%s, similarityThreshold=%f", 
 				relId, clFrom, clTo, similarityThreshold));

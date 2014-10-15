@@ -6,28 +6,23 @@ import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import edu.pitt.sis.exp.colfusion.dal.managers.DNameInfoManager;
-import edu.pitt.sis.exp.colfusion.dal.managers.DNameInfoManagerImpl;
-import edu.pitt.sis.exp.colfusion.dal.managers.GeneralManagerImpl;
-import edu.pitt.sis.exp.colfusion.dal.managers.SourceInfoManager;
-import edu.pitt.sis.exp.colfusion.dal.managers.SourceInfoManagerImpl;
-import edu.pitt.sis.exp.colfusion.dal.orm.ColfusionDnameinfo;
-import edu.pitt.sis.exp.colfusion.dal.orm.ColfusionSourceinfo;
-import edu.pitt.sis.exp.colfusion.dal.orm.ColfusionSourceinfoDb;
-import edu.pitt.sis.exp.colfusion.dal.utils.TransofmationCidsExtractor;
+import edu.pitt.sis.exp.colfusion.dal.dataModels.tableDataModel.ColumnMetadata;
 
 public class RelationshipTransformation {
 	
 	static Logger logger = LogManager.getLogger(RelationshipTransformation.class.getName());
 	
 	private final String transformationInCids;
-	private final List<Integer> cids;
-	private final List<ColfusionDnameinfo> columns;
 	
-	private String tableName;
-	private ColfusionSourceinfo story;
+//	private final List<Integer> cids;
 	
-	public RelationshipTransformation(final String transformationInCids) throws Exception {
+	private final List<ColumnMetadata> columnsMetadata;
+	//private final List<ColfusionDnameinfo> columns;
+	
+	private final String tableName;
+	private final int sid;
+	
+	public RelationshipTransformation(final String transformationInCids, final int sid, final String tableName, final List<ColumnMetadata> columnsMetadata) throws Exception {
 		
 		if (transformationInCids.length() == 0) {
 			logger.error(String.format("Fail to initialize RelationshipTransformation because transformationInCids parameter has length 0."));
@@ -35,60 +30,64 @@ public class RelationshipTransformation {
 		}
 		
 		this.transformationInCids = transformationInCids;
+		this.sid = sid;
+		this.tableName = tableName;
 	
-		cids = TransofmationCidsExtractor.extractCids(transformationInCids);
+		this.columnsMetadata = columnsMetadata;
 		
-		columns = new ArrayList<>();
+//		cids = TransofmationCidsExtractor.extractCids(transformationInCids);
 		
-		extractConnectionInfoAndColumnNames();
+//		columns = new ArrayList<>();
+		
+//		extractConnectionInfoAndColumnNames();
 	}
 
-	private void extractConnectionInfoAndColumnNames() throws Exception {
-		if (cids.size() == 0) {
-			throw new RuntimeException("Cannot get columns names from empty array of cids.");
-		}
-		
-		SourceInfoManager sourceInfoMng = new SourceInfoManagerImpl();
-		DNameInfoManager columnManager = new DNameInfoManagerImpl();
-		
-		ColfusionSourceinfo storyTemp = null;
-		
-		for (int i = 0; i < cids.size(); i++) {
-			storyTemp = sourceInfoMng.findStoryByCid(cids.get(i));
-			
-			if (i == 0) {
-				story = GeneralManagerImpl.initializeField(storyTemp, "colfusionSourceinfoDb");
-			} else {
-				if (storyTemp.getSid() != story.getSid()) {
-					String msg = String.format("Found cids from more than one story (%d and %d). "
-							+ "Transformation should have columns only from one story and one table.", story.getSid(), storyTemp.getSid());
-					logger.error(msg);
-					
-					throw new RuntimeException(msg);
-				}
-			}
-		
-			ColfusionDnameinfo column = null;
-			
-			column = columnManager.findByID(cids.get(i));
-			
-			column = GeneralManagerImpl.initializeField(column, "colfusionColumnTableInfo");
-			
-			if (i == 0) {
-				tableName = column.getColfusionColumnTableInfo().getTableName();
-			} else {
-				if (!column.getColfusionColumnTableInfo().getTableName().equalsIgnoreCase(tableName)) {
-					String msg = String.format("Found cids from more than one table (%s and %s). "
-							+ "Transformation should have columns only from one story and one table.", 
-							tableName, column.getColfusionColumnTableInfo().getTableName());
-					logger.error(msg);
-					throw new RuntimeException(msg);
-				}
-			}
-			
-			columns.add(column);
-		}
-	}
+//	private void extractConnectionInfoAndColumnNames() throws Exception {
+//		if (cids.size() == 0) {
+//			throw new RuntimeException("Cannot get columns names from empty array of cids.");
+//		}
+//		
+//		SourceInfoManager sourceInfoMng = new SourceInfoManagerImpl();
+//		DNameInfoManager columnManager = new DNameInfoManagerImpl();
+//		
+//		ColfusionSourceinfo storyTemp = null;
+//		
+//		for (int i = 0; i < cids.size(); i++) {
+//			storyTemp = sourceInfoMng.findStoryByCid(cids.get(i));
+//			
+//			if (i == 0) {
+//				story = GeneralManagerImpl.initializeField(storyTemp, "colfusionSourceinfoDb");
+//			} else {
+//				if (storyTemp.getSid() != story.getSid()) {
+//					String msg = String.format("Found cids from more than one story (%d and %d). "
+//							+ "Transformation should have columns only from one story and one table.", story.getSid(), storyTemp.getSid());
+//					logger.error(msg);
+//					
+//					throw new RuntimeException(msg);
+//				}
+//			}
+//		
+//			ColfusionDnameinfo column = null;
+//			
+//			column = columnManager.findByID(cids.get(i));
+//			
+//			column = GeneralManagerImpl.initializeField(column, "colfusionColumnTableInfo");
+//			
+//			if (i == 0) {
+//				tableName = column.getColfusionColumnTableInfo().getTableName();
+//			} else {
+//				if (!column.getColfusionColumnTableInfo().getTableName().equalsIgnoreCase(tableName)) {
+//					String msg = String.format("Found cids from more than one table (%s and %s). "
+//							+ "Transformation should have columns only from one story and one table.", 
+//							tableName, column.getColfusionColumnTableInfo().getTableName());
+//					logger.error(msg);
+//					throw new RuntimeException(msg);
+//				}
+//			}
+//			
+//			columns.add(column);
+//		}
+//	}
 
 	public String getTableName() {
 		return tableName;
@@ -98,14 +97,6 @@ public class RelationshipTransformation {
 		return transformationInCids;
 	}
 	
-	public List<Integer> getCids() {
-		return cids;
-	}
-	
-	public List<ColfusionDnameinfo> getColumns() {
-		return columns;
-	}
-	
 	/**
 	 * Return the list of column names used in this transformation. The names are original names in the target database.
 	 * @return
@@ -113,19 +104,11 @@ public class RelationshipTransformation {
 	public List<String> getColumnDbNames() {
 		List<String> columnDbNames = new ArrayList<>();
 		
-		for (ColfusionDnameinfo column : columns) {
-			columnDbNames.add(column.getDnameOriginalName());
+		for (ColumnMetadata column : columnsMetadata) {
+			columnDbNames.add(column.getOriginalName());
 		}
 		
 		return columnDbNames;
-	}
-	
-	public ColfusionSourceinfo getStory() {
-		return story;
-	}
-	
-	public ColfusionSourceinfoDb getTargetDbConnectionInfo() {
-		return story.getColfusionSourceinfoDb();
 	}
 	
 	@Override

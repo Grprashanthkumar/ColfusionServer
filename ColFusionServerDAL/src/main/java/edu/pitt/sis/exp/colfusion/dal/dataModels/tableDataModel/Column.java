@@ -10,9 +10,11 @@ import edu.pitt.sis.exp.colfusion.utils.Gsonizer;
 @XmlRootElement
 public class Column implements Gsonazable {
 	
-	//private final int cid;
+	//TODO:get rid of originalName
 	@Expose private String originalName;
-	//private final String chosenName;
+	
+	@Expose private ColumnMetadata metadata;
+	
 	@Expose private Cell cell;
 	
 	public Column() {
@@ -20,18 +22,9 @@ public class Column implements Gsonazable {
 	}
 	
 	public Column(final String originalName, final Cell cell) {
-	//	this.cid = cid;
 		this.originalName = originalName;
-	//	this.chosenName = chosenName;
 		this.cell = cell;
 	}
-
-	/**
-	 * @return the cid
-	 */
-//	public int getCid() {
-//		return cid;
-//	}
 
 	/**
 	 * @return the originalName
@@ -39,13 +32,6 @@ public class Column implements Gsonazable {
 	public String getOriginalName() {
 		return originalName;
 	}
-
-	/**
-	 * @return the chosenName
-	 */
-//	public String getChosenName() {
-//		return chosenName;
-//	}
 	
 	@Override
 	public boolean equals(final Object o) {
@@ -87,5 +73,19 @@ public class Column implements Gsonazable {
 	@Override
 	public String toString() {
 		return String.format("Original Name: %s, Cell Value: %s", originalName, getCell().toString()) ;
+	}
+
+	/**
+	 * @return the metadata
+	 */
+	private ColumnMetadata getMetadata() {
+		return metadata;
+	}
+
+	/**
+	 * @param metadata the metadata to set
+	 */
+	private void setMetadata(final ColumnMetadata metadata) {
+		this.metadata = metadata;
 	}
 }

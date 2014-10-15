@@ -5,34 +5,31 @@ import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import edu.pitt.sis.exp.colfusion.dal.orm.ColfusionSourceinfoDb;
+import com.google.gson.annotations.Expose;
 
 public class Relationship {
 	
 	static Logger logger = LogManager.getLogger(Relationship.class.getName());
 	
-	private final int sidFrom;
-	private final String tableNameFrom;
+	@Expose private int sidFrom;
+	@Expose private String tableNameFrom;
 	
-	private final int sidTo;
-	private final String tableNameTo;
+	@Expose private int sidTo;
+	@Expose private String tableNameTo;
 	
-	private final List<RelationshipLink> links;
+	@Expose private List<RelationshipLink> links;
 	
-	//TODO:don't use hibernate generated classes here
-	private final ColfusionSourceinfoDb dbFrom;
-	private final ColfusionSourceinfoDb dbTo;
-	
-	public Relationship(final int sidFrom, final String tableNameFrom, final int sidTo, final String tableNameTo, final List<RelationshipLink> links,
-			final ColfusionSourceinfoDb dbFrom, final ColfusionSourceinfoDb dbTo) throws Exception {
+	public Relationship() {
 		
-		this.sidFrom = sidFrom;
-		this.tableNameFrom = tableNameFrom;
-		this.sidTo = sidTo;
-		this.tableNameTo = tableNameTo;
-		this.links = links;
-		this.dbFrom = dbFrom;
-		this.dbTo = dbTo;
+	}
+	
+	public Relationship(final int sidFrom, final String tableNameFrom, final int sidTo, final String tableNameTo, final List<RelationshipLink> links) throws Exception {
+		
+		this.setSidFrom(sidFrom);
+		this.setTableNameFrom(tableNameFrom);
+		this.setSidTo(sidTo);
+		this.setTableNameTo(tableNameTo);
+		this.setLinks(links);
 	}
 
 	/**
@@ -71,18 +68,37 @@ public class Relationship {
 	}
 
 	/**
-	 * @return the dbFrom
+	 * @param sidFrom the sidFrom to set
 	 */
-	public ColfusionSourceinfoDb getDbFrom() {
-		return dbFrom;
+	private void setSidFrom(int sidFrom) {
+		this.sidFrom = sidFrom;
 	}
 
 	/**
-	 * @return the dbTo
+	 * @param tableNameFrom the tableNameFrom to set
 	 */
-	public ColfusionSourceinfoDb getDbTo() {
-		return dbTo;
+	private void setTableNameFrom(String tableNameFrom) {
+		this.tableNameFrom = tableNameFrom;
 	}
 
-	
+	/**
+	 * @param sidTo the sidTo to set
+	 */
+	private void setSidTo(int sidTo) {
+		this.sidTo = sidTo;
+	}
+
+	/**
+	 * @param tableNameTo the tableNameTo to set
+	 */
+	private void setTableNameTo(String tableNameTo) {
+		this.tableNameTo = tableNameTo;
+	}
+
+	/**
+	 * @param links the links to set
+	 */
+	private void setLinks(List<RelationshipLink> links) {
+		this.links = links;
+	}
 }

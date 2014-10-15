@@ -4,6 +4,7 @@
 package edu.pitt.sis.exp.colfusion.bll;
 
 import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.util.List;
 import java.util.Set;
 
@@ -11,6 +12,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import edu.pitt.sis.exp.colfusion.dal.dataModels.relationships.transformation.RelationshipTransformation;
+import edu.pitt.sis.exp.colfusion.dal.dataModels.relationships.transformation.RelationshipTransofmationUtil;
 import edu.pitt.sis.exp.colfusion.dal.databaseHandlers.DatabaseHandlerBase;
 import edu.pitt.sis.exp.colfusion.dal.databaseHandlers.DatabaseHandlerFactory;
 import edu.pitt.sis.exp.colfusion.dal.managers.GeneralManagerImpl;
@@ -28,6 +30,7 @@ import edu.pitt.sis.exp.colfusion.dal.orm.ColfusionRelationshipsColumns;
 import edu.pitt.sis.exp.colfusion.dal.orm.ColfusionRelationshipsColumnsDataMathingRatios;
 import edu.pitt.sis.exp.colfusion.dal.orm.ColfusionRelationshipsColumnsDataMathingRatiosId;
 import edu.pitt.sis.exp.colfusion.dal.orm.ColfusionSourceinfo;
+import edu.pitt.sis.exp.colfusion.dal.orm.ColfusionSourceinfoDb;
 import edu.pitt.sis.exp.colfusion.dal.viewmodels.RelationshipLinkViewModel;
 import edu.pitt.sis.exp.colfusion.dal.viewmodels.RelationshipMiningViewModel;
 import edu.pitt.sis.exp.colfusion.process.ProcessManager;
@@ -147,19 +150,23 @@ public class RelationshipBL {
 			if (object instanceof ColfusionRelationshipsColumns) {
 				ColfusionRelationshipsColumns relationshipColumns = (ColfusionRelationshipsColumns) object;
 				
-				RelationshipTransformation transformationFrom = new RelationshipTransformation(relationshipColumns.getId().getClFrom());
-				RelationshipTransformation transformationTo = new RelationshipTransformation(relationshipColumns.getId().getClTo());
+				RelationshipTransformation transformationFrom = RelationshipTransofmationUtil.makeRelationshipTransformation(rel.getRelId(), relationshipColumns.getId().getClFrom()); 
+				RelationshipTransformation transformationTo = RelationshipTransofmationUtil.makeRelationshipTransformation(rel.getRelId(), relationshipColumns.getId().getClTo());
 				
 				//TODO: Once we add ability to chain processes or make some processes depend on other processes
 				//TODO: indices should be also created in a background process.
-				createIndeces(transformationFrom);
-				createIndeces(transformationTo);
 				
-				for (double i = 0; i <= 1; i+= 0.1) {
-					triggerDataMatchingRatiosCalculationsByRelationshipsColumns(relationshipColumns, new BigDecimal(i));
+				SourceInfoManager sourceMng = new SourceInfoManagerImpl();
+				
+				ColfusionSourceinfoDb srouceInfoDBFrom = sourceMng.getColfusionSourceinfoDbFrom(rel.getRelId());
+				ColfusionSourceinfoDb srouceInfoDBTo = sourceMng.getColfusionSourceinfoDbTo(rel.getRelId());
+				
+				createIndeces(srouceInfoDBFrom, transformationFrom);
+				createIndeces(srouceInfoDBTo, transformationTo);
+				
+				for (double i = 0; i < 1.1; i+= 0.1) {
+					triggerDataMatchingRatiosCalculationsByRelationshipsColumns(relationshipColumns, new BigDecimal(new DecimalFormat("#.###").format(i)));
 				}
-				
-				
 			}
 			else {
 				
@@ -176,15 +183,18 @@ public class RelationshipBL {
 	 * @param cidFromOneStory a list of cids. Note all cids should be from one story only (from one target database/table).
 	 * @throws Exception 
 	 */
-	private void createIndeces(final RelationshipTransformation transformation) throws Exception {
+	private void createIndeces(final ColfusionSourceinfoDb targetDBInfo, final RelationshipTransformation transformation) throws Exception {
 		
-		for (String columnDbName : transformation.getColumnDbNames()) {
-			try {
-				DatabaseHandlerBase dbHandler = DatabaseHandlerFactory.getDatabaseHandler(transformation.getTargetDbConnectionInfo());
-				dbHandler.createIndecesIfNotExist(transformation.getTableName(), columnDbName);
-			} catch (Exception e) {
-				logger.error("createIndeces FAILED to initialize colfusionSourceinfoDb field.");
-				throw e;
+		try (DatabaseHandlerBase dbHandler = DatabaseHandlerFactory.getDatabaseHandler(targetDBInfo)) {
+		
+			//TODO FIXME: should indeces be created on all columns at once?
+			for (String columnDbName : transformation.getColumnDbNames()) {
+				try {
+					dbHandler.createIndecesIfNotExist(transformation.getTableName(), columnDbName);
+				} catch (Exception e) {
+					logger.error("createIndeces FAILED to initialize colfusionSourceinfoDb field.");
+					throw e;
+				}
 			}
 		}
 	}

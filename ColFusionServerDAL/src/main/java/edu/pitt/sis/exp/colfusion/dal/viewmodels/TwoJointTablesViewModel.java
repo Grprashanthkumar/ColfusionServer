@@ -29,9 +29,6 @@ public class TwoJointTablesViewModel implements Serializable{
 	
 	@Expose private double similarityThreshold;
 	
-	@Expose private Table table1;
-	@Expose private Table table2;
-	
 	@Expose private Table jointTable;
 	
 	public TwoJointTablesViewModel() {
@@ -39,15 +36,13 @@ public class TwoJointTablesViewModel implements Serializable{
 	}
 	
 	public TwoJointTablesViewModel(final int sid1, final String tableName1, final int sid2, final String tableName2,
-			final double similarityThreshold, final Table jointTable, final Table table1, final Table table2) {
+			final double similarityThreshold, final Table jointTable) {
 		this.sid1 = sid1;
 		this.sid2 = sid2;
 		this.tableName1 = tableName1;
 		this.tableName2 = tableName2;
 		this.similarityThreshold = similarityThreshold;
 		this.setJointTable(jointTable);
-		this.table1 = table1;
-		this.table2 = table2;
 	}
 	
 	/**
@@ -125,33 +120,5 @@ public class TwoJointTablesViewModel implements Serializable{
 	 */
 	public void setSimilarityThreshold(final double similarityThreshold) {
 		this.similarityThreshold = similarityThreshold;
-	}
-	
-	/**
-	 * @return the jointTable
-	 */
-	public Table getTable1() {
-		return table1;
-	}
-
-	/**
-	 * @param jointTable the jointTable to set
-	 */
-	public void setTable1(final Table table1) {
-		this.table1 = table1;
-	}
-	
-	/**
-	 * @return the jointTable
-	 */
-	public Table getTable2() {
-		return table2;
-	}
-
-	/**
-	 * @param jointTable the jointTable to set
-	 */
-	public void setTable2(final Table table2) {
-		this.table2 = table2;
 	}
 }

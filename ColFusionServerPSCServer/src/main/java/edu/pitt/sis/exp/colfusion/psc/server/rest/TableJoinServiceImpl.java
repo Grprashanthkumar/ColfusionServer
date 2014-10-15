@@ -20,6 +20,7 @@ import com.sun.jersey.api.json.JSONConfiguration;
 import edu.pitt.sis.exp.colfusion.bll.BasicTableBL;
 import edu.pitt.sis.exp.colfusion.dal.dataModels.tableDataModel.Table;
 import edu.pitt.sis.exp.colfusion.dal.viewmodels.TwoJointTablesViewModel;
+import edu.pitt.sis.exp.colfusion.dal.viewmodels.TwoTableJoinInputViewModel;
 import edu.pitt.sis.exp.colfusion.psc.server.util.ServerType;
 import edu.pitt.sis.exp.colfusion.psc.server.util.Utils;
 import edu.pitt.sis.exp.colfusion.responseModels.JointTableByRelationshipsResponeModel;
@@ -39,7 +40,7 @@ public class TableJoinServiceImpl implements TableJoinService {
 		
 		logger.info("Got request");
 		
-		TwoJointTablesViewModel model = Gsonizer.fromJson(twoJointTables, TwoJointTablesViewModel.class);
+		TwoTableJoinInputViewModel model = Gsonizer.fromJson(twoJointTables, TwoTableJoinInputViewModel.class);
 		
 		return Response.status(200).entity("test2").build();
 	}
@@ -58,9 +59,11 @@ public class TableJoinServiceImpl implements TableJoinService {
 		JointTableByRelationshipsResponeModel tableResponse2 = tablBL.getTableDataBySidAndName(sid2, tableName2);
 		Table table2 = tableResponse2.getPayload().getJointTable();
 		
-		TwoJointTablesViewModel model = new TwoJointTablesViewModel(sid1, tableName1, sid2, tableName2, similarityThreshold, null, table1, table2);
+		TwoJointTablesViewModel twoJointTables = new TwoJointTablesViewModel(sid1, tableName1, sid2, tableName2, similarityThreshold, null);
 		
-		String modelStr = Gsonizer.toJson(model, true);
+		TwoTableJoinInputViewModel twoTables = new TwoTableJoinInputViewModel(table1,  table2, twoJointTables);
+		
+		String twoTablesStr = Gsonizer.toJson(twoTables, true);
 		
 		ClientConfig clientConfit = new DefaultClientConfig();
 		clientConfit.getFeatures().put(JSONConfiguration.FEATURE_POJO_MAPPING, Boolean.TRUE);
@@ -71,7 +74,7 @@ public class TableJoinServiceImpl implements TableJoinService {
 		WebResource webResource = client.resource(resourceURL);
 		   
 		ClientResponse response = webResource.
-				type(MediaType.APPLICATION_JSON).post(ClientResponse.class, modelStr);
+				type(MediaType.APPLICATION_JSON).post(ClientResponse.class, twoTablesStr);
 		
 		return Response.status(200).entity("test").build();
 	}

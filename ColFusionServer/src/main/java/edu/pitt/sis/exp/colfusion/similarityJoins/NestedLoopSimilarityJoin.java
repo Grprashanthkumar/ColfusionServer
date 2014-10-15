@@ -32,6 +32,10 @@ public class NestedLoopSimilarityJoin extends SimilarityJoinBase {
 			final List<RelationshipTransformation> transformationsTable2,
 			final double similarityThreshold) {
 		
+		if (table1 == null || table2 == null) {
+			return null;
+		}
+		
 		Table result = new Table();
 		
 		for (Row rowTable1 : table1.getRows()) {

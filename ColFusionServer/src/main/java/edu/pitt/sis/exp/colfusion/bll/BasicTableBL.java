@@ -14,9 +14,9 @@ import edu.pitt.sis.exp.colfusion.dal.databaseHandlers.DatabaseHandlerFactory;
 import edu.pitt.sis.exp.colfusion.dal.managers.ExecutionInfoManagerImpl;
 import edu.pitt.sis.exp.colfusion.dal.managers.SourceInfoManagerImpl;
 import edu.pitt.sis.exp.colfusion.dal.orm.ColfusionExecuteinfo;
+import edu.pitt.sis.exp.colfusion.dal.orm.ColfusionSourceinfoDb;
 import edu.pitt.sis.exp.colfusion.dal.viewmodels.BasicTableInfoViewModel;
 import edu.pitt.sis.exp.colfusion.dal.viewmodels.JoinTablesByRelationshipsViewModel;
-import edu.pitt.sis.exp.colfusion.dal.viewmodels.StoryTargetDBViewModel;
 import edu.pitt.sis.exp.colfusion.responseModels.BasicTableResponseModel;
 import edu.pitt.sis.exp.colfusion.responseModels.JointTableByRelationshipsResponeModel;
 import edu.pitt.sis.exp.colfusion.responseModels.StoryStatusResponseModel;
@@ -88,9 +88,9 @@ public class BasicTableBL {
 	public JointTableByRelationshipsResponeModel getTableDataBySidAndName(final int sid, final String tableName,
 			final int perPage, final int pageNumber ){
 		SourceInfoManagerImpl sourceInfo = new SourceInfoManagerImpl();
-		StoryTargetDBViewModel storyTargetDBViewModel = sourceInfo.getStorySourceInfoDB(sid);
+		ColfusionSourceinfoDb storyTargetDB = sourceInfo.getStorySourceInfoDB(sid);
 		try {
-			DatabaseHandlerBase databaseHandlerBase = DatabaseHandlerFactory.getDatabaseHandler(storyTargetDBViewModel);
+			DatabaseHandlerBase databaseHandlerBase = DatabaseHandlerFactory.getDatabaseHandler(storyTargetDB);
 			Table table = databaseHandlerBase.getAll(tableName, perPage, pageNumber);
 			
 			int countTuples = databaseHandlerBase.getCount(tableName);
@@ -120,9 +120,9 @@ public class BasicTableBL {
 	//TODO: need to be refactored
 	public JointTableByRelationshipsResponeModel getTableDataBySidAndName(final int sid, final String tableName){
 		SourceInfoManagerImpl sourceInfo = new SourceInfoManagerImpl();
-		StoryTargetDBViewModel storyTargetDBViewModel = sourceInfo.getStorySourceInfoDB(sid);
+		ColfusionSourceinfoDb storyTargetDB = sourceInfo.getStorySourceInfoDB(sid);
 		try {
-			DatabaseHandlerBase databaseHandlerBase = DatabaseHandlerFactory.getDatabaseHandler(storyTargetDBViewModel);
+			DatabaseHandlerBase databaseHandlerBase = DatabaseHandlerFactory.getDatabaseHandler(storyTargetDB);
 			Table table = databaseHandlerBase.getAll(tableName);
 			
 			JointTableByRelationshipsResponeModel result = new JointTableByRelationshipsResponeModel(); 

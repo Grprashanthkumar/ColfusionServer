@@ -40,6 +40,7 @@ import edu.pitt.sis.exp.colfusion.dal.dao.UserRolesDAOImpl;
 import edu.pitt.sis.exp.colfusion.dal.dao.UsersDAO;
 import edu.pitt.sis.exp.colfusion.dal.dao.UsersDAOImpl;
 import edu.pitt.sis.exp.colfusion.dal.orm.ColfusionLinks;
+import edu.pitt.sis.exp.colfusion.dal.orm.ColfusionRelationships;
 import edu.pitt.sis.exp.colfusion.dal.orm.ColfusionSourceinfo;
 import edu.pitt.sis.exp.colfusion.dal.orm.ColfusionSourceinfoDb;
 import edu.pitt.sis.exp.colfusion.dal.orm.ColfusionSourceinfoMetadataEditHistory;
@@ -745,7 +746,7 @@ public class SourceInfoManagerImpl extends GeneralManagerImpl<ColfusionSourceinf
 	}
 
 	@Override
-	public StoryTargetDBViewModel getStorySourceInfoDB(final int sid) {
+	public ColfusionSourceinfoDb getStorySourceInfoDB(final int sid) {
 		try {
             HibernateUtil.beginTransaction();
             
@@ -753,20 +754,20 @@ public class SourceInfoManagerImpl extends GeneralManagerImpl<ColfusionSourceinf
             
             ColfusionSourceinfoDb sourceinfoDB = sourceInfoDBDAO.findByID(ColfusionSourceinfoDb.class, sid);
             
-            StoryTargetDBViewModel result = new StoryTargetDBViewModel();
-            result.setDatabaseName(sourceinfoDB.getSourceDatabase());
-            result.setDriver(sourceinfoDB.getDriver());
-            result.setIsLocal(sourceinfoDB.getIsLocal());
-            result.setLinkedServerName(sourceinfoDB.getLinkedServerName());
-            result.setPassword(sourceinfoDB.getPassword());
-            result.setPort(sourceinfoDB.getPort());
-            result.setServerAddress(sourceinfoDB.getServerAddress());
-            result.setUserName(sourceinfoDB.getUserName());
-            result.setSid(sourceinfoDB.getSid());
+//            StoryTargetDBViewModel result = new StoryTargetDBViewModel();
+//            result.setDatabaseName(sourceinfoDB.getSourceDatabase());
+//            result.setDriver(sourceinfoDB.getDriver());
+//            result.setIsLocal(sourceinfoDB.getIsLocal());
+//            result.setLinkedServerName(sourceinfoDB.getLinkedServerName());
+//            result.setPassword(sourceinfoDB.getPassword());
+//            result.setPort(sourceinfoDB.getPort());
+//            result.setServerAddress(sourceinfoDB.getServerAddress());
+//            result.setUserName(sourceinfoDB.getUserName());
+//            result.setSid(sourceinfoDB.getSid());
             
             HibernateUtil.commitTransaction();
             
-            return result;
+            return sourceinfoDB;
 		
         } catch (NonUniqueResultException ex) {
 
@@ -814,7 +815,7 @@ public class SourceInfoManagerImpl extends GeneralManagerImpl<ColfusionSourceinf
 	
 	//I don't know how to get data from hibernate........
 	@Override
-	public List<String> getTableNames(int sid) {
+	public List<String> getTableNames(final int sid) {
 		try {
             HibernateUtil.beginTransaction();
             
@@ -845,5 +846,31 @@ public class SourceInfoManagerImpl extends GeneralManagerImpl<ColfusionSourceinf
         	this.logger.error("getTableNames failed HibernateException", ex);
         	throw ex;
         }	
+	}
+
+	@Override
+	public ColfusionSourceinfoDb getColfusionSourceinfoDbFrom(final int relId) throws Exception {
+		RelationshipsManager relMng = new RelationshipsManagerImpl();
+		ColfusionRelationships relationship = relMng.findByID(relId);
+		
+		Hibernate.initialize(relationship.getColfusionSourceinfoBySid1());
+		ColfusionSourceinfo storyFrom = relationship.getColfusionSourceinfoBySid1();
+		
+		Hibernate.initialize(storyFrom.getColfusionSourceinfoDb());
+		
+		return storyFrom.getColfusionSourceinfoDb();
+	}
+
+	@Override
+	public ColfusionSourceinfoDb getColfusionSourceinfoDbTo(final int relId) throws Exception {
+		RelationshipsManager relMng = new RelationshipsManagerImpl();
+		ColfusionRelationships relationship = relMng.findByID(relId);
+		
+		Hibernate.initialize(relationship.getColfusionSourceinfoBySid2());
+		ColfusionSourceinfo storyTo = relationship.getColfusionSourceinfoBySid2();
+
+		Hibernate.initialize(storyTo.getColfusionSourceinfoDb());
+		
+		return storyTo.getColfusionSourceinfoDb();
 	}
 }

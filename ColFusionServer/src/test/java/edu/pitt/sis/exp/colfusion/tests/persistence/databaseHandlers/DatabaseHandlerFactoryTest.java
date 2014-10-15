@@ -3,7 +3,6 @@
  */
 package edu.pitt.sis.exp.colfusion.tests.persistence.databaseHandlers;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -60,21 +59,11 @@ public class DatabaseHandlerFactoryTest extends TestCase {
 		}
 		finally {
 			if (dbHandler1 != null) {
-				try { 
-					dbHandler1.close(); 
-				} 
-				catch (SQLException ignore) {
-					
-				}
+				dbHandler1.close(); 
 			}
 			
 			if (dbHandler2 != null) {
-				try { 
-					dbHandler2.close(); 
-				} 
-				catch (SQLException ignore) {
-					
-				}
+				dbHandler2.close(); 
 			}
 		}
 	}
@@ -114,12 +103,7 @@ public class DatabaseHandlerFactoryTest extends TestCase {
 		}
 		finally {
 			if (dbHandler1 != null) {
-				try { 
-					dbHandler1.close(); 
-				} 
-				catch (SQLException ignore) {
-					
-				}
+					dbHandler1.close();
 			}
 		}
 	}
@@ -160,12 +144,7 @@ public class DatabaseHandlerFactoryTest extends TestCase {
 		}
 		finally {
 			if (dbHandler1 != null) {
-				try { 
-					dbHandler1.close(); 
-				} 
-				catch (SQLException ignore) {
-					
-				}
+				dbHandler1.close(); 
 			}
 		}
 	}

@@ -10,11 +10,14 @@ import org.apache.logging.log4j.Logger;
 import edu.pitt.sis.exp.colfusion.dal.dataModels.relationships.Relationship;
 import edu.pitt.sis.exp.colfusion.dal.dataModels.relationships.RelationshipLink;
 import edu.pitt.sis.exp.colfusion.dal.dataModels.relationships.transformation.RelationshipTransformation;
+import edu.pitt.sis.exp.colfusion.dal.dataModels.relationships.transformation.RelationshipTransofmationUtil;
 import edu.pitt.sis.exp.colfusion.dal.dataModels.tableDataModel.Table;
 import edu.pitt.sis.exp.colfusion.dal.databaseHandlers.DatabaseHandlerBase;
 import edu.pitt.sis.exp.colfusion.dal.databaseHandlers.DatabaseHandlerFactory;
 import edu.pitt.sis.exp.colfusion.dal.managers.RelationshipsManager;
 import edu.pitt.sis.exp.colfusion.dal.managers.RelationshipsManagerImpl;
+import edu.pitt.sis.exp.colfusion.dal.managers.SourceInfoManager;
+import edu.pitt.sis.exp.colfusion.dal.managers.SourceInfoManagerImpl;
 import edu.pitt.sis.exp.colfusion.dal.orm.ColfusionRelationships;
 import edu.pitt.sis.exp.colfusion.dal.orm.ColfusionRelationshipsColumns;
 import edu.pitt.sis.exp.colfusion.dal.orm.ColfusionSourceinfoDb;
@@ -41,12 +44,12 @@ public class JoinTablesBL {
 		
 			//TODO:HACK, FIX ME!!!!
 			ColfusionRelationships rel = rels.get(0);
-			ColfusionRelationshipsColumns links = (ColfusionRelationshipsColumns)rel.getColfusionRelationshipsColumnses().iterator().next();
+			ColfusionRelationshipsColumns links = (ColfusionRelationshipsColumns) rel.getColfusionRelationshipsColumnses().iterator().next();
 			
-			Table jointTable = joinTables(links.getId().getClFrom(), links.getId().getClTo(), joinTablesInfo.getSimilarityThreshold());
+			Table jointTable = joinTables(rel.getRelId(), links.getId().getClFrom(), links.getId().getClTo(), joinTablesInfo.getSimilarityThreshold());
 			
 			TwoJointTablesViewModel resultPayload = new TwoJointTablesViewModel(joinTablesInfo.getSid1(), joinTablesInfo.getTableName1(), 
-					joinTablesInfo.getSid2(), joinTablesInfo.getTableName2(), joinTablesInfo.getSimilarityThreshold(), jointTable, null, null);
+					joinTablesInfo.getSid2(), joinTablesInfo.getTableName2(), joinTablesInfo.getSimilarityThreshold(), jointTable);
 			
 			JointTableResponeModel result = new JointTableResponeModel();
 			result.message = "OK";
@@ -64,19 +67,24 @@ public class JoinTablesBL {
 		}
 	}
 
-	public Table joinTables(final String clFrom, final String clTo, final double similarityThreshold) {
+	public Table joinTables(final Integer relId, final String clFrom, final String clTo, final double similarityThreshold) {
 		try {
-			RelationshipTransformation transformationFrom = new RelationshipTransformation(clFrom);
+			SourceInfoManager sourceMng = new SourceInfoManagerImpl();
+			
+			ColfusionSourceinfoDb srouceInfoDBFrom = sourceMng.getColfusionSourceinfoDbFrom(relId);
+			ColfusionSourceinfoDb srouceInfoDBTo = sourceMng.getColfusionSourceinfoDbTo(relId);
+			
+			RelationshipTransformation transformationFrom = RelationshipTransofmationUtil.makeRelationshipTransformation(relId, clFrom);
 			List<RelationshipTransformation> transformationFromList = new ArrayList<RelationshipTransformation>();
 			transformationFromList.add(transformationFrom);
 			
-			DatabaseHandlerBase dbHandlerFrom = DatabaseHandlerFactory.getDatabaseHandler(transformationFrom.getTargetDbConnectionInfo());
+			DatabaseHandlerBase dbHandlerFrom = DatabaseHandlerFactory.getDatabaseHandler(srouceInfoDBFrom);
 			
-			RelationshipTransformation transformationTo = new RelationshipTransformation(clTo);
+			RelationshipTransformation transformationTo = RelationshipTransofmationUtil.makeRelationshipTransformation(relId, clTo);
 			List<RelationshipTransformation> transformationToList = new ArrayList<RelationshipTransformation>();
 			transformationToList.add(transformationTo);
 			
-			DatabaseHandlerBase dbHandlerTo = DatabaseHandlerFactory.getDatabaseHandler(transformationTo.getTargetDbConnectionInfo());
+			DatabaseHandlerBase dbHandlerTo = DatabaseHandlerFactory.getDatabaseHandler(srouceInfoDBTo);
 			
 			Table allTuplesFrom = dbHandlerFrom.getAll(transformationFrom.getTableName());//, transformationFrom.getColumnDbNames());
 			
@@ -115,6 +123,7 @@ public class JoinTablesBL {
 //	}
 	
 	public JointTableByRelationshipsResponeModel joinTablesByRelationships(final JoinTablesByRelationshipsViewModel joinTablesByRelationshipInfo) {
+		
 		try {
 			
 			List<TableAsHalfLink> halvesToJoin = getTablesAsHalfLinksInOrderToJoin(joinTablesByRelationshipInfo);
@@ -123,17 +132,21 @@ public class JoinTablesBL {
 				throw new RuntimeException("There should be at least two tables to perform similarity join");
 			}
 			
-			DatabaseHandlerBase dbHandler1 = DatabaseHandlerFactory.getDatabaseHandler(halvesToJoin.get(0).getDbInfo());
-			
-			Table resultTable = dbHandler1.getAll(halvesToJoin.get(0).getTableName());
-						
 			NestedLoopSimilarityJoin simJoin = new NestedLoopSimilarityJoin(new NormalizedDistance(new LevenshteinDistance()), null, null);
+			
+			Table resultTable = null;
+			
+			try (DatabaseHandlerBase dbHandler1 = DatabaseHandlerFactory.getDatabaseHandler(halvesToJoin.get(0).getDbInfo())) {
+				resultTable = dbHandler1.getAll(halvesToJoin.get(0).getTableName());
+			}
 			
 			for (int i = 1; i < halvesToJoin.size(); i++) {
 				
-				DatabaseHandlerBase dbHandler2 = DatabaseHandlerFactory.getDatabaseHandler(halvesToJoin.get(i).getDbInfo());
+				Table allTuples2 = null;
 				
-				Table allTuples2 = dbHandler2.getAll(halvesToJoin.get(i).getTableName());
+				try (DatabaseHandlerBase dbHandler2 = DatabaseHandlerFactory.getDatabaseHandler(halvesToJoin.get(i).getDbInfo())) {
+					allTuples2 = dbHandler2.getAll(halvesToJoin.get(i).getTableName());
+				}
 				
 				resultTable = simJoin.join(resultTable, allTuples2, 
 						halvesToJoin.get(i).getTransformationsReferredTable(), halvesToJoin.get(i).getTransformationsCurrentTable(), joinTablesByRelationshipInfo.getSimilarityThreshold());
@@ -176,17 +189,15 @@ public class JoinTablesBL {
 			
 			for (Object relColumnOBj : colfusionRelationship.getColfusionRelationshipsColumnses().toArray()) {
 				ColfusionRelationshipsColumns colfusionLink = (ColfusionRelationshipsColumns) relColumnOBj;
-				links.add(new RelationshipLink(new RelationshipTransformation(colfusionLink.getId().getClFrom()), 
-						new RelationshipTransformation(colfusionLink.getId().getClTo())));
+				links.add(new RelationshipLink(RelationshipTransofmationUtil.makeRelationshipTransformation(colfusionRelationship.getRelId(), colfusionLink.getId().getClFrom()), 
+						RelationshipTransofmationUtil.makeRelationshipTransformation(colfusionRelationship.getRelId(), colfusionLink.getId().getClTo())));
 				
-				transformations1.add(new RelationshipTransformation(colfusionLink.getId().getClFrom()));
-				transformations2.add(new RelationshipTransformation(colfusionLink.getId().getClTo()));
+				transformations1.add(RelationshipTransofmationUtil.makeRelationshipTransformation(colfusionRelationship.getRelId(), colfusionLink.getId().getClFrom()));
+				transformations2.add(RelationshipTransofmationUtil.makeRelationshipTransformation(colfusionRelationship.getRelId(), colfusionLink.getId().getClTo()));
 			}
 			
 			Relationship relationship = new Relationship(colfusionRelationship.getColfusionSourceinfoBySid1().getSid(), colfusionRelationship.getTableName1(), 
-					colfusionRelationship.getColfusionSourceinfoBySid2().getSid(), colfusionRelationship.getTableName2(), links, 
-					colfusionRelationship.getColfusionSourceinfoBySid1().getColfusionSourceinfoDb(), 
-					colfusionRelationship.getColfusionSourceinfoBySid2().getColfusionSourceinfoDb());
+					colfusionRelationship.getColfusionSourceinfoBySid2().getSid(), colfusionRelationship.getTableName2(), links);
 			
 			TableAsHalfLink half1 = new TableAsHalfLink(colfusionRelationship.getColfusionSourceinfoBySid1().getColfusionSourceinfoDb(), 
 					colfusionRelationship.getTableName1(), 

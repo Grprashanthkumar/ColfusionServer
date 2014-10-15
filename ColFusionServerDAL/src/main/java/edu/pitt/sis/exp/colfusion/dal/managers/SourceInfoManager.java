@@ -10,6 +10,7 @@ import java.util.Map;
 
 import edu.pitt.sis.exp.colfusion.dal.managers.SourceInfoManagerImpl.HistoryItem;
 import edu.pitt.sis.exp.colfusion.dal.orm.ColfusionSourceinfo;
+import edu.pitt.sis.exp.colfusion.dal.orm.ColfusionSourceinfoDb;
 import edu.pitt.sis.exp.colfusion.dal.orm.ColfusionUserroles;
 import edu.pitt.sis.exp.colfusion.dal.orm.ColfusionUsers;
 import edu.pitt.sis.exp.colfusion.dal.utils.DataSourceTypes;
@@ -129,7 +130,7 @@ public interface SourceInfoManager extends GeneralManager<ColfusionSourceinfo, I
 	 * @param sid is of the story.
 	 * @return the target database info.
 	 */
-	public StoryTargetDBViewModel getStorySourceInfoDB(int sid);
+	public ColfusionSourceinfoDb getStorySourceInfoDB(int sid);
 
 	/**
 	 * Find a story by the id of one of the columns.
@@ -145,4 +146,8 @@ public interface SourceInfoManager extends GeneralManager<ColfusionSourceinfo, I
 	 * @return tableName List.
 	 */
 	public List<String> getTableNames(int sid);
+
+	public ColfusionSourceinfoDb getColfusionSourceinfoDbFrom(int relId) throws Exception;
+
+	public ColfusionSourceinfoDb getColfusionSourceinfoDbTo(int relId) throws Exception;
 }
