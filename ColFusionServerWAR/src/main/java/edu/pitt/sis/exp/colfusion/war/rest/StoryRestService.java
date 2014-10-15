@@ -132,4 +132,24 @@ public interface StoryRestService {
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public abstract Response getLicense();
+	
+	@OPTIONS
+    @Path("{sid}/StoryStatus")
+    public abstract Response getStoryStatus(@HeaderParam("Access-Control-Request-Headers") final String requestH);
+	
+	
+	@Path("{sid}/StoryStatus")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public abstract Response getStoryStatus(@PathParam("sid") final int sid);
+	
+	@OPTIONS
+    @Path("{sid}/MineRelationships/{perPage}/{pageNumber}")
+    public abstract Response getMineRelationships(@HeaderParam("Access-Control-Request-Headers") final String requestH);
+	
+	
+	@Path("{sid}/MineRelationships/{perPage}/{pageNumber}")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public abstract Response getMineRelationships(@PathParam("sid") final int sid, @PathParam("perPage") int perPage, @PathParam("pageNumber") int pageNumber);
 }

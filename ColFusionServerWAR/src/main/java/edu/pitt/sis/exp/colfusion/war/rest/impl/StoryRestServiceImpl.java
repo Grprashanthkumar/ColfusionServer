@@ -18,8 +18,10 @@ import edu.pitt.sis.exp.colfusion.responseModels.ColumnMetadataResponse;
 import edu.pitt.sis.exp.colfusion.responseModels.GetColumnMetadataEditHistoryResponse;
 import edu.pitt.sis.exp.colfusion.responseModels.GetLicenseResponse;
 import edu.pitt.sis.exp.colfusion.responseModels.JointTableByRelationshipsResponeModel;
+import edu.pitt.sis.exp.colfusion.responseModels.RelationshipsResponseModel;
 import edu.pitt.sis.exp.colfusion.responseModels.StoryMetadataHistoryResponse;
 import edu.pitt.sis.exp.colfusion.responseModels.StoryMetadataResponse;
+import edu.pitt.sis.exp.colfusion.responseModels.StoryStatusResponseModel;
 import edu.pitt.sis.exp.colfusion.war.rest.StoryRestService;
 
 /**
@@ -165,5 +167,32 @@ public class StoryRestServiceImpl extends BaseController implements StoryRestSer
 		GetLicenseResponse  result = storyBL.getLicense();
 		//System.out.println(result.getPayload().toString());
 		return this.makeCORS(Response.status(200).entity(result));
-}
+	}
+	
+	@Override
+	public Response getStoryStatus(String requestH) {
+		return makeCORS(Response.ok()); //, requestH);
+	}
+
+	@Override
+	public Response getStoryStatus(int sid) {
+		BasicTableBL basicBL=new BasicTableBL();
+		StoryStatusResponseModel result = basicBL.getStoryStatus(sid);
+		String json = result.toJson();
+		return this.makeCORS(Response.status(200).entity(json));
+	}
+
+	@Override
+	public Response getMineRelationships(String requestH) {
+		return makeCORS(Response.ok()); //, requestH);
+	}
+
+	@Override
+	public Response getMineRelationships(int sid, int perPage, int pageNumber) {
+		BasicTableBL basicBL=new BasicTableBL();
+		RelationshipsResponseModel result = basicBL.getRelationships(sid, perPage, pageNumber);
+		String json = result.toJson();
+		return this.makeCORS(Response.status(200).entity(json));
+		
+	}
 }

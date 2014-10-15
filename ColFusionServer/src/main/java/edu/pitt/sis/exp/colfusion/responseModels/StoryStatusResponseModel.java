@@ -3,7 +3,10 @@ package edu.pitt.sis.exp.colfusion.responseModels;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.google.gson.annotations.Expose;
+
 import edu.pitt.sis.exp.colfusion.dal.orm.ColfusionExecuteinfo;
+import edu.pitt.sis.exp.colfusion.dal.viewmodels.StoryStatusViewModel;
 import edu.pitt.sis.exp.colfusion.utils.Gsonazable;
 import edu.pitt.sis.exp.colfusion.utils.Gsonizer;
 
@@ -13,25 +16,25 @@ import edu.pitt.sis.exp.colfusion.utils.Gsonizer;
  *
  */
 public class StoryStatusResponseModel extends GeneralResponseImpl implements Gsonazable{
-	private List<ColfusionExecuteinfo> payload = new ArrayList<ColfusionExecuteinfo>();
+	@Expose private List<StoryStatusViewModel> payload = new ArrayList<StoryStatusViewModel>();
 
 	/**
 	 * @return the payload
 	 */
-	public List<ColfusionExecuteinfo> getPayload() {
+	public List<StoryStatusViewModel> getPayload() {
 		return payload;
 	}
 
 	/**
 	 * @param payload the payload to set
 	 */
-	public void setPayload(List<ColfusionExecuteinfo> payload) {
+	public void setPayload(List<StoryStatusViewModel> payload) {
 		this.payload = payload;
 	}
 
 	@Override
 	public String toJson() {
-		return Gsonizer.toJson(this, false);
+		return Gsonizer.toJson(this, true);
 	}
 
 	@Override

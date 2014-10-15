@@ -17,8 +17,11 @@ import edu.pitt.sis.exp.colfusion.dal.orm.ColfusionExecuteinfo;
 import edu.pitt.sis.exp.colfusion.dal.orm.ColfusionSourceinfoDb;
 import edu.pitt.sis.exp.colfusion.dal.viewmodels.BasicTableInfoViewModel;
 import edu.pitt.sis.exp.colfusion.dal.viewmodels.JoinTablesByRelationshipsViewModel;
+import edu.pitt.sis.exp.colfusion.dal.viewmodels.RelationshipsViewModel;
+import edu.pitt.sis.exp.colfusion.dal.viewmodels.StoryStatusViewModel;
 import edu.pitt.sis.exp.colfusion.responseModels.BasicTableResponseModel;
 import edu.pitt.sis.exp.colfusion.responseModels.JointTableByRelationshipsResponeModel;
+import edu.pitt.sis.exp.colfusion.responseModels.RelationshipsResponseModel;
 import edu.pitt.sis.exp.colfusion.responseModels.StoryStatusResponseModel;
 
 public class BasicTableBL {
@@ -143,7 +146,7 @@ public class BasicTableBL {
 	
 	public StoryStatusResponseModel getStoryStatus(final int sid){
 		StoryStatusResponseModel result = new StoryStatusResponseModel();
-		List<ColfusionExecuteinfo> contents = new ArrayList<ColfusionExecuteinfo>();
+		List<StoryStatusViewModel> contents = new ArrayList<StoryStatusViewModel>();
 		try {
 			SourceInfoManagerImpl sourceInfoManagerImpl = new SourceInfoManagerImpl();
 			
@@ -152,7 +155,22 @@ public class BasicTableBL {
 			
 			ExecutionInfoManagerImpl executionInfoManagerImpl = new ExecutionInfoManagerImpl();
 			for(int i=0;i<tableNames.size();i++){
-				ColfusionExecuteinfo content = executionInfoManagerImpl.getExecutionInfo(sid,tableNames.get(i));
+				ColfusionExecuteinfo colfusionExecuteinfo = executionInfoManagerImpl.getExecutionInfo(sid,tableNames.get(i));
+				StoryStatusViewModel content = new StoryStatusViewModel();
+				content.setEid(colfusionExecuteinfo.getEid());
+				content.setSid(sid);
+				content.setUserId(colfusionExecuteinfo.getUserId());
+				content.setTimeStart(colfusionExecuteinfo.getTimeStart());
+				content.setTimeEnd(colfusionExecuteinfo.getTimeEnd());
+				content.setExitStatus(colfusionExecuteinfo.getExitStatus());
+				content.setErrorMessage(colfusionExecuteinfo.getErrorMessage());
+				content.setRecordsProcessed(colfusionExecuteinfo.getRecordsProcessed());
+				content.setStatus(colfusionExecuteinfo.getStatus());
+				content.setPanCommand(colfusionExecuteinfo.getPanCommand());
+				content.setTableName(colfusionExecuteinfo.getTableName());
+				content.setLog(colfusionExecuteinfo.getLog());
+				//??What is NumberProcessRecords???
+				content.setNumberProcessRecords(null);
 				contents.add(content);
 			}
 			result.setPayload(contents);
@@ -164,9 +182,32 @@ public class BasicTableBL {
 		}
 		
 		
+		return result;	
+	}
+	public RelationshipsResponseModel getRelationships(int sid,
+			int perPage, int pageNumber) {
+		RelationshipsResponseModel result = new RelationshipsResponseModel();
+		// The following code is to get data from the table and store it into payload.
+		try {
+			SourceInfoManagerImpl sourceInfoManagerImpl = new SourceInfoManagerImpl();
+			List<RelationshipsViewModel> contents = sourceInfoManagerImpl.getRelationshipsViewModel(sid);
+			result.setPayload(contents);
+			result.getControl().setPerPage(perPage);
+			result.getControl().setPageNO(pageNumber);
+			result.getControl().setTotalPage(40);
+//			String [] cols = {"rel_id","name","description","creator","creationTime","creatorLogin","sidFrom","sidTo","titleFrom","titleTo","tableNameFrom","tableNameTo","numberOfVerdicts","numberOfApproved","numberOfNotSure","avgConfidence"};
+//			result.getControl().setCols(cols);
+			result.getControl().setCols("rel_id,name,description,creator,creationTime,creatorLogin,sidFrom,sidTo,titleFrom,titleTo,tableNameFrom,tableNameTo,numberOfVerdicts,numberOfApproved,numberOfNotSure,avgConfidence");
+			
+		}
+		catch(Exception e) {
+//			logger.error("failed to get relationshipResponseModel");
+//			result.isSuccessful=false;
+//			result.message = "Get MineRelationships failed";
+		}
+
 		return result;
 	}
-	
 	
 
 }

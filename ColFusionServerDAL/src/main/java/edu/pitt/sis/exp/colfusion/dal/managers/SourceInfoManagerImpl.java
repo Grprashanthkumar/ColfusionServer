@@ -55,6 +55,7 @@ import edu.pitt.sis.exp.colfusion.dal.utils.DataSourceTypes;
 import edu.pitt.sis.exp.colfusion.dal.utils.HibernateUtil;
 import edu.pitt.sis.exp.colfusion.dal.utils.MappingUtils;
 import edu.pitt.sis.exp.colfusion.dal.utils.StoryStatusTypes;
+import edu.pitt.sis.exp.colfusion.dal.viewmodels.RelationshipsViewModel;
 import edu.pitt.sis.exp.colfusion.dal.viewmodels.StoryAuthorViewModel;
 import edu.pitt.sis.exp.colfusion.dal.viewmodels.StoryMetadataHistoryLogRecordViewModel;
 import edu.pitt.sis.exp.colfusion.dal.viewmodels.StoryMetadataHistoryViewModel;
@@ -872,5 +873,79 @@ public class SourceInfoManagerImpl extends GeneralManagerImpl<ColfusionSourceinf
 		Hibernate.initialize(storyTo.getColfusionSourceinfoDb());
 		
 		return storyTo.getColfusionSourceinfoDb();
+	}
+	
+	@Override
+	public List<RelationshipsViewModel> getRelationshipsViewModel(
+			int sid) {
+		try {
+            HibernateUtil.beginTransaction();
+            
+            SourceInfoDAO storyDao = new SourceInfoDAOImpl();
+                        
+//            String hql = "SELECT NEW edu.pitt.sis.exp.colfusion.dal.viewmodels.RelationshipsViewModel(rel.relId, rel.name, rel.description, relUser.userId, rel.creationTime, relUser.userLogin, sidFrom.sid, sidTo.sid, sidFrom.title, sidTo.title, rel.tableName1, rel.tableName2, st.id.numberOfVerdicts, st.id.numberOfApproved, st.id.numberOfReject, st.id.numberOfNotSure, st.id.avgConfidence) "
+//            		+ "FROM ColfusionRelationships rel join rel.colfusionUsers relUser "
+//            		+ "join rel.colfusionSourceinfoBySid1 sidFrom "
+//            		+ "join rel.colfusionSourceinfoBySid2 sidTo, Statonverdicts st "
+//            		+ "WHERE (rel.colfusionSourceinfoBySid1.sid = :sid or rel.colfusionSourceinfoBySid2.sid = :sid) "
+//            		+ "AND rel.status <> 1 "
+//            		+ "AND rel.relId = st.id.relId"; 
+//            Query query = HibernateUtil.getSession().createQuery(hql);
+//            query.setParameter("sid", sid);
+//            List<RelationshipsViewModel> result = query.list();
+            
+            //TODO: make it work with select new
+            String hql = "SELECT rel.relId, rel.name, rel.description, relUser.userId, rel.creationTime, relUser.userLogin, sidFrom.sid, sidTo.sid, sidFrom.title, sidTo.title, rel.tableName1, rel.tableName2, st.id.numberOfVerdicts, st.id.numberOfApproved, st.id.numberOfReject, st.id.numberOfNotSure, st.id.avgConfidence "
+            		+ "FROM ColfusionRelationships rel join rel.colfusionUsers relUser "
+            		+ "join rel.colfusionSourceinfoBySid1 sidFrom "
+            		+ "join rel.colfusionSourceinfoBySid2 sidTo, Statonverdicts st "
+            		+ "WHERE (rel.colfusionSourceinfoBySid1.sid = :sid or rel.colfusionSourceinfoBySid2.sid = :sid) "
+            		+ "AND rel.status <> 1 "
+            		+ "AND rel.relId = st.id.relId";
+            
+            Query query = HibernateUtil.getSession().createQuery(hql);
+            query.setParameter("sid", sid);
+            
+            List<Object> relationshipsObjs = query.list();
+            List<RelationshipsViewModel> result = new ArrayList<>();
+            for (Object relationshipObj : relationshipsObjs) {
+            	Object[] relationshipColumns = (Object[]) relationshipObj;
+            	RelationshipsViewModel relationshipViewModel = new RelationshipsViewModel();
+            	relationshipViewModel.setRelid((int)relationshipColumns[0]);
+            	relationshipViewModel.setName(relationshipColumns[1].toString());
+            	relationshipViewModel.setDescription(relationshipColumns[2].toString());
+            	relationshipViewModel.setCreator((int)relationshipColumns[3]);
+            	relationshipViewModel.setCreationTime((Date) relationshipColumns[4]);
+            	relationshipViewModel.setCreatorLogin( relationshipColumns[5].toString());
+            	relationshipViewModel.setSidFrom((int)relationshipColumns[6]);
+            	relationshipViewModel.setSidTo((int)relationshipColumns[7]);
+            	relationshipViewModel.setTitleFrom(relationshipColumns[8].toString());
+            	relationshipViewModel.setTitleTo(relationshipColumns[9].toString());
+            	relationshipViewModel.setTableNameFrom(relationshipColumns[10].toString());
+            	relationshipViewModel.setTableNameTo(relationshipColumns[11].toString());
+            	relationshipViewModel.setNumberOfVerdicts((long) relationshipColumns[12]);
+            	relationshipViewModel.setNumberOfApproved( (BigDecimal) relationshipColumns[13]);
+            	relationshipViewModel.setNumberOfReject( (BigDecimal) relationshipColumns[14]);
+            	relationshipViewModel.setNumberOfNotSure((BigDecimal) relationshipColumns[15]);
+            	relationshipViewModel.setAvgConfidence((BigDecimal) relationshipColumns[16]);
+            	result.add(relationshipViewModel);
+            }
+                                    
+            
+            return result;
+		
+        } catch (NonUniqueResultException ex) {
+
+        	HibernateUtil.rollbackTransaction();
+        	
+        	this.logger.error("getMineRelationshipsViewModel failed NonUniqueResultException", ex);
+            throw ex;
+        } catch (HibernateException ex) {
+
+        	HibernateUtil.rollbackTransaction();
+        	
+        	this.logger.error("getMineRelationshipsViewModel failed HibernateException", ex);
+        	throw ex;
+        }	
 	}
 }
