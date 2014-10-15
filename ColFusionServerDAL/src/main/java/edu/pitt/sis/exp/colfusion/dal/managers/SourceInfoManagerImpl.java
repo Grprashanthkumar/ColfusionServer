@@ -854,12 +854,12 @@ public class SourceInfoManagerImpl extends GeneralManagerImpl<ColfusionSourceinf
 		RelationshipsManager relMng = new RelationshipsManagerImpl();
 		ColfusionRelationships relationship = relMng.findByID(relId);
 		
-		relationship = GeneralManagerImpl.initializeField(relationship, "getColfusionSourceinfoBySid1");
+		relationship = GeneralManagerImpl.initializeField(relationship, "colfusionSourceinfoBySid1");
 		
 		//Hibernate.initialize(relationship.getColfusionSourceinfoBySid1());
 		ColfusionSourceinfo storyFrom = relationship.getColfusionSourceinfoBySid1();
 		
-		storyFrom = GeneralManagerImpl.initializeField(storyFrom, "getColfusionSourceinfoDb");
+		storyFrom = GeneralManagerImpl.initializeField(storyFrom, "colfusionSourceinfoDb");
 		
 		//Hibernate.initialize(storyFrom.getColfusionSourceinfoDb());
 		
@@ -871,12 +871,12 @@ public class SourceInfoManagerImpl extends GeneralManagerImpl<ColfusionSourceinf
 		RelationshipsManager relMng = new RelationshipsManagerImpl();
 		ColfusionRelationships relationship = relMng.findByID(relId);
 		
-		relationship = GeneralManagerImpl.initializeField(relationship, "getColfusionSourceinfoBySid2");
+		relationship = GeneralManagerImpl.initializeField(relationship, "colfusionSourceinfoBySid2");
 		
 		//Hibernate.initialize(relationship.getColfusionSourceinfoBySid2());
 		ColfusionSourceinfo storyTo = relationship.getColfusionSourceinfoBySid2();
 
-		storyTo = GeneralManagerImpl.initializeField(storyTo, "getColfusionSourceinfoDb");
+		storyTo = GeneralManagerImpl.initializeField(storyTo, "colfusionSourceinfoDb");
 		
 		//Hibernate.initialize(storyTo.getColfusionSourceinfoDb());
 		
@@ -885,7 +885,7 @@ public class SourceInfoManagerImpl extends GeneralManagerImpl<ColfusionSourceinf
 	
 	@Override
 	public List<RelationshipsViewModel> getRelationshipsViewModel(
-			int sid) {
+			final int sid) {
 		try {
             HibernateUtil.beginTransaction();
             
