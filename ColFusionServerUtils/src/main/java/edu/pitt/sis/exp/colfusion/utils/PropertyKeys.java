@@ -168,9 +168,21 @@ public class PropertyKeys {
 	*/
 	public static String emailSenderPassword = "emailSenderPassword";
 	/*Appended by Hao Bai
+	 * This value is used for setting email smtp starttls boolean value.
+	*/
+	public static String smtpStarttlsEnable = "smtpStarttlsEnable";
+	/*Appended by Hao Bai
+	 * This value is used for setting email smtp authentication boolean value.
+	*/
+	public static String smtpAuth = "smtpAuth";
+	/*Appended by Hao Bai
 	 * This value is used for setting email smtp server host.
 	*/
 	public static String smtpHost = "smtpHost";
+	/*Appended by Hao Bai
+	 * This value is used for setting email smtp port number.
+	*/
+	public static String smtpPort = "smtpPort";
 	/*Appended by Hao Bai
 	 * This value is used for setting email receiver's userLevel.
 	*/

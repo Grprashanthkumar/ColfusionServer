@@ -26,7 +26,11 @@ public class EmailNotifier {
 
     private static String senderAddress = ConfigManager.getInstance().getPropertyByName(PropertyKeys.emailSenderAddress);
     private static String senderPassword = ConfigManager.getInstance().getPropertyByName(PropertyKeys.emailSenderPassword);
+    
+    private static String smtpStarttlsEnable = ConfigManager.getInstance().getPropertyByName(PropertyKeys.smtpStarttlsEnable);
+    private static String smtpAuth = ConfigManager.getInstance().getPropertyByName(PropertyKeys.smtpAuth);
     private static String smtpHost = ConfigManager.getInstance().getPropertyByName(PropertyKeys.smtpHost);
+    private static String smtpPort = ConfigManager.getInstance().getPropertyByName(PropertyKeys.smtpPort);
     
     private Logger logger = LogManager.getLogger(ServiceMonitor.class.getName());
     
@@ -35,10 +39,10 @@ public class EmailNotifier {
 	
 	public void sendMail(String toAddress, String mailSubject, String mailText){
 		Properties properties = new Properties();
-		properties.put("mail.smtp.starttls.enable", "true");
-		properties.put("mail.smtp.auth", "true");
+		properties.put("mail.smtp.starttls.enable", smtpStarttlsEnable);
+		properties.put("mail.smtp.auth", smtpAuth);
 		properties.put("mail.smtp.host", smtpHost);
-		properties.put("mail.smtp.port", "587");
+		properties.put("mail.smtp.port", smtpPort);
 
         Session session = Session.getInstance(properties,
         	new javax.mail.Authenticator() {
@@ -59,7 +63,7 @@ public class EmailNotifier {
         }
 		catch(MessagingException exception){
 			logger.error("In EmailNotifier.sendMail()\n"
-					+exception.toString()+" "+exception.getMessage()+" "+exception.getCause());
+					+ exception.toString() + " " + exception.getMessage() + " " + exception.getCause());
 		}
 	}	
 }

@@ -45,12 +45,12 @@ public class DatabaseConnection {
 		}
 		catch(SQLException sqlException){
 			logger.error("In queryServieExistance:sql\n"
-						+sqlException.toString()+" "+sqlException.getErrorCode()+" "+sqlException.getSQLState());
+						+ sqlException.toString() + " " + sqlException.getErrorCode() + " " + sqlException.getSQLState());
 			return queryResult;
 		}	
 		catch(Exception exception){
 			logger.error("In queryServieExistance:other\n"
-					+exception.toString()+" "+exception.getMessage()+" "+exception.getCause());
+					+ exception.toString() + " " + exception.getMessage() + " " + exception.getCause());
 			return queryResult;
 		}	
 	}
@@ -75,6 +75,7 @@ public class DatabaseConnection {
 				service.setServiceDir(resultSet.getString("service_dir"));
 				service.setServiceCommand(resultSet.getString("service_command"));
 				service.setServiceStatus(resultSet.getString("service_status"));
+				service.setServicePreviousStatus(resultSet.getString("service_status"));
 				
 				serviceList.add(service);
 				service = null;
@@ -87,12 +88,12 @@ public class DatabaseConnection {
 		}
 		catch(SQLException sqlException){
 			logger.error("In queryAllServies:sql\n"
-					+sqlException.toString()+" "+sqlException.getErrorCode()+" "+sqlException.getSQLState());
+					+ sqlException.toString() + " " + sqlException.getErrorCode() + " " + sqlException.getSQLState());
 			return null;
 		}	
 		catch(Exception exception){
 			logger.error("In queryAllServies:other\n"
-					+exception.toString()+" "+exception.getMessage()+" "+exception.getCause());
+					+ exception.toString() + " " + exception.getMessage() + " " + exception.getCause());
 			return null;
 		}	
 	}
@@ -119,12 +120,12 @@ public class DatabaseConnection {
 		}
 		catch(SQLException sqlException){
 			logger.error("In queryServiceStatus:sql\n"
-					+sqlException.toString()+" "+sqlException.getErrorCode()+" "+sqlException.getSQLState());
+					+ sqlException.toString() + " " + sqlException.getErrorCode() + " " + sqlException.getSQLState());
 			return queryResult;
 		}	
 		catch(Exception exception){
 			logger.error("In queryServiceStatus:other\n"
-					+exception.toString()+" "+exception.getMessage()+" "+exception.getCause());
+					+ exception.toString() + " " + exception.getMessage() + " " + exception.getCause());
 			return queryResult;
 		}	
 	}
@@ -154,12 +155,12 @@ public class DatabaseConnection {
 		}
 		catch(SQLException sqlException){
 			logger.error("In updateServiceStatus:sql\n"
-					+sqlException.toString()+" "+sqlException.getErrorCode()+" "+sqlException.getSQLState());
+					+ sqlException.toString() + " " + sqlException.getErrorCode() + " " + sqlException.getSQLState());
 			return updateResult; 
 		}	
 		catch(Exception exception){
 			logger.error("In updateServiceStatus:other\n"
-					+exception.toString()+" "+exception.getMessage()+" "+exception.getCause());
+					+ exception.toString() + " " + exception.getMessage() + " " + exception.getCause());
 			return updateResult;
 		}	
 	}
@@ -188,12 +189,12 @@ public class DatabaseConnection {
 		}
 		catch(SQLException sqlException){
 			logger.error("In queryUserEmails:sql\n"
-					+sqlException.toString()+" "+sqlException.getErrorCode()+" "+sqlException.getSQLState());
+					+ sqlException.toString() + " " + sqlException.getErrorCode() + " " + sqlException.getSQLState());
 			return queryResult;
 		}	
 		catch(Exception exception){
 			logger.error("In queryUserEmails:other\n"
-					+exception.toString()+" "+exception.getMessage()+" "+exception.getCause());
+					+ exception.toString() + " " + exception.getMessage() + " " + exception.getCause());
 			return queryResult;
 		}	
 	}

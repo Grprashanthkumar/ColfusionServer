@@ -121,7 +121,8 @@ public class ServiceMonitor extends TimerTask{
 				currentStatus = this.updateServiceStatus(service);
 				this.dataBaseconnection.updateServiceStatus(service);
 				serviceList.set(serviceList.indexOf(service), service);
-				if(currentStatus == ServiceStatusEnum.STOPPED.getValue()){
+				if(currentStatus == ServiceStatusEnum.STOPPED.getValue() && 
+				   currentStatus != service.getServicePreviousStatus()){
 					for(String userLevel : ConfigManager.getInstance().getPropertyByName(PropertyKeys.userLevel).split(",")){
 						for(String emailAddress : this.dataBaseconnection.queryUserEmails(userLevel)){
 							emailNotifier.sendMail(emailAddress, 
@@ -130,12 +131,14 @@ public class ServiceMonitor extends TimerTask{
 						}
 					}
 				}
+				if(currentStatus != service.getServicePreviousStatus())
+					service.setServicePreviousStatus(currentStatus);
 				currentStatus = null;
 			}
 		}
 		catch(Exception exception){
 			logger.error("In ServiceMonitor.run()\n"
-					+exception.toString()+" "+exception.getMessage()+" "+exception.getCause());
+					+ exception.toString() + " " + exception.getMessage() + " " + exception.getCause());
 		}
 	}
 	
@@ -174,7 +177,7 @@ public class ServiceMonitor extends TimerTask{
 			}
 			catch(Exception exception){
 				logger.error("In ServiceMonitor.startService()\n"
-						+exception.toString()+" "+exception.getMessage()+" "+exception.getCause());
+						+ exception.toString() + " " + exception.getMessage() + " " + exception.getCause());
 				return 3;
 			}
 		}

@@ -23,6 +23,7 @@ public class Service {
 	private String serviceDir;
 	private String serviceCommand;
 	private String serviceStatus;
+	private String servicePreviousStatus;
 	
 	public Service(){
 	}
@@ -87,6 +88,14 @@ public class Service {
 	
 	public String getServiceStatus(){
 		return this.serviceStatus;
+	}
+	
+	public void setServicePreviousStatus(String status){
+		this.servicePreviousStatus = status;
+	}
+	
+	public String getServicePreviousStatus(){
+		return this.servicePreviousStatus;
 	}
 	
 	public String toString(){

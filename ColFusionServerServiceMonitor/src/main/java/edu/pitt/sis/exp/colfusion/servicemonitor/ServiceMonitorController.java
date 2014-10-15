@@ -58,7 +58,7 @@ public class ServiceMonitorController{
 		}
 		catch(Exception exception){
 			logger.error("In ServiceMonitorController.startServiceMonitor()\n"
-					+exception.toString()+" "+exception.getMessage()+" "+exception.getCause());
+					+ exception.toString() + " " + exception.getMessage() + " " + exception.getCause());
 			return false;
 		}
 	}
@@ -78,7 +78,7 @@ public class ServiceMonitorController{
 		}
 		catch(Exception exception){
 			logger.error("In ServiceMonitorController.stopServiceMonitor()\n"
-					+exception.toString()+" "+exception.getMessage()+" "+exception.getCause());		
+					+ exception.toString() + " " + exception.getMessage() + " " + exception.getCause());		
 			return false;
 		}
 	}
