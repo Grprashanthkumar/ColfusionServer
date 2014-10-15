@@ -28,6 +28,14 @@ public interface RelationshipsManager extends GeneralManager<ColfusionRelationsh
 	List<ColfusionRelationships> findRelationshipsBySid(int sid) throws Exception;
 	
 	/**
+	 * Find all relationships between two stories by given sids. 
+	 * @param sid1
+	 * @param sid2
+	 * @return
+	 */
+	List<ColfusionRelationships> findRelationshipsBySid(int sid1, int sid2);
+	
+	/**
      * Find only one entity by id.
      * 
      * @param clazz of entity to be found.

@@ -7,7 +7,6 @@ import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import edu.pitt.sis.exp.colfusion.dal.dataModels.relationships.Relationship;
 import edu.pitt.sis.exp.colfusion.dal.dataModels.relationships.RelationshipLink;
 import edu.pitt.sis.exp.colfusion.dal.dataModels.relationships.transformation.RelationshipTransformation;
 import edu.pitt.sis.exp.colfusion.dal.dataModels.relationships.transformation.RelationshipTransofmationUtil;
@@ -195,9 +194,6 @@ public class JoinTablesBL {
 				transformations1.add(RelationshipTransofmationUtil.makeRelationshipTransformation(colfusionRelationship.getRelId(), colfusionLink.getId().getClFrom()));
 				transformations2.add(RelationshipTransofmationUtil.makeRelationshipTransformation(colfusionRelationship.getRelId(), colfusionLink.getId().getClTo()));
 			}
-			
-			Relationship relationship = new Relationship(colfusionRelationship.getColfusionSourceinfoBySid1().getSid(), colfusionRelationship.getTableName1(), 
-					colfusionRelationship.getColfusionSourceinfoBySid2().getSid(), colfusionRelationship.getTableName2(), links);
 			
 			TableAsHalfLink half1 = new TableAsHalfLink(colfusionRelationship.getColfusionSourceinfoBySid1().getColfusionSourceinfoDb(), 
 					colfusionRelationship.getTableName1(), 

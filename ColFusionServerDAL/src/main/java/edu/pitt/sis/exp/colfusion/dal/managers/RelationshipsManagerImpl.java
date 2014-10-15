@@ -194,4 +194,37 @@ public class RelationshipsManagerImpl extends GeneralManagerImpl<ColfusionRelati
 		
 		return result;
 	}
+	
+	@Override
+	public List<ColfusionRelationships> findRelationshipsBySid(final int sid1,
+			final int sid2) {
+	
+		try {
+			
+			this.checkIfDaoSet();
+			
+            HibernateUtil.beginTransaction();
+		
+			String hql = "SELECT rel "
+					+ "FROM ColfusionRelationships rel JOIN FETCH rel.colfusionSourceinfoBySid1 JOIN FETCH rel.colfusionSourceinfoBySid2 JOIN FETCH rel.colfusionRelationshipsColumnses "
+					+ "WHERE (rel.colfusionSourceinfoBySid1.sid = :sid1 AND rel.colfusionSourceinfoBySid2.sid = :sid2) OR "
+					+ "(rel.colfusionSourceinfoBySid1.sid = :sid2 AND rel.colfusionSourceinfoBySid2.sid = :sid1)";
+			
+			Query query = HibernateUtil.getSession().createQuery(hql)
+	        		.setParameter("sid1", sid1)
+	        		.setParameter("sid2", sid2);
+			
+			List<ColfusionRelationships> result = _dao.findMany(query);
+		
+			HibernateUtil.commitTransaction();
+			
+			return result;
+		} catch (HibernateException ex) {
+
+        	HibernateUtil.rollbackTransaction();
+        	
+        	logger.error("findByID failed HibernateException", ex);
+        	throw ex;
+        } 
+	}
 }

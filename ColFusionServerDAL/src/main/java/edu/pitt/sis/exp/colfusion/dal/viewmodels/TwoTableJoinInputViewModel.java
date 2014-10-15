@@ -4,11 +4,13 @@
 package edu.pitt.sis.exp.colfusion.dal.viewmodels;
 
 import java.io.Serializable;
+import java.util.List;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
 import com.google.gson.annotations.Expose;
 
+import edu.pitt.sis.exp.colfusion.dal.dataModels.relationships.Relationship;
 import edu.pitt.sis.exp.colfusion.dal.dataModels.tableDataModel.Table;
 
 /**
@@ -25,16 +27,20 @@ public class TwoTableJoinInputViewModel implements Serializable{
 	@Expose private Table table1;
 	@Expose private Table table2;
 	
+	@Expose private List<Relationship> relationships;
+	
 	@Expose private TwoJointTablesViewModel twoJointTables;
 	
 	public TwoTableJoinInputViewModel() {
 		
 	}
 	
-	public TwoTableJoinInputViewModel(final Table table1, final Table table2, final TwoJointTablesViewModel twoJointTables) {
+	public TwoTableJoinInputViewModel(final Table table1, final Table table2, 
+			final TwoJointTablesViewModel twoJointTables, final List<Relationship> relationships) {
 		this.table1 = table1;
 		this.table2 = table2;
 		setTwoJointTables(twoJointTables);
+		this.setRelationships(relationships);
 	}
 	
 	/**
@@ -77,5 +83,19 @@ public class TwoTableJoinInputViewModel implements Serializable{
 	 */
 	private void setTwoJointTables(final TwoJointTablesViewModel twoJointTables) {
 		this.twoJointTables = twoJointTables;
+	}
+
+	/**
+	 * @return the relationships
+	 */
+	private List<Relationship> getRelationships() {
+		return relationships;
+	}
+
+	/**
+	 * @param relationships the relationships to set
+	 */
+	private void setRelationships(List<Relationship> relationships) {
+		this.relationships = relationships;
 	}
 }

@@ -350,22 +350,21 @@ public class DNameInfoManagerImpl extends GeneralManagerImpl<ColfusionDnameinfo,
 	
 	@Override
 	public List<StoryMetadataHistoryLogRecordViewModel> getColumnMetaEditHistory(final int cid, final String editAttribute){
-		HibernateUtil.beginTransaction();
+		 HibernateUtil.beginTransaction();
 		
-		ColfusionDnameinfo Cid = (ColfusionDnameinfo)  HibernateUtil.getSession().get(ColfusionDnameinfo.class, cid);
-
+		 ColfusionDnameinfo Cid = (ColfusionDnameinfo)  HibernateUtil.getSession().get(ColfusionDnameinfo.class, cid);
 		
 		 Query query = HibernateUtil.getSession().createQuery("SELECT di FROM ColfusionDnameinfoMetadataEditHistory di where di.colfusionDnameinfo = :cid AND di.editedAttribute = :editAttribute ORDER BY di.hid DESC");
 		 query.setParameter("cid", Cid);
 		 query.setParameter("editAttribute", editAttribute);
-		 
 
-         List<ColfusionDnameinfoMetadataEditHistory> edithistory =query.list();
-         
+         List<ColfusionDnameinfoMetadataEditHistory> edithistory = query.list();
          
          List<StoryMetadataHistoryLogRecordViewModel> result = new ArrayList<StoryMetadataHistoryLogRecordViewModel>();
          for (ColfusionDnameinfoMetadataEditHistory onehistory : edithistory){
+        
         	 Hibernate.initialize(onehistory.getColfusionUsers());
+        	 
         	 result.add(new StoryMetadataHistoryLogRecordViewModel(onehistory.getHid(),MappingUtils.getInstance().mapColfusionUserToStoryAuthorViewModel(onehistory.getColfusionUsers()),onehistory.getWhenSaved(),onehistory.getEditedAttribute(),onehistory.getReason(),onehistory.getValue()));
          }
          

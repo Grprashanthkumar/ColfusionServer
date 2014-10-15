@@ -15,7 +15,7 @@ public interface TableJoinService {
 	@GET
     @Produces(MediaType.APPLICATION_JSON)
 	public abstract Response joinTables(@PathParam("sid1") int sid1, @PathParam("tableName1") String tableName1, 
-			@PathParam("sid2") int sid2, @PathParam("tableName2") String tableName2, @PathParam("similarityThreshold") double similarityThreshold);
+			@PathParam("sid2") int sid2, @PathParam("tableName2") String tableName2, @PathParam("similarityThreshold") double similarityThreshold) throws Exception;
 	
 	@Path("join")
 	@POST

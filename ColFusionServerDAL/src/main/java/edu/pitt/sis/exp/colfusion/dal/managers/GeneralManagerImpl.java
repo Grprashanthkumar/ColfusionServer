@@ -33,11 +33,11 @@ public abstract class GeneralManagerImpl<T extends Object, ID extends Serializab
 		_clazz = clazz;
 	}
 	
-	protected void checkIfDaoSet() throws Exception {
+	protected void checkIfDaoSet() {
 		if (_dao == null) {
 			logger.error("Dao is not set up");
 			//TODO: create custom exception
-			throw new Exception("Dao is not set up");
+			throw new RuntimeException("Dao is not set up");
 		}
 	}
 	

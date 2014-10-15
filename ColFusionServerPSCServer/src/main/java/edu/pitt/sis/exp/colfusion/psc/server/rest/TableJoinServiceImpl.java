@@ -3,6 +3,9 @@
  */
 package edu.pitt.sis.exp.colfusion.psc.server.rest;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.ws.rs.Path;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -18,7 +21,14 @@ import com.sun.jersey.api.client.config.DefaultClientConfig;
 import com.sun.jersey.api.json.JSONConfiguration;
 
 import edu.pitt.sis.exp.colfusion.bll.BasicTableBL;
+import edu.pitt.sis.exp.colfusion.dal.dataModels.relationships.Relationship;
+import edu.pitt.sis.exp.colfusion.dal.dataModels.relationships.RelationshipLink;
+import edu.pitt.sis.exp.colfusion.dal.dataModels.relationships.transformation.RelationshipTransofmationUtil;
 import edu.pitt.sis.exp.colfusion.dal.dataModels.tableDataModel.Table;
+import edu.pitt.sis.exp.colfusion.dal.managers.RelationshipsManager;
+import edu.pitt.sis.exp.colfusion.dal.managers.RelationshipsManagerImpl;
+import edu.pitt.sis.exp.colfusion.dal.orm.ColfusionRelationships;
+import edu.pitt.sis.exp.colfusion.dal.orm.ColfusionRelationshipsColumns;
 import edu.pitt.sis.exp.colfusion.dal.viewmodels.TwoJointTablesViewModel;
 import edu.pitt.sis.exp.colfusion.dal.viewmodels.TwoTableJoinInputViewModel;
 import edu.pitt.sis.exp.colfusion.psc.server.util.ServerType;
@@ -47,7 +57,7 @@ public class TableJoinServiceImpl implements TableJoinService {
 
 	@Override
 	public Response joinTables(final int sid1, final String tableName1, final int sid2,
-			final String tableName2, final double similarityThreshold) {
+			final String tableName2, final double similarityThreshold) throws Exception {
 		
 		logger.info(String.format("Got: %d %s %d %s %f", sid1, tableName1, sid2, tableName2, similarityThreshold));
 		
@@ -61,7 +71,27 @@ public class TableJoinServiceImpl implements TableJoinService {
 		
 		TwoJointTablesViewModel twoJointTables = new TwoJointTablesViewModel(sid1, tableName1, sid2, tableName2, similarityThreshold, null);
 		
-		TwoTableJoinInputViewModel twoTables = new TwoTableJoinInputViewModel(table1,  table2, twoJointTables);
+		RelationshipsManager relMng = new RelationshipsManagerImpl();
+		List<ColfusionRelationships> dbRelationships = relMng.findRelationshipsBySid(sid1, sid2);
+		
+		List<Relationship> relationships = new ArrayList<Relationship>();
+		List<RelationshipLink> links = new ArrayList<RelationshipLink>();
+		
+		for (ColfusionRelationships dbRelationship : dbRelationships) {
+			
+			for (Object relColumnOBj : dbRelationship.getColfusionRelationshipsColumnses().toArray()) {
+				ColfusionRelationshipsColumns colfusionLink = (ColfusionRelationshipsColumns) relColumnOBj;
+				links.add(new RelationshipLink(RelationshipTransofmationUtil.makeRelationshipTransformation(dbRelationship.getRelId(), colfusionLink.getId().getClFrom()), 
+						RelationshipTransofmationUtil.makeRelationshipTransformation(dbRelationship.getRelId(), colfusionLink.getId().getClTo())));
+			}
+			
+			Relationship relationship = new Relationship(dbRelationship.getColfusionSourceinfoBySid1().getSid(), dbRelationship.getTableName1(), 
+					dbRelationship.getColfusionSourceinfoBySid2().getSid(), dbRelationship.getTableName2(), links);
+			
+			relationships.add(relationship);
+		}
+		
+		TwoTableJoinInputViewModel twoTables = new TwoTableJoinInputViewModel(table1,  table2, twoJointTables, relationships);
 		
 		String twoTablesStr = Gsonizer.toJson(twoTables, true);
 		

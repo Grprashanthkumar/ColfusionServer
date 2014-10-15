@@ -6,21 +6,23 @@ import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.google.gson.annotations.Expose;
+
 import edu.pitt.sis.exp.colfusion.dal.dataModels.tableDataModel.ColumnMetadata;
 
 public class RelationshipTransformation {
 	
 	static Logger logger = LogManager.getLogger(RelationshipTransformation.class.getName());
 	
-	private final String transformationInCids;
+	@Expose private final String transformationInCids;
 	
 //	private final List<Integer> cids;
 	
-	private final List<ColumnMetadata> columnsMetadata;
+	@Expose private final List<ColumnMetadata> columnsMetadata;
 	//private final List<ColfusionDnameinfo> columns;
 	
-	private final String tableName;
-	private final int sid;
+	@Expose private final String tableName;
+	@Expose private final int sid;
 	
 	public RelationshipTransformation(final String transformationInCids, final int sid, final String tableName, final List<ColumnMetadata> columnsMetadata) throws Exception {
 		

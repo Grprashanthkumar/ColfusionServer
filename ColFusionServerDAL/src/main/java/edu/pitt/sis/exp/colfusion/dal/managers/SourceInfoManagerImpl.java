@@ -854,10 +854,14 @@ public class SourceInfoManagerImpl extends GeneralManagerImpl<ColfusionSourceinf
 		RelationshipsManager relMng = new RelationshipsManagerImpl();
 		ColfusionRelationships relationship = relMng.findByID(relId);
 		
-		Hibernate.initialize(relationship.getColfusionSourceinfoBySid1());
+		relationship = GeneralManagerImpl.initializeField(relationship, "getColfusionSourceinfoBySid1");
+		
+		//Hibernate.initialize(relationship.getColfusionSourceinfoBySid1());
 		ColfusionSourceinfo storyFrom = relationship.getColfusionSourceinfoBySid1();
 		
-		Hibernate.initialize(storyFrom.getColfusionSourceinfoDb());
+		storyFrom = GeneralManagerImpl.initializeField(storyFrom, "getColfusionSourceinfoDb");
+		
+		//Hibernate.initialize(storyFrom.getColfusionSourceinfoDb());
 		
 		return storyFrom.getColfusionSourceinfoDb();
 	}
@@ -867,10 +871,14 @@ public class SourceInfoManagerImpl extends GeneralManagerImpl<ColfusionSourceinf
 		RelationshipsManager relMng = new RelationshipsManagerImpl();
 		ColfusionRelationships relationship = relMng.findByID(relId);
 		
-		Hibernate.initialize(relationship.getColfusionSourceinfoBySid2());
+		relationship = GeneralManagerImpl.initializeField(relationship, "getColfusionSourceinfoBySid2");
+		
+		//Hibernate.initialize(relationship.getColfusionSourceinfoBySid2());
 		ColfusionSourceinfo storyTo = relationship.getColfusionSourceinfoBySid2();
 
-		Hibernate.initialize(storyTo.getColfusionSourceinfoDb());
+		storyTo = GeneralManagerImpl.initializeField(storyTo, "getColfusionSourceinfoDb");
+		
+		//Hibernate.initialize(storyTo.getColfusionSourceinfoDb());
 		
 		return storyTo.getColfusionSourceinfoDb();
 	}
