@@ -28,11 +28,11 @@ public class DatabaseHandlerFactory {
 	 * @return the vendor specific implementation of the database handler.
 	 * @throws Exception
 	 */
-	public static DatabaseHandlerBase getDatabaseHandler(final String host, final int port, final String user, final String password, final String database, 
+	public static DatabaseHandlerBase getDatabaseHandler(final int sid, final String host, final int port, final String user, final String password, final String database, 
 			final DatabaseHanderType databaseHanderType, final ExecutionInfoManager executionInfoMgr, final int executionLogId) throws Exception {
 		switch (databaseHanderType) {
 		case MYSQL:
-			return new MySQLDatabaseHandler(host, port, user, password, database, databaseHanderType, executionInfoMgr, executionLogId);
+			return new MySQLDatabaseHandler(sid, host, port, user, password, database, databaseHanderType, executionInfoMgr, executionLogId);
 			
 		default:
 			
@@ -48,13 +48,13 @@ public class DatabaseHandlerFactory {
 	}
 	
 	public static DatabaseHandlerBase getDatabaseHandler(final ColfusionSourceinfoDb storyDbInfo) throws Exception {
-		return DatabaseHandlerFactory.getDatabaseHandler(storyDbInfo.getServerAddress(), storyDbInfo.getPort(), 
+		return DatabaseHandlerFactory.getDatabaseHandler(storyDbInfo.getSid(), storyDbInfo.getServerAddress(), storyDbInfo.getPort(), 
 				storyDbInfo.getUserName(), storyDbInfo.getPassword(), storyDbInfo.getSourceDatabase(), DatabaseHanderType.fromString(storyDbInfo.getDriver()), 
 				null, -1);
 	}
 	
 	public static DatabaseHandlerBase getDatabaseHandler(final StoryTargetDBViewModel storyDbInfo) throws Exception {
-		return DatabaseHandlerFactory.getDatabaseHandler(storyDbInfo.getServerAddress(), storyDbInfo.getPort(), 
+		return DatabaseHandlerFactory.getDatabaseHandler(storyDbInfo.getSid(), storyDbInfo.getServerAddress(), storyDbInfo.getPort(), 
 				storyDbInfo.getUserName(), storyDbInfo.getPassword(), storyDbInfo.getDatabaseName(), DatabaseHanderType.fromString(storyDbInfo.getDriver()), 
 				null, -1);
 	}

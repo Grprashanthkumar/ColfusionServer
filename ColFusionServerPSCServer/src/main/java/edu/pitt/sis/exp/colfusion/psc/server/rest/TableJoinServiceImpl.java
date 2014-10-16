@@ -5,6 +5,7 @@ package edu.pitt.sis.exp.colfusion.psc.server.rest;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,6 +40,7 @@ import edu.pitt.sis.exp.colfusion.psc.server.util.Utils;
 import edu.pitt.sis.exp.colfusion.responseModels.JointTableByRelationshipsResponeModel;
 import edu.pitt.sis.exp.colfusion.utils.Gsonizer;
 import edu.pitt.sis.exp.colfusion.utils.IOUtils;
+import edu.pitt.sis.exp.colfusion.utils.models.IOUtilsStoredFileInfoModel;
 
 /**
  * @author Evgeny
@@ -59,14 +61,15 @@ public class TableJoinServiceImpl implements TableJoinService {
 		JoinTablesBL joinBL = new JoinTablesBL();
 		
 		for (double i = 0; i<= 1; i += 0.1) {
-			model.getTwoJointTables().setSimilarityThreshold(i);
+			model.getTwoJointTables().setSimilarityThreshold(Double.parseDouble(new DecimalFormat("#.###").format(i)));
 			TwoJointTablesViewModel result = joinBL.joinTables(model);
 			
 			TwoTableJoinInputViewModel modelToSave = new TwoTableJoinInputViewModel();
 			modelToSave.setRelationships(model.getRelationships());
 			modelToSave.setTwoJointTables(result);
 			
-			IOUtils.writeToFile(Gsonizer.toJson(modelToSave, true), model.getIdentifyingString());
+			IOUtilsStoredFileInfoModel file = IOUtils.writeToFile(Gsonizer.toJson(modelToSave, true), model.getIdentifyingString());
+			logger.info(file.getAbsoluteFileName());
 		}
 		
 		return Response.status(200).entity("test2").build();

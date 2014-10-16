@@ -28,6 +28,7 @@ import edu.pitt.sis.exp.colfusion.dal.managers.ExecutionInfoManager;
  *
  */
 public abstract class DatabaseHandlerBase implements Closeable {
+	private int sid;
 	private String host;
     private int port;
     private String user;
@@ -45,8 +46,9 @@ public abstract class DatabaseHandlerBase implements Closeable {
     
     Logger logger = LogManager.getLogger(DatabaseHandlerBase.class.getName());
     
-    public DatabaseHandlerBase(final String host, final int port, final String user, final String password, final String database, final DatabaseHanderType databaseHanderType,
+    public DatabaseHandlerBase(final int sid, final String host, final int port, final String user, final String password, final String database, final DatabaseHanderType databaseHanderType,
     		final ExecutionInfoManager executionInfoMgr, final int executionLogId, final char dbCharToWrapNamesWithSpaces, final char dbCharToWrapStrings) {
+    	setSid(sid);
     	setHost(host);
     	setPort(port);
     	setUser(user);
@@ -262,7 +264,7 @@ public abstract class DatabaseHandlerBase implements Closeable {
 			Table result = new Table();
 			
 			while (resultSet.next()) {
-				ColumnGroup columnGroup = new ColumnGroup(tableName);
+				ColumnGroup columnGroup = new ColumnGroup(tableName, sid);
 				
 				for (String column : columnDbNames) {
 					
@@ -322,5 +324,19 @@ public abstract class DatabaseHandlerBase implements Closeable {
 	protected String wrapInEscapeChars(final String tableName) {
 		return String.format("%s%s%s", getDbCharToWrapNamesWithSpaces(), 
 				tableName, getDbCharToWrapNamesWithSpaces());
+	}
+
+	/**
+	 * @return the sid
+	 */
+	public int getSid() {
+		return sid;
+	}
+
+	/**
+	 * @param sid the sid to set
+	 */
+	public void setSid(final int sid) {
+		this.sid = sid;
 	}
 }

@@ -124,4 +124,9 @@ public class RelationshipTransformation {
 		
 		return false;
 	}
+	
+	@Override
+	public String toString() {
+		return transformationInCids;
+	}
 }

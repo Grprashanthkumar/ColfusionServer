@@ -286,7 +286,16 @@ public class JoinTablesBL {
 	}
 
 	public TwoJointTablesViewModel joinTables(final TwoTableJoinInputViewModel model) {
-		// TODO Auto-generated method stub
-		return null;
+		NestedLoopSimilarityJoin simJoin = new NestedLoopSimilarityJoin(new NormalizedDistance(new LevenshteinDistance()), null, null);
+		
+		Table resultTable = null;
+		
+		resultTable = simJoin.join(model.getTable1(), model.getTable2(), 
+				model.getRelationships(), model.getTwoJointTables().getSimilarityThreshold());
+		
+		TwoJointTablesViewModel result = new TwoJointTablesViewModel(model.getTwoJointTables().getSid1(), model.getTwoJointTables().getTableName1(),
+				model.getTwoJointTables().getSid2(), model.getTwoJointTables().getTableName1(), model.getTwoJointTables().getSimilarityThreshold(), resultTable);
+		
+		return result;
 	}
 }

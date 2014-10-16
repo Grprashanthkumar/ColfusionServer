@@ -3,11 +3,14 @@
  */
 package edu.pitt.sis.exp.colfusion.similarityJoins;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import edu.pitt.sis.exp.colfusion.dal.dataModels.relationships.Relationship;
+import edu.pitt.sis.exp.colfusion.dal.dataModels.relationships.RelationshipLink;
 import edu.pitt.sis.exp.colfusion.dal.dataModels.relationships.transformation.RelationshipTransformation;
 import edu.pitt.sis.exp.colfusion.dal.dataModels.tableDataModel.Row;
 import edu.pitt.sis.exp.colfusion.dal.dataModels.tableDataModel.Table;
@@ -88,6 +91,56 @@ public class NestedLoopSimilarityJoin extends SimilarityJoinBase {
 		result.getColumnGroups().addAll(rowTable2.getColumnGroups());
 		
 		return result;
+	}
+
+
+	public Table join(final Table table1, final Table table2,
+			final List<Relationship> relationships, final double similarityThreshold) {
+		
+		//TODO FIXME only take one relationship in account for now
+		
+		Relationship relationship = relationships.get(0);
+		
+		List<RelationshipTransformation> transformationsTable1 = new ArrayList<RelationshipTransformation>();
+		List<RelationshipTransformation> transformationsTable2 = new ArrayList<RelationshipTransformation>();
+		
+		setTransformationsForTables(table1, table2, relationship, transformationsTable1, transformationsTable2);
+		
+		return join(table1, table2, transformationsTable1, transformationsTable2, similarityThreshold);
+	}
+
+
+	private void setTransformationsForTables(final Table table1, final Table table2,
+			final Relationship relationship,
+			final List<RelationshipTransformation> transformationsTable1,
+			final List<RelationshipTransformation> transformationsTable2) {
+		
+		//TODO FIXME not check for size so fail get(0) if empty
+		
+		//TODO FIXME one table can have more than one sid
+		
+		for (RelationshipLink relationshipLink : relationship.getLinks()) {
+			
+			if (table1.getRows().get(0).getColumnGroups().get(0).getSid() == relationship.getSidFrom()) {
+				transformationsTable1.add(relationshipLink.getFrom());
+				
+				if (table2.getRows().get(0).getColumnGroups().get(0).getSid() != relationship.getSidTo()) {
+					throw new RuntimeException("could not find tranformation for table 2");
+				}
+				
+				transformationsTable2.add(relationshipLink.getTo());
+			}
+			else if (table1.getRows().get(0).getColumnGroups().get(0).getSid() == relationship.getSidTo()) {
+				transformationsTable1.add(relationshipLink.getTo());
+				
+				if (table2.getRows().get(0).getColumnGroups().get(0).getSid() != relationship.getSidFrom()) {
+					throw new RuntimeException("could not find tranformation for table 2");
+				}
+				
+				transformationsTable2.add(relationshipLink.getFrom());
+			}
+		}
+		
 	}
 
 

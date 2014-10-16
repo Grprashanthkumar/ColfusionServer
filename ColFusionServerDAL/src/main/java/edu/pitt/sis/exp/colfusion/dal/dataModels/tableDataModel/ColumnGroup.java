@@ -28,7 +28,7 @@ public class ColumnGroup implements Gsonazable{
 	static Logger logger = LogManager.getLogger(ColumnGroup.class.getName());
 	
 	@Expose private String tableName;
-	//private final int sid; 
+	@Expose private int sid; 
 	
 	@Expose private List<Column> columns = new ArrayList<Column>();
 	
@@ -36,7 +36,7 @@ public class ColumnGroup implements Gsonazable{
 		
 	}
 	
-	public ColumnGroup(final String tableName) {
+	public ColumnGroup(final String tableName, final int sid) {
 	//	super();
 		
 		if (tableName.length() == 0) {
@@ -45,6 +45,7 @@ public class ColumnGroup implements Gsonazable{
 		}
 		
 		this.tableName = tableName;
+		this.setSid(sid);
 	}
 	
 	public ColumnGroup(final String tableName, final List<Column> columns) {
@@ -108,5 +109,19 @@ public class ColumnGroup implements Gsonazable{
 	 */
 	public void setColumns(final List<Column> columns) {
 		this.columns = columns;
+	}
+
+	/**
+	 * @return the sid
+	 */
+	public int getSid() {
+		return sid;
+	}
+
+	/**
+	 * @param sid the sid to set
+	 */
+	public void setSid(final int sid) {
+		this.sid = sid;
 	}
 }

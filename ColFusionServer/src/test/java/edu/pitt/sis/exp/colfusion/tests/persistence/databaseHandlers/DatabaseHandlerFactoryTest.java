@@ -36,13 +36,13 @@ public class DatabaseHandlerFactoryTest extends TestCase {
 		DatabaseHandlerBase dbHandler2 = null;
 		
 		try {
-			dbHandler1 = DatabaseHandlerFactory.getDatabaseHandler(configManager.getPropertyByName(PropertyKeysTest.testTargetFileToDBDatabase_Server), 
+			dbHandler1 = DatabaseHandlerFactory.getDatabaseHandler(123, configManager.getPropertyByName(PropertyKeysTest.testTargetFileToDBDatabase_Server), 
 					Integer.valueOf(configManager.getPropertyByName(PropertyKeysTest.testTargetFileToDBDatabase_Port)), 
 					configManager.getPropertyByName(PropertyKeysTest.testTargetFileToDBDatabase_UserName), 
 					configManager.getPropertyByName(PropertyKeysTest.testTargetFileToDBDatabase_Password), 
 					"", DatabaseHanderType.MYSQL, null, 0);
 			
-			dbHandler2 = DatabaseHandlerFactory.getDatabaseHandler(configManager.getPropertyByName(PropertyKeysTest.testTargetFileToDBDatabase_Server), 
+			dbHandler2 = DatabaseHandlerFactory.getDatabaseHandler(123, configManager.getPropertyByName(PropertyKeysTest.testTargetFileToDBDatabase_Server), 
 					Integer.valueOf(configManager.getPropertyByName(PropertyKeysTest.testTargetFileToDBDatabase_Port)), 
 					configManager.getPropertyByName(PropertyKeysTest.testTargetFileToDBDatabase_UserName), 
 					configManager.getPropertyByName(PropertyKeysTest.testTargetFileToDBDatabase_Password), 
@@ -75,7 +75,7 @@ public class DatabaseHandlerFactoryTest extends TestCase {
 		DatabaseHandlerBase dbHandler1 = null;
 		
 		try {
-			dbHandler1 = DatabaseHandlerFactory.getDatabaseHandler(configManager.getPropertyByName(PropertyKeysTest.testTargetFileToDBDatabase_Server), 
+			dbHandler1 = DatabaseHandlerFactory.getDatabaseHandler(123, configManager.getPropertyByName(PropertyKeysTest.testTargetFileToDBDatabase_Server), 
 					Integer.valueOf(configManager.getPropertyByName(PropertyKeysTest.testTargetFileToDBDatabase_Port)), 
 					configManager.getPropertyByName(PropertyKeysTest.testTargetFileToDBDatabase_UserName), 
 					configManager.getPropertyByName(PropertyKeysTest.testTargetFileToDBDatabase_Password), 
@@ -115,7 +115,7 @@ public class DatabaseHandlerFactoryTest extends TestCase {
 		DatabaseHandlerBase dbHandler1 = null;
 		
 		try {
-			dbHandler1 = DatabaseHandlerFactory.getDatabaseHandler(configManager.getPropertyByName(PropertyKeysTest.testTargetFileToDBDatabase_Server), 
+			dbHandler1 = DatabaseHandlerFactory.getDatabaseHandler(123, configManager.getPropertyByName(PropertyKeysTest.testTargetFileToDBDatabase_Server), 
 					Integer.valueOf(configManager.getPropertyByName(PropertyKeysTest.testTargetFileToDBDatabase_Port)), 
 					configManager.getPropertyByName(PropertyKeysTest.testTargetFileToDBDatabase_UserName), 
 					configManager.getPropertyByName(PropertyKeysTest.testTargetFileToDBDatabase_Password), 

@@ -34,11 +34,11 @@ public class MySQLDatabaseHandler extends DatabaseHandlerBase {
 	 * @param databaseHanderType the type of the database (vendor).
 	 * @throws Exception 
 	 */
-	public MySQLDatabaseHandler(final String host, final int port, final String user,
+	public MySQLDatabaseHandler(final int sid, final String host, final int port, final String user,
 			final String password, final String database,
 			final DatabaseHanderType databaseHanderType,
 			final ExecutionInfoManager executionInfoMgr, final int executionLogId) throws Exception {
-		super(host, port, user, password, database, databaseHanderType, executionInfoMgr, executionLogId,
+		super(sid, host, port, user, password, database, databaseHanderType, executionInfoMgr, executionLogId,
 				'`', '\'');
 		
 		try {
