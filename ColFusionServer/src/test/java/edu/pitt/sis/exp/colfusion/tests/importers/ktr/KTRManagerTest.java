@@ -61,7 +61,7 @@ public class KTRManagerTest extends TestCase {
 		String textExcelFileName = configManager.getPropertyByName(PropertyKeysTest.testExcelFileNameInResourceFolder);
 		//This depends on the fact that the file is already copied to the uplaod_row_data folder.
 		
-		String uploadFilesLocation = IOUtils.getInstance().getAbsolutePathInColfutionRoot(ConfigManager.getInstance().getPropertyByName(PropertyKeys.uploadRawFileLocationKey));
+		String uploadFilesLocation = IOUtils.getAbsolutePathInColfutionRoot(ConfigManager.getInstance().getPropertyByName(PropertyKeys.uploadRawFileLocationKey));
 		String uploadFileAbsolutePath = uploadFilesLocation + File.separator + sid; 
 		
 		String textExcelFileNameLocation =  uploadFileAbsolutePath + File.separator + textExcelFileName;

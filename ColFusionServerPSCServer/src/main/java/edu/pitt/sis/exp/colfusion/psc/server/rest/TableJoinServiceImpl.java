@@ -3,6 +3,8 @@
  */
 package edu.pitt.sis.exp.colfusion.psc.server.rest;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,6 +23,7 @@ import com.sun.jersey.api.client.config.DefaultClientConfig;
 import com.sun.jersey.api.json.JSONConfiguration;
 
 import edu.pitt.sis.exp.colfusion.bll.BasicTableBL;
+import edu.pitt.sis.exp.colfusion.bll.JoinTablesBL;
 import edu.pitt.sis.exp.colfusion.dal.dataModels.relationships.Relationship;
 import edu.pitt.sis.exp.colfusion.dal.dataModels.relationships.RelationshipLink;
 import edu.pitt.sis.exp.colfusion.dal.dataModels.relationships.transformation.RelationshipTransofmationUtil;
@@ -35,6 +38,7 @@ import edu.pitt.sis.exp.colfusion.psc.server.util.ServerType;
 import edu.pitt.sis.exp.colfusion.psc.server.util.Utils;
 import edu.pitt.sis.exp.colfusion.responseModels.JointTableByRelationshipsResponeModel;
 import edu.pitt.sis.exp.colfusion.utils.Gsonizer;
+import edu.pitt.sis.exp.colfusion.utils.IOUtils;
 
 /**
  * @author Evgeny
@@ -46,11 +50,24 @@ public class TableJoinServiceImpl implements TableJoinService {
 	private static final Logger logger = LogManager.getLogger(TableJoinServiceImpl.class.getName());
 	
 	@Override
-	public Response joinTables(final String twoJointTables) {
+	public Response joinTables(final String twoJointTables) throws FileNotFoundException, IOException {
 		
 		logger.info("Got request");
 		
 		TwoTableJoinInputViewModel model = Gsonizer.fromJson(twoJointTables, TwoTableJoinInputViewModel.class);
+		
+		JoinTablesBL joinBL = new JoinTablesBL();
+		
+		for (double i = 0; i<= 1; i += 0.1) {
+			model.getTwoJointTables().setSimilarityThreshold(i);
+			TwoJointTablesViewModel result = joinBL.joinTables(model);
+			
+			TwoTableJoinInputViewModel modelToSave = new TwoTableJoinInputViewModel();
+			modelToSave.setRelationships(model.getRelationships());
+			modelToSave.setTwoJointTables(result);
+			
+			IOUtils.writeToFile(Gsonizer.toJson(modelToSave, true), model.getIdentifyingString());
+		}
 		
 		return Response.status(200).entity("test2").build();
 	}
@@ -85,7 +102,7 @@ public class TableJoinServiceImpl implements TableJoinService {
 						RelationshipTransofmationUtil.makeRelationshipTransformation(dbRelationship.getRelId(), colfusionLink.getId().getClTo())));
 			}
 			
-			Relationship relationship = new Relationship(dbRelationship.getColfusionSourceinfoBySid1().getSid(), dbRelationship.getTableName1(), 
+			Relationship relationship = new Relationship(dbRelationship.getRelId(), dbRelationship.getColfusionSourceinfoBySid1().getSid(), dbRelationship.getTableName1(), 
 					dbRelationship.getColfusionSourceinfoBySid2().getSid(), dbRelationship.getTableName2(), links);
 			
 			relationships.add(relationship);
@@ -108,5 +125,4 @@ public class TableJoinServiceImpl implements TableJoinService {
 		
 		return Response.status(200).entity("test").build();
 	}
-
 }

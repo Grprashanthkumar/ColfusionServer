@@ -2,6 +2,7 @@ package edu.pitt.sis.exp.colfusion.utils;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -34,20 +35,10 @@ import edu.pitt.sis.exp.colfusion.utils.models.IOUtilsStoredFileInfoModel;
  */
 public class IOUtils {
 
-	final Logger logger = LogManager.getLogger(IOUtils.class.getName());
-
-	private static IOUtils instance = null;
+	final static Logger logger = LogManager.getLogger(IOUtils.class.getName());
 
 	protected IOUtils() {
 
-	}
-
-	public static IOUtils getInstance() {
-		if (instance == null) {
-			instance = new IOUtils();
-		}
-
-		return instance;
 	}
 
 	/**
@@ -59,17 +50,35 @@ public class IOUtils {
 	 * @return info about newly created file.
 	 * @throws IOException
 	 */
-	public IOUtilsStoredFileInfoModel copyFileContent(final String originalFileLocation, final String dirLocation, final String fileName) throws IOException{
+	public static IOUtilsStoredFileInfoModel copyFileContent(final String originalFileLocation, final String dirLocation, final String fileName) throws IOException{
 		
 		try {
 			InputStream io = new FileInputStream(new File(originalFileLocation));
 			
-			return IOUtils.getInstance().writeInputStreamToFile(io, dirLocation, fileName, true);
+			return IOUtils.writeInputStreamToFile(io, dirLocation, fileName, true);
 		} catch (IOException e) {
 			throw e;
 		}
 	}
 
+	/**
+	 * Write string content to a file in current??? directory.
+	 * @param content
+	 * @param fileName
+	 * @return
+	 * @throws IOException 
+	 * @throws FileNotFoundException 
+	 */
+	public static IOUtilsStoredFileInfoModel writeToFile(final String content, final String fileName) throws FileNotFoundException, IOException {
+		InputStream input = StreamUtils.fromString(content);
+		
+		File file = new File(fileName);
+		
+		writeToFile(input, file, true);
+		
+		return prepareIOUtilsStoredFileInfoModel(file);
+	}
+	
 	/**
 	 * Save uploaded file from input stream to the specified location on the
 	 * disk.
@@ -85,7 +94,7 @@ public class IOUtils {
 	 * @throws IOException
 	 *             if file wasn't written to the disk successfully.
 	 */
-	public IOUtilsStoredFileInfoModel writeInputStreamToFile(
+	public static IOUtilsStoredFileInfoModel writeInputStreamToFile(
 			final InputStream uploadedInputStream, final String dirLocation, String fileName, final boolean closeStream)
 			throws IOException {
 
@@ -107,10 +116,8 @@ public class IOUtils {
 				fileToSave.renameTo(new File(newName));
 			}
 
-			OutputStream out = new FileOutputStream(fileToSave);
-			org.apache.commons.io.IOUtils.copy(uploadedInputStream, out);
-			out.close();
-
+			writeToFile(uploadedInputStream, fileToSave, closeStream);
+			
 			return prepareIOUtilsStoredFileInfoModel(fileToSave);
 
 		} catch (IOException e) {
@@ -130,6 +137,25 @@ public class IOUtils {
 	}
 
 	/**
+	 * @param uploadedInputStream
+	 * @param fileToSave
+	 * @param closeStream
+	 * @throws FileNotFoundException
+	 * @throws IOException
+	 */
+	private static void writeToFile(final InputStream uploadedInputStream,
+			final File fileToSave, final boolean closeStream)
+			throws FileNotFoundException, IOException {
+		OutputStream out = new FileOutputStream(fileToSave);
+		org.apache.commons.io.IOUtils.copy(uploadedInputStream, out);
+		out.close();
+
+		if (closeStream) {
+			uploadedInputStream.close();
+		}
+	}
+
+	/**
 	 * Creates {@link IOUtilsStoredFileInfoModel} from {@link File} by
 	 * extracting name, extension, last modified and absolute file name.
 	 * 
@@ -138,7 +164,7 @@ public class IOUtils {
 	 * 
 	 * @return {@link IOUtilsStoredFileInfoModel} with extracted info.
 	 */
-	private IOUtilsStoredFileInfoModel prepareIOUtilsStoredFileInfoModel(
+	private static IOUtilsStoredFileInfoModel prepareIOUtilsStoredFileInfoModel(
 			final File file) {
 		IOUtilsStoredFileInfoModel fileInfo = new IOUtilsStoredFileInfoModel();
 
@@ -162,7 +188,7 @@ public class IOUtils {
 	 * @throws IOException
 	 * @throws ArchiveException
 	 */
-	public ArrayList<IOUtilsStoredFileInfoModel> unarchive(
+	public static ArrayList<IOUtilsStoredFileInfoModel> unarchive(
 			final String absoluteFileName, final String directory) throws IOException,
 			ArchiveException {
 
@@ -226,7 +252,7 @@ public class IOUtils {
 	 * @throws IOException
 	 * @throws ArchiveException
 	 */
-	public ArrayList<IOUtilsStoredFileInfoModel> unarchive(
+	public static ArrayList<IOUtilsStoredFileInfoModel> unarchive(
 			final String absoluteFileName) throws IOException, ArchiveException {
 
 		File archiveFile = new File(absoluteFileName);
@@ -243,7 +269,7 @@ public class IOUtils {
 	 * @throws SAXException
 	 * @throws IOException
 	 */
-	public Document readXMLDocument(final String ablsoluteXMLDocumentPath) throws ParserConfigurationException, SAXException, IOException {
+	public static Document readXMLDocument(final String ablsoluteXMLDocumentPath) throws ParserConfigurationException, SAXException, IOException {
 		
 		logger.info(String.format("readXMLDocument: Starting to read XML document %s", ablsoluteXMLDocumentPath));
 		
@@ -261,7 +287,7 @@ public class IOUtils {
 	 * @param fileName absolute file name.
 	 * @return URL of the file.
 	 */
-	public String getFileURLFromName(String fileAbsoluteName) {
+	public static String getFileURLFromName(String fileAbsoluteName) {
 		
 		String colfusionRoot = ConfigManager.getInstance().getPropertyByName(PropertyKeys.colfusionRootLocation);
 		
@@ -279,7 +305,7 @@ public class IOUtils {
 	 * @param propertyByName
 	 * @return
 	 */
-	public String getAbsolutePathInColfutionRoot(final String dir) {
+	public static String getAbsolutePathInColfutionRoot(final String dir) {
 		String colfusionRoot = ConfigManager.getInstance().getPropertyByName(PropertyKeys.colfusionRootLocation);
 		
 		return colfusionRoot + File.separator + dir;

@@ -30,7 +30,7 @@ public class IOUtilsTest extends TestCase {
 	 */
 	public void testWriteExcelAsInputStreamToFile() {
 			
-		String testFileUploadDir = IOUtils.getInstance().getAbsolutePathInColfutionRoot(configManager.getPropertyByName(PropertyKeysTest.testUploadRawFilesBaseLocation));
+		String testFileUploadDir = IOUtils.getAbsolutePathInColfutionRoot(configManager.getPropertyByName(PropertyKeysTest.testUploadRawFilesBaseLocation));
 	
 		String testEcelFileName = configManager.getPropertyByName(PropertyKeysTest.testExcelFileNameInResourceFolder);
 		
@@ -44,7 +44,7 @@ public class IOUtilsTest extends TestCase {
 		testFileInfo.setFileExtension("xlsx");
 		
 		try {
-			IOUtilsStoredFileInfoModel fileInfo = IOUtils.getInstance().writeInputStreamToFile(testExcelFileInputStream, testFileUploadDir, testEcelFileName, true);
+			IOUtilsStoredFileInfoModel fileInfo = IOUtils.writeInputStreamToFile(testExcelFileInputStream, testFileUploadDir, testEcelFileName, true);
 			
 			assertEquals(testFileInfo.getFileName(), fileInfo.getFileName());
 			assertEquals(testFileInfo.getFileExtension(), fileInfo.getFileExtension());
@@ -58,7 +58,7 @@ public class IOUtilsTest extends TestCase {
 	 * Test if the TarGz Archive file from the test/resources is written to specified in the properties location.
 	 */
 	public void testWriteTarGzArchiveAsInputStremToFile() {
-		String testFileUploadDir = IOUtils.getInstance().getAbsolutePathInColfutionRoot(configManager.getPropertyByName(PropertyKeysTest.testUploadRawFilesBaseLocation));
+		String testFileUploadDir = IOUtils.getAbsolutePathInColfutionRoot(configManager.getPropertyByName(PropertyKeysTest.testUploadRawFilesBaseLocation));
 		
 		String testFileName = configManager.getPropertyByName(PropertyKeysTest.testTarGzArchiveFileNameInResourceFolder);
 		
@@ -72,7 +72,7 @@ public class IOUtilsTest extends TestCase {
 		testFileInfo.setFileExtension("gz");
 		
 		try {
-			IOUtilsStoredFileInfoModel fileInfo = IOUtils.getInstance().writeInputStreamToFile(testInputStream, testFileUploadDir, testFileName, true);
+			IOUtilsStoredFileInfoModel fileInfo = IOUtils.writeInputStreamToFile(testInputStream, testFileUploadDir, testFileName, true);
 			
 			assertEquals(testFileInfo.getFileName(), fileInfo.getFileName());
 			assertEquals(testFileInfo.getFileExtension(), fileInfo.getFileExtension());
@@ -86,7 +86,7 @@ public class IOUtilsTest extends TestCase {
 	 * Test unarchival of a zip archive
 	 */
 	public void testUnarchive() {
-		String testFileUploadDir = IOUtils.getInstance().getAbsolutePathInColfutionRoot(configManager.getPropertyByName(PropertyKeysTest.testUploadRawFilesBaseLocation));
+		String testFileUploadDir = IOUtils.getAbsolutePathInColfutionRoot(configManager.getPropertyByName(PropertyKeysTest.testUploadRawFilesBaseLocation));
 		
 		String testFileName = configManager.getPropertyByName(PropertyKeysTest.testZipArchive);
 		
@@ -97,7 +97,7 @@ public class IOUtilsTest extends TestCase {
 		
 		
 		try {
-			List<IOUtilsStoredFileInfoModel> fileInfo = IOUtils.getInstance().unarchive(testFileNameAbsolutePath, testFileUploadDir);
+			List<IOUtilsStoredFileInfoModel> fileInfo = IOUtils.unarchive(testFileNameAbsolutePath, testFileUploadDir);
 			
 			assertEquals(2, fileInfo.size());
 			
@@ -111,13 +111,13 @@ public class IOUtilsTest extends TestCase {
 	}
 	
 	public void testCopyFileContentOnKTRTemplates() {
-		String testKTRBaseDirLocation = IOUtils.getInstance().getAbsolutePathInColfutionRoot(configManager.getPropertyByName(PropertyKeysTest.testKtrFielsBaseLocation));
+		String testKTRBaseDirLocation = IOUtils.getAbsolutePathInColfutionRoot(configManager.getPropertyByName(PropertyKeysTest.testKtrFielsBaseLocation));
 		
 		String fileToCopyName = configManager.getPropertyByName(PropertyKeysTest.testCsvToDatabaseKTRTemplate);
 		String fileToCopyLocation = this.getClass().getResource(fileToCopyName).getFile();
 		
 		try {
-			IOUtilsStoredFileInfoModel result =  IOUtils.getInstance().copyFileContent(fileToCopyLocation, testKTRBaseDirLocation + File.separator + 
+			IOUtilsStoredFileInfoModel result =  IOUtils.copyFileContent(fileToCopyLocation, testKTRBaseDirLocation + File.separator + 
 					"testSid",	"testCopiedFile");
 			
 			File originalFile = new File(fileToCopyLocation);

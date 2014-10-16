@@ -11,6 +11,8 @@ public class Relationship {
 	
 	static Logger logger = LogManager.getLogger(Relationship.class.getName());
 	
+	@Expose private int relId;
+	
 	@Expose private int sidFrom;
 	@Expose private String tableNameFrom;
 	
@@ -23,8 +25,8 @@ public class Relationship {
 		
 	}
 	
-	public Relationship(final int sidFrom, final String tableNameFrom, final int sidTo, final String tableNameTo, final List<RelationshipLink> links) throws Exception {
-		
+	public Relationship(final int relId, final int sidFrom, final String tableNameFrom, final int sidTo, final String tableNameTo, final List<RelationshipLink> links) throws Exception {
+		this.setRelId(relId);
 		this.setSidFrom(sidFrom);
 		this.setTableNameFrom(tableNameFrom);
 		this.setSidTo(sidTo);
@@ -70,35 +72,49 @@ public class Relationship {
 	/**
 	 * @param sidFrom the sidFrom to set
 	 */
-	private void setSidFrom(int sidFrom) {
+	public void setSidFrom(final int sidFrom) {
 		this.sidFrom = sidFrom;
 	}
 
 	/**
 	 * @param tableNameFrom the tableNameFrom to set
 	 */
-	private void setTableNameFrom(String tableNameFrom) {
+	public void setTableNameFrom(final String tableNameFrom) {
 		this.tableNameFrom = tableNameFrom;
 	}
 
 	/**
 	 * @param sidTo the sidTo to set
 	 */
-	private void setSidTo(int sidTo) {
+	public void setSidTo(final int sidTo) {
 		this.sidTo = sidTo;
 	}
 
 	/**
 	 * @param tableNameTo the tableNameTo to set
 	 */
-	private void setTableNameTo(String tableNameTo) {
+	public void setTableNameTo(final String tableNameTo) {
 		this.tableNameTo = tableNameTo;
 	}
 
 	/**
 	 * @param links the links to set
 	 */
-	private void setLinks(List<RelationshipLink> links) {
+	public void setLinks(final List<RelationshipLink> links) {
 		this.links = links;
+	}
+
+	/**
+	 * @return the relId
+	 */
+	public int getRelId() {
+		return relId;
+	}
+
+	/**
+	 * @param relId the relId to set
+	 */
+	public void setRelId(final int relId) {
+		this.relId = relId;
 	}
 }

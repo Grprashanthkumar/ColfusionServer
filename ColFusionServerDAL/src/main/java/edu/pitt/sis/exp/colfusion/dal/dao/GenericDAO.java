@@ -5,10 +5,10 @@ package edu.pitt.sis.exp.colfusion.dal.dao;
 
 /**
 *
-* @author leonidas
+* @author leonidas from http://blog.patouchas.net/technology/hibernate-dao-java-tutorial/
 */
-import java.io.*;
-import java.util.*;
+import java.io.Serializable;
+import java.util.List;
 
 import org.hibernate.HibernateException;
 import org.hibernate.Query;

@@ -22,6 +22,7 @@ import edu.pitt.sis.exp.colfusion.dal.orm.ColfusionRelationshipsColumns;
 import edu.pitt.sis.exp.colfusion.dal.orm.ColfusionSourceinfoDb;
 import edu.pitt.sis.exp.colfusion.dal.viewmodels.JoinTablesByRelationshipsViewModel;
 import edu.pitt.sis.exp.colfusion.dal.viewmodels.TwoJointTablesViewModel;
+import edu.pitt.sis.exp.colfusion.dal.viewmodels.TwoTableJoinInputViewModel;
 import edu.pitt.sis.exp.colfusion.responseModels.JointTableByRelationshipsResponeModel;
 import edu.pitt.sis.exp.colfusion.responseModels.JointTableResponeModel;
 import edu.pitt.sis.exp.colfusion.similarityJoins.NestedLoopSimilarityJoin;
@@ -282,5 +283,10 @@ public class JoinTablesBL {
 			
 			return false;
 		}
+	}
+
+	public TwoJointTablesViewModel joinTables(final TwoTableJoinInputViewModel model) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

@@ -11,6 +11,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 import com.google.gson.annotations.Expose;
 
 import edu.pitt.sis.exp.colfusion.dal.dataModels.relationships.Relationship;
+import edu.pitt.sis.exp.colfusion.dal.dataModels.relationships.RelationshipLink;
 import edu.pitt.sis.exp.colfusion.dal.dataModels.tableDataModel.Table;
 
 /**
@@ -74,28 +75,46 @@ public class TwoTableJoinInputViewModel implements Serializable{
 	/**
 	 * @return the twoJointTables
 	 */
-	private TwoJointTablesViewModel getTwoJointTables() {
+	public TwoJointTablesViewModel getTwoJointTables() {
 		return twoJointTables;
 	}
 
 	/**
 	 * @param twoJointTables the twoJointTables to set
 	 */
-	private void setTwoJointTables(final TwoJointTablesViewModel twoJointTables) {
+	public void setTwoJointTables(final TwoJointTablesViewModel twoJointTables) {
 		this.twoJointTables = twoJointTables;
 	}
 
 	/**
 	 * @return the relationships
 	 */
-	private List<Relationship> getRelationships() {
+	public List<Relationship> getRelationships() {
 		return relationships;
 	}
 
 	/**
 	 * @param relationships the relationships to set
 	 */
-	private void setRelationships(List<Relationship> relationships) {
+	public void setRelationships(final List<Relationship> relationships) {
 		this.relationships = relationships;
+	}
+	
+	public String getIdentifyingString() {
+		StringBuilder strBuilding = new StringBuilder();
+		strBuilding.append(twoJointTables.getSid1()).append("_").append(twoJointTables.getTableName1())
+					.append("_").append(twoJointTables.getSid2()).append("_").append(twoJointTables.getTableName2()).append("_");
+		
+		for (Relationship relationship :relationships) {
+			strBuilding.append(relationship.getRelId()).append("_");
+			
+			for (RelationshipLink relationshipLink : relationship.getLinks()) {
+				strBuilding.append(relationshipLink.getFrom()).append("_").append(relationshipLink.getTo()).append("_");
+			}
+		}
+		
+		strBuilding.append(twoJointTables.getSimilarityThreshold());
+		
+		return strBuilding.toString();
 	}
 }

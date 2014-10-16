@@ -377,7 +377,7 @@ public class KTRManager {
 		
 		for(String fileName : filesAbsoluteNames) {
 			Element name = ktrDocument.createElement("name");
-			name.appendChild(ktrDocument.createTextNode(IOUtils.getInstance().getFileURLFromName(fileName)));
+			name.appendChild(ktrDocument.createTextNode(IOUtils.getFileURLFromName(fileName)));
 			
 			fileNode.appendChild(name);
 		}
@@ -601,7 +601,7 @@ public class KTRManager {
 	 */
 	private IOUtilsStoredFileInfoModel createKTRFileFromTemplate(final int sid, final String dataFileExtension, final String tableName) throws IOException {
 		
-		String ktrBaseDirLocation = IOUtils.getInstance().getAbsolutePathInColfutionRoot(ConfigManager.getInstance().getPropertyByName(PropertyKeys.ktrFielsBaseLocation));
+		String ktrBaseDirLocation = IOUtils.getAbsolutePathInColfutionRoot(ConfigManager.getInstance().getPropertyByName(PropertyKeys.ktrFielsBaseLocation));
 		String ktrDirectoryLocation = ktrBaseDirLocation + File.separator +	sid;
 		
 		//TODO for now simple check for csv, but what if we going to have more extensions, need to rewrite this.
@@ -611,7 +611,7 @@ public class KTRManager {
 				
 		InputStream ktrTemplate = ResourceUtils.getResourceAsStream(this.getClass(), ktrTemplateName);
 			
-		IOUtilsStoredFileInfoModel result = IOUtils.getInstance().writeInputStreamToFile(ktrTemplate, ktrDirectoryLocation, tableName + ".ktr", true);
+		IOUtilsStoredFileInfoModel result = IOUtils.writeInputStreamToFile(ktrTemplate, ktrDirectoryLocation, tableName + ".ktr", true);
 		
 		logger.info(String.format("Copied KTR file for table name %s", tableName));
 		
@@ -640,7 +640,7 @@ public class KTRManager {
 	 * @throws ParserConfigurationException 
 	 */
 	public void loadKTR(final String ktrLocation) throws ParserConfigurationException, SAXException, IOException {
-		ktrDocument = IOUtils.getInstance().readXMLDocument(ktrLocation);		
+		ktrDocument = IOUtils.readXMLDocument(ktrLocation);		
 		this.ktrAbsoluteName = ktrLocation;
 	}
 

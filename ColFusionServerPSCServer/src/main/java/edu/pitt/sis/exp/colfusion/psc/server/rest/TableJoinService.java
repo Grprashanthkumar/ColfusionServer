@@ -1,5 +1,8 @@
 package edu.pitt.sis.exp.colfusion.psc.server.rest;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
+
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -21,5 +24,5 @@ public interface TableJoinService {
 	@POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-	public abstract Response joinTables(String twoJointTables);
+	public abstract Response joinTables(String twoJointTables) throws FileNotFoundException, IOException;
 }

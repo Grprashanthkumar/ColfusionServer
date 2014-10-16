@@ -67,7 +67,7 @@ public class DataSubmissionWizzardBL {
 	public AcceptedFilesResponse storeUploadedFiles(final String sid, final String uploadTimestamp, 
     		final String fileType, final String dbType, final Map<String, InputStream> inputStreams) {
 				
-		String uploadFilesLocation = IOUtils.getInstance().getAbsolutePathInColfutionRoot(ConfigManager.getInstance().getPropertyByName(PropertyKeys.uploadRawFileLocationKey));
+		String uploadFilesLocation = IOUtils.getAbsolutePathInColfutionRoot(ConfigManager.getInstance().getPropertyByName(PropertyKeys.uploadRawFileLocationKey));
 		String uploadFileAbsolutePath = uploadFilesLocation + File.separator + sid; 
 		
 		AcceptedFilesResponse result = new AcceptedFilesResponse();
@@ -76,10 +76,10 @@ public class DataSubmissionWizzardBL {
 		
 			for (Map.Entry<String, InputStream> inputStream : inputStreams.entrySet()){
 				
-				IOUtilsStoredFileInfoModel fileInfo = IOUtils.getInstance().writeInputStreamToFile(inputStream.getValue(), uploadFileAbsolutePath, inputStream.getKey(), false);
+				IOUtilsStoredFileInfoModel fileInfo = IOUtils.writeInputStreamToFile(inputStream.getValue(), uploadFileAbsolutePath, inputStream.getKey(), false);
 				
 				if (fileInfo.isArchive()) {
-					ArrayList<IOUtilsStoredFileInfoModel> filesInfo = IOUtils.getInstance().unarchive(fileInfo.getAbsoluteFileName());
+					ArrayList<IOUtilsStoredFileInfoModel> filesInfo = IOUtils.unarchive(fileInfo.getAbsoluteFileName());
 					
 					OneUploadedItemViewModel oneItem = new OneUploadedItemViewModel();
 					oneItem.getFiles().addAll(filesInfo);
