@@ -152,4 +152,14 @@ public interface StoryRestService {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public abstract Response getMineRelationships(@PathParam("sid") final int sid, @PathParam("perPage") int perPage, @PathParam("pageNumber") int pageNumber);
+	
+	@OPTIONS
+    @Path("{sid}/AttachmentList")
+    public abstract Response getAttachmentList(@HeaderParam("Access-Control-Request-Headers") final String requestH);
+	
+	
+	@Path("{sid}/AttachmentList")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public abstract Response getAttachmentList(@PathParam("sid") final int sid);
 }

@@ -11,14 +11,17 @@ import java.util.List;
 import edu.pitt.sis.exp.colfusion.dal.dataModels.tableDataModel.Table;
 import edu.pitt.sis.exp.colfusion.dal.databaseHandlers.DatabaseHandlerBase;
 import edu.pitt.sis.exp.colfusion.dal.databaseHandlers.DatabaseHandlerFactory;
+import edu.pitt.sis.exp.colfusion.dal.managers.AttachmentManagerImpl;
 import edu.pitt.sis.exp.colfusion.dal.managers.ExecutionInfoManagerImpl;
 import edu.pitt.sis.exp.colfusion.dal.managers.SourceInfoManagerImpl;
 import edu.pitt.sis.exp.colfusion.dal.orm.ColfusionExecuteinfo;
 import edu.pitt.sis.exp.colfusion.dal.orm.ColfusionSourceinfoDb;
+import edu.pitt.sis.exp.colfusion.dal.viewmodels.AttachmentListViewModel;
 import edu.pitt.sis.exp.colfusion.dal.viewmodels.BasicTableInfoViewModel;
 import edu.pitt.sis.exp.colfusion.dal.viewmodels.JoinTablesByRelationshipsViewModel;
 import edu.pitt.sis.exp.colfusion.dal.viewmodels.RelationshipsViewModel;
 import edu.pitt.sis.exp.colfusion.dal.viewmodels.StoryStatusViewModel;
+import edu.pitt.sis.exp.colfusion.responseModels.AttachmentListResponseModel;
 import edu.pitt.sis.exp.colfusion.responseModels.BasicTableResponseModel;
 import edu.pitt.sis.exp.colfusion.responseModels.JointTableByRelationshipsResponeModel;
 import edu.pitt.sis.exp.colfusion.responseModels.RelationshipsResponseModel;
@@ -88,6 +91,7 @@ public class BasicTableBL {
 		
 	}
 	
+	//Resturn Table Response according to sid and tableName.
 	public JointTableByRelationshipsResponeModel getTableDataBySidAndName(final int sid, final String tableName,
 			final int perPage, final int pageNumber ){
 		SourceInfoManagerImpl sourceInfo = new SourceInfoManagerImpl();
@@ -121,6 +125,7 @@ public class BasicTableBL {
 	}
 	
 	//TODO: need to be refactored
+	//Return table relationship by sid and tableName
 	public JointTableByRelationshipsResponeModel getTableDataBySidAndName(final int sid, final String tableName){
 		SourceInfoManagerImpl sourceInfo = new SourceInfoManagerImpl();
 		ColfusionSourceinfoDb storyTargetDB = sourceInfo.getStorySourceInfoDB(sid);
@@ -138,19 +143,19 @@ public class BasicTableBL {
 			
 			return result;
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			result.isSuccessful=false;
+			result.message = "Get TableDataBySidAndName failed";
 		}
 		return null;
 	}
 	
+	//Return the story status response according to sid
 	public StoryStatusResponseModel getStoryStatus(final int sid){
 		StoryStatusResponseModel result = new StoryStatusResponseModel();
 		List<StoryStatusViewModel> contents = new ArrayList<StoryStatusViewModel>();
 		try {
 			SourceInfoManagerImpl sourceInfoManagerImpl = new SourceInfoManagerImpl();
 			
-			//I cannot get tableNames list from database by Hibernate!!!!!!
 			List<String> tableNames = sourceInfoManagerImpl.getTableNames(sid);
 			
 			ExecutionInfoManagerImpl executionInfoManagerImpl = new ExecutionInfoManagerImpl();
@@ -184,6 +189,9 @@ public class BasicTableBL {
 		
 		return result;	
 	}
+	
+	
+	//Return the relationship response according to sid.
 	public RelationshipsResponseModel getRelationships(int sid,
 			int perPage, int pageNumber) {
 		RelationshipsResponseModel result = new RelationshipsResponseModel();
@@ -209,5 +217,19 @@ public class BasicTableBL {
 		return result;
 	}
 	
-
+	public AttachmentListResponseModel getAttachmentList(int sid){
+		AttachmentListResponseModel result =  new AttachmentListResponseModel();
+		try{
+			AttachmentManagerImpl attachmentManagerImpl = new AttachmentManagerImpl();
+			List<AttachmentListViewModel> contents = attachmentManagerImpl.getAttachmentListViewModel(sid);
+			result.setPayload(contents);
+			result.isSuccessful=true;
+		}
+		catch(Exception e) {
+			result.isSuccessful=false;
+			result.message = "Get AttachmentList failed";
+		}
+		return result;
+		
+	}
 }

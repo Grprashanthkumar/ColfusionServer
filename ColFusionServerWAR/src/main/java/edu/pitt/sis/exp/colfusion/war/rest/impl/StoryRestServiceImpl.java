@@ -13,6 +13,7 @@ import edu.pitt.sis.exp.colfusion.bll.BasicTableBL;
 import edu.pitt.sis.exp.colfusion.bll.StoryBL;
 import edu.pitt.sis.exp.colfusion.dal.viewmodels.StoryMetadataViewModel;
 import edu.pitt.sis.exp.colfusion.responseModels.AddColumnMetadataEditHistoryResponse;
+import edu.pitt.sis.exp.colfusion.responseModels.AttachmentListResponseModel;
 import edu.pitt.sis.exp.colfusion.responseModels.BasicTableResponseModel;
 import edu.pitt.sis.exp.colfusion.responseModels.ColumnMetadataResponse;
 import edu.pitt.sis.exp.colfusion.responseModels.GetColumnMetadataEditHistoryResponse;
@@ -195,4 +196,18 @@ public class StoryRestServiceImpl extends BaseController implements StoryRestSer
 		return this.makeCORS(Response.status(200).entity(json));
 		
 	}
+
+	@Override
+	public Response getAttachmentList(String requestH) {
+		return makeCORS(Response.ok()); //, requestH);
+	}
+
+	@Override
+	public Response getAttachmentList(int sid) {
+		BasicTableBL basicBL=new BasicTableBL();
+		AttachmentListResponseModel result = basicBL.getAttachmentList(sid);
+		String json = result.toJson();
+		return this.makeCORS(Response.status(200).entity(json));
+	}
+	
 }

@@ -889,7 +889,6 @@ public class SourceInfoManagerImpl extends GeneralManagerImpl<ColfusionSourceinf
 		try {
             HibernateUtil.beginTransaction();
             
-            SourceInfoDAO storyDao = new SourceInfoDAOImpl();
                         
 //            String hql = "SELECT NEW edu.pitt.sis.exp.colfusion.dal.viewmodels.RelationshipsViewModel(rel.relId, rel.name, rel.description, relUser.userId, rel.creationTime, relUser.userLogin, sidFrom.sid, sidTo.sid, sidFrom.title, sidTo.title, rel.tableName1, rel.tableName2, st.id.numberOfVerdicts, st.id.numberOfApproved, st.id.numberOfReject, st.id.numberOfNotSure, st.id.avgConfidence) "
 //            		+ "FROM ColfusionRelationships rel join rel.colfusionUsers relUser "
@@ -955,5 +954,9 @@ public class SourceInfoManagerImpl extends GeneralManagerImpl<ColfusionSourceinf
         	this.logger.error("getMineRelationshipsViewModel failed HibernateException", ex);
         	throw ex;
         }	
+		
+		
 	}
+
+
 }

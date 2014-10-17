@@ -159,4 +159,6 @@ public interface SourceInfoManager extends GeneralManager<ColfusionSourceinfo, I
 	 * @return MineRelationshipsViewModel List.
 	 */
 	public List<RelationshipsViewModel> getRelationshipsViewModel(int sid);
+	
+
 }
