@@ -142,7 +142,11 @@ public class TableJoinServiceImpl implements TableJoinService {
 		
 		WebResource webResource = client.resource(resourceURL);
 		   
+		logger.info("About to send get request to: " + resourceURL);
+		
 		ClientResponse response = webResource.get(ClientResponse.class);
+		
+		logger.info("Got this response (toString): " + response.toString());
 		
 		return Response.status(response.getStatus()).entity(response.toString()).build();
 	}
