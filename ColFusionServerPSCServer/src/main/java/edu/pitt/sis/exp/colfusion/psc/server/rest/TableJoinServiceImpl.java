@@ -142,7 +142,7 @@ public class TableJoinServiceImpl implements TableJoinService {
 		   
 		ClientResponse response = webResource.get(ClientResponse.class);
 		
-		return Response.status(response.getStatus()).entity(response.getEntity(String.class)).build();
+		return Response.status(response.getStatus()).entity(response.toString()).build();
 	}
 
 	@Override
