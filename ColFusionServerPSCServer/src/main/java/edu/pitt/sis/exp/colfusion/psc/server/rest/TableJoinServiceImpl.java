@@ -132,6 +132,8 @@ public class TableJoinServiceImpl implements TableJoinService {
 	@Override
 	public Response isJoinerAlive() {
 		
+		logger.info("Got reques 'isJoinerAlive'");
+		
 		ClientConfig clientConfit = new DefaultClientConfig();
 		clientConfit.getFeatures().put(JSONConfiguration.FEATURE_POJO_MAPPING, Boolean.TRUE);
 		Client client = Client.create(clientConfit);
@@ -147,6 +149,8 @@ public class TableJoinServiceImpl implements TableJoinService {
 
 	@Override
 	public Response isAlive() {
+		logger.info("Got reques 'isAlive'");
+		
 		return Response.status(200).entity("OK").build();
 	}
 }
