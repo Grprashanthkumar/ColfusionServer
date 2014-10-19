@@ -14,10 +14,15 @@ import javax.ws.rs.core.Response;
 
 public interface TableJoinService {
 	
-	@Path("testjoinerconnection")
+	@Path("isAlive")
 	@GET
     @Produces(MediaType.APPLICATION_JSON)
-	public abstract Response joinTables();
+	public abstract Response isAlive();
+	
+	@Path("isJoinerAlive")
+	@GET
+    @Produces(MediaType.APPLICATION_JSON)
+	public abstract Response isJoinerAlive();
 	
 	@Path("join/{sid1}/{tableName1}/{sid2}/{tableName2}/{similarityThreshold}")
 	@GET

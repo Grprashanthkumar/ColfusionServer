@@ -130,7 +130,23 @@ public class TableJoinServiceImpl implements TableJoinService {
 	}
 
 	@Override
-	public Response joinTables() {
+	public Response isJoinerAlive() {
+		
+		ClientConfig clientConfit = new DefaultClientConfig();
+		clientConfit.getFeatures().put(JSONConfiguration.FEATURE_POJO_MAPPING, Boolean.TRUE);
+		Client client = Client.create(clientConfit);
+
+		String resourceURL = String.format("%s/TableJoin/isAlive", Utils.getBaseRestURL(ServerType.JOINER));
+		
+		WebResource webResource = client.resource(resourceURL);
+		   
+		ClientResponse response = webResource.get(ClientResponse.class);
+		
+		return Response.status(response.getStatus()).entity(response.getEntity(String.class)).build();
+	}
+
+	@Override
+	public Response isAlive() {
 		return Response.status(200).entity("OK").build();
 	}
 }
