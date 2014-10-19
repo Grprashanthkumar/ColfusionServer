@@ -128,4 +128,9 @@ public class TableJoinServiceImpl implements TableJoinService {
 		
 		return Response.status(200).entity("test").build();
 	}
+
+	@Override
+	public Response joinTables() {
+		return Response.status(200).entity("OK").build();
+	}
 }
