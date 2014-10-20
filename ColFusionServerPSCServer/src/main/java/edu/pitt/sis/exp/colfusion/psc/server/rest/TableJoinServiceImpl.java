@@ -137,6 +137,8 @@ public class TableJoinServiceImpl implements TableJoinService {
 		
 		String twoTablesStr = Gsonizer.toJson(twoTables, true);
 		
+		logger.info("Serialized model: " + twoTablesStr);
+		
 		ClientConfig clientConfit = new DefaultClientConfig();
 		clientConfit.getFeatures().put(JSONConfiguration.FEATURE_POJO_MAPPING, Boolean.TRUE);
 		Client client = Client.create(clientConfit);
@@ -156,7 +158,7 @@ public class TableJoinServiceImpl implements TableJoinService {
 	@Override
 	public Response isJoinerAlive() {
 		
-		logger.info("Got reques 'isJoinerAlive'");
+		logger.info("Got request 'isJoinerAlive'");
 		
 		ClientConfig clientConfit = new DefaultClientConfig();
 		clientConfit.getFeatures().put(JSONConfiguration.FEATURE_POJO_MAPPING, Boolean.TRUE);
