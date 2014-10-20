@@ -150,7 +150,7 @@ public class TableJoinServiceImpl implements TableJoinService {
 		logger.info(String.format("About to do POST request to '%s' resource. The body lenght is %d", resourceURL, twoTablesStr.length()));
 		
 		ClientResponse response = webResource.
-				type(MediaType.APPLICATION_JSON).post(ClientResponse.class, twoTablesStr);
+				type(MediaType.TEXT_PLAIN).post(ClientResponse.class, twoTablesStr);
 		
 		return Response.status(200).entity("test").build();
 	}
