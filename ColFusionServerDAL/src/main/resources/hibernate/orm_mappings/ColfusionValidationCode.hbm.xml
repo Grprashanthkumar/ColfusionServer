@@ -3,7 +3,7 @@
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 <!-- Generated 2014-6-10 16:18:00 by Hibernate Tools 3.4.0.CR1 -->
 <hibernate-mapping>
-    <class name="edu.pitt.sis.exp.colfusion.dal.orm.ColfusionValidationCode" table="colfusion_validation_code" catalog="colfusion">
+    <class name="edu.pitt.sis.exp.colfusion.dal.orm.ColfusionValidationCode" table="colfusion_validation_code" >
         <composite-id name="id" class="edu.pitt.sis.exp.colfusion.dal.orm.ColfusionValidationCodeId">
             <key-property name="email" type="string">
                 <column name="email" length="100" />
