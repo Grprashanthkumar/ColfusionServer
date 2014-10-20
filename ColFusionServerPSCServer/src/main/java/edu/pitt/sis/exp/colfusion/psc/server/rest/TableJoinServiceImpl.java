@@ -84,9 +84,31 @@ public class TableJoinServiceImpl implements TableJoinService {
 		BasicTableBL tablBL = new BasicTableBL();
 		
 		JointTableByRelationshipsResponeModel tableResponse1 = tablBL.getTableDataBySidAndName(sid1, tableName1);
+		
+		if (tableResponse1 ==  null) {
+			logger.info("joinTables: tableResponse1 is Null");
+			return Response.status(200).entity("tableResponse1 is Null").build();
+		}
+		
+		if (tableResponse1.getPayload() ==  null) {
+			logger.info("joinTables: tableResponse1.getPayload() is Null");
+			return Response.status(200).entity("tableResponse1.getPayload() is Null").build();
+		}
+		
 		Table table1 = tableResponse1.getPayload().getJointTable();
 		
 		JointTableByRelationshipsResponeModel tableResponse2 = tablBL.getTableDataBySidAndName(sid2, tableName2);
+		
+		if (tableResponse2 ==  null) {
+			logger.info("joinTables: tableResponse2 is Null");
+			return Response.status(200).entity("tableResponse2 is Null").build();
+		}
+		
+		if (tableResponse2.getPayload() ==  null) {
+			logger.info("joinTables: tableResponse2.getPayload() is Null");
+			return Response.status(200).entity("tableResponse2.getPayload() is Null").build();
+		}
+		
 		Table table2 = tableResponse2.getPayload().getJointTable();
 		
 		TwoJointTablesViewModel twoJointTables = new TwoJointTablesViewModel(sid1, tableName1, sid2, tableName2, similarityThreshold, null);
