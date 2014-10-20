@@ -44,6 +44,14 @@ public class ServiceMonitorMain extends TimerTask{
 	}
 	
 	public static void main(String[] args) {	
+		
+/*		DatabaseConnector dbc = new DatabaseConnector();
+		for(Service serv : dbc.queryAllServies()){
+			System.out.println(serv.getServiceName());
+			System.out.println(dbc.queryServieExistance(serv.getServiceName()));
+		}
+		System.out.println("\n"+dbc.queryServieExistance("Apachea")); */
+		
 		serviceMonitorController = new ServiceMonitorController();
 		roundCount = 0;
 		
@@ -54,7 +62,7 @@ public class ServiceMonitorMain extends TimerTask{
 		try{
 			timer.schedule(new ServiceMonitorMain(), 0, 5000);
 		}
-		/*Logger is not used here, since this is a Test class.*/
+		//Logger is not used here, since this is a Test class.
 		catch(Exception exception){
 			logger.error("In ServiceMonitorMain.main()\n"
 					+exception.toString()+" "+exception.getMessage()+" "+exception.getCause());

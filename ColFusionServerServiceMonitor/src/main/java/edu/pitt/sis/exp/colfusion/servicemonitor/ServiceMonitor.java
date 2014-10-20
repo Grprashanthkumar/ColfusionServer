@@ -114,6 +114,8 @@ public class ServiceMonitor extends TimerTask{
 	 */
 	public void run(){
 		String currentStatus = null;
+		String emailSubject = null;
+		String emailText = null;
 		try{
 			if(this.serviceList.isEmpty() == true)
 				this.serviceList = this.dataBaseconnection.queryAllServies();
@@ -125,9 +127,23 @@ public class ServiceMonitor extends TimerTask{
 				   currentStatus != service.getServicePreviousStatus()){
 					for(String userLevel : ConfigManager.getInstance().getPropertyByName(PropertyKeys.userLevel).split(",")){
 						for(String emailAddress : this.dataBaseconnection.queryUserEmails(userLevel)){
-							emailNotifier.sendMail(emailAddress, 
-												   "Service Status changed: " + service.getServiceName(), 
-												   service.getServiceName() + " has been stopped!");
+							emailSubject = "Service Status changed: " + service.getServiceName();
+							emailText = String.format("Service has been stopped!\n"
+									+ "  Service id: %d\n"
+									+ "  Service Name: %s\n"
+									+ "  Service Address: %s\n"
+									+ "  Service Port#: %d\n"
+									+ "  Service Dir: %s\n"
+									+ "  Service Command: %s\n"
+									+ "  Service Status: %s",
+									service.getServiceID(),
+									service.getServiceName(),
+									service.getServiceAddress(),
+									service.getPortNumber(),
+									service.getServiceDir(),
+									service.getServiceCommand(),
+									service.getServiceStatus());
+							emailNotifier.sendMail(emailAddress, emailSubject, emailText);
 						}
 					}
 				}
