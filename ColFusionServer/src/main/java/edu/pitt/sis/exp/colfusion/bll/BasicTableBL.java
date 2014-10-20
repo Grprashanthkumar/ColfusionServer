@@ -8,6 +8,9 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import edu.pitt.sis.exp.colfusion.dal.dataModels.tableDataModel.Table;
 import edu.pitt.sis.exp.colfusion.dal.databaseHandlers.DatabaseHandlerBase;
 import edu.pitt.sis.exp.colfusion.dal.databaseHandlers.DatabaseHandlerFactory;
@@ -29,9 +32,11 @@ import edu.pitt.sis.exp.colfusion.responseModels.StoryStatusResponseModel;
 
 public class BasicTableBL {
 
-	BasicTableResponseModel result=new BasicTableResponseModel();
-	 
+	private static Logger logger = LogManager.getLogger(BasicTableBL.class.getName());
+	
 	public BasicTableResponseModel getTableInfo(final int sid, final String tableName ){
+		
+		BasicTableResponseModel result=new BasicTableResponseModel();
 		
         String driver = "com.mysql.jdbc.Driver";
 
@@ -95,6 +100,9 @@ public class BasicTableBL {
 	public JointTableByRelationshipsResponeModel getTableDataBySidAndName(final int sid, final String tableName,
 			final int perPage, final int pageNumber ){
 		SourceInfoManagerImpl sourceInfo = new SourceInfoManagerImpl();
+		
+		JointTableByRelationshipsResponeModel result = new JointTableByRelationshipsResponeModel(); 
+		
 		ColfusionSourceinfoDb storyTargetDB = sourceInfo.getStorySourceInfoDB(sid);
 		try {
 			DatabaseHandlerBase databaseHandlerBase = DatabaseHandlerFactory.getDatabaseHandler(storyTargetDB);
@@ -103,50 +111,57 @@ public class BasicTableBL {
 			int countTuples = databaseHandlerBase.getCount(tableName);
 			int totalPage = (int) Math.ceil((double)countTuples / perPage);
 			
-			JointTableByRelationshipsResponeModel result = new JointTableByRelationshipsResponeModel(); 
-			
 			JoinTablesByRelationshipsViewModel payload = new JoinTablesByRelationshipsViewModel();
 			payload.setJointTable(table);
 			payload.setPerPage(perPage);
 			payload.setPageNo(pageNumber);
 			payload.setTotalPage(totalPage);
 			
-			
 			result.setPayload(payload);
 			
 			result.isSuccessful = true;
-			
-			return result;
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error(e);
+			result.isSuccessful = false;
+			result.message = e.getMessage();
 		}
-		return null;
+		return result;
 	}
 	
 	//TODO: need to be refactored
 	//Return table relationship by sid and tableName
 	public JointTableByRelationshipsResponeModel getTableDataBySidAndName(final int sid, final String tableName){
+		
+		logger.info(String.format("Getting table data for sid '%d' and table name '%s'", sid, tableName));
+		
 		SourceInfoManagerImpl sourceInfo = new SourceInfoManagerImpl();
-		ColfusionSourceinfoDb storyTargetDB = sourceInfo.getStorySourceInfoDB(sid);
+		
+		JointTableByRelationshipsResponeModel result = new JointTableByRelationshipsResponeModel(); 
+		
 		try {
+			ColfusionSourceinfoDb storyTargetDB = sourceInfo.getStorySourceInfoDB(sid);
+			
+			if (storyTargetDB == null) {
+				String message = String.format("getTableDataBySidAndName: is null for sid '%d'", sid);
+				logger.info(message);
+				throw new Exception(message);
+			}
+			
 			DatabaseHandlerBase databaseHandlerBase = DatabaseHandlerFactory.getDatabaseHandler(storyTargetDB);
 			Table table = databaseHandlerBase.getAll(tableName);
-			
-			JointTableByRelationshipsResponeModel result = new JointTableByRelationshipsResponeModel(); 
 			
 			JoinTablesByRelationshipsViewModel payload = new JoinTablesByRelationshipsViewModel();
 			payload.setJointTable(table);
 			result.setPayload(payload);
 			
 			result.isSuccessful = true;
-			
-			return result;
 		} catch (Exception e) {
+			logger.error(e);
 			result.isSuccessful=false;
-			result.message = "Get TableDataBySidAndName failed";
+			result.message = "Get TableDataBySidAndName failed. " + e.getMessage();
 		}
-		return null;
+		
+		return result;
 	}
 	
 	//Return the story status response according to sid
@@ -192,8 +207,8 @@ public class BasicTableBL {
 	
 	
 	//Return the relationship response according to sid.
-	public RelationshipsResponseModel getRelationships(int sid,
-			int perPage, int pageNumber) {
+	public RelationshipsResponseModel getRelationships(final int sid,
+			final int perPage, final int pageNumber) {
 		RelationshipsResponseModel result = new RelationshipsResponseModel();
 		// The following code is to get data from the table and store it into payload.
 		try {
@@ -217,7 +232,7 @@ public class BasicTableBL {
 		return result;
 	}
 	
-	public AttachmentListResponseModel getAttachmentList(int sid){
+	public AttachmentListResponseModel getAttachmentList(final int sid){
 		AttachmentListResponseModel result =  new AttachmentListResponseModel();
 		try{
 			AttachmentManagerImpl attachmentManagerImpl = new AttachmentManagerImpl();

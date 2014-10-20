@@ -749,22 +749,14 @@ public class SourceInfoManagerImpl extends GeneralManagerImpl<ColfusionSourceinf
 	@Override
 	public ColfusionSourceinfoDb getStorySourceInfoDB(final int sid) {
 		try {
+			
+			logger.info(String.format("Getting story source into db for sid '%d'", sid));
+			
             HibernateUtil.beginTransaction();
             
             SourceInfoDBDAO sourceInfoDBDAO = new SourceInfoDBDAOImpl();
             
             ColfusionSourceinfoDb sourceinfoDB = sourceInfoDBDAO.findByID(ColfusionSourceinfoDb.class, sid);
-            
-//            StoryTargetDBViewModel result = new StoryTargetDBViewModel();
-//            result.setDatabaseName(sourceinfoDB.getSourceDatabase());
-//            result.setDriver(sourceinfoDB.getDriver());
-//            result.setIsLocal(sourceinfoDB.getIsLocal());
-//            result.setLinkedServerName(sourceinfoDB.getLinkedServerName());
-//            result.setPassword(sourceinfoDB.getPassword());
-//            result.setPort(sourceinfoDB.getPort());
-//            result.setServerAddress(sourceinfoDB.getServerAddress());
-//            result.setUserName(sourceinfoDB.getUserName());
-//            result.setSid(sourceinfoDB.getSid());
             
             HibernateUtil.commitTransaction();
             
