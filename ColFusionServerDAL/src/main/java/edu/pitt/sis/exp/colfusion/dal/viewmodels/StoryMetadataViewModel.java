@@ -8,6 +8,8 @@ import java.util.Date;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
+import edu.pitt.sis.exp.colfusion.dal.orm.ColfusionLicense;
+
 /**
  * @author Evgeny
  *
@@ -23,6 +25,7 @@ public class StoryMetadataViewModel {
 	private String tags;
 	private Date dateSubmitted;
 	private String editReason;
+	private int licenseId;
 	
 	private StoryAuthorViewModel storySubmitter;
 	private ArrayList<StoryAuthorViewModel> storyAuthors;
@@ -35,7 +38,7 @@ public class StoryMetadataViewModel {
 	}
 	
 	public StoryMetadataViewModel(final int sid, final int userId, final String title, final String description, final String status, final String sourceType, final String tags, final Date dateSubmitted, final String editReason,
-			final StoryAuthorViewModel storySubmitter, final ArrayList<StoryAuthorViewModel> storyAuthors, final ArrayList<StoryAuthorViewModel> removedStoryAuthors) {
+			final StoryAuthorViewModel storySubmitter, final ArrayList<StoryAuthorViewModel> storyAuthors, final ArrayList<StoryAuthorViewModel> removedStoryAuthors,final int licenseId) {
 		setSid(sid);
 		setUserId(userId);
 		setTitle(title);
@@ -48,8 +51,17 @@ public class StoryMetadataViewModel {
 		setStorySubmitter(storySubmitter);
 		setStoryAuthors(storyAuthors);
 		setRemovedStoryAuthors(removedStoryAuthors);
+		setLicenseId(licenseId);
 	}
 	
+	
+	public void setLicenseId(int licenseId){
+		this.licenseId = licenseId;
+	}
+	
+	public int getLicenseId(){
+		return this.licenseId;
+	}
 	/**
 	 * @return the sid
 	 */

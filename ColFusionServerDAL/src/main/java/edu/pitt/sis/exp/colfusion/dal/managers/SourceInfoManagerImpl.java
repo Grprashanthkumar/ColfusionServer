@@ -19,6 +19,8 @@ import org.hibernate.NonUniqueResultException;
 import org.hibernate.Query;
 import org.hibernate.internal.SessionFactoryImpl;
 
+import edu.pitt.sis.exp.colfusion.dal.dao.LicenseInfoDAO;
+import edu.pitt.sis.exp.colfusion.dal.dao.LicenseInfoDAOImpl;
 import edu.pitt.sis.exp.colfusion.dal.dao.LinksDAO;
 import edu.pitt.sis.exp.colfusion.dal.dao.LinksDAOImpl;
 import edu.pitt.sis.exp.colfusion.dal.dao.SourceInfoDAO;
@@ -39,6 +41,7 @@ import edu.pitt.sis.exp.colfusion.dal.dao.UserRolesDAO;
 import edu.pitt.sis.exp.colfusion.dal.dao.UserRolesDAOImpl;
 import edu.pitt.sis.exp.colfusion.dal.dao.UsersDAO;
 import edu.pitt.sis.exp.colfusion.dal.dao.UsersDAOImpl;
+import edu.pitt.sis.exp.colfusion.dal.orm.ColfusionLicense;
 import edu.pitt.sis.exp.colfusion.dal.orm.ColfusionLinks;
 import edu.pitt.sis.exp.colfusion.dal.orm.ColfusionRelationships;
 import edu.pitt.sis.exp.colfusion.dal.orm.ColfusionSourceinfo;
@@ -354,11 +357,15 @@ public class SourceInfoManagerImpl extends GeneralManagerImpl<ColfusionSourceinf
 		UsersDAO usersDAO = new UsersDAOImpl();
         
         ColfusionUsers userCreator = usersDAO.findByID(ColfusionUsers.class, metadata.getStorySubmitter().getUserId());
+        LicenseInfoDAO licensedao = new LicenseInfoDAOImpl(); 
         
+        ColfusionLicense colfusionLicense = licensedao.findByID(ColfusionLicense.class, metadata.getLicenseId());
         ColfusionSourceinfo newStoryEntity = new ColfusionSourceinfo(userCreator, metadata.getDateSubmitted(), metadata.getSourceType());
         newStoryEntity.setSid(metadata.getSid());
-        newStoryEntity.setTitle(metadata.getTitle());
+        newStoryEntity.setTitle(metadata.getTitle()); //metadata.getTitle()
         newStoryEntity.setStatus(metadata.getStatus());
+        newStoryEntity.setColfusionLicense(colfusionLicense);
+        
         
         try {
 			this.handleHistoryEdits(newStoryEntity, metadata.getUserId(), metadata.getEditReason());
@@ -385,11 +392,12 @@ public class SourceInfoManagerImpl extends GeneralManagerImpl<ColfusionSourceinf
 		SourceInfoMetadataEditHistoryDAO editHistorDAO = new SourceInfoMetadataEditHistoryDAOImpl();
 		
 		ColfusionSourceinfo oldStory = this._dao.findByID(ColfusionSourceinfo.class, newStory.getSid());
-		
+		//find the original information stored in ColfusionSourceInfo table
 		try {
 			String oldValue = (oldStory == null) ? null : oldStory.getTitle();
+			//get the value of title if null==>null
 			editHistorDAO.saveHistoryIfChanged(newStory.getSid(), userId, oldValue, newStory.getTitle(), HistoryItem.TITLE,  reason);
-		
+			
 			oldValue = (oldStory == null) ? null : oldStory.getStatus();
 			editHistorDAO.saveHistoryIfChanged(newStory.getSid(), userId, oldValue, newStory.getStatus(), HistoryItem.STATUS,  reason);
 		
