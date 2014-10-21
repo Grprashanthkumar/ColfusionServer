@@ -17,17 +17,20 @@ import edu.pitt.sis.exp.colfusion.dal.databaseHandlers.DatabaseHandlerFactory;
 import edu.pitt.sis.exp.colfusion.dal.managers.AttachmentManagerImpl;
 import edu.pitt.sis.exp.colfusion.dal.managers.ExecutionInfoManagerImpl;
 import edu.pitt.sis.exp.colfusion.dal.managers.SourceInfoManagerImpl;
+import edu.pitt.sis.exp.colfusion.dal.managers.StoryManagerImpl;
 import edu.pitt.sis.exp.colfusion.dal.orm.ColfusionExecuteinfo;
 import edu.pitt.sis.exp.colfusion.dal.orm.ColfusionSourceinfoDb;
 import edu.pitt.sis.exp.colfusion.dal.viewmodels.AttachmentListViewModel;
 import edu.pitt.sis.exp.colfusion.dal.viewmodels.BasicTableInfoViewModel;
 import edu.pitt.sis.exp.colfusion.dal.viewmodels.JoinTablesByRelationshipsViewModel;
 import edu.pitt.sis.exp.colfusion.dal.viewmodels.RelationshipsViewModel;
+import edu.pitt.sis.exp.colfusion.dal.viewmodels.StoryListViewModel;
 import edu.pitt.sis.exp.colfusion.dal.viewmodels.StoryStatusViewModel;
 import edu.pitt.sis.exp.colfusion.responseModels.AttachmentListResponseModel;
 import edu.pitt.sis.exp.colfusion.responseModels.BasicTableResponseModel;
 import edu.pitt.sis.exp.colfusion.responseModels.JointTableByRelationshipsResponeModel;
 import edu.pitt.sis.exp.colfusion.responseModels.RelationshipsResponseModel;
+import edu.pitt.sis.exp.colfusion.responseModels.StoryListResponseModel;
 import edu.pitt.sis.exp.colfusion.responseModels.StoryStatusResponseModel;
 
 public class BasicTableBL {
@@ -233,7 +236,7 @@ public class BasicTableBL {
 	}
 	
 	public AttachmentListResponseModel getAttachmentList(final int sid){
-		AttachmentListResponseModel result =  new AttachmentListResponseModel();
+		AttachmentListResponseModel result = new AttachmentListResponseModel();
 		try{
 			AttachmentManagerImpl attachmentManagerImpl = new AttachmentManagerImpl();
 			List<AttachmentListViewModel> contents = attachmentManagerImpl.getAttachmentListViewModel(sid);
@@ -245,6 +248,22 @@ public class BasicTableBL {
 			result.message = "Get AttachmentList failed";
 		}
 		return result;
-		
+	}
+	
+	
+	
+	public StoryListResponseModel getStoryList(final int pageNo, final int perPage){
+		StoryListResponseModel result = new StoryListResponseModel();
+		try{
+			StoryManagerImpl storyManagerImpl = new StoryManagerImpl();
+			List<StoryListViewModel> contents = storyManagerImpl.getStoryListViewModel(pageNo, perPage);
+			result.setPayload(contents);
+			result.isSuccessful=true;
+		}
+		catch(Exception e) {
+			result.isSuccessful=false;
+			result.message = "Get StoryList failed";
+		}
+		return result;
 	}
 }

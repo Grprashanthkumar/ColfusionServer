@@ -20,6 +20,7 @@ import edu.pitt.sis.exp.colfusion.responseModels.GetColumnMetadataEditHistoryRes
 import edu.pitt.sis.exp.colfusion.responseModels.GetLicenseResponse;
 import edu.pitt.sis.exp.colfusion.responseModels.JointTableByRelationshipsResponeModel;
 import edu.pitt.sis.exp.colfusion.responseModels.RelationshipsResponseModel;
+import edu.pitt.sis.exp.colfusion.responseModels.StoryListResponseModel;
 import edu.pitt.sis.exp.colfusion.responseModels.StoryMetadataHistoryResponse;
 import edu.pitt.sis.exp.colfusion.responseModels.StoryMetadataResponse;
 import edu.pitt.sis.exp.colfusion.responseModels.StoryStatusResponseModel;
@@ -177,7 +178,7 @@ public class StoryRestServiceImpl extends BaseController implements StoryRestSer
 
 	@Override
 	public Response getStoryStatus(int sid) {
-		BasicTableBL basicBL=new BasicTableBL();
+		BasicTableBL basicBL = new BasicTableBL();
 		StoryStatusResponseModel result = basicBL.getStoryStatus(sid);
 		String json = result.toJson();
 		return this.makeCORS(Response.status(200).entity(json));
@@ -190,7 +191,7 @@ public class StoryRestServiceImpl extends BaseController implements StoryRestSer
 
 	@Override
 	public Response getMineRelationships(int sid, int perPage, int pageNumber) {
-		BasicTableBL basicBL=new BasicTableBL();
+		BasicTableBL basicBL = new BasicTableBL();
 		RelationshipsResponseModel result = basicBL.getRelationships(sid, perPage, pageNumber);
 		String json = result.toJson();
 		return this.makeCORS(Response.status(200).entity(json));
@@ -204,8 +205,21 @@ public class StoryRestServiceImpl extends BaseController implements StoryRestSer
 
 	@Override
 	public Response getAttachmentList(int sid) {
-		BasicTableBL basicBL=new BasicTableBL();
+		BasicTableBL basicBL = new BasicTableBL();
 		AttachmentListResponseModel result = basicBL.getAttachmentList(sid);
+		String json = result.toJson();
+		return this.makeCORS(Response.status(200).entity(json));
+	}
+
+	@Override
+	public Response getStoryList(String requestH) {
+		return makeCORS(Response.ok()); //, requestH);
+	}
+
+	@Override
+	public Response getStoryList(int pageNo, int perPage) {
+		BasicTableBL basicBL = new BasicTableBL();
+		StoryListResponseModel result = basicBL.getStoryList(pageNo,perPage);
 		String json = result.toJson();
 		return this.makeCORS(Response.status(200).entity(json));
 	}

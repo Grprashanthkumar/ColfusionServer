@@ -5,7 +5,6 @@ import java.util.List;
 
 import com.google.gson.annotations.Expose;
 
-import edu.pitt.sis.exp.colfusion.dal.orm.ColfusionExecuteinfo;
 import edu.pitt.sis.exp.colfusion.dal.viewmodels.StoryStatusViewModel;
 import edu.pitt.sis.exp.colfusion.utils.Gsonazable;
 import edu.pitt.sis.exp.colfusion.utils.Gsonizer;

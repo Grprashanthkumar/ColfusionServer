@@ -1,5 +1,7 @@
 package edu.pitt.sis.exp.colfusion.war.rest;
 
+import java.util.Date;
+
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
@@ -11,7 +13,11 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import com.google.gson.annotations.Expose;
+
+import edu.pitt.sis.exp.colfusion.dal.viewmodels.LicenseViewModel;
 import edu.pitt.sis.exp.colfusion.dal.viewmodels.StoryMetadataViewModel;
+import edu.pitt.sis.exp.colfusion.dal.viewmodels.UserViewModel;
 
 public interface StoryRestService {
 
@@ -153,6 +159,13 @@ public interface StoryRestService {
     @Produces(MediaType.APPLICATION_JSON)
     public abstract Response getMineRelationships(@PathParam("sid") final int sid, @PathParam("perPage") int perPage, @PathParam("pageNumber") int pageNumber);
 	
+	
+	/**
+	 * Finds attachment list
+	 * 
+	 * @param sid
+	 * @return response with attachment list in the payload.
+	 */
 	@OPTIONS
     @Path("{sid}/AttachmentList")
     public abstract Response getAttachmentList(@HeaderParam("Access-Control-Request-Headers") final String requestH);
@@ -162,4 +175,31 @@ public interface StoryRestService {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public abstract Response getAttachmentList(@PathParam("sid") final int sid);
+	
+	
+	/**
+	 * Finds story list
+	 * 
+	 * @param pageNo, perPage
+	 * @return storyListViewModel with story list in the payload.
+	 * storyListViewModel:  int sid;
+							String title;
+							UserViewModel user;
+							String path;
+							Date entryDate;
+							Date lastUpdated;
+							String status;
+							String rawDataPath;
+							String sourceType;
+							LicenseViewModel license;
+	 */
+	@OPTIONS
+    @Path("all/{pageNo}/{perPage}")
+    public abstract Response getStoryList(@HeaderParam("Access-Control-Request-Headers") final String requestH);
+	
+	
+	@Path("all/{pageNo}/{perPage}")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public abstract Response getStoryList(@PathParam("pageNo") final int pageNo, @PathParam("perPage") final int perPage);
 }

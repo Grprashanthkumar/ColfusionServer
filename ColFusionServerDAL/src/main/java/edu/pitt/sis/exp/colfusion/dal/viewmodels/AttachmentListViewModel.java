@@ -5,7 +5,10 @@ import java.util.Date;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import com.google.gson.annotations.Expose;
-
+/**
+ * @author Weichuan Hong
+ *
+ */
 @XmlRootElement
 public class AttachmentListViewModel {
 	
