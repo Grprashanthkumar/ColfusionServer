@@ -141,6 +141,7 @@ public class StoryBL {
 			StoryMetadataViewModel storyMetadata = new StoryMetadataViewModel();
 			storyMetadata.setSid(sid);
 			storyMetadata.setSourceType(storyInfo.getSourceType());
+			storyMetadata.setLicenseId(storyInfo.getColfusionLicense().getLicenseId());
 			
 			
 			//Getting user's role in the story and put in the view model with role details: role name, description and role id.
