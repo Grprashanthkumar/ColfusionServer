@@ -18,14 +18,16 @@ public class CellDeserializer implements JsonDeserializer<Cell>{
 	@Override
 	public Cell deserialize(final JsonElement json, final Type typeOfT,
 			final JsonDeserializationContext context) throws JsonParseException {
-		String className = json.getAsJsonObject().get("isA").getAsString();
-		
 		try {
+			String className = json.getAsJsonObject().get("isA").getAsString();
+			
+			logger.info(String.format("About to deserialize Cell from '%s' json for className '%s'", json.toString(), className));
+			
 			Class<?> clazz = Class.forName(className);
 			
-			 Serializable value = context.deserialize(json.getAsJsonObject().get("value"), clazz);
+			Serializable value = context.deserialize(json.getAsJsonObject().get("value"), clazz);
 			 
-			 return new Cell(value);
+			return new Cell(value);
 		} catch (ClassNotFoundException e) {
 			logger.error(e);
 			throw new RuntimeException(e);

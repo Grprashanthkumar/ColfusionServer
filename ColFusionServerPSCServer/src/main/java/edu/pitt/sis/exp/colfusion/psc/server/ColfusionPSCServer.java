@@ -8,6 +8,11 @@ import org.eclipse.jetty.servlet.ServletHolder;
 import org.glassfish.jersey.server.ServerProperties;
 import org.glassfish.jersey.servlet.ServletContainer;
 
+import edu.pitt.sis.exp.colfusion.dal.dataModels.tableDataModel.Cell;
+import edu.pitt.sis.exp.colfusion.dal.dataModels.tableDataModel.CellDeserializer;
+import edu.pitt.sis.exp.colfusion.dal.dataModels.tableDataModel.CellSerializer;
+import edu.pitt.sis.exp.colfusion.utils.Gsonizer;
+
 /**
  * Starts Jetty server on provided port (or default).
  * REST API is available on 0.0.0.0:PORT/rest/*
@@ -77,14 +82,66 @@ public class ColfusionPSCServer implements Runnable{
         ServletContextHandler context = new ServletContextHandler(server, "/", ServletContextHandler.SESSIONS);
         context.addServlet(sh, "/rest/*");
         
+        server.setStopAtShutdown(true);
+        
         try {
         	 server.start();
-             server.join();
+        	 
+        	 Runtime.getRuntime().addShutdownHook(
+                     new Thread(new ShutdownSignalHandler(server))      
+             );
+        	 
+        	 configure();
         }
         catch (Exception e) {
         	logger.error("Failed to start jetty server", e);
+        	return;
         }
          
+        try {
+			server.join();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+        finally {
+        	try {
+				server.stop();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+        }
+        
         logger.info("Jetty Server is shutdown");		
 	}
+
+	private void configure() {
+		
+		//TODO:find a better wat to do that
+		
+		Gsonizer.registerTypeAdapter(Cell.class, new CellSerializer());
+		Gsonizer.registerTypeAdapter(Cell.class, new CellDeserializer());
+	}
+}
+
+class ShutdownSignalHandler implements Runnable {
+    
+    private final Server _server;
+
+    public ShutdownSignalHandler(final Server server) {
+        this._server = server;
+    }
+
+    @Override
+    public void run() {
+       
+        try {
+            _server.stop();
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.exit(1);
+        }
+    }
+
 }

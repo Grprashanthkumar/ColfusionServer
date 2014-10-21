@@ -27,7 +27,7 @@ public class StoryStatusResponseModel extends GeneralResponseImpl implements Gso
 	/**
 	 * @param payload the payload to set
 	 */
-	public void setPayload(List<StoryStatusViewModel> payload) {
+	public void setPayload(final List<StoryStatusViewModel> payload) {
 		this.payload = payload;
 	}
 

@@ -2,11 +2,9 @@ package edu.pitt.sis.exp.colfusion.psc.server;
 
 
 
-import org.junit.Test;
+import javax.ws.rs.core.Response;
 
-import com.sun.jersey.api.client.Client;
-import com.sun.jersey.api.client.ClientResponse;
-import com.sun.jersey.api.client.WebResource;
+import org.junit.Test;
 
 import edu.pitt.sis.exp.colfusion.psc.server.util.ServerType;
 import edu.pitt.sis.exp.colfusion.psc.server.util.Utils;
@@ -18,16 +16,31 @@ public class ColfuseionPSCServerTest {
 		Thread serverThread1 = startServer(Utils.getPort(ServerType.JOINER));
 		Thread serverThread2 = startServer(Utils.getPort(ServerType.FETCHER));
 		
-		
-		Client client = Client.create();
-		
 		String resourceURL = String.format("%s/TableJoin/join/%d/%s/%d/%s/%f", Utils.getBaseRestURL(ServerType.FETCHER), 1746, "CompanyYear", 1745, "CompanyProfit", 0.5);
 		
-		WebResource webResource = client.resource(resourceURL);
-		   
-		ClientResponse response = webResource.
-		        get(ClientResponse.class);
+		Response response = Utils.doGet(resourceURL);
 	
+		serverThread1.interrupt();
+		serverThread2.interrupt();
+	}
+	
+	@Test
+	public void testIsAlive() {
+		Thread serverThread1 = startServer(Utils.getPort(ServerType.JOINER));
+		Thread serverThread2 = startServer(Utils.getPort(ServerType.FETCHER));
+		
+		String resourceURL = String.format("%s/TableJoin/isAlive", Utils.getBaseRestURL(ServerType.FETCHER));
+		
+		Response response = Utils.doGet(resourceURL);
+	
+		System.out.println(response.toString());
+		
+		resourceURL = String.format("%s/TableJoin/isAlive", Utils.getBaseRestURL(ServerType.JOINER));
+		
+		response = Utils.doGet(resourceURL);
+	
+		System.out.println(response.toString());
+		
 		serverThread1.interrupt();
 		serverThread2.interrupt();
 	}

@@ -15,7 +15,7 @@
 
 	<properties>
 		<jettyVersion>9.2.3.v20140905</jettyVersion>
-		<jersey.version>2.5.1</jersey.version>
+		<jersey.version>2.13</jersey.version>
 	</properties>
 
 	<dependencyManagement>
@@ -31,6 +31,13 @@
 	</dependencyManagement>
 
 	<dependencies>
+
+		<dependency>
+			<groupId>edu.pitt.sis.exp.colfusion</groupId>
+			<artifactId>colfusionserver</artifactId>
+			<version>2.0-SNAPSHOT</version>
+			<scope>compile</scope>
+		</dependency>
 
 		<dependency>
 			<groupId>org.eclipse.jetty</groupId>
@@ -63,17 +70,17 @@
 		</dependency>
 		
 		<dependency>
-			<groupId>com.sun.jersey</groupId>
+			<groupId>org.glassfish.jersey.core</groupId>
 			<artifactId>jersey-client</artifactId>
-			<version>1.8</version>
 		</dependency>
 
-		<dependency>
-			<groupId>edu.pitt.sis.exp.colfusion</groupId>
-			<artifactId>colfusionserver</artifactId>
-			<version>2.0-SNAPSHOT</version>
-			<scope>compile</scope>
+		
+		<!-- <dependency>
+			<groupId>com.sun.jersey</groupId>
+			<artifactId>jersey-bundle</artifactId>
+			<version>1.18.1</version>
 		</dependency>
+		 -->
 
 	</dependencies>
 
@@ -91,6 +98,44 @@
 				<version>2.2</version>
 				<!-- nothing here -->
 			</plugin>
+			
+			<plugin>
+	            <groupId>org.apache.maven.plugins</groupId>
+	            <artifactId>maven-shade-plugin</artifactId>
+	            <version>2.0</version>
+	            <executions>
+	                <execution>
+	                    <phase>package</phase>
+	                    <goals>
+	                        <goal>shade</goal>
+	                    </goals>
+	                    <configuration>
+	                        <transformers>
+	                        <!--  use transformer to handle merge of META-INF/services - see http://java.net/jira/browse/JERSEY-440?focusedCommentId=14822&page=com.atlassian.jira.plugin.system.issuetabpanels%3Acomment-tabpanel#action_14822 -->
+	                            <transformer
+	                                implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer" />
+	                            <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+				                	<mainClass>edu.pitt.sis.exp.colfusion.psc.server.ColfusionPSCServer</mainClass>
+				                </transformer>
+	                        </transformers> 
+	                        <filters>
+	                            <!--  filter to address "Invalid signature file" issue - see http://stackoverflow.com/a/6743609/589215-->
+	                            <filter>
+	                                <artifact>*:*</artifact>
+	                                <excludes>
+	                                    <exclude>META-INF/*.SF</exclude>
+	                                    <exclude>META-INF/*.DSA</exclude>
+	                                    <exclude>META-INF/*.RSA</exclude>
+	                                </excludes>
+	                            </filter>
+	                        </filters>
+	                    </configuration>
+	                </execution>
+	            </executions>
+	        </plugin>
+        
+        <!-- 
+			
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-assembly-plugin</artifactId>
@@ -114,6 +159,8 @@
 					</execution>
 				</executions>
 			</plugin>
+			
+			 -->
 		</plugins>
 	</build>
 </project>

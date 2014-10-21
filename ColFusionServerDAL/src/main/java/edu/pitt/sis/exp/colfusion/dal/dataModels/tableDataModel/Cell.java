@@ -4,7 +4,8 @@ import java.io.Serializable;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
-import com.google.gson.annotations.Expose;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import edu.pitt.sis.exp.colfusion.utils.Gsonazable;
 import edu.pitt.sis.exp.colfusion.utils.Gsonizer;
@@ -12,12 +13,16 @@ import edu.pitt.sis.exp.colfusion.utils.Gsonizer;
 @XmlRootElement
 public class Cell implements Gsonazable{
 	
-	@Expose private Serializable value;
+	private static final Logger logger = LogManager.getLogger(Cell.class.getName());
 	
-	static {
-		Gsonizer.registerTypeAdapter(Cell.class, new CellSerializer());
-		Gsonizer.registerTypeAdapter(Cell.class, new CellDeserializer());
-	}
+	private Serializable value;
+	
+//	static {
+//		Gsonizer.registerTypeAdapter(Cell.class, new CellSerializer());
+//		Gsonizer.registerTypeAdapter(Cell.class, new CellDeserializer());
+//		
+//		logger.info("Registered CellSerializer and CellDeserializer()");
+//	}
 	
 	public Cell() {
 		
@@ -37,7 +42,7 @@ public class Cell implements Gsonazable{
 	
 	@Override
 	public String toString() {
-		return value.toString();
+		return value == null ? null : value.toString();
 	}
 
 	@Override

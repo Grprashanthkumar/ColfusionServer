@@ -33,7 +33,7 @@ public class RelationshipsResponseModel  implements Gsonazable{
 		return Control;
 	}
 
-	public void setControl(ControlModel control) {
+	public void setControl(final ControlModel control) {
 		Control = control;
 	}
 
@@ -56,25 +56,25 @@ public class RelationshipsResponseModel  implements Gsonazable{
 		public int getPerPage() {
 			return perPage;
 		}
-		public void setPerPage(int perPage) {
+		public void setPerPage(final int perPage) {
 			this.perPage = perPage;
 		}
 		public int getTotalPage() {
 			return totalPage;
 		}
-		public void setTotalPage(int totalPage) {
+		public void setTotalPage(final int totalPage) {
 			this.totalPage = totalPage;
 		}
 		public int getPageNO() {
 			return pageNO;
 		}
-		public void setPageNO(int pageNO) {
+		public void setPageNO(final int pageNO) {
 			this.pageNO = pageNO;
 		}
 		public String getCols() {
 			return cols;
 		}
-		public void setCols(String cols) {
+		public void setCols(final String cols) {
 			this.cols = cols;
 		}
 

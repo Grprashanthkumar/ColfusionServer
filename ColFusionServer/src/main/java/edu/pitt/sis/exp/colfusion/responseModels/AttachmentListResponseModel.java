@@ -16,7 +16,7 @@ public class AttachmentListResponseModel extends GeneralResponseImpl implements 
 		return payload;
 	}
 
-	public void setPayload(List<AttachmentListViewModel> payload) {
+	public void setPayload(final List<AttachmentListViewModel> payload) {
 		this.payload = payload;
 	}
 

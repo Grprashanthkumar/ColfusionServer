@@ -10,18 +10,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.ws.rs.Path;
-import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-import com.sun.jersey.api.client.Client;
-import com.sun.jersey.api.client.ClientResponse;
-import com.sun.jersey.api.client.WebResource;
-import com.sun.jersey.api.client.config.ClientConfig;
-import com.sun.jersey.api.client.config.DefaultClientConfig;
-import com.sun.jersey.api.json.JSONConfiguration;
 
 import edu.pitt.sis.exp.colfusion.bll.BasicTableBL;
 import edu.pitt.sis.exp.colfusion.bll.JoinTablesBL;
@@ -54,9 +46,15 @@ public class TableJoinServiceImpl implements TableJoinService {
 	@Override
 	public Response joinTables(final String twoJointTables) throws FileNotFoundException, IOException {
 		
-		logger.info("Got request");
+		logger.info("Got request with this payload: " + twoJointTables);
 		
-		TwoTableJoinInputViewModel model = Gsonizer.fromJson(twoJointTables, TwoTableJoinInputViewModel.class);
+//		Gsonizer.registerTypeAdapter(Cell.class, new CellDeserializer());
+//		
+//		TypeAdapter<Cell> ta = Gsonizer.getTypeAdapter(Cell.class);
+//		
+//		logger.info("TA for Cell " + ta.toString());
+		
+		TwoTableJoinInputViewModel model = Gsonizer.fromJson(twoJointTables, TwoTableJoinInputViewModel.class, true);
 		
 		JoinTablesBL joinBL = new JoinTablesBL();
 		
@@ -138,21 +136,14 @@ public class TableJoinServiceImpl implements TableJoinService {
 		String twoTablesStr = Gsonizer.toJson(twoTables, true);
 		
 		logger.info("Serialized model: " + twoTablesStr);
-		
-		ClientConfig clientConfit = new DefaultClientConfig();
-		clientConfit.getFeatures().put(JSONConfiguration.FEATURE_POJO_MAPPING, Boolean.TRUE);
-		Client client = Client.create(clientConfit);
 
 		String resourceURL = String.format("%s/TableJoin/join", Utils.getBaseRestURL(ServerType.JOINER));
-		
-		WebResource webResource = client.resource(resourceURL);
 		   
 		logger.info(String.format("About to do POST request to '%s' resource. The body lenght is %d", resourceURL, twoTablesStr.length()));
 		
-		ClientResponse response = webResource.
-				type(MediaType.TEXT_PLAIN).post(ClientResponse.class, twoTablesStr);
+		Response response = Utils.doPost(resourceURL, twoTablesStr);
 		
-		return Response.status(200).entity("test").build();
+		return Response.status(response.getStatus()).entity(response.getEntity().toString()).build();
 	}
 
 	@Override
@@ -160,17 +151,8 @@ public class TableJoinServiceImpl implements TableJoinService {
 		
 		logger.info("Got request 'isJoinerAlive'");
 		
-		ClientConfig clientConfit = new DefaultClientConfig();
-		clientConfit.getFeatures().put(JSONConfiguration.FEATURE_POJO_MAPPING, Boolean.TRUE);
-		Client client = Client.create(clientConfit);
-
 		String resourceURL = String.format("%s/TableJoin/isAlive", Utils.getBaseRestURL(ServerType.JOINER));
-		
-		WebResource webResource = client.resource(resourceURL);
-		   
-		logger.info("About to send get request to: " + resourceURL);
-		
-		ClientResponse response = webResource.get(ClientResponse.class);
+		Response response = Utils.doGet(resourceURL);
 		
 		logger.info("Got this response (toString): " + response.toString());
 		

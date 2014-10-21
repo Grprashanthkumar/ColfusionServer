@@ -32,7 +32,7 @@ public interface TableJoinService {
 	
 	@Path("join")
 	@POST
-    @Consumes(MediaType.TEXT_PLAIN)
+    @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
 	public abstract Response joinTables(String twoJointTables) throws FileNotFoundException, IOException;
 }

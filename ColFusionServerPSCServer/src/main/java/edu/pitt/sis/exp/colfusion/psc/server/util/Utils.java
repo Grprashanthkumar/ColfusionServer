@@ -4,11 +4,22 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
+import javax.ws.rs.client.Client;
+import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.client.Entity;
+import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.glassfish.jersey.client.ClientConfig;
+
+import com.sun.jersey.api.json.JSONConfiguration;
 
 import edu.pitt.sis.exp.colfusion.psc.server.ColfusionPSCServer;
 import edu.pitt.sis.exp.colfusion.utils.ResourceUtils;
+import edu.pitt.sis.exp.colfusion.utils.StreamUtils;
 
 public class Utils {
 	
@@ -31,11 +42,21 @@ public class Utils {
 		InputStream input = null;
 		
 		try {
+			String resourceURL = ColfusionPSCServer.class.getClassLoader().getResource(CONFIG_FILE_NAME).toString();
+			
+			logger.info(String.format("Loading properties from '%s'", resourceURL));
+			
+			String streamContent = StreamUtils.toString(ResourceUtils.getResourceAsStream(ColfusionPSCServer.class, CONFIG_FILE_NAME));
+			
+			logger.info(String.format("Resource Stream content is '%s'", streamContent));
+			
 			input = ResourceUtils.getResourceAsStream(ColfusionPSCServer.class, CONFIG_FILE_NAME);
 			
 			prop.load(input);
 	 
 			properties = prop;
+			
+			logger.info(String.format("Loaded properties are: ", prop.toString()));
 	 
 		} catch (Exception ex) {
 			logger.error(ex);
@@ -90,5 +111,38 @@ public class Utils {
 				logger.error(message);
 				throw new IllegalArgumentException(message);
 		}
+	}
+	
+	private static Client getClient() {
+		ClientConfig clientConfit = new ClientConfig();
+		clientConfit.property(JSONConfiguration.FEATURE_POJO_MAPPING, Boolean.TRUE);
+		Client client = ClientBuilder.newClient(clientConfit);
+		return client;
+	}
+	
+	public static Response doGet(final String restResource) {
+		
+		Client client = getClient();
+		
+		WebTarget target = client.target(restResource);
+		   
+		logger.info("About to send get request to: " + restResource);
+		
+		Response response = target.request(MediaType.APPLICATION_JSON_TYPE).get();
+		
+		return response;
+	}
+	
+	public static Response doPost(final String restResource, final Object data) {
+		
+		Client client = getClient();
+		
+		WebTarget target = client.target(restResource);
+		   
+		logger.info("About to send post request to: " + restResource);
+		
+		Response response = target.request(MediaType.APPLICATION_JSON_TYPE).post(Entity.entity(data, MediaType.APPLICATION_JSON_TYPE));
+		
+		return response;
 	}
 }

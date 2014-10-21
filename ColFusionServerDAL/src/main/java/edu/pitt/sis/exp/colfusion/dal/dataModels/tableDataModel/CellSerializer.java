@@ -14,6 +14,10 @@ public class CellSerializer implements JsonSerializer<Cell>{
 			final JsonSerializationContext context) {
 		final JsonObject jsonObject = new JsonObject();
 		
+		if (src.getValue() == null) {
+			return null;
+		}
+		
 		jsonObject.addProperty("value", src.toString());
 		jsonObject.addProperty("isA", src.getValue().getClass().getName());
 		
