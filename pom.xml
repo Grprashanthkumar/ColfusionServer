@@ -11,12 +11,13 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<main.basedir>${project.basedir}</main.basedir>
 	</properties>
 
 	<repositories>
 		<repository>
 			<id>repo</id>
-			<url>file://${project.basedir}/repo</url>
+			<url>file://${main.basedir}/repo</url>
 		</repository>
 	</repositories>
 
