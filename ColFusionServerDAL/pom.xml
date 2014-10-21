@@ -13,6 +13,11 @@
 		<version>2.0-SNAPSHOT</version>
 	</parent>
 	
+	<properties>
+		<!-- ${project.parent.basedir} didn't work -->
+		<main.basedir>${project.basedir}/..</main.basedir>
+	</properties>
+	
 	<dependencies>
 
 		<dependency>

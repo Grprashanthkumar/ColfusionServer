@@ -14,8 +14,11 @@
 	</parent>
 	
 	<properties>
-	     <jettyVersion>9.2.3.v20140905</jettyVersion>
-  	</properties>
+	    <jettyVersion>9.2.3.v20140905</jettyVersion>
+  
+		<!-- ${project.parent.basedir} didn't work -->
+		<main.basedir>${project.basedir}/..</main.basedir>
+	</properties>
 
 	<dependencies>
 

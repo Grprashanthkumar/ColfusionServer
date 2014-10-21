@@ -20,6 +20,9 @@
 		<version>1.0</version>
 
 		<war.name>${artifact.id}##${maven.build.timestamp}</war.name>
+	
+		<!-- ${project.parent.basedir} didn't work -->
+		<main.basedir>${project.basedir}/..</main.basedir>
 	</properties>
 
 	<build>
