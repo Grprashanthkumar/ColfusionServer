@@ -262,7 +262,7 @@ public abstract class DatabaseHandlerBase implements Closeable {
 			ResultSet resultSet = statement.executeQuery(sqlWithLimit);
 			
 			Table result = new Table();
-			
+			long index = 0;
 			while (resultSet.next()) {
 				ColumnGroup columnGroup = new ColumnGroup(tableName, sid);
 				
@@ -276,7 +276,10 @@ public abstract class DatabaseHandlerBase implements Closeable {
 				Row row = new Row();
 				row.getColumnGroups().add(columnGroup);
 				result.getRows().add(row);
+				logger.info(String.format("Query result table currently has %d rows.", ++index));
 			}
+			
+			logger.info(String.format("Query '%s' resulted in %d rows", sqlWithLimit, index));
 			
 			return result;
 		} catch (SQLException e) {
@@ -297,7 +300,9 @@ public abstract class DatabaseHandlerBase implements Closeable {
 		
 		String columnDbNamesCSV = StringUtils.join(columnDbNames, String.format("%c, %c", this.getDbCharToWrapNamesWithSpaces(), this.getDbCharToWrapNamesWithSpaces()));
 		
-		sql.append(String.format("%s%c FROM %s", columnDbNamesCSV, this.getDbCharToWrapNamesWithSpaces(), tableName));
+		sql.append(String.format("%s%c FROM %c%s%c", columnDbNamesCSV, 
+				this.getDbCharToWrapNamesWithSpaces(), this.getDbCharToWrapNamesWithSpaces(), 
+				tableName, this.getDbCharToWrapNamesWithSpaces()));
 		
 		String sqlString = sql.toString();
 		return sqlString;
