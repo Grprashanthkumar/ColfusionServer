@@ -223,5 +223,19 @@ public class StoryRestServiceImpl extends BaseController implements StoryRestSer
 		String json = result.toJson();
 		return this.makeCORS(Response.status(200).entity(json));
 	}
+
+	@Override
+	public Response getAllStoryList(String requestH) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Response getAllStoryList() {
+		BasicTableBL basicBL = new BasicTableBL();
+		StoryListResponseModel result = basicBL.getAllStoryList();
+		String json = result.toJson();
+		return this.makeCORS(Response.status(200).entity(json));
+	}
 	
 }

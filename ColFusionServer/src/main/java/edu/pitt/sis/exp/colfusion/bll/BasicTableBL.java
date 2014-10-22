@@ -17,7 +17,6 @@ import edu.pitt.sis.exp.colfusion.dal.databaseHandlers.DatabaseHandlerFactory;
 import edu.pitt.sis.exp.colfusion.dal.managers.AttachmentManagerImpl;
 import edu.pitt.sis.exp.colfusion.dal.managers.ExecutionInfoManagerImpl;
 import edu.pitt.sis.exp.colfusion.dal.managers.SourceInfoManagerImpl;
-import edu.pitt.sis.exp.colfusion.dal.managers.StoryManagerImpl;
 import edu.pitt.sis.exp.colfusion.dal.orm.ColfusionExecuteinfo;
 import edu.pitt.sis.exp.colfusion.dal.orm.ColfusionSourceinfoDb;
 import edu.pitt.sis.exp.colfusion.dal.viewmodels.AttachmentListViewModel;
@@ -255,8 +254,23 @@ public class BasicTableBL {
 	public StoryListResponseModel getStoryList(final int pageNo, final int perPage){
 		StoryListResponseModel result = new StoryListResponseModel();
 		try{
-			StoryManagerImpl storyManagerImpl = new StoryManagerImpl();
-			List<StoryListViewModel> contents = storyManagerImpl.getStoryListViewModel(pageNo, perPage);
+			SourceInfoManagerImpl SourceInfoManagerImpl = new SourceInfoManagerImpl();
+			List<StoryListViewModel> contents = SourceInfoManagerImpl.getStoryListViewModel(pageNo, perPage);
+			result.setPayload(contents);
+			result.isSuccessful=true;
+		}
+		catch(Exception e) {
+			result.isSuccessful=false;
+			result.message = "Get StoryList failed";
+		}
+		return result;
+	}
+	
+	public StoryListResponseModel getAllStoryList(){
+		StoryListResponseModel result = new StoryListResponseModel();
+		try{
+			SourceInfoManagerImpl SourceInfoManagerImpl = new SourceInfoManagerImpl();
+			List<StoryListViewModel> contents = SourceInfoManagerImpl.getStoryListViewModel();
 			result.setPayload(contents);
 			result.isSuccessful=true;
 		}

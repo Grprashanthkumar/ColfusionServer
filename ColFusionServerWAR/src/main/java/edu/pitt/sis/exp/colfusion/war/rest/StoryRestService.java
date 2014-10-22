@@ -1,6 +1,5 @@
 package edu.pitt.sis.exp.colfusion.war.rest;
 
-import java.util.Date;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -12,12 +11,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-
-import com.google.gson.annotations.Expose;
-
-import edu.pitt.sis.exp.colfusion.dal.viewmodels.LicenseViewModel;
 import edu.pitt.sis.exp.colfusion.dal.viewmodels.StoryMetadataViewModel;
-import edu.pitt.sis.exp.colfusion.dal.viewmodels.UserViewModel;
 
 public interface StoryRestService {
 
@@ -202,4 +196,29 @@ public interface StoryRestService {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public abstract Response getStoryList(@PathParam("pageNo") final int pageNo, @PathParam("perPage") final int perPage);
+	
+	/**
+	 * Finds story list
+	 * 
+	 * @return storyListViewModel with story list in the payload.
+	 * storyListViewModel:  int sid;
+							String title;
+							UserViewModel user;
+							String path;
+							Date entryDate;
+							Date lastUpdated;
+							String status;
+							String rawDataPath;
+							String sourceType;
+							LicenseViewModel license;
+	 */
+	@OPTIONS
+    @Path("all/")
+    public abstract Response getAllStoryList(@HeaderParam("Access-Control-Request-Headers") final String requestH);
+	
+	
+	@Path("all/")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public abstract Response getAllStoryList();
 }

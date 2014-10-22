@@ -15,6 +15,7 @@ import edu.pitt.sis.exp.colfusion.dal.orm.ColfusionUserroles;
 import edu.pitt.sis.exp.colfusion.dal.orm.ColfusionUsers;
 import edu.pitt.sis.exp.colfusion.dal.utils.DataSourceTypes;
 import edu.pitt.sis.exp.colfusion.dal.viewmodels.RelationshipsViewModel;
+import edu.pitt.sis.exp.colfusion.dal.viewmodels.StoryListViewModel;
 import edu.pitt.sis.exp.colfusion.dal.viewmodels.StoryMetadataHistoryViewModel;
 import edu.pitt.sis.exp.colfusion.dal.viewmodels.StoryMetadataViewModel;
 import edu.pitt.sis.exp.colfusion.dal.viewmodels.StoryTargetDBViewModel;
@@ -160,5 +161,15 @@ public interface SourceInfoManager extends GeneralManager<ColfusionSourceinfo, I
 	 */
 	public List<RelationshipsViewModel> getRelationshipsViewModel(int sid);
 	
+	/**
+	 * @param int pageNo, int perPage
+	 * @return Story list table info.
+	 */
+	public List<StoryListViewModel> getStoryListViewModel(int pageNo, int perPage);
+	
+	/**
+	 * @return Story list table info.
+	 */
+	public List<StoryListViewModel> getStoryListViewModel();
 
 }
