@@ -48,8 +48,10 @@ public class ServiceMonitorMain extends TimerTask{
 /*		DatabaseConnector dbc = new DatabaseConnector();
 		for(Service serv : dbc.queryAllServies()){
 			System.out.println(serv.getServiceName());
-			System.out.println(dbc.queryServieExistance(serv.getServiceName()));
-		}
+			System.out.println(dbc.queryServiceStatus(serv.getServiceName()));
+			
+		}  
+		System.out.println(dbc.queryUserEmails("normal").size());
 		System.out.println("\n"+dbc.queryServieExistance("Apachea")); */
 		
 		serviceMonitorController = new ServiceMonitorController();

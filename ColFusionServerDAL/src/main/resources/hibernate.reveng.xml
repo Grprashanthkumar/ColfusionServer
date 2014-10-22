@@ -42,6 +42,7 @@
   <table-filter match-catalog="colfusion" match-name="colfusion_relationships_columns_cachingExecutionInfo"/>
   <table-filter match-catalog="colfusion" match-name="colfusion_relationships_columns_dataMathing_ratios"/>
   <table-filter match-catalog="colfusion" match-name="colfusion_saved_links"/>
+  <table-filter match-catalog="colfusion" match-name="colfusion_service"/>
   <table-filter match-catalog="colfusion" match-name="colfusion_shares"/>
   <table-filter match-catalog="colfusion" match-name="colfusion_sourceinfo"/>
   <table-filter match-catalog="colfusion" match-name="colfusion_sourceinfo_DB"/>

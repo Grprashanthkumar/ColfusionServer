@@ -32,7 +32,7 @@ public class ServiceMonitor extends TimerTask{
 	
 	private List<Service> serviceList;
 	private int timeOut;
-	DatabaseConnection dataBaseconnection;
+	DatabaseConnector databaseConnector;
 	EmailNotifier emailNotifier;
 	
 	private Logger logger = LogManager.getLogger(ServiceMonitor.class.getName());
@@ -43,7 +43,7 @@ public class ServiceMonitor extends TimerTask{
 	public ServiceMonitor(){
 		this.serviceList = new ArrayList<Service>();
 		this.timeOut = Integer.parseInt(ConfigManager.getInstance().getPropertyByName(PropertyKeys.ServiceMonitorTimeOut));;
-		dataBaseconnection = new DatabaseConnection();
+		databaseConnector = new DatabaseConnector();
 		emailNotifier = new EmailNotifier();
 	}
 	
@@ -69,7 +69,7 @@ public class ServiceMonitor extends TimerTask{
 	}
 	
 	public int getServiceNumInDatabase(){
-		return this.dataBaseconnection.queryAllServies().size();
+		return this.databaseConnector.queryAllServies().size();
 	}
 	
 	/**
@@ -118,15 +118,15 @@ public class ServiceMonitor extends TimerTask{
 		String emailText = null;
 		try{
 			if(this.serviceList.isEmpty() == true)
-				this.serviceList = this.dataBaseconnection.queryAllServies();
+				this.serviceList = this.databaseConnector.queryAllServies();
 			for(Service service : serviceList){
 				currentStatus = this.updateServiceStatus(service);
-				this.dataBaseconnection.updateServiceStatus(service);
+				this.databaseConnector.updateServiceStatus(service);
 				serviceList.set(serviceList.indexOf(service), service);
 				if(currentStatus == ServiceStatusEnum.STOPPED.getValue() && 
 				   currentStatus != service.getServicePreviousStatus()){
 					for(String userLevel : ConfigManager.getInstance().getPropertyByName(PropertyKeys.userLevel).split(",")){
-						for(String emailAddress : this.dataBaseconnection.queryUserEmails(userLevel)){
+						for(String emailAddress : this.databaseConnector.queryUserEmails(userLevel)){
 							emailSubject = "Service Status changed: " + service.getServiceName();
 							emailText = String.format("Service has been stopped!\n"
 									+ "  Service id: %d\n"
