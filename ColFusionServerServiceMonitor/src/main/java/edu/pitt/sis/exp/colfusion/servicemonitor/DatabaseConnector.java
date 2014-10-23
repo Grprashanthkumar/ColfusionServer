@@ -1,6 +1,7 @@
 package edu.pitt.sis.exp.colfusion.servicemonitor;
 
 import java.util.List;
+
 import org.hibernate.HibernateException; 
 import org.hibernate.Query;
 import org.hibernate.Session; 
@@ -11,6 +12,8 @@ import org.hibernate.cfg.Configuration;
 import org.hibernate.service.ServiceRegistry;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import edu.pitt.sis.exp.colfusion.dal.orm.ColfusionServices;
 
 /**
  * @author Hao Bai
@@ -49,9 +52,9 @@ public class DatabaseConnector {
 	    
 	    try{
 	    	transaction = session.beginTransaction();
-	    	String hql = "FROM Service WHERE serviceName = '" + serviceName + "'";
+	    	String hql = "FROM ColfusionServices WHERE serviceName = '" + serviceName + "'";
 	    	@SuppressWarnings("unchecked")
-	    	List<Service> serviceList = (List<Service>)session.createQuery(hql).list();
+	    	List<ColfusionServices> serviceList = (List<ColfusionServices>)session.createQuery(hql).list();
 	    
 	    	if(serviceList.isEmpty() == false)
 	    		queryResult = true;
@@ -73,7 +76,7 @@ public class DatabaseConnector {
 	
 	/*query all services in database
 	 * */
-	public List<Service> queryAllServies(){
+	public List<ColfusionServices> queryAllServies(){
 		Session session = sessionFactory.openSession();
 	    Transaction transaction = null;
 	    //List<Service> serviceList = null;
@@ -81,7 +84,7 @@ public class DatabaseConnector {
 	    try{
 	    	transaction = session.beginTransaction();
 	    	@SuppressWarnings("unchecked")
-	    	List<Service> serviceList = (List<Service>)session.createQuery("FROM Service").list(); 
+	    	List<ColfusionServices> serviceList = (List<ColfusionServices>)session.createQuery("FROM ColfusionServices").list(); 
 	    	
 	        transaction.commit();
 	        return serviceList;
@@ -107,7 +110,7 @@ public class DatabaseConnector {
 	    
 	    try{
 	    	transaction = session.beginTransaction();
-	    	String hql = "SELECT serviceStatus FROM Service WHERE serviceName = '" + serviceName + "'";
+	    	String hql = "SELECT serviceStatus FROM ColfusionServices WHERE serviceName = '" + serviceName + "'";
 	    	Query query = session.createQuery(hql);
 	    	if(query != null)
 	    		serviceStatus = query.list().get(0).toString();
@@ -129,7 +132,7 @@ public class DatabaseConnector {
 	
 	/*update service's status
 	 * */
-	public boolean updateServiceStatus(Service service){
+	public boolean updateServiceStatus(ColfusionServices service){
 		Session session = sessionFactory.openSession();
 	    Transaction transaction = null;
 	    boolean updateResult = false;
@@ -139,7 +142,7 @@ public class DatabaseConnector {
 	    try{
 	    	transaction = session.beginTransaction();
 	    	
-	    	Service serviceUpdate = (Service) session.get(Service.class, serviceID); 
+	    	ColfusionServices serviceUpdate = (ColfusionServices) session.get(ColfusionServices.class, serviceID); 
 	    	serviceUpdate.setServiceStatus(serviceStatus);
 	    	session.update(serviceUpdate); 
 	    	

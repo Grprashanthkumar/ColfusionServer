@@ -8,6 +8,8 @@ import java.util.TimerTask;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import edu.pitt.sis.exp.colfusion.dal.orm.ColfusionServices;
+
 /**
  * @author Hao Bai
  * 
@@ -21,7 +23,7 @@ public class ServiceMonitorMain extends TimerTask{
 	private static Logger logger = LogManager.getLogger(ServiceMonitorMain.class.getName());
 	
 	public void run(){
-		List<Service> serviceList = new ArrayList<Service>();
+		List<ColfusionServices> serviceList = new ArrayList<ColfusionServices>();
 		try{	
 			serviceList = serviceMonitorController.getServicesStatus();
 			if(serviceList != null){

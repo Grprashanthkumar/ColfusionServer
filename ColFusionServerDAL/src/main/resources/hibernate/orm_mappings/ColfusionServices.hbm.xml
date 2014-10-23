@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 2014-6-10 16:18:00 by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="edu.pitt.sis.exp.colfusion.dal.orm.ColfusionServices" table="colfusion_services">
+        <id name="serviceID" type="int">
+            <column name="service_id" />
+            <generator class="native" />
+        </id>
+        <property name="serviceName" type="string">
+            <column name="service_name" length="20" not-null="true" />
+        </property>
+        <property name="serviceAddress" type="string">
+            <column name="service_address" length="30" not-null="true" />
+        </property>
+        <property name="portNumber" type="int">
+            <column name="port_number" not-null="true" />
+        </property>
+        <property name="serviceDir" type="string">
+            <column name="service_dir" length="100" not-null="true" />
+        </property>
+        <property name="serviceCommand" type="string">
+            <column name="service_command" length="100" not-null="true" />
+        </property>
+        <property name="serviceStatus" type="string">
+            <column name="service_status" length="20" not-null="true" />
+        </property>
+
+    </class>
+</hibernate-mapping>

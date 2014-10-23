@@ -7,6 +7,7 @@ import java.util.TimerTask;
 
 
 
+
 /**
  * Apache Commons Net library implements the client side of many basic Internet protocols. 
  * The purpose of the library is to provide fundamental protocol access, 
@@ -18,6 +19,7 @@ import org.apache.commons.net.telnet.TelnetClient;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import edu.pitt.sis.exp.colfusion.dal.orm.ColfusionServices;
 import edu.pitt.sis.exp.colfusion.utils.ConfigManager;
 import edu.pitt.sis.exp.colfusion.utils.PropertyKeys;
 
@@ -30,7 +32,7 @@ import edu.pitt.sis.exp.colfusion.utils.PropertyKeys;
  */
 public class ServiceMonitor extends TimerTask{
 	
-	private List<Service> serviceList;
+	private List<ColfusionServices> serviceList;
 	private int timeOut;
 	DatabaseConnector databaseConnector;
 	EmailNotifier emailNotifier;
@@ -41,22 +43,22 @@ public class ServiceMonitor extends TimerTask{
 	 * Set the default time out as 3 seconds.
 	 */
 	public ServiceMonitor(){
-		this.serviceList = new ArrayList<Service>();
+		this.serviceList = new ArrayList<ColfusionServices>();
 		this.timeOut = Integer.parseInt(ConfigManager.getInstance().getPropertyByName(PropertyKeys.ServiceMonitorTimeOut));;
 		databaseConnector = new DatabaseConnector();
 		emailNotifier = new EmailNotifier();
 	}
 	
-	public ServiceMonitor(List<Service> servicelist, int timeout){
+	public ServiceMonitor(List<ColfusionServices> servicelist, int timeout){
 		this.serviceList = servicelist;
 		this.timeOut = timeout;
 	}
 	
-	public void setServiceList(List<Service> servicelist){
+	public void setServiceList(List<ColfusionServices> servicelist){
 		this.serviceList = servicelist;
 	}
 	
-	public List<Service> getServiceList(){
+	public List<ColfusionServices> getServiceList(){
 		return this.serviceList;
 	}
 	
@@ -79,7 +81,7 @@ public class ServiceMonitor extends TimerTask{
 	 * If the service is connected, returns true;
 	 * Else, connect() reports connect exceptions, thus, returns false.
 	 */
-	public boolean isServiceConnected(Service service){	
+	public boolean isServiceConnected(ColfusionServices service){	
         try{
             TelnetClient client = new TelnetClient();
             client.setDefaultTimeout(this.getTimeOut());
@@ -95,7 +97,7 @@ public class ServiceMonitor extends TimerTask{
 	/**
 	 * Return current service's status.
 	 */
-	public String updateServiceStatus(Service service){
+	public String updateServiceStatus(ColfusionServices service){
 		if(this.isServiceConnected(service) == true){
 			service.setServiceStatus(ServiceStatusEnum.RUNNING.getValue());
 		}
@@ -119,7 +121,7 @@ public class ServiceMonitor extends TimerTask{
 		try{
 			if(this.serviceList.isEmpty() == true)
 				this.serviceList = this.databaseConnector.queryAllServies();
-			for(Service service : serviceList){
+			for(ColfusionServices service : serviceList){
 				currentStatus = this.updateServiceStatus(service);
 				this.databaseConnector.updateServiceStatus(service);
 				serviceList.set(serviceList.indexOf(service), service);
@@ -169,7 +171,7 @@ public class ServiceMonitor extends TimerTask{
 	 *   2: successfully started
 	 *   3: Other Exceptions
 	 */
-	public int startService(Service service){
+	public int startService(ColfusionServices service){
 		if(service.getServiceName() == null || service.getServiceName() == "")
 			return 0;
 		else if(service.getServiceStatus() == ServiceStatusEnum.RUNNING.getValue())

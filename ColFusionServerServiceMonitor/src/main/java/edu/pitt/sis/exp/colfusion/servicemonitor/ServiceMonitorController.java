@@ -6,6 +6,7 @@ import java.util.Timer;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import edu.pitt.sis.exp.colfusion.dal.orm.ColfusionServices;
 import edu.pitt.sis.exp.colfusion.utils.ConfigManager;
 import edu.pitt.sis.exp.colfusion.utils.PropertyKeys;
 
@@ -89,7 +90,7 @@ public class ServiceMonitorController{
 	 * Note: Either the name or the function of this function
 	 * is different from getServiceStatus() in Service.java
 	 */
-	public List<Service> getServicesStatus(){
+	public List<ColfusionServices> getServicesStatus(){
 		if(this.serviceMonitor.getServiceList().isEmpty() == true ||
 		   this.serviceMonitor.getServiceList().size() < this.serviceMonitor.getServiceNumInDatabase())
 			return null;
