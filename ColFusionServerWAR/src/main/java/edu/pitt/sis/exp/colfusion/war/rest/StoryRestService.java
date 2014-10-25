@@ -21,7 +21,6 @@ public interface StoryRestService {
 	 * @return
 	 */
 	@OPTIONS
-    @Path("metadata/new/{userId}")
     public abstract Response newStoryMetadata(@HeaderParam("Access-Control-Request-Headers") String requestH);
 
 	/**

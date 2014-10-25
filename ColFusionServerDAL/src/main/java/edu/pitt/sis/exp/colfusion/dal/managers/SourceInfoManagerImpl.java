@@ -82,7 +82,8 @@ public class SourceInfoManagerImpl extends GeneralManagerImpl<ColfusionSourceinf
 	}
 	
 	public enum HistoryItem {
-	    TITLE("title"), DESCRIPTION("description"), TAGS("tags"), STATUS("status");
+	    TITLE("title"), DESCRIPTION("description"), TAGS("tags"), STATUS("status"), LICENSE("license");
+	    
 	    
 	    private String value;
 
@@ -403,7 +404,11 @@ public class SourceInfoManagerImpl extends GeneralManagerImpl<ColfusionSourceinf
 			
 			oldValue = (oldStory == null) ? null : oldStory.getStatus();
 			editHistorDAO.saveHistoryIfChanged(newStory.getSid(), userId, oldValue, newStory.getStatus(), HistoryItem.STATUS,  reason);
-		
+			
+			oldValue = (oldStory == null) ? null : oldStory.getColfusionLicense().getLicenseName();
+			editHistorDAO.saveHistoryIfChanged(newStory.getSid(), userId, oldValue, newStory.getColfusionLicense().getLicenseName(), HistoryItem.LICENSE, reason);
+			
+			
 		} catch (Exception e) {
 			this.logger.error(String.format("handleHistoryEdits for sourceinfo failed due to one of the two calls of editHistorDAO.saveHistoryIfChanged. userId = %d and reason is %s", userId, reason));
 			

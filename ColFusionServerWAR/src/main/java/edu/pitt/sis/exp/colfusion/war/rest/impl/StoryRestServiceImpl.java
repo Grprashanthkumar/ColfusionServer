@@ -43,6 +43,7 @@ public class StoryRestServiceImpl extends BaseController implements StoryRestSer
 	@Override
 	public Response newStoryMetadata(final int userId) {
     	
+		System.out.println("newStoryMetadata function");
 		StoryBL storyBL = new StoryBL();
 		
 		StoryMetadataResponse result = storyBL.createStory(userId);
@@ -68,6 +69,7 @@ public class StoryRestServiceImpl extends BaseController implements StoryRestSer
 	@Override
 	public Response updateStoryMetadata(final StoryMetadataViewModel metadata) {
     	
+		System.out.println("updateStoryMetadata function");
 		StoryBL storyBL = new StoryBL();
 		
 		StoryMetadataResponse result = storyBL.updateStoryMetadata(metadata);
