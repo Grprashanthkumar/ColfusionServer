@@ -90,7 +90,7 @@ public class ServiceMonitorController{
 	 * Note: Either the name or the function of this function
 	 * is different from getServiceStatus() in Service.java
 	 */
-	public List<ColfusionServices> getServicesStatus(){
+	public List<ColfusionServices> getServicesStatus() throws Exception{
 		if(this.serviceMonitor.getServiceList().isEmpty() == true ||
 		   this.serviceMonitor.getServiceList().size() < this.serviceMonitor.getServiceNumInDatabase())
 			return null;

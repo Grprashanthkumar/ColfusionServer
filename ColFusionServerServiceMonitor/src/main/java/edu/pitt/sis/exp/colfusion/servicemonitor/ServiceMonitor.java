@@ -8,6 +8,12 @@ import java.util.TimerTask;
 
 
 
+
+
+
+
+
+
 /**
  * Apache Commons Net library implements the client side of many basic Internet protocols. 
  * The purpose of the library is to provide fundamental protocol access, 
@@ -19,6 +25,10 @@ import org.apache.commons.net.telnet.TelnetClient;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import edu.pitt.sis.exp.colfusion.dal.managers.ServiceManager;
+import edu.pitt.sis.exp.colfusion.dal.managers.ServiceManagerImpl;
+import edu.pitt.sis.exp.colfusion.dal.managers.UserManager;
+import edu.pitt.sis.exp.colfusion.dal.managers.UserManagerImpl;
 import edu.pitt.sis.exp.colfusion.dal.orm.ColfusionServices;
 import edu.pitt.sis.exp.colfusion.utils.ConfigManager;
 import edu.pitt.sis.exp.colfusion.utils.PropertyKeys;
@@ -34,7 +44,8 @@ public class ServiceMonitor extends TimerTask{
 	
 	private List<ColfusionServices> serviceList;
 	private int timeOut;
-	DatabaseConnector databaseConnector;
+	ServiceManager serviceManager;
+	UserManager userManager;
 	EmailNotifier emailNotifier;
 	
 	private Logger logger = LogManager.getLogger(ServiceMonitor.class.getName());
@@ -45,7 +56,9 @@ public class ServiceMonitor extends TimerTask{
 	public ServiceMonitor(){
 		this.serviceList = new ArrayList<ColfusionServices>();
 		this.timeOut = Integer.parseInt(ConfigManager.getInstance().getPropertyByName(PropertyKeys.ServiceMonitorTimeOut));;
-		databaseConnector = new DatabaseConnector();
+		
+		serviceManager = new ServiceManagerImpl();
+		userManager = new UserManagerImpl();
 		emailNotifier = new EmailNotifier();
 	}
 	
@@ -70,8 +83,8 @@ public class ServiceMonitor extends TimerTask{
 		return this.timeOut;
 	}
 	
-	public int getServiceNumInDatabase(){
-		return this.databaseConnector.queryAllServies().size();
+	public int getServiceNumInDatabase() throws Exception{
+		return this.serviceManager.findAll().size();
 	}
 	
 	/**
@@ -120,15 +133,15 @@ public class ServiceMonitor extends TimerTask{
 		String emailText = null;
 		try{
 			if(this.serviceList.isEmpty() == true)
-				this.serviceList = this.databaseConnector.queryAllServies();
+				this.serviceList = this.serviceManager.findAll();
 			for(ColfusionServices service : serviceList){
 				currentStatus = this.updateServiceStatus(service);
-				this.databaseConnector.updateServiceStatus(service);
+				this.serviceManager.updateServiceStatus(service);
 				serviceList.set(serviceList.indexOf(service), service);
 				if(currentStatus == ServiceStatusEnum.STOPPED.getValue() && 
 				   currentStatus != service.getServicePreviousStatus()){
 					for(String userLevel : ConfigManager.getInstance().getPropertyByName(PropertyKeys.userLevel).split(",")){
-						for(String emailAddress : this.databaseConnector.queryUserEmails(userLevel)){
+						for(String emailAddress : this.userManager.queryUserEmails(userLevel)){
 							emailSubject = "Service Status changed: " + service.getServiceName();
 							emailText = String.format("Service has been stopped!\n"
 									+ "  Service id: %d\n"

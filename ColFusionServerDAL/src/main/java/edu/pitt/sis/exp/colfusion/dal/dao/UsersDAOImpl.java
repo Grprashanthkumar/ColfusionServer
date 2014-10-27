@@ -35,4 +35,25 @@ public class UsersDAOImpl extends GenericDAOImpl<ColfusionUsers, Integer> implem
 		
 		return this.findMany(query);
 	}
+	
+	@Override
+	public List<String> queryUserEmails(String userLevel) throws HibernateException{
+		String hql = "SELECT userEmail FROM ColfusionUsers WHERE userLevel = '" + userLevel + "'";
+		List<String> queryResult = null;
+		
+		try {		
+			Query query = HibernateUtil.getSession().createQuery(hql);
+	    	if(query != null){
+	    		@SuppressWarnings("unchecked")
+	    		List<String> tempQueryResult = (List<String>)query.list();
+	    		queryResult = tempQueryResult;
+	    	}
+		} catch (Exception e) {
+			logger.error(String.format("queryUserEmails failed on HibernateUtil.getSession()..."));
+			
+			throw new HibernateException(e);
+		}
+		
+		return queryResult;
+	}
 }

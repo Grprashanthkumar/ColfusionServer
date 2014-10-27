@@ -8,6 +8,10 @@ import java.util.TimerTask;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import edu.pitt.sis.exp.colfusion.dal.managers.ServiceManager;
+import edu.pitt.sis.exp.colfusion.dal.managers.ServiceManagerImpl;
+import edu.pitt.sis.exp.colfusion.dal.managers.UserManager;
+import edu.pitt.sis.exp.colfusion.dal.managers.UserManagerImpl;
 import edu.pitt.sis.exp.colfusion.dal.orm.ColfusionServices;
 
 /**
@@ -45,17 +49,28 @@ public class ServiceMonitorMain extends TimerTask{
 		}
 	}
 	
-	public static void main(String[] args) {	
+	public static void main(String[] args) throws Exception {	
 		
-/*		DatabaseConnector dbc = new DatabaseConnector();
-		for(Service serv : dbc.queryAllServies()){
+/*		ServiceManager servMan = new ServiceManagerImpl();
+		
+		servMan.queryServieExistance("Apache");
+		
+		for(ColfusionServices serv : servMan.findAll()){
 			System.out.println(serv.getServiceName());
-			System.out.println(dbc.queryServiceStatus(serv.getServiceName()));
-			
-		}  
-		System.out.println(dbc.queryUserEmails("normal").size());
-		System.out.println("\n"+dbc.queryServieExistance("Apachea")); */
+			if(serv.getServiceName().equals("Neo4j")){
+				serv.setServiceStatus("stopped");
+				servMan.updateServiceStatus(serv);
+			}
+		}
 		
+		System.out.println(servMan.queryServiceStatus("MySQL"));
+		
+		UserManager userMan = new UserManagerImpl();
+		for(String email : userMan.queryUserEmails("admin")){
+			System.out.println(email);
+		}   */
+
+			
 		serviceMonitorController = new ServiceMonitorController();
 		roundCount = 0;
 		
@@ -70,6 +85,6 @@ public class ServiceMonitorMain extends TimerTask{
 		catch(Exception exception){
 			logger.error("In ServiceMonitorMain.main()\n"
 					+exception.toString()+" "+exception.getMessage()+" "+exception.getCause());
-		}
+		} 
 	}
 }

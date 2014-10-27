@@ -24,4 +24,14 @@ public interface UsersDAO extends GenericDAO<ColfusionUsers, Integer> {
 	 * @throws Exception 
 	 */
 	public List<ColfusionUsers> lookUpUser(String searchTerm, int limit) throws HibernateException;
+	
+	/**
+	 * @author Hao Bai
+	 * Query users' email address.
+	 * 
+	 * @param userLevel to find to be contained in user level.
+	 * @return users' email addresses. 
+	 * @throws Exception 
+	 */
+	public List<String> queryUserEmails(String userLevel) throws HibernateException;
 }

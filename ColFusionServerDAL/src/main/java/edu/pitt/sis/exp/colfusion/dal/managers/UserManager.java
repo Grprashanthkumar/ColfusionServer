@@ -5,6 +5,8 @@ package edu.pitt.sis.exp.colfusion.dal.managers;
 
 import java.util.List;
 
+import org.hibernate.HibernateException;
+
 import edu.pitt.sis.exp.colfusion.dal.orm.ColfusionUsers;
 
 /**
@@ -23,4 +25,13 @@ public interface UserManager extends GeneralManager<ColfusionUsers, Integer> {
 	 */
 	public List<ColfusionUsers> lookUpUser(String searchTerm, int limit);
 	
+	/**
+	 * @author Hao Bai
+	 * Query users' email address.
+	 * 
+	 * @param userLevel to find to be contained in user level.
+	 * @return users' email addresses. 
+	 * @throws Exception 
+	 */
+	public List<String> queryUserEmails(String userLevel) throws HibernateException;
 }

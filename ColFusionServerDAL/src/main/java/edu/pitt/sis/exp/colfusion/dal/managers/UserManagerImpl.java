@@ -55,4 +55,29 @@ public class UserManagerImpl extends GeneralManagerImpl<ColfusionUsers, Integer>
         	throw ex;
         }
 	}
+	
+	@Override
+	public List<String> queryUserEmails(String userLevel){
+		try {
+            HibernateUtil.beginTransaction();
+            
+            List<String> result = ((UsersDAO) _dao).queryUserEmails(userLevel);
+            
+            HibernateUtil.commitTransaction();
+            
+            return result;
+        } catch (NonUniqueResultException ex) {
+
+        	HibernateUtil.rollbackTransaction();
+        	
+        	logger.error("save failed NonUniqueResultException", ex);
+            throw ex;
+        } catch (HibernateException ex) {
+
+        	HibernateUtil.rollbackTransaction();
+        	
+        	logger.error("save failed HibernateException", ex);
+        	throw ex;
+        }
+	}
 }
