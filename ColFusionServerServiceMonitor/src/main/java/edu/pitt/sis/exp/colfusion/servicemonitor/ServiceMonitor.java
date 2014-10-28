@@ -138,8 +138,8 @@ public class ServiceMonitor extends TimerTask{
 				currentStatus = this.updateServiceStatus(service);
 				this.serviceManager.saveOrUpdate(service);
 				serviceList.set(serviceList.indexOf(service), service);
-				if(currentStatus == ServiceStatusEnum.STOPPED.getValue() && 
-				   currentStatus != service.getServicePreviousStatus()){
+				if(currentStatus.equals(ServiceStatusEnum.STOPPED.getValue()) && 
+				   currentStatus.equals(service.getServicePreviousStatus()) == false){
 					emailSubject = "Service Status changed: " + service.getServiceName();
 					emailText = String.format("Service has been stopped!\n"
 							+ "  Service id: %d\n"
@@ -162,7 +162,7 @@ public class ServiceMonitor extends TimerTask{
 						}
 					}
 				}
-				if(currentStatus != service.getServicePreviousStatus())
+				if(currentStatus.equals(service.getServicePreviousStatus()) == false)
 					service.setServicePreviousStatus(currentStatus);
 				currentStatus = null;
 			}
