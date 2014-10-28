@@ -27,11 +27,11 @@ public class ServiceManagerImpl extends GeneralManagerImpl<ColfusionServices, In
 	//***************************************
 	
 	@Override
-	public boolean queryServieExistance(String serviceName){
+	public boolean queryServieExistance(int serviceID){
 		try{
 			HibernateUtil.beginTransaction();
             
-            boolean queryResult = ((ServicesDAO) _dao).queryServieExistance(serviceName);
+            boolean queryResult = ((ServicesDAO) _dao).queryServieExistance(serviceID);
             
             HibernateUtil.commitTransaction();
             
@@ -50,38 +50,15 @@ public class ServiceManagerImpl extends GeneralManagerImpl<ColfusionServices, In
 	}
 	
 	@Override
-	public String queryServiceStatus(String serviceName){
+	public String queryServiceStatus(int serviceID){
 		try{
 			HibernateUtil.beginTransaction();
             
-            String serviceStatus = ((ServicesDAO) _dao).queryServiceStatus(serviceName);
+            String serviceStatus = ((ServicesDAO) _dao).queryServiceStatus(serviceID);
             
             HibernateUtil.commitTransaction();
             
             return serviceStatus;
-        }
-		catch(NonUniqueResultException ex){
-        	HibernateUtil.rollbackTransaction();     	
-        	logger.error("save failed NonUniqueResultException", ex);
-            throw ex;
-        }
-		catch(HibernateException ex){
-        	HibernateUtil.rollbackTransaction();     	
-        	logger.error("save failed HibernateException", ex);
-        	throw ex;
-        }
-	}
-	
-	@Override
-	public boolean updateServiceStatus(ColfusionServices service){
-		try{
-			HibernateUtil.beginTransaction();
-            
-            boolean updateResult = ((ServicesDAO) _dao).updateServiceStatus(service);
-            
-            HibernateUtil.commitTransaction();
-            
-            return updateResult;
         }
 		catch(NonUniqueResultException ex){
         	HibernateUtil.rollbackTransaction();     	

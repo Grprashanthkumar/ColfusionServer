@@ -19,13 +19,13 @@ public class ServicesDAOImpl extends GenericDAOImpl<ColfusionServices, Integer> 
 	Logger logger = LogManager.getLogger(ServicesDAOImpl.class.getName());
 	
 	@Override
-	public boolean queryServieExistance(String serviceName) throws HibernateException{
+	public boolean queryServieExistance(int serviceID) throws HibernateException{
 		boolean queryResult = false;
-		String hql = "FROM ColfusionServices WHERE serviceName = '" + serviceName + "'";
+		String hql = "FROM ColfusionServices WHERE serviceID = :serviceID";
 	    
 		try{    	
 	    	@SuppressWarnings("unchecked")
-	    	List<ColfusionServices> serviceList = (List<ColfusionServices>)HibernateUtil.getSession().createQuery(hql).list();
+	    	List<ColfusionServices> serviceList = (List<ColfusionServices>)HibernateUtil.getSession().createQuery(hql).setParameter("serviceID", serviceID).list();
 	    
 	    	if(serviceList.isEmpty() == false)
 	    		queryResult = true;
@@ -38,12 +38,12 @@ public class ServicesDAOImpl extends GenericDAOImpl<ColfusionServices, Integer> 
 	}
 	
 	@Override
-	public String queryServiceStatus(String serviceName) throws HibernateException{
+	public String queryServiceStatus(int serviceID) throws HibernateException{
 		String serviceStatus = null;
-		String hql = "SELECT serviceStatus FROM ColfusionServices WHERE serviceName = '" + serviceName + "'";
+		String hql = "SELECT serviceStatus FROM ColfusionServices WHERE serviceID = :serviceID";
 	    
 		try{    	
-			Query query = HibernateUtil.getSession().createQuery(hql);
+			Query query = HibernateUtil.getSession().createQuery(hql).setParameter("serviceID", serviceID);
 	    
 			if(query != null)
 	    		serviceStatus = query.list().get(0).toString();
@@ -53,25 +53,5 @@ public class ServicesDAOImpl extends GenericDAOImpl<ColfusionServices, Integer> 
 			throw new HibernateException(e);
 		}	
 		return serviceStatus;
-	}
-	
-	@Override
-	public boolean updateServiceStatus(ColfusionServices service) throws HibernateException{
-		boolean updateResult = false;
-		int serviceID = service.getServiceID();
-		String serviceStatus = service.getServiceStatus();
-	    
-		try{  
-			ColfusionServices serviceUpdate = (ColfusionServices) HibernateUtil.getSession().get(ColfusionServices.class, serviceID); 
-	    	serviceUpdate.setServiceStatus(serviceStatus);
-	    	HibernateUtil.getSession().update(serviceUpdate); 
-	    	
-	    	updateResult = true;
-	    }
-	    catch(Exception e){
-			logger.error(String.format("updateServiceStatus failed on HibernateUtil.getSession()..."));
-			throw new HibernateException(e);
-		}	
-		return updateResult;
 	}
 }

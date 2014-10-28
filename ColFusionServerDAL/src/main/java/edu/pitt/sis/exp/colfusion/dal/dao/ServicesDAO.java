@@ -17,7 +17,7 @@ public interface ServicesDAO extends GenericDAO<ColfusionServices, Integer> {
 	 * @return if service with serviceName exists (boolean). 
 	 * @throws Exception 
 	 */
-	public boolean queryServieExistance(String serviceName) throws HibernateException;
+	public boolean queryServieExistance(int serviceID) throws HibernateException;
 	
 	/**
 	 * 
@@ -27,15 +27,5 @@ public interface ServicesDAO extends GenericDAO<ColfusionServices, Integer> {
 	 * @return service's status. 
 	 * @throws Exception 
 	 */
-	public String queryServiceStatus(String serviceName) throws HibernateException;
-	
-	/**
-	 * 
-	 * Update service's status.
-	 * 
-	 * @param Object service to find to be contained in service.
-	 * @return updating result (boolean). 
-	 * @throws Exception 
-	 */
-	public boolean updateServiceStatus(ColfusionServices service) throws HibernateException;
+	public String queryServiceStatus(int serviceID) throws HibernateException;
 }

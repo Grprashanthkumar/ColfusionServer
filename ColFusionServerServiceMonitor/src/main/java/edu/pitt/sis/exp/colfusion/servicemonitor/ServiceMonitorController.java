@@ -91,8 +91,7 @@ public class ServiceMonitorController{
 	 * is different from getServiceStatus() in Service.java
 	 */
 	public List<ColfusionServices> getServicesStatus() throws Exception{
-		if(this.serviceMonitor.getServiceList().isEmpty() == true ||
-		   this.serviceMonitor.getServiceList().size() < this.serviceMonitor.getServiceNumInDatabase())
+		if(this.serviceMonitor.getServiceList().isEmpty() == true)
 			return null;
 		
 		return this.serviceMonitor.getServiceList();

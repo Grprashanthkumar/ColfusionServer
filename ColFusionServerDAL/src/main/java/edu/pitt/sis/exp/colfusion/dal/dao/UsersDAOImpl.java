@@ -38,11 +38,11 @@ public class UsersDAOImpl extends GenericDAOImpl<ColfusionUsers, Integer> implem
 	
 	@Override
 	public List<String> queryUserEmails(String userLevel) throws HibernateException{
-		String hql = "SELECT userEmail FROM ColfusionUsers WHERE userLevel = '" + userLevel + "'";
+		String hql = "SELECT userEmail FROM ColfusionUsers WHERE userLevel = :userLevel";
 		List<String> queryResult = null;
 		
 		try {		
-			Query query = HibernateUtil.getSession().createQuery(hql);
+			Query query = HibernateUtil.getSession().createQuery(hql).setParameter("userLevel", userLevel);
 	    	if(query != null){
 	    		@SuppressWarnings("unchecked")
 	    		List<String> tempQueryResult = (List<String>)query.list();
