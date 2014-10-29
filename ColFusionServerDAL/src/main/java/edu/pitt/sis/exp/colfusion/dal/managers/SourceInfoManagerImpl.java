@@ -405,7 +405,7 @@ public class SourceInfoManagerImpl extends GeneralManagerImpl<ColfusionSourceinf
 			oldValue = (oldStory == null) ? null : oldStory.getStatus();
 			editHistorDAO.saveHistoryIfChanged(newStory.getSid(), userId, oldValue, newStory.getStatus(), HistoryItem.STATUS,  reason);
 			
-			oldValue = (oldStory == null) ? null : oldStory.getColfusionLicense().getLicenseName();
+			oldValue = (oldStory.getColfusionLicense() == null) ? null : oldStory.getColfusionLicense().getLicenseName();
 			editHistorDAO.saveHistoryIfChanged(newStory.getSid(), userId, oldValue, newStory.getColfusionLicense().getLicenseName(), HistoryItem.LICENSE, reason);
 			
 			
