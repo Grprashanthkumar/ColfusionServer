@@ -21,7 +21,7 @@ public class CellDeserializer implements JsonDeserializer<Cell>{
 		try {
 			String className = json.getAsJsonObject().get("isA").getAsString();
 			
-			logger.info(String.format("About to deserialize Cell from '%s' json for className '%s'", json.toString(), className));
+			//logger.info(String.format("About to deserialize Cell from '%s' json for className '%s'", json.toString(), className));
 			
 			Class<?> clazz = Class.forName(className);
 			

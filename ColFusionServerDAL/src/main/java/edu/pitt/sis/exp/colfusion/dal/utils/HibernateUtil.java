@@ -29,6 +29,7 @@ public class HibernateUtil {
 		} catch (Throwable ex) {
 			// Log the exception.
 			logger.error("sessionFactory initialization failed!", ex);
+			throw new RuntimeException(ex);
 		}
 	}
  
