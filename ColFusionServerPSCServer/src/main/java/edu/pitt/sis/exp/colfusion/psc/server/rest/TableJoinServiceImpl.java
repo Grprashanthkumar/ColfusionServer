@@ -46,7 +46,7 @@ public class TableJoinServiceImpl implements TableJoinService {
 	@Override
 	public Response joinTables(final String twoJointTables) throws FileNotFoundException, IOException {
 		
-		logger.info("Got request with this payload: " + twoJointTables);
+		logger.info("Got request with this payload length: " + twoJointTables.length());
 		
 //		Gsonizer.registerTypeAdapter(Cell.class, new CellDeserializer());
 //		
@@ -135,7 +135,7 @@ public class TableJoinServiceImpl implements TableJoinService {
 		
 		String twoTablesStr = Gsonizer.toJson(twoTables, true);
 		
-		logger.info("Serialized model: " + twoTablesStr);
+		logger.info("Serialized model length is: " + twoTablesStr.length());
 
 		String resourceURL = String.format("%s/TableJoin/join", Utils.getBaseRestURL(ServerType.JOINER));
 		   
