@@ -11,6 +11,12 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+
+import com.wordnik.swagger.annotations.ApiOperation;
+import com.wordnik.swagger.annotations.ApiResponse;
+import com.wordnik.swagger.annotations.ApiResponses;
+
+import edu.pitt.sis.exp.colfusion.dal.viewmodels.StoryListViewModel;
 import edu.pitt.sis.exp.colfusion.dal.viewmodels.StoryMetadataViewModel;
 
 public interface StoryRestService {
@@ -31,6 +37,11 @@ public interface StoryRestService {
 	 */
 	@Path("metadata/new/{userId}")
     @GET
+    @ApiOperation(value = "Find purchase order by ID",
+    notes = "For valid response try integer IDs with value <= 5 or > 10. Other values will generated exceptions",
+    response = StoryListViewModel.class)
+	@ApiResponses(value = { @ApiResponse(code = 400, message = "Invalid ID supplied"),
+      @ApiResponse(code = 404, message = "Order not found") })
     @Produces(MediaType.APPLICATION_JSON)
     public abstract Response newStoryMetadata(@PathParam("userId") int userId);
 
@@ -174,17 +185,18 @@ public interface StoryRestService {
 	 * Finds story list
 	 * 
 	 * @param pageNo, perPage
+	 * @response MediaType.APPLICATION_JSON
 	 * @return storyListViewModel with story list in the payload.
 	 * storyListViewModel:  int sid;
-							String title;
-							UserViewModel user;
-							String path;
-							Date entryDate;
-							Date lastUpdated;
-							String status;
-							String rawDataPath;
-							String sourceType;
-							LicenseViewModel license;
+	 *						String title;
+	 *						UserViewModel user;
+	 *						String path;
+	 *						Date entryDate;
+	 *						Date lastUpdated;
+	 *						String status;
+	 *						String rawDataPath;
+	 *						String sourceType;
+	 *						LicenseViewModel license;
 	 */
 	@OPTIONS
     @Path("all/{pageNo}/{perPage}")
@@ -201,15 +213,15 @@ public interface StoryRestService {
 	 * 
 	 * @return storyListViewModel with story list in the payload.
 	 * storyListViewModel:  int sid;
-							String title;
-							UserViewModel user;
-							String path;
-							Date entryDate;
-							Date lastUpdated;
-							String status;
-							String rawDataPath;
-							String sourceType;
-							LicenseViewModel license;
+	 *						String title;
+	 *						UserViewModel user;
+	 *						String path;
+	 *						Date entryDate;
+	 *						Date lastUpdated;
+	 *						String status;
+	 *						String rawDataPath;
+	 *						String sourceType;
+	 *						LicenseViewModel license;
 	 */
 	@OPTIONS
     @Path("all/")

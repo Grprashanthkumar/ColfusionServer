@@ -9,6 +9,8 @@ import javax.ws.rs.core.Response;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.wordnik.swagger.annotations.Api;
+
 import edu.pitt.sis.exp.colfusion.bll.BasicTableBL;
 import edu.pitt.sis.exp.colfusion.bll.StoryBL;
 import edu.pitt.sis.exp.colfusion.dal.viewmodels.StoryMetadataViewModel;
@@ -30,6 +32,7 @@ import edu.pitt.sis.exp.colfusion.war.rest.StoryRestService;
  * @author Evgeny
  *
  */
+@Api(value = "/Story", description = "Operations on stories")
 @Path("Story/")
 public class StoryRestServiceImpl extends BaseController implements StoryRestService {
 	
@@ -174,12 +177,12 @@ public class StoryRestServiceImpl extends BaseController implements StoryRestSer
 	}
 	
 	@Override
-	public Response getStoryStatus(String requestH) {
+	public Response getStoryStatus(final String requestH) {
 		return makeCORS(Response.ok()); //, requestH);
 	}
 
 	@Override
-	public Response getStoryStatus(int sid) {
+	public Response getStoryStatus(final int sid) {
 		BasicTableBL basicBL = new BasicTableBL();
 		StoryStatusResponseModel result = basicBL.getStoryStatus(sid);
 		String json = result.toJson();
@@ -187,12 +190,12 @@ public class StoryRestServiceImpl extends BaseController implements StoryRestSer
 	}
 
 	@Override
-	public Response getMineRelationships(String requestH) {
+	public Response getMineRelationships(final String requestH) {
 		return makeCORS(Response.ok()); //, requestH);
 	}
 
 	@Override
-	public Response getMineRelationships(int sid, int perPage, int pageNumber) {
+	public Response getMineRelationships(final int sid, final int perPage, final int pageNumber) {
 		BasicTableBL basicBL = new BasicTableBL();
 		RelationshipsResponseModel result = basicBL.getRelationships(sid, perPage, pageNumber);
 		String json = result.toJson();
@@ -201,12 +204,12 @@ public class StoryRestServiceImpl extends BaseController implements StoryRestSer
 	}
 
 	@Override
-	public Response getAttachmentList(String requestH) {
+	public Response getAttachmentList(final String requestH) {
 		return makeCORS(Response.ok()); //, requestH);
 	}
 
 	@Override
-	public Response getAttachmentList(int sid) {
+	public Response getAttachmentList(final int sid) {
 		BasicTableBL basicBL = new BasicTableBL();
 		AttachmentListResponseModel result = basicBL.getAttachmentList(sid);
 		String json = result.toJson();
@@ -214,12 +217,12 @@ public class StoryRestServiceImpl extends BaseController implements StoryRestSer
 	}
 
 	@Override
-	public Response getStoryList(String requestH) {
+	public Response getStoryList(final String requestH) {
 		return makeCORS(Response.ok()); //, requestH);
 	}
 
 	@Override
-	public Response getStoryList(int pageNo, int perPage) {
+	public Response getStoryList(final int pageNo, final int perPage) {
 		BasicTableBL basicBL = new BasicTableBL();
 		StoryListResponseModel result = basicBL.getStoryList(pageNo,perPage);
 		String json = result.toJson();
@@ -227,9 +230,8 @@ public class StoryRestServiceImpl extends BaseController implements StoryRestSer
 	}
 
 	@Override
-	public Response getAllStoryList(String requestH) {
-		// TODO Auto-generated method stub
-		return null;
+	public Response getAllStoryList(final String requestH) {
+		return makeCORS(Response.ok()); //, requestH);
 	}
 
 	@Override
