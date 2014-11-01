@@ -35,6 +35,13 @@
 		<module>ColFusionServerPSCClient</module>	
 	</modules>
 	
+	<distributionManagement>
+		<site>
+			<id>website</id>
+			<url>http://colfusion.exp.sis.pitt.edu/docs</url>
+		</site>
+	</distributionManagement>
+
 	<build>
 		<plugins>
 			<plugin>
