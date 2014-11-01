@@ -252,19 +252,20 @@ public class ExcelImporter implements Importer {
                 	
                 	org.apache.poi.ss.usermodel.Row row = sheet.getRow(j);
                 	
-                	short lastCell = row.getLastCellNum();
-                	
                 	WorksheetDataRowViewModel rowCells = new WorksheetDataRowViewModel();
                 	
-                	for (int k = 0; k < lastCell; k++) {
-                		
-                		org.apache.poi.ss.usermodel.Cell sourceCell = row.getCell(k);
-                		
-                		DatasetVariableViewModel datasetVariable = extractVariableCell(sourceCell);
-                		
-                		rowCells.getWorksheetDataRow().add(datasetVariable.getOriginalName());
-					}
-          	
+                	if (row != null) {                		
+	                	short lastCell = row.getLastCellNum();
+	                	
+	                	for (int k = 0; k < lastCell; k++) {
+	                		
+	                		org.apache.poi.ss.usermodel.Cell sourceCell = row.getCell(k);
+	                		
+	                		DatasetVariableViewModel datasetVariable = extractVariableCell(sourceCell);
+	                		
+	                		rowCells.getWorksheetDataRow().add(datasetVariable.getOriginalName());
+						}
+                	}
                 	worksheetData.add(rowCells);
 				}
                

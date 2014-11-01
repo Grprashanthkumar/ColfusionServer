@@ -48,8 +48,8 @@ public class Gsonizer {
 	
 	public static <T> T fromJson(final String json, final Class<T> clazz, final boolean excludeNotExposed) {
 		
-		logger.info(String.format("About to deserialize this json '%s' to class '%s' "
-				+ "with excludeNotExposed set tot %b", json, clazz, excludeNotExposed));
+		logger.info(String.format("About to deserialize this json string with length '%d' to class '%s' "
+				+ "with excludeNotExposed set tot %b", json.length(), clazz, excludeNotExposed));
 		
 		if (excludeNotExposed) {
 			return gson.fromJson(json, clazz);

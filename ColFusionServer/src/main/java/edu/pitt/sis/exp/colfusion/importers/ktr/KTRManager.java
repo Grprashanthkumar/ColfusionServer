@@ -80,6 +80,7 @@ public class KTRManager {
 		
 		logger.info(String.format("Starting to create KTR file(s) for %s sid", sid));
 		
+		//TODO: why do we need that prefix at all???
 		//TODO: this should be done in some other place, because the same line is used DataSubmissionWizardBLL when saveVariablesMetadata.
 		String tableNamePrefix = file.getWorksheets().size() > 1 ? file.getFileName() + " - " : "";
 		

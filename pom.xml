@@ -15,6 +15,10 @@
 	</properties>
 
 	<repositories>
+		<repository>  
+            <id>central</id>  
+            <url>http://repo1.maven.org/maven2/</url>  
+        </repository> 
 		<repository>
 			<id>repo</id>
 			<url>file://${main.basedir}/repo</url>
@@ -93,13 +97,6 @@
 			</plugin>
 		</plugins>
 	</build>
-
-	<distributionManagement>
-		<site>
-			<id>website</id>
-			<url>file:///{basedir}/documentation</url>
-		</site>
-	</distributionManagement>
 	
 	<dependencies>
 
@@ -129,6 +126,15 @@
 
 	</dependencies>
 
-	<url>colfusion.exp.sis.pitt.edu/colfusion</url>	
+	<url>colfusion.exp.sis.pitt.edu/colfusion</url>
+	<description>Col*Fusion (Collaborative Data Fusion) is an advanced infrastructure for systematic accumulation, integration and utilization of historical data. It aims to support large-scale interdisciplinary research, where a comprehensive picture of the subject requires large amounts of historical data from disparate data sources from a variety of disciplines. As an example, consider the task of exploring long-term and short-term social changes, which requires consolidation of a comprehensive set of data on social-scientific, health, and environmental dynamics. While there are numerous historical data sets available from various groups worldwide, the existing data sources are principally oriented toward regional comparative efforts rather than global applications. They vary widely both in content and format, and cannot be easily integrated and maintained by small groups of developers. Devising efficient and scalable methods for integration of the existing and emerging historical data sources is a considerable research challenge.</description>
+	<issueManagement>
+		<system>Redmine</system>
+		<url>http://colfusion.exp.sis.pitt.edu/redmine</url>
+	</issueManagement>
+	<ciManagement>
+		<system>Jenkins</system>
+		<url>http://colfusion.exp.sis.pitt.edu/jenkins/</url>
+	</ciManagement>
 	
 </project>
