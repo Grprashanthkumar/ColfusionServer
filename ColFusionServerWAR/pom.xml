@@ -183,4 +183,5 @@
         </dependency>
 
 	</dependencies>
+	<description>REST API of the ColfusionProject</description>
 </project>

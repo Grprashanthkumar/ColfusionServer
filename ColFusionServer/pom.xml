@@ -100,4 +100,5 @@
 			<version>1.4.7</version>
 		</dependency>
 	</dependencies>
+	<description>The core of Colfusion Server business logic</description>
 </project>

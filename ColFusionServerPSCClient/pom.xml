@@ -36,4 +36,5 @@
 		</dependency>
 
 	</dependencies>
+	<description>A client to talk to ColfusionServerPSC that intended to run on PSC</description>
 </project>

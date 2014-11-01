@@ -111,4 +111,5 @@
 			<version>1.4.7</version>
 		</dependency>
 	</dependencies>
+	<description>Datat Access Layer (DAL) that holds all database related classes including hibernate mappings and generated ORM classes for colfusion metadata (catalog) as wells as datahandlers to deal with the the actual ingested data.</description>
 </project>

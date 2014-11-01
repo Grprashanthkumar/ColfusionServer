@@ -100,4 +100,5 @@
 	</dependencies>
 
 	<url>colfusion.exp.sis.pitt.edu/colfusion</url>
+	<description>Executable projects inteded to be constantly run on background and periodically check for all Colfusion serveces (e.g. Carte, MySQL, Neo4j, OpenRefine, ColfusionServer, etc). The project also exposes REST API</description>
 </project>

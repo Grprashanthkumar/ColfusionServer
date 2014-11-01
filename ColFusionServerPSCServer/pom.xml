@@ -165,4 +165,5 @@
 			 -->
 		</plugins>
 	</build>
+	<description>ColfusionServer that is supposed to run on PSC servers. This server starts Jettry server  expeses REST API</description>
 </project>
