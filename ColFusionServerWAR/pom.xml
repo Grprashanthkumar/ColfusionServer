@@ -56,7 +56,7 @@
                             <!---General parameters END-->
 
                             <!---Document generation parameters BEGIN-->
-                            <outputTemplate>../swaggerTemplates/strapdown.html.mustache</outputTemplate>
+                            <outputTemplate>swaggerTemplates/strapdown.html.mustache</outputTemplate>
                             <mustacheFileRoot>${main.basedir}/swaggerTemplates/</mustacheFileRoot>
                             <outputPath>${main.basedir}/generated/document.html</outputPath>
                             <!---Document generation parameters END-->
