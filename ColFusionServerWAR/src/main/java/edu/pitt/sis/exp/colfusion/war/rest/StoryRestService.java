@@ -12,13 +12,17 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
+import com.wordnik.swagger.annotations.ApiParam;
 import com.wordnik.swagger.annotations.ApiResponse;
 import com.wordnik.swagger.annotations.ApiResponses;
 
-import edu.pitt.sis.exp.colfusion.dal.viewmodels.StoryListViewModel;
 import edu.pitt.sis.exp.colfusion.dal.viewmodels.StoryMetadataViewModel;
+import edu.pitt.sis.exp.colfusion.responseModels.StoryListResponseModel;
+import edu.pitt.sis.exp.colfusion.responseModels.StoryMetadataResponse;
 
+@Api(value = "/Story", description = "Operations on stories")
 public interface StoryRestService {
 
 	/**
@@ -37,13 +41,15 @@ public interface StoryRestService {
 	 */
 	@Path("metadata/new/{userId}")
     @GET
-    @ApiOperation(value = "Find purchase order by ID",
-    notes = "For valid response try integer IDs with value <= 5 or > 10. Other values will generated exceptions",
-    response = StoryListViewModel.class)
-	@ApiResponses(value = { @ApiResponse(code = 400, message = "Invalid ID supplied"),
-      @ApiResponse(code = 404, message = "Order not found") })
+    @ApiOperation(
+    		value = "Creates new story in the database.",
+    		notes = "newStoryMetadata note",
+    		response = StoryMetadataResponse.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 400, message = "Invalid ID supplied"),
+			@ApiResponse(code = 404, message = "StoryMetadata not found") })
     @Produces(MediaType.APPLICATION_JSON)
-    public abstract Response newStoryMetadata(@PathParam("userId") int userId);
+    public abstract Response newStoryMetadata(@ApiParam(value = "the id of the authors of story", required = true) @PathParam("userId") int userId);
 
 	@OPTIONS
     @Path("metadata/{sid: [0-9]+}")
@@ -57,8 +63,15 @@ public interface StoryRestService {
 	 */
 	@Path("metadata/{sid: [0-9]+}")
     @GET
+    @ApiOperation(
+    		value = "Finds metadata for the story with provided sid.",
+    		notes = "For valid response try integer IDs with value <= 5 or > 10. Other values will generated exceptions",
+    		response = StoryMetadataResponse.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 400, message = "Invalid ID supplied"),
+			@ApiResponse(code = 404, message = "StoryMetadata not found") })
     @Produces(MediaType.APPLICATION_JSON)
-    public abstract Response getStoryMetadata(@PathParam("sid") int sid);
+    public abstract Response getStoryMetadata(@ApiParam(value = "story id for which the metadata should be fetched", required = true) @PathParam("sid") int sid);
 
 	/**
 	 * Updates story/dataset metadata.
@@ -205,8 +218,15 @@ public interface StoryRestService {
 	
 	@Path("all/{pageNo}/{perPage}")
     @GET
+    @ApiOperation(
+    		value = "Finds story list.",
+    		notes = "getAllStoryList note",
+    		response = StoryListResponseModel.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 400, message = "Invalid pageNo, perPage supplied"),
+			@ApiResponse(code = 404, message = "StoryList not found") })
     @Produces(MediaType.APPLICATION_JSON)
-    public abstract Response getStoryList(@PathParam("pageNo") final int pageNo, @PathParam("perPage") final int perPage);
+    public abstract Response getStoryList(@ApiParam(value = "number of the page", required = true) @PathParam("pageNo") final int pageNo,@ApiParam(value = "story lists amount on per page", required = true) @PathParam("perPage") final int perPage);
 	
 	/**
 	 * Finds story list
@@ -230,6 +250,12 @@ public interface StoryRestService {
 	
 	@Path("all/")
     @GET
+    @ApiOperation(
+    		value = "Finds story list.",
+    		notes = "getAllStoryList note",
+    		response = StoryListResponseModel.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 404, message = "StoryList not found") })
     @Produces(MediaType.APPLICATION_JSON)
     public abstract Response getAllStoryList();
 }
