@@ -37,17 +37,17 @@
                         <apiSource>
                             <!--Required parameters BEGIN-->
                             <locations>edu.pitt.sis.exp.colfusion.war.rest</locations>
-                            <apiVersion>v1</apiVersion>
-                            <basePath>localhost</basePath>
+                            <apiVersion>2.0</apiVersion>
+                            <basePath>http://localhost/REST/ColFusionServer</basePath>
                             <!--Required parameters END-->
 
                             <!--Optional parameters BEGIN-->
                             <!---General parameters BEGIN-->
                             <apiInfo>
                                 <title>Colfusion</title>
-                                <description>This is a sample for Colfusion</description>
+                                <description>This is the RSET API for Colfusion</description>
                                 <termsOfServiceUrl>http://www.github.com/kongchen/swagger-maven-plugin</termsOfServiceUrl>
-                                <contact>kongchen#gmail$com</contact>
+                                <contact>University of Pittsburgh iSchool</contact>
                                 <license>Apache 2.0</license>
                                 <licenseUrl>http://www.apache.org/licenses/LICENSE-2.0.html</licenseUrl>
                             </apiInfo>
@@ -56,9 +56,9 @@
                             <!---General parameters END-->
 
                             <!---Document generation parameters BEGIN-->
-                            <outputTemplate>templates/strapdown.html.mustache</outputTemplate>
-                            <mustacheFileRoot>${basedir}/templates/</mustacheFileRoot>
-                            <outputPath>${basedir}/generated/document.html</outputPath>
+                            <outputTemplate>../swaggerTemplates/strapdown.html.mustache</outputTemplate>
+                            <mustacheFileRoot>${main.basedir}/swaggerTemplates/</mustacheFileRoot>
+                            <outputPath>${main.basedir}/generated/document.html</outputPath>
                             <!---Document generation parameters END-->
 
                             <!---Swagger JSON parameters BEGIN-->
