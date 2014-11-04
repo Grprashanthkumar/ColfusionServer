@@ -1,4 +1,4 @@
-package edu.pitt.sis.exp.colfusion.war.rest.impl;
+package edu.pitt.sis.exp.colfusion.war.rest;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;

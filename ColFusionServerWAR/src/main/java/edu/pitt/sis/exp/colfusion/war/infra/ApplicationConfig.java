@@ -5,13 +5,13 @@ import java.util.Set;
 
 import javax.ws.rs.core.Application;
 
-import edu.pitt.sis.exp.colfusion.war.rest.impl.OpenRefineRestServiceImpl;
-import edu.pitt.sis.exp.colfusion.war.rest.impl.RelationshipRestServiceImpl;
-import edu.pitt.sis.exp.colfusion.war.rest.impl.SimilarityJoinRestServiceImpl;
-import edu.pitt.sis.exp.colfusion.war.rest.impl.StoryRestServiceImpl;
-import edu.pitt.sis.exp.colfusion.war.rest.impl.TestResourceImpl;
-import edu.pitt.sis.exp.colfusion.war.rest.impl.UserRestServiceImpl;
-import edu.pitt.sis.exp.colfusion.war.rest.impl.WizardRestServiceImpl;
+import edu.pitt.sis.exp.colfusion.war.rest.OpenRefineRestServiceImpl;
+import edu.pitt.sis.exp.colfusion.war.rest.RelationshipRestServiceImpl;
+import edu.pitt.sis.exp.colfusion.war.rest.SimilarityJoinRestServiceImpl;
+import edu.pitt.sis.exp.colfusion.war.rest.StoryRestServiceImpl;
+import edu.pitt.sis.exp.colfusion.war.rest.TestResourceImpl;
+import edu.pitt.sis.exp.colfusion.war.rest.UserRestServiceImpl;
+import edu.pitt.sis.exp.colfusion.war.rest.WizardRestServiceImpl;
 
 
 
