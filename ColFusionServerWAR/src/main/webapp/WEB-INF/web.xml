@@ -65,12 +65,29 @@
     </filter>
     <filter-mapping>
         <filter-name>log4jServletFilter</filter-name>
-        <url-pattern>/*</url-pattern>
+        <url-pattern>/rest/*</url-pattern>
         <dispatcher>REQUEST</dispatcher>
         <dispatcher>FORWARD</dispatcher>
         <dispatcher>INCLUDE</dispatcher>
         <dispatcher>ERROR</dispatcher>
     </filter-mapping>
-     
+    
+    <filter>
+        <filter-name>LoggingRecievedRequetsFilter</filter-name>
+        <filter-class>edu.pitt.sis.exp.colfusion.war.infra.LoggingFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>LoggingRecievedRequetsFilter</filter-name>
+        <url-pattern>/rest/*</url-pattern>
+    </filter-mapping>
+    
+    <filter>
+	    <filter-name>ApiOriginFilter</filter-name>
+	    <filter-class>edu.pitt.sis.exp.colfusion.war.infra.ApiOriginFilter</filter-class>
+  	</filter> 
+  	<filter-mapping>
+	    <filter-name>ApiOriginFilter</filter-name>
+	    <url-pattern>/rest/*</url-pattern>
+  	</filter-mapping>
     
 </web-app>
