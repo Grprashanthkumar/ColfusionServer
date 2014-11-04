@@ -5,12 +5,11 @@ import java.util.Set;
 
 import javax.ws.rs.core.Application;
 
-import org.glassfish.jersey.media.multipart.MultiPartFeature;
-
 import edu.pitt.sis.exp.colfusion.war.rest.impl.OpenRefineRestServiceImpl;
 import edu.pitt.sis.exp.colfusion.war.rest.impl.RelationshipRestServiceImpl;
 import edu.pitt.sis.exp.colfusion.war.rest.impl.SimilarityJoinRestServiceImpl;
 import edu.pitt.sis.exp.colfusion.war.rest.impl.StoryRestServiceImpl;
+import edu.pitt.sis.exp.colfusion.war.rest.impl.TestResourceImpl;
 import edu.pitt.sis.exp.colfusion.war.rest.impl.UserRestServiceImpl;
 import edu.pitt.sis.exp.colfusion.war.rest.impl.WizardRestServiceImpl;
 
@@ -29,10 +28,13 @@ public class ApplicationConfig extends Application {
         resources.add(RelationshipRestServiceImpl.class);
         resources.add(OpenRefineRestServiceImpl.class);
         resources.add(SimilarityJoinRestServiceImpl.class);
+        
+        resources.add(TestResourceImpl.class);
        
         // Add additional features such as support for Multipart.
-        resources.add(MultiPartFeature.class);
-
+//        resources.add(MultiPartFeature.class);
+        
         return resources;
     }
+	
 }

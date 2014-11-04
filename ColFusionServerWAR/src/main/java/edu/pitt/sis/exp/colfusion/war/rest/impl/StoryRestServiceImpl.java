@@ -9,8 +9,6 @@ import javax.ws.rs.core.Response;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.wordnik.swagger.annotations.Api;
-
 import edu.pitt.sis.exp.colfusion.bll.BasicTableBL;
 import edu.pitt.sis.exp.colfusion.bll.StoryBL;
 import edu.pitt.sis.exp.colfusion.dal.viewmodels.StoryMetadataViewModel;
@@ -32,7 +30,7 @@ import edu.pitt.sis.exp.colfusion.war.rest.StoryRestService;
  * @author Evgeny
  *
  */
-@Api(value = "/Story", description = "Operations on stories")
+//@Api(value = "/Story", description = "Operations on stories")
 @Path("Story/")
 public class StoryRestServiceImpl extends BaseController implements StoryRestService {
 	

@@ -12,7 +12,6 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
 import com.wordnik.swagger.annotations.ApiParam;
 import com.wordnik.swagger.annotations.ApiResponse;
@@ -22,7 +21,7 @@ import edu.pitt.sis.exp.colfusion.dal.viewmodels.StoryMetadataViewModel;
 import edu.pitt.sis.exp.colfusion.responseModels.StoryListResponseModel;
 import edu.pitt.sis.exp.colfusion.responseModels.StoryMetadataResponse;
 
-@Api(value = "/Story", description = "Operations on stories")
+//@Api(value = "/Story", description = "Operations on stories")
 public interface StoryRestService {
 
 	/**
@@ -41,13 +40,13 @@ public interface StoryRestService {
 	 */
 	@Path("metadata/new/{userId}")
     @GET
-    @ApiOperation(
-    		value = "Creates new story in the database.",
-    		notes = "newStoryMetadata note",
-    		response = StoryMetadataResponse.class)
-	@ApiResponses(value = {
-			@ApiResponse(code = 400, message = "Invalid ID supplied"),
-			@ApiResponse(code = 404, message = "StoryMetadata not found") })
+//    @ApiOperation(
+//    		value = "Creates new story in the database.",
+//    		notes = "newStoryMetadata note",
+//    		response = StoryMetadataResponse.class)
+//	@ApiResponses(value = {
+//			@ApiResponse(code = 400, message = "Invalid ID supplied"),
+//			@ApiResponse(code = 404, message = "StoryMetadata not found") })
     @Produces(MediaType.APPLICATION_JSON)
     public abstract Response newStoryMetadata(@ApiParam(value = "the id of the authors of story", required = true) @PathParam("userId") int userId);
 
