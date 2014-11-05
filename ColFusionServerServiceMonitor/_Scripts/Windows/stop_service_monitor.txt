@@ -1,0 +1,5 @@
+start /min java -jar ServiceMonitor.jar -stop
+
+OR
+
+javaw -jar ServiceMonitor.jar -stop

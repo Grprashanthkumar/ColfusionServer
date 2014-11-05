@@ -1,0 +1,1 @@
+nohup java -jar ServiceMonitor.jar -stop & > log.txt

@@ -2,7 +2,17 @@ package edu.pitt.sis.exp.colfusion.servicemonitor;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
 import java.util.TimerTask;
+
+
+
+
+
+
+
+
+
 
 
 
@@ -47,6 +57,8 @@ public class ServiceMonitor extends TimerTask{
 	ServiceManager serviceManager;
 	UserManager userManager;
 	EmailNotifier emailNotifier;
+	private int monitorPeriod;
+	Timer timer;
 	
 	private Logger logger = LogManager.getLogger(ServiceMonitor.class.getName());
 	
@@ -54,17 +66,21 @@ public class ServiceMonitor extends TimerTask{
 	 * Set the default time out as 3 seconds.
 	 */
 	public ServiceMonitor(){
+		timer = new Timer();
 		this.serviceList = new ArrayList<ColfusionServices>();
 		this.timeOut = Integer.parseInt(ConfigManager.getInstance().getPropertyByName(PropertyKeys.ServiceMonitorTimeOut));;
-		
+		this.monitorPeriod = Integer.parseInt(ConfigManager.getInstance().getPropertyByName(PropertyKeys.ServiceMonitorPeriod));;
+
 		serviceManager = new ServiceManagerImpl();
 		userManager = new UserManagerImpl();
 		emailNotifier = new EmailNotifier();
 	}
 	
-	public ServiceMonitor(List<ColfusionServices> servicelist, int timeout){
+	public ServiceMonitor(List<ColfusionServices> servicelist, int timeout, int period, Timer timerParameter){
 		this.serviceList = servicelist;
 		this.timeOut = timeout;
+		this.monitorPeriod = period;
+		this.timer = timerParameter;
 	}
 	
 	public void setServiceList(List<ColfusionServices> servicelist){
@@ -83,8 +99,67 @@ public class ServiceMonitor extends TimerTask{
 		return this.timeOut;
 	}
 	
+	public void setMonitorPeriod(int period){
+		this.monitorPeriod = period;
+	}
+	
+	public int getMonitorPeriod(){
+		return this.monitorPeriod;
+	}
+	
 	public int getServiceNumInDatabase() throws Exception{
 		return this.serviceManager.findAll().size();
+	}
+	
+	/**
+	 * This function starts the process of service monitoring.
+	 * If monitoring is started successfully, returns true.
+	 * Otherwise, returns false.
+	 */
+	public boolean startServiceMonitor(){
+		try{
+			/*executes task as schedule(task, initial delay, delay period)*/
+			this.timer.schedule(this, 0, this.monitorPeriod);
+			return true;
+		}
+		catch(Exception exception){
+			logger.error("In ServiceMonitor.startServiceMonitor()\n"
+					+ exception.toString() + " " + exception.getMessage() + " " + exception.getCause());
+			return false;
+		}
+	}
+	
+	/**
+	 * This function stops the process of service monitoring.
+	 * If monitoring is stopped successfully, returns true.
+	 * Otherwise, returns false.
+	 */
+	public boolean stopServiceMonitor(){
+		if(this.timer == null)
+			return true;
+		try{
+			//this.timer.cancel();
+			this.cancel();
+			return true;
+		}
+		catch(Exception exception){
+			logger.error("In ServiceMonitor.stopServiceMonitor()\n"
+					+ exception.toString() + " " + exception.getMessage() + " " + exception.getCause());		
+			return false;
+		}
+	}
+	
+	/**
+	 * This function returns all services's status 
+	 * with other information in a Service list.
+	 * Note: Either the name or the function of this function
+	 * is different from getServiceStatus() in Service.java
+	 */
+	public List<ColfusionServices> getServicesStatus() throws Exception{
+		if(this.getServiceList().isEmpty() == true)
+			return null;
+		
+		return this.getServiceList();
 	}
 	
 	/**
@@ -120,7 +195,28 @@ public class ServiceMonitor extends TimerTask{
 		return service.getServiceStatus();
 	}
 	
-	/*
+	/**
+	 * Main function
+	 * */
+	public static void main(String[] args) {
+		//if(args.length <= 0) {
+		//	System.out.println("The valid input should be: ServiceMonitor.java start/stop");
+		//	System.exit(1);
+		//}
+			
+		ServiceMonitor serviceMonitor = new ServiceMonitor();
+		
+		//if(args[1].equals("start")) {
+			serviceMonitor.startServiceMonitor();
+			System.out.println("Services Monitoring process started!");
+		//}
+		//else if(args[1].equals("stop")) {
+			serviceMonitor.stopServiceMonitor();
+			System.out.println("Services Monitoring process stopped!");
+		//}
+	}
+	
+	/**
 	 * This TimerTask run() function gets services' information
 	 * from database, and monitor status of all the six services.
 	 * If status of some service is changed, this function also 
@@ -138,6 +234,9 @@ public class ServiceMonitor extends TimerTask{
 				currentStatus = this.updateServiceStatus(service);
 				this.serviceManager.saveOrUpdate(service);
 				serviceList.set(serviceList.indexOf(service), service);
+				//Print out service's name and status
+				System.out.println(service.getServiceName()+": "+service.getServiceStatus());
+				
 				if(currentStatus.equals(ServiceStatusEnum.STOPPED.getValue()) && 
 				   currentStatus.equals(service.getServicePreviousStatus()) == false){
 					emailSubject = "Service Status changed: " + service.getServiceName();
