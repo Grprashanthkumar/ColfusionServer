@@ -100,6 +100,7 @@ public class IOUtils {
 
 		try {
 			fileName = FilenameUtils.getName(fileName);
+			fileName = StringUtils.replaceSpaces(fileName);
 
 			File targetDir = new File(dirLocation);
 			targetDir.mkdirs();
