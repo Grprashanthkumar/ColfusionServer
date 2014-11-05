@@ -155,7 +155,7 @@ public class WizardRestServiceImpl extends BaseController{
     }
 	
 	/**
-	 * Retreive variable names from each file and try to guess data type for each of them. Also contains recommended variables names.
+	 * Retrieve variable names from each file and try to guess data type for each of them. Also contains recommended variables names.
 	 * 
 	 * @param sid story id for which the template need to be created.
 	 * @param fileMode the mode specifying how several files should be processed. Could Append or Separately.
