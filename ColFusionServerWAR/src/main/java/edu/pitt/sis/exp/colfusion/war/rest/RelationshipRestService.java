@@ -27,9 +27,9 @@ import edu.pitt.sis.exp.colfusion.responseModels.RelationshipLinksResponse;
  *
  */
 @Path("Relationship/")
-public class RelationshipRestServiceImpl extends BaseController {
+public class RelationshipRestService extends BaseController {
 	
-	final Logger logger = LogManager.getLogger(RelationshipRestServiceImpl.class.getName());
+	final Logger logger = LogManager.getLogger(RelationshipRestService.class.getName());
 	
 	/**
 	 * Because we do cross domain AJAX calls, we need to use CORS. Actually it worked for me from simple form, but didn't work from file upload.

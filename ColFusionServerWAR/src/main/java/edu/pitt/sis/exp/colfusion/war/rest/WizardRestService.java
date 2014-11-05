@@ -34,9 +34,9 @@ import edu.pitt.sis.exp.colfusion.responseModels.OneNumberResponse;
 import edu.pitt.sis.exp.colfusion.responseModels.PreviewFileResponse;
 
 @Path("Wizard/")
-public class WizardRestServiceImpl extends BaseController{
+public class WizardRestService extends BaseController{
 	
-	final Logger logger = LogManager.getLogger(WizardRestServiceImpl.class.getName());
+	final Logger logger = LogManager.getLogger(WizardRestService.class.getName());
 	
 	/**
 	 * Because we do cross domain AJAX calls, we need to use CORS. Actually it worked for me from simple form, but didn't work from file upload.
@@ -155,7 +155,7 @@ public class WizardRestServiceImpl extends BaseController{
     }
 	
 	/**
-	 * Retrieve variable names from each file and try to guess data type for each of them. Also contains recommended variables names.
+	 * Retreive variable names from each file and try to guess data type for each of them. Also contains recommended variables names.
 	 * 
 	 * @param sid story id for which the template need to be created.
 	 * @param fileMode the mode specifying how several files should be processed. Could Append or Separately.

@@ -45,9 +45,9 @@ import edu.pitt.sis.exp.colfusion.responseModels.StoryStatusResponseModel;
  */
 @Api(value = "/Story", description = "Operations on stories")
 @Path("Story/")
-public class StoryRestServiceImpl extends BaseController  {
+public class StoryRestService extends BaseController  {
 	
-	final Logger logger = LogManager.getLogger(StoryRestServiceImpl.class.getName());
+	final Logger logger = LogManager.getLogger(StoryRestService.class.getName());
 	
 	/**
 	 * Because we do cross domain AJAX calls, we need to use CORS. Actually it worked for me from simple form, but didn't work from file upload.

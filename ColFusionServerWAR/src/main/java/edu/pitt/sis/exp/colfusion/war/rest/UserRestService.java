@@ -23,9 +23,9 @@ import edu.pitt.sis.exp.colfusion.responseModels.AuthorsResponse;
  *
  */
 @Path("User/")
-public class UserRestServiceImpl extends BaseController {
+public class UserRestService extends BaseController {
 
-	final Logger logger = LogManager.getLogger(UserRestServiceImpl.class.getName());
+	final Logger logger = LogManager.getLogger(UserRestService.class.getName());
 	
 	/**
 	 * Because we do cross domain AJAX calls, we need to use CORS. Actually it worked for me from simple form, but didn't work from file upload.

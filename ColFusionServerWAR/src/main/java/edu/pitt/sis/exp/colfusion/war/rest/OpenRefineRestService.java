@@ -24,8 +24,8 @@ import edu.pitt.sis.exp.colfusion.responseModels.GeneralResponseGen;
  *
  */
 @Path("OpenRefine/")
-public class OpenRefineRestServiceImpl  extends BaseController{
-	final Logger logger = LogManager.getLogger(OpenRefineRestServiceImpl.class.getName());
+public class OpenRefineRestService  extends BaseController{
+	final Logger logger = LogManager.getLogger(OpenRefineRestService.class.getName());
 	
 	@OPTIONS
     @Path("createNewProject/{sid}/{tableName}")

@@ -26,8 +26,8 @@ import edu.pitt.sis.exp.colfusion.responseModels.JointTableResponeModel;
  *
  */
 @Path("SimilarityJoin/")
-public class SimilarityJoinRestServiceImpl extends BaseController{
-	final Logger logger = LogManager.getLogger(SimilarityJoinRestServiceImpl.class.getName());
+public class SimilarityJoinRestService extends BaseController{
+	final Logger logger = LogManager.getLogger(SimilarityJoinRestService.class.getName());
 	
 	@OPTIONS
     @Path("join")
