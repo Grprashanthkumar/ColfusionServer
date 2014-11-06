@@ -14,16 +14,6 @@ import java.util.TimerTask;
 
 
 
-
-
-
-
-
-
-
-
-
-
 /**
  * Apache Commons Net library implements the client side of many basic Internet protocols. 
  * The purpose of the library is to provide fundamental protocol access, 
@@ -60,7 +50,7 @@ public class ServiceMonitor extends TimerTask{
 	private int monitorPeriod;
 	Timer timer;
 	
-	private Logger logger = LogManager.getLogger(ServiceMonitor.class.getName());
+	private final Logger logger = LogManager.getLogger(ServiceMonitor.class.getName());
 	
 	/**
 	 * Set the default time out as 3 seconds.
@@ -83,7 +73,7 @@ public class ServiceMonitor extends TimerTask{
 		this.timer = timerParameter;
 	}
 	
-	public void setServiceList(List<ColfusionServices> servicelist){
+	public void setServiceList(final List<ColfusionServices> servicelist){
 		this.serviceList = servicelist;
 	}
 	
@@ -91,7 +81,7 @@ public class ServiceMonitor extends TimerTask{
 		return this.serviceList;
 	}
 	
-	public void setTimeOut(int timeout){
+	public void setTimeOut(final int timeout){
 		this.timeOut = timeout;
 	}
 	
@@ -169,7 +159,7 @@ public class ServiceMonitor extends TimerTask{
 	 * If the service is connected, returns true;
 	 * Else, connect() reports connect exceptions, thus, returns false.
 	 */
-	public boolean isServiceConnected(ColfusionServices service){	
+	public boolean isServiceConnected(final ColfusionServices service){	
         try{
             TelnetClient client = new TelnetClient();
             client.setDefaultTimeout(this.getTimeOut());
@@ -185,7 +175,7 @@ public class ServiceMonitor extends TimerTask{
 	/**
 	 * Return current service's status.
 	 */
-	public String updateServiceStatus(ColfusionServices service){
+	public String updateServiceStatus(final ColfusionServices service){
 		if(this.isServiceConnected(service) == true){
 			service.setServiceStatus(ServiceStatusEnum.RUNNING.getValue());
 		}
@@ -223,13 +213,15 @@ public class ServiceMonitor extends TimerTask{
 	 * update the display information as well as the status data
 	 * in database.
 	 */
+	@Override
 	public void run(){
 		String currentStatus = null;
 		String emailSubject = null;
 		String emailText = null;
 		try{
-			if(this.serviceList.isEmpty() == true)
+			if(this.serviceList.isEmpty() == true) {
 				this.serviceList = this.serviceManager.findAll();
+			}
 			for(ColfusionServices service : serviceList){
 				currentStatus = this.updateServiceStatus(service);
 				this.serviceManager.saveOrUpdate(service);
@@ -261,8 +253,9 @@ public class ServiceMonitor extends TimerTask{
 						}
 					}
 				}
-				if(currentStatus.equals(service.getServicePreviousStatus()) == false)
+				if(currentStatus.equals(service.getServicePreviousStatus()) == false) {
 					service.setServicePreviousStatus(currentStatus);
+				}
 				currentStatus = null;
 			}
 		}
@@ -283,12 +276,12 @@ public class ServiceMonitor extends TimerTask{
 	 *   2: successfully started
 	 *   3: Other Exceptions
 	 */
-	public int startService(ColfusionServices service){
-		if(service.getServiceName() == null || service.getServiceName() == "")
+	public int startService(final ColfusionServices service){
+		if(service.getServiceName() == null || service.getServiceName() == "") {
 			return 0;
-		else if(service.getServiceStatus() == ServiceStatusEnum.RUNNING.getValue())
+		} else if(service.getServiceStatus() == ServiceStatusEnum.RUNNING.getValue()) {
 			return 1;
-		else if(service.getServiceStatus() == ServiceStatusEnum.STOPPED.getValue()){
+		} else if(service.getServiceStatus() == ServiceStatusEnum.STOPPED.getValue()){
 			try{
 				
 				//String s;
