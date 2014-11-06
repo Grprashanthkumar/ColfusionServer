@@ -43,7 +43,7 @@ public class LoggingFilter implements javax.servlet.Filter {
 		
 		chain.doFilter(request, response);
 		
-		logger.info(String.format("END: %s %s", httpMethod, fullRequestUriWithParameters));
+		logger.info(String.format("END: %s %s%s", httpMethod, fullRequestUriWithParameters, StringUtils.NEWLINE));
 	}
 
 	@Override
