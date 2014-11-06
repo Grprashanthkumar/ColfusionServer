@@ -31,7 +31,7 @@ import edu.pitt.sis.exp.colfusion.responseModels.AttachmentListResponseModel;
 import edu.pitt.sis.exp.colfusion.responseModels.BasicTableResponseModel;
 import edu.pitt.sis.exp.colfusion.responseModels.ColumnMetadataResponse;
 import edu.pitt.sis.exp.colfusion.responseModels.GetColumnMetadataEditHistoryResponse;
-import edu.pitt.sis.exp.colfusion.responseModels.GetLicenseResponse;
+import edu.pitt.sis.exp.colfusion.responseModels.LicensesResponseModel;
 import edu.pitt.sis.exp.colfusion.responseModels.JointTableByRelationshipsResponeModel;
 import edu.pitt.sis.exp.colfusion.responseModels.RelationshipsResponseModel;
 import edu.pitt.sis.exp.colfusion.responseModels.StoryListResponseModel;
@@ -77,7 +77,6 @@ public class StoryRestService extends BaseController  {
     @Produces(MediaType.APPLICATION_JSON)
 	public Response newStoryMetadata(@ApiParam(value = "the id of the authors of story", required = true) @PathParam("userId") final int userId) {
     	
-		System.out.println("newStoryMetadata function");
 		StoryBL storyBL = new StoryBL();
 		
 		StoryMetadataResponse result = storyBL.createStory(userId);
@@ -259,7 +258,7 @@ public class StoryRestService extends BaseController  {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getLicense(){
 		StoryBL storyBL = new StoryBL();
-		GetLicenseResponse  result = storyBL.getLicense();
+		LicensesResponseModel  result = storyBL.getLicense();
 		//System.out.println(result.getPayload().toString());
 		return this.makeCORS(Response.status(200).entity(result));
 	}
