@@ -978,28 +978,7 @@ public class SourceInfoManagerImpl extends GeneralManagerImpl<ColfusionSourceinf
 	        query.setMaxResults(perPage);
 	        List<Object> storyListObjs = query.list();
 	        List<StoryListViewModel> result = new ArrayList<>();
-	        for (Object storyListObj : storyListObjs) {
-	        	Object[] storyColumns = (Object[]) storyListObj;
-	        	StoryListViewModel storyListViewModel = new StoryListViewModel();
-	        	storyListViewModel.setSid((int)storyColumns[0]);
-	        	storyListViewModel.setTitle((String)storyColumns[1]);
-	        	UserViewModel userViewModel = new UserViewModel();
-	        	userViewModel.setUserId((int)storyColumns[2]);
-	        	userViewModel.setUserLogin((String)storyColumns[3]);
-	        	storyListViewModel.setUser(userViewModel);
-	        	storyListViewModel.setPath((String)storyColumns[4]);
-	        	storyListViewModel.setEntryDate((Date)storyColumns[5]);
-	        	storyListViewModel.setLastUpdated((Date)storyColumns[6]);
-	        	storyListViewModel.setStatus((String)storyColumns[7]);
-	        	storyListViewModel.setRawDataPath((String)storyColumns[8]);
-	        	storyListViewModel.setSourceType((String)storyColumns[9]);
-	        	LicenseViewModel licenseViewModel = new LicenseViewModel();
-	        	licenseViewModel.setLicenseId((int)storyColumns[10]);
-	        	licenseViewModel.setLicenseName((String)storyColumns[11]);
-	        	licenseViewModel.setLicenseURL((String)storyColumns[12]);
-	        	storyListViewModel.setLicense(licenseViewModel);
-	        	result.add(storyListViewModel);
-	        }  
+	        StoryListToStoryViewModelList(storyListObjs, result);  
 	        return result;
   
 		} catch (NonUniqueResultException ex) {
@@ -1026,28 +1005,7 @@ public class SourceInfoManagerImpl extends GeneralManagerImpl<ColfusionSourceinf
 	        Query query = HibernateUtil.getSession().createQuery(hql);
 	        List<Object> storyListObjs = query.list();
 	        List<StoryListViewModel> result = new ArrayList<>();
-	        for (Object storyListObj : storyListObjs) {
-	        	Object[] storyColumns = (Object[]) storyListObj;
-	        	StoryListViewModel storyListViewModel = new StoryListViewModel();
-	        	storyListViewModel.setSid((int)storyColumns[0]);
-	        	storyListViewModel.setTitle((String)storyColumns[1]);
-	        	UserViewModel userViewModel = new UserViewModel();
-	        	userViewModel.setUserId((int)storyColumns[2]);
-	        	userViewModel.setUserLogin((String)storyColumns[3]);
-	        	storyListViewModel.setUser(userViewModel);
-	        	storyListViewModel.setPath((String)storyColumns[4]);
-	        	storyListViewModel.setEntryDate((Date)storyColumns[5]);
-	        	storyListViewModel.setLastUpdated((Date)storyColumns[6]);
-	        	storyListViewModel.setStatus((String)storyColumns[7]);
-	        	storyListViewModel.setRawDataPath((String)storyColumns[8]);
-	        	storyListViewModel.setSourceType((String)storyColumns[9]);
-	        	LicenseViewModel licenseViewModel = new LicenseViewModel();
-	        	licenseViewModel.setLicenseId((int)storyColumns[10]);
-	        	licenseViewModel.setLicenseName((String)storyColumns[11]);
-	        	licenseViewModel.setLicenseURL((String)storyColumns[12]);
-	        	storyListViewModel.setLicense(licenseViewModel);
-	        	result.add(storyListViewModel);
-	        }  
+	        StoryListToStoryViewModelList(storyListObjs, result);  
 	        return result;
   
 		} catch (NonUniqueResultException ex) {
@@ -1063,6 +1021,32 @@ public class SourceInfoManagerImpl extends GeneralManagerImpl<ColfusionSourceinf
 	    	this.logger.error("getStoryListViewModel failed HibernateException", ex);
 	    	throw ex;
 	    }	
+	}
+
+	private void StoryListToStoryViewModelList(List<Object> storyListObjs,
+			List<StoryListViewModel> result) {
+		for (Object storyListObj : storyListObjs) {
+			Object[] storyColumns = (Object[]) storyListObj;
+			StoryListViewModel storyListViewModel = new StoryListViewModel();
+			storyListViewModel.setSid((int)storyColumns[0]);
+			storyListViewModel.setTitle((String)storyColumns[1]);
+			UserViewModel userViewModel = new UserViewModel();
+			userViewModel.setUserId((int)storyColumns[2]);
+			userViewModel.setUserLogin((String)storyColumns[3]);
+			storyListViewModel.setUser(userViewModel);
+			storyListViewModel.setPath((String)storyColumns[4]);
+			storyListViewModel.setEntryDate((Date)storyColumns[5]);
+			storyListViewModel.setLastUpdated((Date)storyColumns[6]);
+			storyListViewModel.setStatus((String)storyColumns[7]);
+			storyListViewModel.setRawDataPath((String)storyColumns[8]);
+			storyListViewModel.setSourceType((String)storyColumns[9]);
+			LicenseViewModel licenseViewModel = new LicenseViewModel();
+			licenseViewModel.setLicenseId((int)storyColumns[10]);
+			licenseViewModel.setLicenseName((String)storyColumns[11]);
+			licenseViewModel.setLicenseURL((String)storyColumns[12]);
+			storyListViewModel.setLicense(licenseViewModel);
+			result.add(storyListViewModel);
+		}
 	}
 
 
