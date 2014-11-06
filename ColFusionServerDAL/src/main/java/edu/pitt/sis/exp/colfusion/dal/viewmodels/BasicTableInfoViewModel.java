@@ -4,6 +4,8 @@
 package edu.pitt.sis.exp.colfusion.dal.viewmodels;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import com.google.gson.annotations.Expose;
+
 /**
  * @author Weichuan Hong
  *
@@ -11,22 +13,22 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement
 public class BasicTableInfoViewModel {
-	private String cid;
-	private String dname_chosen;
-	private String dname_value_type;
-	private String dname_value_unit;
-	private String dname_value_description;
-	private String dname_original_name;
+	@Expose private Integer cid;
+	@Expose private String dname_chosen;
+	@Expose private String dname_value_type;
+	@Expose private String dname_value_unit;
+	@Expose private String dname_value_description;
+	@Expose private String dname_original_name;
 	
 	public BasicTableInfoViewModel() {
 		
 	}
 
-	public String getCid() {
+	public Integer getCid() {
 		return cid;
 	}
 
-	public void setCid(final String cid) {
+	public void setCid(final Integer cid) {
 		this.cid = cid;
 	}
 

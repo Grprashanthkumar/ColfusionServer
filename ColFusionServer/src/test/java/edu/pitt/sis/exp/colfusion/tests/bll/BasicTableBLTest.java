@@ -5,9 +5,7 @@ import junit.framework.TestCase;
 import org.junit.Test;
 
 import edu.pitt.sis.exp.colfusion.bll.BasicTableBL;
-import edu.pitt.sis.exp.colfusion.responseModels.AttachmentListResponseModel;
-import edu.pitt.sis.exp.colfusion.responseModels.JointTableByRelationshipsResponeModel;
-import edu.pitt.sis.exp.colfusion.responseModels.StoryStatusResponseModel;
+import edu.pitt.sis.exp.colfusion.responseModels.BasicTableResponseModel;
 
 public class BasicTableBLTest extends TestCase {
 	
@@ -69,13 +67,21 @@ public class BasicTableBLTest extends TestCase {
 //			fail(e.getMessage());
 //		}	
 //	}
+//	
+//	@Test
+//	public void testGetAttachmentList(){
+//		int sid = 1751;
+//		BasicTableBL basicBL=new BasicTableBL();
+//		AttachmentListResponseModel result = basicBL.getAttachmentList(sid);
+//		result.getPayload().get(0).getUploadTime();
+//		assertEquals(true, true);
+//	}
 	
-	@Test
-	public void testGetAttachmentList(){
+	@Test public void testGetTableInfo(){
 		int sid = 1751;
+		String tableName = "Sheet1";
 		BasicTableBL basicBL=new BasicTableBL();
-		AttachmentListResponseModel result = basicBL.getAttachmentList(sid);
-		result.getPayload().get(0).getUploadTime();
+		BasicTableResponseModel result = basicBL.getTableInfo(sid, tableName);
 		assertEquals(true, true);
 	}
 }

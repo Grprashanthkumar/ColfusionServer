@@ -6,6 +6,7 @@ package edu.pitt.sis.exp.colfusion.dal.managers;
 import java.util.List;
 
 import edu.pitt.sis.exp.colfusion.dal.orm.ColfusionDnameinfo;
+import edu.pitt.sis.exp.colfusion.dal.viewmodels.BasicTableInfoViewModel;
 import edu.pitt.sis.exp.colfusion.dal.viewmodels.StoryMetadataHistoryLogRecordViewModel;
 import edu.pitt.sis.exp.colfusion.dal.viewmodels.WorksheetViewModel;
 
@@ -37,5 +38,13 @@ public interface DNameInfoManager extends GeneralManager<ColfusionDnameinfo, Int
 
 	List<StoryMetadataHistoryLogRecordViewModel> getColumnMetaEditHistory(
 			int cid, String editAttribute);
+	
+	/**
+	 * 
+	 * @param sid
+	 * @param ColfusionDnameInfo table
+	 * @return
+	 */
+	List<BasicTableInfoViewModel> getTableInfo(int sid);
 	
 }

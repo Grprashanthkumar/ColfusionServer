@@ -822,7 +822,7 @@ public class SourceInfoManagerImpl extends GeneralManagerImpl<ColfusionSourceinf
         }	
 	}
 	
-	//I don't know how to get data from hibernate........
+
 	@Override
 	public List<String> getTableNames(final int sid) {
 		try {
@@ -968,7 +968,7 @@ public class SourceInfoManagerImpl extends GeneralManagerImpl<ColfusionSourceinf
 
 
 	@Override
-	public List<StoryListViewModel> getStoryListViewModel(int pageNo, int perPage) {
+	public List<StoryListViewModel> getStoryListViewModel(final int pageNo, final int perPage) {
 		try{
 			HibernateUtil.beginTransaction();
 			String hql = "SELECT src.sid, src.title, cus.userId, cus.userLogin, src.path, src.entryDate, src.lastUpdated, src.status, src.rawDataPath, src.sourceType, cli.licenseId, cli.licenseName, cli.licenseUrl " 
@@ -1064,7 +1064,8 @@ public class SourceInfoManagerImpl extends GeneralManagerImpl<ColfusionSourceinf
 	    	throw ex;
 	    }	
 	}
-	
+
+
 	
 
 }

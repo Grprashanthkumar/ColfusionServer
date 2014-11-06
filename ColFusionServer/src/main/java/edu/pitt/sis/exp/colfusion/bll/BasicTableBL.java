@@ -1,10 +1,5 @@
 package edu.pitt.sis.exp.colfusion.bll;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,6 +10,7 @@ import edu.pitt.sis.exp.colfusion.dal.dataModels.tableDataModel.Table;
 import edu.pitt.sis.exp.colfusion.dal.databaseHandlers.DatabaseHandlerBase;
 import edu.pitt.sis.exp.colfusion.dal.databaseHandlers.DatabaseHandlerFactory;
 import edu.pitt.sis.exp.colfusion.dal.managers.AttachmentManagerImpl;
+import edu.pitt.sis.exp.colfusion.dal.managers.DNameInfoManagerImpl;
 import edu.pitt.sis.exp.colfusion.dal.managers.ExecutionInfoManagerImpl;
 import edu.pitt.sis.exp.colfusion.dal.managers.SourceInfoManagerImpl;
 import edu.pitt.sis.exp.colfusion.dal.orm.ColfusionExecuteinfo;
@@ -38,63 +34,76 @@ public class BasicTableBL {
 	
 	public BasicTableResponseModel getTableInfo(final int sid, final String tableName ){
 		
-		BasicTableResponseModel result=new BasicTableResponseModel();
-		
-        String driver = "com.mysql.jdbc.Driver";
-
-        String url = "jdbc:mysql://127.0.0.1:3306/colfusion";
-        String user = "dataverse"; 
-        String password = "dataverse";
-
-        try { 
-        	
-        	List<BasicTableInfoViewModel> tableInfoFromDB= new ArrayList<BasicTableInfoViewModel>();
-        	
-	         Class.forName(driver);
-	         Connection conn = DriverManager.getConnection(url, user, password);
-	
-	         if(!conn.isClosed()) {
-//	          System.out.println("Succeeded connecting to the Database!");
-	         }
-	         Statement statement = conn.createStatement();
-	         String sql = "SELECT * FROM colfusion_columnTableInfo natural join colfusion_dnameinfo where sid = "+sid;
-	
-	         ResultSet rs = statement.executeQuery(sql);
-         
-
-	
-	         while(rs.next()) {
-	        	 BasicTableInfoViewModel tableInfo = new BasicTableInfoViewModel();
-	        	 tableInfo.setCid(rs.getString("cid"));
-	        	 tableInfo.setDname_chosen(rs.getString("dname_chosen"));
-	        	 tableInfo.setDname_original_name(rs.getString("dname_original_name"));
-	        	 tableInfo.setDname_value_description(rs.getString("dname_value_description"));
-	        	 tableInfo.setDname_value_type(rs.getString("dname_value_type"));
-	        	 tableInfo.setDname_value_unit(rs.getString("dname_value_unit"));
-	        	 tableInfoFromDB.add(tableInfo);
-	        	 
-	        	 System.out.println(rs.getString("cid"));
-	          	 System.out.println(rs.getString("dname_chosen"));
-         }
-	         
-//	         result=tableInfoFromDB;
-	         result.setPayload(tableInfoFromDB);
-	         result.isSuccessful=true;
-	         result.message="OK";
-	         System.out.println(result.getPayload().get(0).getCid());
-	         rs.close();
-	         conn.close();
-        } catch(ClassNotFoundException e) {
-	         System.out.println("Sorry,can`t find the Driver!"); 
-	         e.printStackTrace();  
-        } catch(SQLException e) {
-        	 e.printStackTrace();
-        } catch(Exception e) {
-        	 e.printStackTrace();
-        } 
-
-
+		BasicTableResponseModel result = new BasicTableResponseModel();
+		try{
+			DNameInfoManagerImpl dNameInfoManagerImpl = new DNameInfoManagerImpl();
+			List<BasicTableInfoViewModel> contents = dNameInfoManagerImpl.getTableInfo(sid);
+			result.setPayload(contents);
+			result.isSuccessful=true;
+		}
+		catch(Exception e) {
+			result.isSuccessful=false;
+			result.message = "Get DNameInfo failed";
+		}
 		return result;
+		
+//		BasicTableResponseModel result=new BasicTableResponseModel();
+//		
+//        String driver = "com.mysql.jdbc.Driver";
+//
+//        String url = "jdbc:mysql://127.0.0.1:3306/colfusion";
+//        String user = "dataverse"; 
+//        String password = "dataverse";
+//
+//        try { 
+//        	
+//        	List<BasicTableInfoViewModel> tableInfoFromDB= new ArrayList<BasicTableInfoViewModel>();
+//        	
+//	         Class.forName(driver);
+//	         Connection conn = DriverManager.getConnection(url, user, password);
+//	
+//	         if(!conn.isClosed()) {
+////	          System.out.println("Succeeded connecting to the Database!");
+//	         }
+//	         Statement statement = conn.createStatement();
+//	         String sql = "SELECT * FROM colfusion_columnTableInfo natural join colfusion_dnameinfo where sid = "+sid;
+//	
+//	         ResultSet rs = statement.executeQuery(sql);
+//         
+//
+//	
+//	         while(rs.next()) {
+//	        	 BasicTableInfoViewModel tableInfo = new BasicTableInfoViewModel();
+//	        	 tableInfo.setCid(rs.getString("cid"));
+//	        	 tableInfo.setDname_chosen(rs.getString("dname_chosen"));
+//	        	 tableInfo.setDname_original_name(rs.getString("dname_original_name"));
+//	        	 tableInfo.setDname_value_description(rs.getString("dname_value_description"));
+//	        	 tableInfo.setDname_value_type(rs.getString("dname_value_type"));
+//	        	 tableInfo.setDname_value_unit(rs.getString("dname_value_unit"));
+//	        	 tableInfoFromDB.add(tableInfo);
+//	        	 
+//	        	 System.out.println(rs.getString("cid"));
+//	          	 System.out.println(rs.getString("dname_chosen"));
+//         }
+//	         
+////	         result=tableInfoFromDB;
+//	         result.setPayload(tableInfoFromDB);
+//	         result.isSuccessful=true;
+//	         result.message="OK";
+//	         System.out.println(result.getPayload().get(0).getCid());
+//	         rs.close();
+//	         conn.close();
+//        } catch(ClassNotFoundException e) {
+//	         System.out.println("Sorry,can`t find the Driver!"); 
+//	         e.printStackTrace();  
+//        } catch(SQLException e) {
+//        	 e.printStackTrace();
+//        } catch(Exception e) {
+//        	 e.printStackTrace();
+//        } 
+//
+//
+//		return result;
 		
 	}
 	

@@ -17,6 +17,7 @@ import org.hibernate.Query;
 
 import edu.pitt.sis.exp.colfusion.dal.dao.ColumnTableInfoDAO;
 import edu.pitt.sis.exp.colfusion.dal.dao.ColumnTableInfoDAOImpl;
+import edu.pitt.sis.exp.colfusion.dal.dao.DNameInfoDAO;
 import edu.pitt.sis.exp.colfusion.dal.dao.DNameInfoDAOImpl;
 import edu.pitt.sis.exp.colfusion.dal.dao.DNameInfoMetadataEditHistoryDAO;
 import edu.pitt.sis.exp.colfusion.dal.dao.DNameInfoMetadataEditHistoryDAOImpl;
@@ -29,6 +30,7 @@ import edu.pitt.sis.exp.colfusion.dal.orm.ColfusionSourceinfo;
 import edu.pitt.sis.exp.colfusion.dal.orm.ColfusionUsers;
 import edu.pitt.sis.exp.colfusion.dal.utils.HibernateUtil;
 import edu.pitt.sis.exp.colfusion.dal.utils.MappingUtils;
+import edu.pitt.sis.exp.colfusion.dal.viewmodels.BasicTableInfoViewModel;
 import edu.pitt.sis.exp.colfusion.dal.viewmodels.DatasetVariableViewModel;
 import edu.pitt.sis.exp.colfusion.dal.viewmodels.StoryMetadataHistoryLogRecordViewModel;
 import edu.pitt.sis.exp.colfusion.dal.viewmodels.WorksheetViewModel;
@@ -44,6 +46,8 @@ public class DNameInfoManagerImpl extends GeneralManagerImpl<ColfusionDnameinfo,
 	public DNameInfoManagerImpl() {
 		super(new DNameInfoDAOImpl(), ColfusionDnameinfo.class);
 	}
+	
+	private final DNameInfoDAO dNameInfoDao = new DNameInfoDAOImpl();
 	
 	public enum VariableMetadataHistoryItem {
 	    CHOSEN_NAME("chosen name"), ORIGINAL_NAME("original name"), DATA_TYPE("data type"), VALUE_UNIT("value unit"), 
@@ -370,6 +374,41 @@ public class DNameInfoManagerImpl extends GeneralManagerImpl<ColfusionDnameinfo,
          
          HibernateUtil.commitTransaction();
          return result;         
+	}
+
+	@Override
+	public List<BasicTableInfoViewModel> getTableInfo(final int sid) {
+		try{
+			HibernateUtil.beginTransaction();
+	        
+	        List<ColfusionDnameinfo> DNameInfoObjs = dNameInfoDao.findBySid(sid);
+	        
+	        List<BasicTableInfoViewModel> result = new ArrayList<>();
+	        for(ColfusionDnameinfo DNameInfoObj : DNameInfoObjs){
+	        	BasicTableInfoViewModel basicTableInfoViewModel =  new BasicTableInfoViewModel();
+	        	basicTableInfoViewModel.setCid(DNameInfoObj.getCid());
+	        	basicTableInfoViewModel.setDname_chosen(DNameInfoObj.getDnameChosen());
+	        	basicTableInfoViewModel.setDname_original_name(DNameInfoObj.getDnameOriginalName());
+	        	basicTableInfoViewModel.setDname_value_description(DNameInfoObj.getDnameValueDescription());
+	        	basicTableInfoViewModel.setDname_value_type(DNameInfoObj.getDnameValueType());
+	        	basicTableInfoViewModel.setDname_value_unit(DNameInfoObj.getDnameValueUnit());
+	        	result.add(basicTableInfoViewModel);
+	        }
+	                               
+	        return result;
+	    } catch (NonUniqueResultException ex) {
+	
+	    	HibernateUtil.rollbackTransaction();
+	    	
+	    	this.logger.error("getTableInfo failed NonUniqueResultException", ex);
+	        throw ex;
+	    } catch (HibernateException ex) {
+	
+	    	HibernateUtil.rollbackTransaction();
+	    	
+	    	this.logger.error("getTableInfo failed HibernateException", ex);
+	    	throw ex;
+	    }	
 	}
 }
 
