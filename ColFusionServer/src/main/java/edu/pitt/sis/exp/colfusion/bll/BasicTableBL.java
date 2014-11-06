@@ -45,7 +45,8 @@ public class BasicTableBL {
 			result.isSuccessful=false;
 			result.message = "Get DNameInfo failed";
 		}
-		return result
+		return result;
+	
 		
 	}
 	
