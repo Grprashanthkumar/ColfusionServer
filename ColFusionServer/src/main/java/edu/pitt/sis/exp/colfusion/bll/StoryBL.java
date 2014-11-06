@@ -29,7 +29,7 @@ import edu.pitt.sis.exp.colfusion.dal.orm.ColfusionUsers;
 import edu.pitt.sis.exp.colfusion.dal.utils.DataSourceTypes;
 import edu.pitt.sis.exp.colfusion.dal.utils.MappingUtils;
 import edu.pitt.sis.exp.colfusion.dal.viewmodels.DatasetVariableViewModel;
-import edu.pitt.sis.exp.colfusion.dal.viewmodels.GetLicenseViewModal;
+import edu.pitt.sis.exp.colfusion.dal.viewmodels.LicenseViewModel;
 import edu.pitt.sis.exp.colfusion.dal.viewmodels.StoryAuthorViewModel;
 import edu.pitt.sis.exp.colfusion.dal.viewmodels.StoryMetadataHistoryLogRecordViewModel;
 import edu.pitt.sis.exp.colfusion.dal.viewmodels.StoryMetadataHistoryViewModel;
@@ -37,7 +37,7 @@ import edu.pitt.sis.exp.colfusion.dal.viewmodels.StoryMetadataViewModel;
 import edu.pitt.sis.exp.colfusion.responseModels.AddColumnMetadataEditHistoryResponse;
 import edu.pitt.sis.exp.colfusion.responseModels.ColumnMetadataResponse;
 import edu.pitt.sis.exp.colfusion.responseModels.GetColumnMetadataEditHistoryResponse;
-import edu.pitt.sis.exp.colfusion.responseModels.GetLicenseResponse;
+import edu.pitt.sis.exp.colfusion.responseModels.LicensesResponseModel;
 import edu.pitt.sis.exp.colfusion.responseModels.StoryMetadataHistoryResponse;
 import edu.pitt.sis.exp.colfusion.responseModels.StoryMetadataResponse;
 
@@ -304,20 +304,21 @@ public class StoryBL {
 	}
 	
 	//license
-	public GetLicenseResponse getLicense(){
-		GetLicenseResponse result = new GetLicenseResponse();
+	public LicensesResponseModel getLicense(){
+		LicensesResponseModel result = new LicensesResponseModel();
 		
 		try{
 			LicenseInfoManager licenseMgr = new LicenseInfoManagerImpl();
-			List<ColfusionLicense> licenseFromDB = licenseMgr.getLicenseFromDB();
-			System.out.println("LicenseFrom DB size:"+licenseFromDB.size());
-			//for (int i =0;i<licenseFromDB.size();i++){
-			//	System.out.println("printFuck"+licenseFromDB.get(i).getLicenseName());
-			//}
-			GetLicenseViewModal newModal = new GetLicenseViewModal();
-			newModal.setLicenseList(licenseFromDB);
-			result.setPayload(newModal);
-			result.isSuccessful =true;
+			List<ColfusionLicense> licensesFromDB = licenseMgr.findAll();
+			
+			logger.info(String.format("Got %d licenses from db.", licensesFromDB.size()));
+			
+			for (ColfusionLicense licenseFromDB : licensesFromDB) {
+				 result.getPayload().add(new LicenseViewModel(licenseFromDB.getLicenseId(),
+						 licenseFromDB.getLicenseName(), licenseFromDB.getLicenseUrl(), licenseFromDB.getLicenseDes()));
+			}
+			
+			result.isSuccessful = true;
 			result.message="OK";
 		}catch(Exception e){
 			System.out.println("StoryBL error license");
