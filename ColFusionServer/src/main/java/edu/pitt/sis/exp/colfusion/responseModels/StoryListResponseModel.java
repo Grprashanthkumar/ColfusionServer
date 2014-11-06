@@ -11,6 +11,7 @@ import edu.pitt.sis.exp.colfusion.utils.Gsonizer;
 
 public class StoryListResponseModel extends GeneralResponseImpl implements Gsonazable{
 	
+	@Expose private List<StoryListViewModel> payload = new ArrayList<StoryListViewModel>();
 	
 	public List<StoryListViewModel> getPayload() {
 		return payload;
@@ -19,8 +20,6 @@ public class StoryListResponseModel extends GeneralResponseImpl implements Gsona
 	public void setPayload(final List<StoryListViewModel> payload) {
 		this.payload = payload;
 	}
-	@Expose private List<StoryListViewModel> payload = new ArrayList<StoryListViewModel>();
-
 	
 	@Override
 	public String toJson() {
