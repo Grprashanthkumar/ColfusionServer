@@ -34,4 +34,16 @@ public class StringUtilsTest extends TestCase {
 		assertEquals("_a_b_c_", StringUtils.replaceSpaces(" a      b c  "));
 		assertEquals("_a___b_c_", StringUtils.replaceSpaces(" a  _   b c  "));
 	}
+	
+	@Test
+	public void testMakeShortUnique() {
+		assertEquals("", StringUtils.makeShortUnique(""));
+		assertEquals("abc" + "abc".hashCode(), StringUtils.makeShortUnique("abc"));
+		
+		System.out.println("Sheet1".hashCode());
+		
+		//The change only in the last digit
+		assertFalse(StringUtils.makeShortUnique("123456789123456789123456789123456789123456789123456789123456789123456789")
+				.equals(StringUtils.makeShortUnique("123456789123456789123456789123456789123456789123456789123456789123456780")));
+	}
 }

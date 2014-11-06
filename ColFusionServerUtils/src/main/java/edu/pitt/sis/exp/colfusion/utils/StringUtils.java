@@ -8,6 +8,8 @@ package edu.pitt.sis.exp.colfusion.utils;
 public final class StringUtils {
 	
 	public static final String SPACE_REPLACEMENT_CHARACTER = "_";
+	public static final int UNIQUE_SHORT_LAX_LENGTH_DEFAULT = 64;
+	public static final String NEWLINE = System.lineSeparator();
 	
 	/**
 	 * This class cannot be instantiated
@@ -53,5 +55,31 @@ public final class StringUtils {
 	 */
 	public static String replaceSpaces(final String value) {
 		return value == null ? null : value.replaceAll(" +", SPACE_REPLACEMENT_CHARACTER);
+	}
+
+	/**
+	 * Creates a short version of the provided string up to the length of {@value #UNIQUE_SHORT_LAX_LENGTH_DEFAULT},
+	 * by taking substring from the beginning up to the <code>{@value #UNIQUE_SHORT_LAX_LENGTH_DEFAULT} - length</code> of hash code of the string
+	 * and concatenates it with the hash code value.
+	 * 
+	 * @param 	value
+	 * 				the {@link String} for which to create a short version.
+	 * @return
+	 * 			the short version of the given string.
+	 */
+	public static String makeShortUnique(final String value) {
+		
+		if (StringUtils.isNullOrEmpty(value)) {
+			return "";
+		}
+		
+		String hashValue = String.valueOf(value.hashCode());
+		
+		int endIndex = (UNIQUE_SHORT_LAX_LENGTH_DEFAULT - hashValue.length() < 0) ? 0 : UNIQUE_SHORT_LAX_LENGTH_DEFAULT - hashValue.length();
+		endIndex = value.length() > endIndex ? endIndex : value.length();
+		
+		String result = value.substring(0, endIndex) + hashValue;
+		
+		return result;
 	}
 }
