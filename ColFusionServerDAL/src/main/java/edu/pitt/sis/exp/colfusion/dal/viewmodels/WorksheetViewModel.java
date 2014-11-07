@@ -6,8 +6,11 @@ package edu.pitt.sis.exp.colfusion.dal.viewmodels;
 import java.util.ArrayList;
 
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+
+import edu.pitt.sis.exp.colfusion.utils.StringUtils;
 
 /**
  * @author Evgeny
@@ -22,11 +25,22 @@ public class WorksheetViewModel {
 	private int indexInTheFile;
 	private ArrayList<DatasetVariableViewModel> variables;
 	
+	/**
+	 * The unique (among sheets/tables in one file) short (not exceeding database table name limit) database save name of this sheet/table.
+	 * Clients don't need to set this.
+	 * 
+	 * TODO this should be done somewhere else
+	 */
+	@XmlTransient
+	private String uniqueShortName = "";
+	
 	public WorksheetViewModel() {
 		variables = new ArrayList<>();
 	}
 	
-	public WorksheetViewModel(final String sheetName, final int headerRow, final String startColumn, final int numberOfRows, final int indexInTheFile, final ArrayList<DatasetVariableViewModel> variables) {
+	public WorksheetViewModel(final String sheetName, final int headerRow, 
+			final String startColumn, final int numberOfRows, 
+			final int indexInTheFile, final ArrayList<DatasetVariableViewModel> variables) {
 		setSheetName(sheetName);
 		setHeaderRow(headerRow);
 		setStartColumn(startColumn);
@@ -124,5 +138,22 @@ public class WorksheetViewModel {
 	@Override
 	public String toString() {
 		return ReflectionToStringBuilder.toString(this);
+	}
+
+//	public void setUniqueShortName(final String value) {
+//		uniqueShortName = value;
+//	}
+	
+	public String getUniqueShortName() {
+		if (StringUtils.isSpecified(uniqueShortName)) {
+			return uniqueShortName;
+		}
+		
+		if (StringUtils.isNullOrEmpty(uniqueShortName)) {
+			//TODO FIXME: this is just a precocious 
+			uniqueShortName = StringUtils.makeShortUnique(StringUtils.replaceSpaces(sheetName));
+		}
+		
+		return uniqueShortName;
 	}
 }

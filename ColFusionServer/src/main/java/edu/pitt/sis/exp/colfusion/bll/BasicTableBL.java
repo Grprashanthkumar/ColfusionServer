@@ -6,13 +6,17 @@ import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import edu.pitt.sis.exp.colfusion.dal.dataModels.tableDataModel.RelationKey;
 import edu.pitt.sis.exp.colfusion.dal.dataModels.tableDataModel.Table;
 import edu.pitt.sis.exp.colfusion.dal.databaseHandlers.DatabaseHandlerBase;
 import edu.pitt.sis.exp.colfusion.dal.databaseHandlers.DatabaseHandlerFactory;
 import edu.pitt.sis.exp.colfusion.dal.managers.AttachmentManagerImpl;
+import edu.pitt.sis.exp.colfusion.dal.managers.ColumnTableInfoManager;
+import edu.pitt.sis.exp.colfusion.dal.managers.ColumnTableInfoManagerImpl;
 import edu.pitt.sis.exp.colfusion.dal.managers.DNameInfoManagerImpl;
 import edu.pitt.sis.exp.colfusion.dal.managers.ExecutionInfoManagerImpl;
 import edu.pitt.sis.exp.colfusion.dal.managers.SourceInfoManagerImpl;
+import edu.pitt.sis.exp.colfusion.dal.orm.ColfusionColumnTableInfo;
 import edu.pitt.sis.exp.colfusion.dal.orm.ColfusionExecuteinfo;
 import edu.pitt.sis.exp.colfusion.dal.orm.ColfusionSourceinfoDb;
 import edu.pitt.sis.exp.colfusion.dal.viewmodels.AttachmentListViewModel;
@@ -52,17 +56,23 @@ public class BasicTableBL {
 	
 	//Resturn Table Response according to sid and tableName.
 	public JointTableByRelationshipsResponeModel getTableDataBySidAndName(final int sid, final String tableName,
-			final int perPage, final int pageNumber ){
+			final int perPage, final int pageNumber) {
 		SourceInfoManagerImpl sourceInfo = new SourceInfoManagerImpl();
 		
 		JointTableByRelationshipsResponeModel result = new JointTableByRelationshipsResponeModel(); 
 		
-		ColfusionSourceinfoDb storyTargetDB = sourceInfo.getStorySourceInfoDB(sid);
 		try {
-			DatabaseHandlerBase databaseHandlerBase = DatabaseHandlerFactory.getDatabaseHandler(storyTargetDB);
-			Table table = databaseHandlerBase.getAll(tableName, perPage, pageNumber);
+			ColfusionSourceinfoDb storyTargetDB = sourceInfo.getStorySourceInfoDB(sid);
 			
-			int countTuples = databaseHandlerBase.getCount(tableName);
+			DatabaseHandlerBase databaseHandlerBase = DatabaseHandlerFactory.getDatabaseHandler(storyTargetDB);
+			
+			ColumnTableInfoManager columnTableMng = new ColumnTableInfoManagerImpl();
+			ColfusionColumnTableInfo columnTable = columnTableMng.findBySidAndOriginalTableName(sid, tableName);
+			RelationKey relationKey = new RelationKey(tableName, columnTable.getDbTableName());
+			
+			Table table = databaseHandlerBase.getAll(relationKey, perPage, pageNumber);
+			
+			int countTuples = databaseHandlerBase.getCount(relationKey);
 			int totalPage = (int) Math.ceil((double)countTuples / perPage);
 			
 			JoinTablesByRelationshipsViewModel payload = new JoinTablesByRelationshipsViewModel();
@@ -102,7 +112,12 @@ public class BasicTableBL {
 			}
 			
 			DatabaseHandlerBase databaseHandlerBase = DatabaseHandlerFactory.getDatabaseHandler(storyTargetDB);
-			Table table = databaseHandlerBase.getAll(tableName);
+			
+			ColumnTableInfoManager columnTableMng = new ColumnTableInfoManagerImpl();
+			ColfusionColumnTableInfo columnTable = columnTableMng.findBySidAndOriginalTableName(sid, tableName);
+			RelationKey relationKey = new RelationKey(tableName, columnTable.getDbTableName());
+			
+			Table table = databaseHandlerBase.getAll(relationKey);
 			
 			JoinTablesByRelationshipsViewModel payload = new JoinTablesByRelationshipsViewModel();
 			payload.setJointTable(table);
@@ -125,11 +140,11 @@ public class BasicTableBL {
 		try {
 			SourceInfoManagerImpl sourceInfoManagerImpl = new SourceInfoManagerImpl();
 			
-			List<String> tableNames = sourceInfoManagerImpl.getTableNames(sid);
+			List<RelationKey> tableNames = sourceInfoManagerImpl.getTableNames(sid);
 			
 			ExecutionInfoManagerImpl executionInfoManagerImpl = new ExecutionInfoManagerImpl();
-			for(int i=0;i<tableNames.size();i++){
-				ColfusionExecuteinfo colfusionExecuteinfo = executionInfoManagerImpl.getExecutionInfo(sid,tableNames.get(i));
+			for(int i = 0; i < tableNames.size(); i++) {
+				ColfusionExecuteinfo colfusionExecuteinfo = executionInfoManagerImpl.getExecutionInfo(sid, tableNames.get(i).getDbTableName());
 				StoryStatusViewModel content = new StoryStatusViewModel();
 				content.setEid(colfusionExecuteinfo.getEid());
 				content.setSid(sid);
@@ -141,20 +156,19 @@ public class BasicTableBL {
 				content.setRecordsProcessed(colfusionExecuteinfo.getRecordsProcessed());
 				content.setStatus(colfusionExecuteinfo.getStatus());
 				content.setPanCommand(colfusionExecuteinfo.getPanCommand());
-				content.setTableName(colfusionExecuteinfo.getTableName());
+				content.setTableName(tableNames.get(i).getTableName());
 				content.setLog(colfusionExecuteinfo.getLog());
 				//??What is NumberProcessRecords???
 				content.setNumberProcessRecords(null);
 				contents.add(content);
 			}
 			result.setPayload(contents);
-			result.isSuccessful=true;
+			result.isSuccessful = true;
 		}
 		catch(Exception e) {
-			result.isSuccessful=false;
+			result.isSuccessful = false;
 			result.message = "Get StoryStatus failed";
 		}
-		
 		
 		return result;	
 	}

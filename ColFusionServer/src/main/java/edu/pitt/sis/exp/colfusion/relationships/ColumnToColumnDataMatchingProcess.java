@@ -145,9 +145,9 @@ public class ColumnToColumnDataMatchingProcess extends ProcessBase {
 		
 		DatabaseHandlerBase dbHandlerTo = DatabaseHandlerFactory.getDatabaseHandler(srouceInfoDBTo);
 		
-		Table allTuplesFrom = dbHandlerFrom.getAll(transformationFrom.getTableName(), transformationFrom.getColumnDbNames());
+		Table allTuplesFrom = dbHandlerFrom.getAll(transformationFrom.getRelationKey(), transformationFrom.getColumnDbNames());
 		
-		Table allTuplesTo = dbHandlerTo.getAll(transformationTo.getTableName(), transformationTo.getColumnDbNames());
+		Table allTuplesTo = dbHandlerTo.getAll(transformationTo.getRelationKey(), transformationTo.getColumnDbNames());
 		
 		NestedLoopSimilarityJoin simJoin = new NestedLoopSimilarityJoin(new NormalizedDistance(new LevenshteinDistance()), null, null);
 		

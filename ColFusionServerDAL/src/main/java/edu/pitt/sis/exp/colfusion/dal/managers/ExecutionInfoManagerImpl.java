@@ -12,6 +12,7 @@ import org.hibernate.HibernateException;
 import org.hibernate.NonUniqueResultException;
 import org.hibernate.Query;
 
+import edu.pitt.sis.exp.colfusion.dal.dao.ExecutionInfoDAO;
 import edu.pitt.sis.exp.colfusion.dal.dao.ExecutionInfoDAOImpl;
 import edu.pitt.sis.exp.colfusion.dal.dao.SourceInfoDAO;
 import edu.pitt.sis.exp.colfusion.dal.dao.SourceInfoDAOImpl;
@@ -23,7 +24,7 @@ import edu.pitt.sis.exp.colfusion.dal.utils.HibernateUtil;
  * @author Evgeny
  *
  */
-public class ExecutionInfoManagerImpl extends GeneralManagerImpl<ColfusionExecuteinfo, Integer> implements ExecutionInfoManager {
+public class ExecutionInfoManagerImpl extends GeneralManagerImpl<ExecutionInfoDAO, ColfusionExecuteinfo, Integer> implements ExecutionInfoManager {
 
 	Logger logger = LogManager.getLogger(ExecutionInfoManagerImpl.class.getName());
 	

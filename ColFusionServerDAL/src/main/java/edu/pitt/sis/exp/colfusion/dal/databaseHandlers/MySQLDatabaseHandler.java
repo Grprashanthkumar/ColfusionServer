@@ -12,6 +12,7 @@ import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import edu.pitt.sis.exp.colfusion.dal.dataModels.tableDataModel.RelationKey;
 import edu.pitt.sis.exp.colfusion.dal.managers.ExecutionInfoManager;
 
 /**
@@ -195,23 +196,23 @@ public class MySQLDatabaseHandler extends DatabaseHandlerBase {
 	}
 
 	@Override
-	public void createIndecesIfNotExist(final String tableName, final String columnName) throws SQLException {
+	public void createIndecesIfNotExist(final RelationKey relationKey, final String columnName) throws SQLException {
 		String sql = "";
 		
-		String indexName = makeIndexName(tableName, columnName);
+		String indexName = makeIndexName(relationKey, columnName);
 		
-		if (doesIndexExist(tableName, indexName)) {
+		if (doesIndexExist(relationKey, indexName)) {
 			return;
 		}
 		
 		try (Statement statement = getConnection().createStatement()) {
 			//TODO: escape query, SQL injection is possible. See if it is possible to use prepared statement.
-			sql = String.format("ALTER TABLE `%s` ADD INDEX `%s` (`%s`(%d));", tableName, indexName, columnName, MYSQL_INDEX_KEY_LENGTH);
+			sql = String.format("ALTER TABLE `%s` ADD INDEX `%s` (`%s`(%d));", relationKey.getDbTableName(), indexName, columnName, MYSQL_INDEX_KEY_LENGTH);
 			
 			statement.executeUpdate(sql);			
 		} catch (SQLException e) {
 			
-			logger.error(String.format("createIndecesIfNotExist FAILED for table %s and column name %s and index name %s", tableName, columnName, indexName), e);
+			logger.error(String.format("createIndecesIfNotExist FAILED for table %s and column name %s and index name %s", relationKey.getDbTableName(), columnName, indexName), e);
 			throw e;
 		}
 	}
@@ -222,14 +223,14 @@ public class MySQLDatabaseHandler extends DatabaseHandlerBase {
 	 * @return
 	 * @throws SQLException 
 	 */
-	private boolean doesIndexExist(final String tableName, final String indexName) throws SQLException {
+	private boolean doesIndexExist(final RelationKey relationKey, final String indexName) throws SQLException {
 		
-		logger.info(String.format("Checking if an index exists with name %s for table %s", indexName, tableName));
+		logger.info(String.format("Checking if an index exists with name %s for table %s", indexName, relationKey.getDbTableName()));
 		
 		String sql = "SELECT COUNT(*) as cnt FROM INFORMATION_SCHEMA.STATISTICS WHERE table_name = ? and index_name = ?";
 		
 		try (java.sql.PreparedStatement statement = getConnection().prepareStatement(sql)) {
-			statement.setString(1, tableName);
+			statement.setString(1, relationKey.getDbTableName());
 			statement.setString(2, indexName);
 			
 			ResultSet rs = statement.executeQuery();
@@ -239,7 +240,7 @@ public class MySQLDatabaseHandler extends DatabaseHandlerBase {
 			
 			return false;
 		} catch (SQLException e) {
-			logger.error(String.format("doesIndexExist FAILED on table %s and index name %s", tableName, indexName), e);
+			logger.error(String.format("doesIndexExist FAILED on table %s and index name %s", relationKey.getDbTableName(), indexName), e);
 			
 			throw e;
 		}
@@ -251,22 +252,22 @@ public class MySQLDatabaseHandler extends DatabaseHandlerBase {
 	 * @param columnName
 	 * @return generated index name
 	 */
-	private String makeIndexName(final String tableName, final String columnName) {
-		String indexName = String.format("Index_%s_%s_%s", this.getDatabase(), tableName, columnName);
+	private String makeIndexName(final RelationKey relationKey, final String columnName) {
+		String indexName = String.format("Index_%s_%s_%s", this.getDatabase(), relationKey.getDbTableName(), columnName);
 		
 		logger.info(String.format("Generated index name %s", indexName));
 		return indexName;
 	}
 
 	@Override
-	public List<String> getAllColumnsInTable(final String tableName) throws SQLException {
-		logger.info(String.format("Getting all columns in table '%s'", tableName));
+	public List<String> getAllColumnsInTable(final RelationKey relationKey) throws SQLException {
+		logger.info(String.format("Getting all columns in table '%s'", relationKey.getDbTableName()));
 		
 		String sql = "SELECT `COLUMN_NAME` as columnName FROM `INFORMATION_SCHEMA`.`COLUMNS` WHERE `TABLE_SCHEMA`= ? AND `TABLE_NAME`= ?";
 		
 		try (java.sql.PreparedStatement statement = getConnection().prepareStatement(sql)) {
 			statement.setString(1, this.getDatabase());
-			statement.setString(2, tableName);
+			statement.setString(2, relationKey.getDbTableName());
 			
 			ResultSet rs = statement.executeQuery();
 			List<String> result = new ArrayList<String>(); 
@@ -274,11 +275,11 @@ public class MySQLDatabaseHandler extends DatabaseHandlerBase {
 				result.add(rs.getString("columnName"));				
 			}
 			
-			logger.info(String.format("Got %d columns in table '%s'", result.size(), tableName));
+			logger.info(String.format("Got %d columns in table '%s'", result.size(), relationKey.getDbTableName()));
 			
 			return result;
 		} catch (SQLException e) {
-			logger.error(String.format("getAllColumnsInTable FAILED on table '%s'", tableName), e);
+			logger.error(String.format("getAllColumnsInTable FAILED on table '%s'", relationKey.getDbTableName()), e);
 			
 			throw e;
 		}
@@ -293,8 +294,8 @@ public class MySQLDatabaseHandler extends DatabaseHandlerBase {
 	}
 
 	@Override
-	public int getCount(final String tableName) throws SQLException {
-		String sql = String.format("SELECT COUNT(*) as ct from %s", wrapInEscapeChars(tableName));
+	public int getCount(final RelationKey relationKey) throws SQLException {
+		String sql = String.format("SELECT COUNT(*) as ct from %s", wrapInEscapeChars(relationKey));
 		
 		try (Statement statement = getConnection().createStatement()) {
 			
@@ -306,7 +307,7 @@ public class MySQLDatabaseHandler extends DatabaseHandlerBase {
 			
 			return 0;
 		} catch (SQLException e) {
-			logger.error(String.format("getAllColumnsInTable FAILED on table '%s'", tableName), e);
+			logger.error(String.format("getAllColumnsInTable FAILED on table '%s'", relationKey.getDbTableName()), e);
 			
 			throw e;
 		}

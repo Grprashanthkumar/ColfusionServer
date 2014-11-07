@@ -16,5 +16,10 @@
                 <comment>tables from the source database to which this column belongs</comment>
             </column>
         </property>
+        <property name="dbTableName" type="string">
+            <column name="dbTableName" not-null="true">
+                <comment>The name of the database table where the data is stored in colfusion data databases. THIS WHOLE TABLE IS THE WORST DESGIN EVERY. NEED TO FIX IT. DUPLICATIONS.</comment>
+            </column>
+        </property>
     </class>
 </hibernate-mapping>

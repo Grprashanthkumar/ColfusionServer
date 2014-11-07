@@ -19,10 +19,14 @@ public interface DNameInfoManager extends GeneralManager<ColfusionDnameinfo, Int
 	/**
 	 * Creates or updates metadata for all variables in a given table/worksheet
 	 * 
-	 * @param worksheet for which variables metadata need to be created/updated.
-	 * @param tableNamePrefix a string to workhseet name
+	 * @param 	worksheet 
+	 * 				for which variables metadata need to be created/updated.
+	 * @param	sid
+	 * 				id of the story
+	 * @param	userId
+	 * 				id of the user  to is making the changes
 	 */
-	void createOrUpdateSheetMetadata(WorksheetViewModel worksheet, String tableNamePrefix, int sid, int userId)  throws Exception;
+	void createOrUpdateSheetMetadata(WorksheetViewModel worksheet, int sid, int userId)  throws Exception;
 
 	//TODO: wrintt a comment
 	/**

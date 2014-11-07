@@ -19,7 +19,7 @@ import edu.pitt.sis.exp.colfusion.dal.utils.HibernateUtil;
  *
  */
 public class RelationshipsColumnsDataMathingRatiosManagerImpl extends
-		GeneralManagerImpl<ColfusionRelationshipsColumnsDataMathingRatios, ColfusionRelationshipsColumnsDataMathingRatiosId> implements
+		GeneralManagerImpl<RelationshipsColumnsDataMathingRatiosDAO, ColfusionRelationshipsColumnsDataMathingRatios, ColfusionRelationshipsColumnsDataMathingRatiosId> implements
 		RelationshipsColumnsDataMathingRatiosManager {
 
 	static Logger logger = LogManager.getLogger(RelationshipsColumnsDataMathingRatiosManagerImpl.class.getName());

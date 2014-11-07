@@ -14,6 +14,7 @@ import org.hibernate.HibernateException;
 import org.hibernate.NonUniqueResultException;
 import org.hibernate.Query;
 
+import edu.pitt.sis.exp.colfusion.dal.dao.RelationshipsDAO;
 import edu.pitt.sis.exp.colfusion.dal.dao.RelationshipsDAOImpl;
 import edu.pitt.sis.exp.colfusion.dal.dao.SourceInfoDAO;
 import edu.pitt.sis.exp.colfusion.dal.dao.SourceInfoDAOImpl;
@@ -29,7 +30,7 @@ import edu.pitt.sis.exp.colfusion.dal.viewmodels.RelationshipLinkViewModel;
  * @author Evgeny
  *
  */
-public class RelationshipsManagerImpl extends GeneralManagerImpl<ColfusionRelationships, Integer> implements RelationshipsManager {
+public class RelationshipsManagerImpl extends GeneralManagerImpl<RelationshipsDAO, ColfusionRelationships, Integer> implements RelationshipsManager {
 
 	Logger logger = LogManager.getLogger(RelationshipsManagerImpl.class.getName());
 	

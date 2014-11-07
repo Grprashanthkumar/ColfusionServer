@@ -10,13 +10,17 @@ import org.apache.logging.log4j.Logger;
 import edu.pitt.sis.exp.colfusion.dal.dataModels.relationships.RelationshipLink;
 import edu.pitt.sis.exp.colfusion.dal.dataModels.relationships.transformation.RelationshipTransformation;
 import edu.pitt.sis.exp.colfusion.dal.dataModels.relationships.transformation.RelationshipTransofmationUtil;
+import edu.pitt.sis.exp.colfusion.dal.dataModels.tableDataModel.RelationKey;
 import edu.pitt.sis.exp.colfusion.dal.dataModels.tableDataModel.Table;
 import edu.pitt.sis.exp.colfusion.dal.databaseHandlers.DatabaseHandlerBase;
 import edu.pitt.sis.exp.colfusion.dal.databaseHandlers.DatabaseHandlerFactory;
+import edu.pitt.sis.exp.colfusion.dal.managers.ColumnTableInfoManager;
+import edu.pitt.sis.exp.colfusion.dal.managers.ColumnTableInfoManagerImpl;
 import edu.pitt.sis.exp.colfusion.dal.managers.RelationshipsManager;
 import edu.pitt.sis.exp.colfusion.dal.managers.RelationshipsManagerImpl;
 import edu.pitt.sis.exp.colfusion.dal.managers.SourceInfoManager;
 import edu.pitt.sis.exp.colfusion.dal.managers.SourceInfoManagerImpl;
+import edu.pitt.sis.exp.colfusion.dal.orm.ColfusionColumnTableInfo;
 import edu.pitt.sis.exp.colfusion.dal.orm.ColfusionRelationships;
 import edu.pitt.sis.exp.colfusion.dal.orm.ColfusionRelationshipsColumns;
 import edu.pitt.sis.exp.colfusion.dal.orm.ColfusionSourceinfoDb;
@@ -86,9 +90,9 @@ public class JoinTablesBL {
 			
 			DatabaseHandlerBase dbHandlerTo = DatabaseHandlerFactory.getDatabaseHandler(srouceInfoDBTo);
 			
-			Table allTuplesFrom = dbHandlerFrom.getAll(transformationFrom.getTableName());//, transformationFrom.getColumnDbNames());
+			Table allTuplesFrom = dbHandlerFrom.getAll(transformationFrom.getRelationKey());//, transformationFrom.getColumnDbNames());
 			
-			Table allTuplesTo = dbHandlerTo.getAll(transformationTo.getTableName());// , transformationTo.getColumnDbNames());
+			Table allTuplesTo = dbHandlerTo.getAll(transformationTo.getRelationKey());// , transformationTo.getColumnDbNames());
 			
 			NestedLoopSimilarityJoin simJoin = new NestedLoopSimilarityJoin(new NormalizedDistance(new LevenshteinDistance()), null, null);
 			
@@ -137,7 +141,7 @@ public class JoinTablesBL {
 			Table resultTable = null;
 			
 			try (DatabaseHandlerBase dbHandler1 = DatabaseHandlerFactory.getDatabaseHandler(halvesToJoin.get(0).getDbInfo())) {
-				resultTable = dbHandler1.getAll(halvesToJoin.get(0).getTableName());
+				resultTable = dbHandler1.getAll(halvesToJoin.get(0).getRelationKey());
 			}
 			
 			for (int i = 1; i < halvesToJoin.size(); i++) {
@@ -145,7 +149,7 @@ public class JoinTablesBL {
 				Table allTuples2 = null;
 				
 				try (DatabaseHandlerBase dbHandler2 = DatabaseHandlerFactory.getDatabaseHandler(halvesToJoin.get(i).getDbInfo())) {
-					allTuples2 = dbHandler2.getAll(halvesToJoin.get(i).getTableName());
+					allTuples2 = dbHandler2.getAll(halvesToJoin.get(i).getRelationKey());
 				}
 				
 				resultTable = simJoin.join(resultTable, allTuples2, 
@@ -196,12 +200,19 @@ public class JoinTablesBL {
 				transformations2.add(RelationshipTransofmationUtil.makeRelationshipTransformation(colfusionRelationship.getRelId(), colfusionLink.getId().getClTo()));
 			}
 			
+			ColumnTableInfoManager columnTableMng = new ColumnTableInfoManagerImpl();
+			ColfusionColumnTableInfo columnTable = columnTableMng.findBySidAndOriginalTableName(colfusionRelationship.getColfusionSourceinfoBySid1().getSid(), colfusionRelationship.getTableName1());
+			RelationKey relationKey = new RelationKey(columnTable.getTableName(), columnTable.getDbTableName());
+			
 			TableAsHalfLink half1 = new TableAsHalfLink(colfusionRelationship.getColfusionSourceinfoBySid1().getColfusionSourceinfoDb(), 
-					colfusionRelationship.getTableName1(), 
+					relationKey, 
 					transformations1, transformations2);
 			
+			columnTable = columnTableMng.findBySidAndOriginalTableName(colfusionRelationship.getColfusionSourceinfoBySid2().getSid(), colfusionRelationship.getTableName2());
+			relationKey = new RelationKey(columnTable.getTableName(), columnTable.getDbTableName());
+			
 			TableAsHalfLink half2 = new TableAsHalfLink(colfusionRelationship.getColfusionSourceinfoBySid2().getColfusionSourceinfoDb(), 
-					colfusionRelationship.getTableName2(), 
+					relationKey, 
 					transformations2, transformations1);
 			
 			if (result.contains(half1)) {
@@ -230,15 +241,15 @@ public class JoinTablesBL {
 	private static class TableAsHalfLink {
 		
 		private final ColfusionSourceinfoDb dbInfo;
-		private final String tableName;
+		private final RelationKey relationKey;
 		private final List<RelationshipTransformation> transformationsCurrentTable;
 		private final List<RelationshipTransformation> transformationsReferredTable;
 		
-		public TableAsHalfLink(final ColfusionSourceinfoDb dbInfo, final String tableName, 
+		public TableAsHalfLink(final ColfusionSourceinfoDb dbInfo, final RelationKey relationKey, 
 				final List<RelationshipTransformation> transformationsCurrentTable,
 				final List<RelationshipTransformation> transformationsReferredTable) {
 			this.dbInfo = dbInfo;
-			this.tableName = tableName;
+			this.relationKey = relationKey;
 			this.transformationsCurrentTable = transformationsCurrentTable;
 			this.transformationsReferredTable = transformationsReferredTable;
 		}
@@ -253,8 +264,8 @@ public class JoinTablesBL {
 		/**
 		 * @return the tableName
 		 */
-		public String getTableName() {
-			return tableName;
+		public RelationKey getRelationKey() {
+			return relationKey;
 		}
 		
 		/**
@@ -277,7 +288,7 @@ public class JoinTablesBL {
 			if (other instanceof TableAsHalfLink) {
 				TableAsHalfLink typedOther = (TableAsHalfLink) other;
 				
-				return this.tableName.equals(typedOther.getTableName()) && 
+				return this.getRelationKey().equals(typedOther.getRelationKey()) && 
 						this.getDbInfo().getSourceDatabase().equals(typedOther.getDbInfo().getSourceDatabase());
 			}
 			

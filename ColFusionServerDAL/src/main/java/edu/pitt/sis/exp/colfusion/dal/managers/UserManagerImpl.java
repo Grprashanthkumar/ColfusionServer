@@ -19,7 +19,7 @@ import edu.pitt.sis.exp.colfusion.dal.utils.HibernateUtil;
  * @author Evgeny
  *
  */
-public class UserManagerImpl extends GeneralManagerImpl<ColfusionUsers, Integer> implements UserManager {
+public class UserManagerImpl extends GeneralManagerImpl<UsersDAO, ColfusionUsers, Integer> implements UserManager {
 
 	Logger logger = LogManager.getLogger(UserManagerImpl.class.getName());
 	
@@ -36,7 +36,7 @@ public class UserManagerImpl extends GeneralManagerImpl<ColfusionUsers, Integer>
 		try {
             HibernateUtil.beginTransaction();
             
-            List<ColfusionUsers> result = ((UsersDAO) _dao).lookUpUser(searchTerm, limit);
+            List<ColfusionUsers> result = _dao.lookUpUser(searchTerm, limit);
             
             HibernateUtil.commitTransaction();
             
@@ -57,11 +57,11 @@ public class UserManagerImpl extends GeneralManagerImpl<ColfusionUsers, Integer>
 	}
 	
 	@Override
-	public List<String> queryUserEmails(String userLevel){
+	public List<String> queryUserEmails(final String userLevel){
 		try {
             HibernateUtil.beginTransaction();
             
-            List<String> result = ((UsersDAO) _dao).queryUserEmails(userLevel);
+            List<String> result = _dao.queryUserEmails(userLevel);
             
             HibernateUtil.commitTransaction();
             

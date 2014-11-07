@@ -16,17 +16,17 @@ import edu.pitt.sis.exp.colfusion.dal.utils.HibernateUtil;
 import edu.pitt.sis.exp.colfusion.dal.viewmodels.AttachmentListViewModel;
 
 
-public class AttachmentManagerImpl extends GeneralManagerImpl<ColfusionDesAttachments, Integer> implements AttachmentManager{
+public class AttachmentManagerImpl extends GeneralManagerImpl<AttachmentDAO, ColfusionDesAttachments, Integer> implements AttachmentManager{
 	Logger logger = LogManager.getLogger(AttachmentManagerImpl.class.getName());
 	
 	public AttachmentManagerImpl() {
 		super(new AttachmentDAOImpl(), ColfusionDesAttachments.class);
 	}
 	
-	private AttachmentDAO attachmentDao = new AttachmentDAOImpl();
+	private final AttachmentDAO attachmentDao = new AttachmentDAOImpl();
 	
 	@Override
-	public List<AttachmentListViewModel> getAttachmentListViewModel(int sid) {
+	public List<AttachmentListViewModel> getAttachmentListViewModel(final int sid) {
 		try{
 			HibernateUtil.beginTransaction();
 	        
@@ -44,7 +44,9 @@ public class AttachmentManagerImpl extends GeneralManagerImpl<ColfusionDesAttach
 	        	attachmentListViewModel.setUploadTime(attachmentObj.getUploadTime());
 	        	result.add(attachmentListViewModel);
 	        }
-	                               
+	                        
+	        HibernateUtil.commitTransaction();
+	        
 	        return result;
 	    } catch (NonUniqueResultException ex) {
 	

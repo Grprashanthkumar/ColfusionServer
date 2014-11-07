@@ -8,6 +8,7 @@ import org.apache.logging.log4j.Logger;
 import org.hibernate.HibernateException;
 import org.hibernate.NonUniqueResultException;
 
+import edu.pitt.sis.exp.colfusion.dal.dao.ProcessesDAO;
 import edu.pitt.sis.exp.colfusion.dal.dao.ProcessesDAOImpl;
 import edu.pitt.sis.exp.colfusion.dal.orm.ColfusionProcesses;
 //import edu.pitt.sis.exp.colfusion.process.ProcessStatusEnum;
@@ -17,7 +18,7 @@ import edu.pitt.sis.exp.colfusion.dal.utils.HibernateUtil;
  * @author Evgeny
  *
  */
-public class ProcessPersistantManagerImpl extends GeneralManagerImpl<ColfusionProcesses, Integer> implements ProcessPersistantManager {
+public class ProcessPersistantManagerImpl extends GeneralManagerImpl<ProcessesDAO, ColfusionProcesses, Integer> implements ProcessPersistantManager {
 
 	Logger logger = LogManager.getLogger(ProcessPersistantManagerImpl.class.getName());
 	

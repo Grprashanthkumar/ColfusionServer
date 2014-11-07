@@ -9,6 +9,7 @@ import org.apache.logging.log4j.Logger;
 import com.google.gson.annotations.Expose;
 
 import edu.pitt.sis.exp.colfusion.dal.dataModels.tableDataModel.ColumnMetadata;
+import edu.pitt.sis.exp.colfusion.dal.dataModels.tableDataModel.RelationKey;
 
 public class RelationshipTransformation {
 	
@@ -21,10 +22,10 @@ public class RelationshipTransformation {
 	@Expose private final List<ColumnMetadata> columnsMetadata;
 	//private final List<ColfusionDnameinfo> columns;
 	
-	@Expose private final String tableName;
+	@Expose private final RelationKey relationKey;
 	@Expose private final int sid;
 	
-	public RelationshipTransformation(final String transformationInCids, final int sid, final String tableName, final List<ColumnMetadata> columnsMetadata) throws Exception {
+	public RelationshipTransformation(final String transformationInCids, final int sid, final RelationKey relationKey, final List<ColumnMetadata> columnsMetadata) throws Exception {
 		
 		if (transformationInCids.length() == 0) {
 			logger.error(String.format("Fail to initialize RelationshipTransformation because transformationInCids parameter has length 0."));
@@ -33,7 +34,7 @@ public class RelationshipTransformation {
 		
 		this.transformationInCids = transformationInCids;
 		this.sid = sid;
-		this.tableName = tableName;
+		this.relationKey = relationKey;
 	
 		this.columnsMetadata = columnsMetadata;
 		
@@ -91,8 +92,8 @@ public class RelationshipTransformation {
 //		}
 //	}
 
-	public String getTableName() {
-		return tableName;
+	public RelationKey getRelationKey() {
+		return relationKey;
 	}
 	
 	public String getTransformation() {

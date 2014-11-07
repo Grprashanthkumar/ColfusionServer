@@ -190,7 +190,7 @@ public class RelationshipBL {
 			//TODO FIXME: should indeces be created on all columns at once?
 			for (String columnDbName : transformation.getColumnDbNames()) {
 				try {
-					dbHandler.createIndecesIfNotExist(transformation.getTableName(), columnDbName);
+					dbHandler.createIndecesIfNotExist(transformation.getRelationKey(), columnDbName);
 				} catch (Exception e) {
 					logger.error("createIndeces FAILED to initialize colfusionSourceinfoDb field.");
 					throw e;

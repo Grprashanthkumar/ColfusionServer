@@ -39,7 +39,7 @@ import edu.pitt.sis.exp.colfusion.dal.viewmodels.WorksheetViewModel;
  * @author Evgeny
  *
  */
-public class DNameInfoManagerImpl extends GeneralManagerImpl<ColfusionDnameinfo, Integer> implements DNameInfoManager {
+public class DNameInfoManagerImpl extends GeneralManagerImpl<DNameInfoDAO, ColfusionDnameinfo, Integer> implements DNameInfoManager {
 
 	Logger logger = LogManager.getLogger(DNameInfoManagerImpl.class.getName());
 	
@@ -80,44 +80,31 @@ public class DNameInfoManagerImpl extends GeneralManagerImpl<ColfusionDnameinfo,
 	//***************************************
 	
 	@Override
-	//TODO: maybe all should happen in one transaction, righ now each variable is written in its own transaction
-	public void createOrUpdateSheetMetadata(final WorksheetViewModel worksheet, final String tableNamePrefix, final int sid, final int userId) throws Exception {
+	//TODO: maybe all should happen in one transaction, right now each variable is written in its own transaction
+	public void createOrUpdateSheetMetadata(final WorksheetViewModel worksheet, final int sid, final int userId) throws Exception {
 		for (DatasetVariableViewModel variable : worksheet.getVariables()) {
 			
 			if (!variable.isChecked()) { // if user didn't select the variable then we don't need to save it, at last for now.
 				continue;
 			}
 			
+			ColfusionDnameinfo variableMetadata = null;
+			
 			if (variable.getCid() > 0) {
 				//need to update, the variable already stored in the db.
-				ColfusionDnameinfo variableMeta = this.findByID(variable.getCid());
-				
-				if (variableMeta == null) {
-					//could not find the variable in the db, should we try to create it?
-					
-					ColfusionDnameinfo addedColumn = this.addVariable(variable, sid, userId);
-					this.addOrUpdateTableNameRecordForNewVariable(addedColumn, tableNamePrefix + worksheet.getSheetName());
-				}
-				else {
-					//perform the update here and record the history
-					
-					ColfusionDnameinfo updatedColumn = this.updateVariable(variable, sid, userId);
-					this.addOrUpdateTableNameRecordForNewVariable(updatedColumn, tableNamePrefix + worksheet.getSheetName());
-				}
+				variableMetadata = this.findByID(variable.getCid());	
 			}
-			else if (variable.getCid() == 0) {
-				//variable has not been saved to the db yet, need to save
-				
-				ColfusionDnameinfo addedColumn = this.addVariable(variable, sid, userId);
-				this.addOrUpdateTableNameRecordForNewVariable(addedColumn, tableNamePrefix + worksheet.getSheetName());
+			
+			if (variableMetadata == null) {
+				//could not find the variable in the db, should we try to create it?					
+				variableMetadata = this.addVariable(variable, sid, userId);					
 			}
 			else {
-				//TODO: implement, throw an error, cid cannot be less than 0.
-				
-				this.logger.error(String.format("createOrUpdateSheetMetadata fialed because the cid is less than 0 - %d", variable.getCid()));
-				
-				throw new Exception("createOrUpdateSheetMetadata fialed because the cid is less than 0.");
+				//perform the update here and record the history					
+				variableMetadata = this.updateVariable(variable, sid, userId);					
 			}
+			
+			this.addOrUpdateTableNameRecordForNewVariable(variableMetadata, worksheet.getSheetName(), worksheet.getUniqueShortName());
 		}
 	}
 
@@ -249,17 +236,31 @@ public class DNameInfoManagerImpl extends GeneralManagerImpl<ColfusionDnameinfo,
 	/**
 	 * Add or updates record about the table name for given column and given table name.
 	 * 
-	 * @param column {@link ColfusionDnameinfo} for which to add/update record about parent table.
-	 * @param tableName new/updated table name.
+	 * @param 	column 
+	 * 				{@link ColfusionDnameinfo} for which to add/update record about parent table.
+	 * @param 	tableName 
+	 * 				new/updated table name.
+	 * @param	dbTableName
+	 * 				name of the target database table that hold the data. This field should not be updated once it is set.
 	 */
-	private void addOrUpdateTableNameRecordForNewVariable(final ColfusionDnameinfo column, final String tableName) {
+	private void addOrUpdateTableNameRecordForNewVariable(final ColfusionDnameinfo column, final String tableName, final String dbTableName) {
 		
 		try {
             HibernateUtil.beginTransaction();
             
-            ColfusionColumnTableInfo columnTableInfo = new ColfusionColumnTableInfo(column, tableName);
-            
             ColumnTableInfoDAO columnTableInfoDAO = new ColumnTableInfoDAOImpl();
+            
+            ColfusionColumnTableInfo existingRecord = columnTableInfoDAO.findByID(ColfusionColumnTableInfo.class, column.getCid());
+            
+            if (existingRecord != null && existingRecord.getDbTableName().equals(dbTableName)) {
+            	String message = String.format("Currently cannot update dbTableName in the colfumnTableInfo table. "
+            			+ "Cid '%d', Table Name '%s'. dbTableName '%s'", column.getCid(), tableName, dbTableName);
+            	
+            	logger.error(message);
+            	throw new RuntimeException(message);
+            }
+            
+            ColfusionColumnTableInfo columnTableInfo = new ColfusionColumnTableInfo(column, tableName, dbTableName);
             
             columnTableInfoDAO.saveOrUpdate(columnTableInfo);
             

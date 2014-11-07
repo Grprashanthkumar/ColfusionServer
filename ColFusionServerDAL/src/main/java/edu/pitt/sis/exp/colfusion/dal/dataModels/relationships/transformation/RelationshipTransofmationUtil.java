@@ -9,6 +9,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import edu.pitt.sis.exp.colfusion.dal.dataModels.tableDataModel.ColumnMetadata;
+import edu.pitt.sis.exp.colfusion.dal.dataModels.tableDataModel.RelationKey;
 import edu.pitt.sis.exp.colfusion.dal.managers.DNameInfoManager;
 import edu.pitt.sis.exp.colfusion.dal.managers.DNameInfoManagerImpl;
 import edu.pitt.sis.exp.colfusion.dal.orm.ColfusionDnameinfo;
@@ -57,7 +58,7 @@ public class RelationshipTransofmationUtil {
 		List<ColumnMetadata> columnsMetadata = new ArrayList<ColumnMetadata>();
 		
 		Integer sid = null;
-		String tableName = null;
+		RelationKey relationKey = null;
 		
 		for (Integer cid : cids) {
 			
@@ -75,13 +76,13 @@ public class RelationshipTransofmationUtil {
 				throw new RuntimeException(message);
 			}
 			
-			if (tableName == null) {
-				tableName = column.getColfusionColumnTableInfo().getTableName();
+			if (relationKey == null) {
+				relationKey = new RelationKey(column.getColfusionColumnTableInfo().getTableName(), column.getColfusionColumnTableInfo().getDbTableName());
 			}
-			else if (!tableName.equals(column.getColfusionColumnTableInfo().getTableName())) {
+			else if (!relationKey.getDbTableName().equals(column.getColfusionColumnTableInfo().getDbTableName())) {
 				String message = String.format("makeRelationshipTransformation FIALED: encounter not "
 						+ "unique table name (%s and %s) for relid %d and transformation '%s'", 
-						tableName, column.getColfusionColumnTableInfo().getTableName(), relId, transformationInCids);
+						relationKey.getDbTableName(), column.getColfusionColumnTableInfo().getDbTableName(), relId, transformationInCids);
 				
 				logger.error(message);
 				throw new RuntimeException(message);
@@ -95,6 +96,6 @@ public class RelationshipTransofmationUtil {
 			columnsMetadata.add(columnMetadata);
 		}
 		
-		return new RelationshipTransformation(transformationInCids, sid, tableName, columnsMetadata);
+		return new RelationshipTransformation(transformationInCids, sid, relationKey, columnsMetadata);
 	}
 }

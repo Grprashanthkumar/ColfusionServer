@@ -19,6 +19,7 @@ import org.apache.logging.log4j.Logger;
 import edu.pitt.sis.exp.colfusion.dal.dataModels.tableDataModel.Cell;
 import edu.pitt.sis.exp.colfusion.dal.dataModels.tableDataModel.Column;
 import edu.pitt.sis.exp.colfusion.dal.dataModels.tableDataModel.ColumnGroup;
+import edu.pitt.sis.exp.colfusion.dal.dataModels.tableDataModel.RelationKey;
 import edu.pitt.sis.exp.colfusion.dal.dataModels.tableDataModel.Row;
 import edu.pitt.sis.exp.colfusion.dal.dataModels.tableDataModel.Table;
 import edu.pitt.sis.exp.colfusion.dal.managers.ExecutionInfoManager;
@@ -236,23 +237,23 @@ public abstract class DatabaseHandlerBase implements Closeable {
 	 * @param combineColumns - if true, only one index will be created where key will be combination of all columns, otherwise a separate index on each column will be created.
 	 * @throws SQLException 
 	 */
-	public abstract void createIndecesIfNotExist(String tableName, String columnNames) throws SQLException;
+	public abstract void createIndecesIfNotExist(RelationKey relationKey, String columnNames) throws SQLException;
 
-	public Table getAll(final String tableName, final List<String> columnDbNames) throws SQLException {
-		String sqlString = constructSelectFromSQL(tableName, columnDbNames);
+	public Table getAll(final RelationKey relationKey, final List<String> columnDbNames) throws SQLException {
+		String sqlString = constructSelectFromSQL(relationKey, columnDbNames);
 		
-		return runQuery(tableName, columnDbNames, sqlString);
+		return runQuery(relationKey, columnDbNames, sqlString);
 	}
 	
-	public Table getAll(final String tableName, final List<String> columnDbNames, final int perPage, final int pageNumber) throws SQLException {
-		String sqlString = constructSelectFromSQL(tableName, columnDbNames);
+	public Table getAll(final RelationKey relationKey, final List<String> columnDbNames, final int perPage, final int pageNumber) throws SQLException {
+		String sqlString = constructSelectFromSQL(relationKey, columnDbNames);
 		
 		String sqlWithLimit = wrapSQLIntoLimit(sqlString, perPage, pageNumber);
 		
-		return runQuery(tableName, columnDbNames, sqlWithLimit);
+		return runQuery(relationKey, columnDbNames, sqlWithLimit);
 	}
 
-	private Table runQuery(final String tableName,
+	private Table runQuery(final RelationKey relationKey,
 			final List<String> columnDbNames, final String sqlWithLimit)
 			throws SQLException {
 		logger.info(String.format("About to execute this query: %s", sqlWithLimit));
@@ -264,7 +265,7 @@ public abstract class DatabaseHandlerBase implements Closeable {
 			Table result = new Table();
 			long index = 0;
 			while (resultSet.next()) {
-				ColumnGroup columnGroup = new ColumnGroup(tableName, sid);
+				ColumnGroup columnGroup = new ColumnGroup(relationKey.getTableName(), sid);
 				
 				for (String column : columnDbNames) {
 					
@@ -292,7 +293,7 @@ public abstract class DatabaseHandlerBase implements Closeable {
 	protected abstract String wrapSQLIntoLimit(String sqlString, int perPage,
 			int pageNumber);
 
-	private String constructSelectFromSQL(final String tableName,
+	private String constructSelectFromSQL(final RelationKey relationKey,
 			final List<String> columnDbNames) {
 		StringBuilder sql = new StringBuilder();
 		
@@ -302,33 +303,33 @@ public abstract class DatabaseHandlerBase implements Closeable {
 		
 		sql.append(String.format("%s%c FROM %c%s%c", columnDbNamesCSV, 
 				this.getDbCharToWrapNamesWithSpaces(), this.getDbCharToWrapNamesWithSpaces(), 
-				tableName, this.getDbCharToWrapNamesWithSpaces()));
+				relationKey.getDbTableName(), this.getDbCharToWrapNamesWithSpaces()));
 		
 		String sqlString = sql.toString();
 		return sqlString;
 	}
 
-	public Table getAll(final String tableNameTo) throws SQLException {
+	public Table getAll(final RelationKey relationKey) throws SQLException {
 		
-		List<String> allColumnsInTable = getAllColumnsInTable(tableNameTo);
+		List<String> allColumnsInTable = getAllColumnsInTable(relationKey);
 		
-		return getAll(tableNameTo, allColumnsInTable);
+		return getAll(relationKey, allColumnsInTable);
 	}
 	
-	public Table getAll(final String tableNameTo, final int perPage, final int pageNumber) throws SQLException {
+	public Table getAll(final RelationKey relationKey, final int perPage, final int pageNumber) throws SQLException {
 		
-		List<String> allColumnsInTable = getAllColumnsInTable(tableNameTo);
+		List<String> allColumnsInTable = getAllColumnsInTable(relationKey);
 		
-		return getAll(tableNameTo, allColumnsInTable, perPage, pageNumber);
+		return getAll(relationKey, allColumnsInTable, perPage, pageNumber);
 	}
 
-	public abstract List<String> getAllColumnsInTable(String tableNameTo) throws SQLException;
+	public abstract List<String> getAllColumnsInTable(RelationKey relationKey) throws SQLException;
 
-	public abstract int getCount(String tableName) throws SQLException;
+	public abstract int getCount(RelationKey relationKey) throws SQLException;
 	
-	protected String wrapInEscapeChars(final String tableName) {
+	protected String wrapInEscapeChars(final RelationKey relationKey) {
 		return String.format("%s%s%s", getDbCharToWrapNamesWithSpaces(), 
-				tableName, getDbCharToWrapNamesWithSpaces());
+				relationKey.getDbTableName(), getDbCharToWrapNamesWithSpaces());
 	}
 
 	/**

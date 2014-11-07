@@ -41,6 +41,7 @@ import edu.pitt.sis.exp.colfusion.dal.dao.UserRolesDAO;
 import edu.pitt.sis.exp.colfusion.dal.dao.UserRolesDAOImpl;
 import edu.pitt.sis.exp.colfusion.dal.dao.UsersDAO;
 import edu.pitt.sis.exp.colfusion.dal.dao.UsersDAOImpl;
+import edu.pitt.sis.exp.colfusion.dal.dataModels.tableDataModel.RelationKey;
 import edu.pitt.sis.exp.colfusion.dal.orm.ColfusionLicense;
 import edu.pitt.sis.exp.colfusion.dal.orm.ColfusionLinks;
 import edu.pitt.sis.exp.colfusion.dal.orm.ColfusionRelationships;
@@ -73,7 +74,7 @@ import edu.pitt.sis.exp.colfusion.dal.viewmodels.UserViewModel;
  * @author Evgeny
  *
  */
-public class SourceInfoManagerImpl extends GeneralManagerImpl<ColfusionSourceinfo, Integer> implements SourceInfoManager {
+public class SourceInfoManagerImpl extends GeneralManagerImpl<SourceInfoDAO, ColfusionSourceinfo, Integer> implements SourceInfoManager {
 
 	Logger logger = LogManager.getLogger(SourceInfoManagerImpl.class.getName());
 	
@@ -163,7 +164,7 @@ public class SourceInfoManagerImpl extends GeneralManagerImpl<ColfusionSourceinf
         try {
             HibernateUtil.beginTransaction();
             
-            sourceinfo = ((SourceInfoDAO)this._dao).findDatasetInfoBySid(sid, includeDraft);
+            sourceinfo = this._dao.findDatasetInfoBySid(sid, includeDraft);
             
             if (sourceinfo != null) {
             
@@ -201,7 +202,7 @@ public class SourceInfoManagerImpl extends GeneralManagerImpl<ColfusionSourceinf
 		try {
             HibernateUtil.beginTransaction();
             
-            List<ColfusionSourceinfo> result = ((SourceInfoDAO) this._dao).lookupStories(searchTerm, limit);
+            List<ColfusionSourceinfo> result = this._dao.lookupStories(searchTerm, limit);
             
             for (ColfusionSourceinfo sourceinfo : result) {
             	
@@ -824,19 +825,19 @@ public class SourceInfoManagerImpl extends GeneralManagerImpl<ColfusionSourceinf
 	
 
 	@Override
-	public List<String> getTableNames(final int sid) {
+	public List<RelationKey> getTableNames(final int sid) {
 		try {
             HibernateUtil.beginTransaction();
             
             SourceInfoDAO storyDao = new SourceInfoDAOImpl();
             ColfusionSourceinfo story = storyDao.findByID(ColfusionSourceinfo.class, sid);
             
-            String hql = "SELECT distinct di.colfusionColumnTableInfo.tableName FROM ColfusionDnameinfo di join di.colfusionColumnTableInfo where di.colfusionSourceinfo =:sid";
+            String hql = "SELECT distinct new edu.pitt.sis.exp.colfusion.dal.dataModels.tableDataModel.RelationKey(ti.tableName, ti.dbTableName) FROM ColfusionDnameinfo di join di.colfusionColumnTableInfo ti where di.colfusionSourceinfo =:sid";
             
             Query query = HibernateUtil.getSession().createQuery(hql);
             query.setParameter("sid", story);
             
-            List<String> tableNames = query.list();
+            List<RelationKey> tableNames = query.list();
                         
             HibernateUtil.commitTransaction();
             
@@ -1023,8 +1024,8 @@ public class SourceInfoManagerImpl extends GeneralManagerImpl<ColfusionSourceinf
 	    }	
 	}
 
-	private void StoryListToStoryViewModelList(List<Object> storyListObjs,
-			List<StoryListViewModel> result) {
+	private void StoryListToStoryViewModelList(final List<Object> storyListObjs,
+			final List<StoryListViewModel> result) {
 		for (Object storyListObj : storyListObjs) {
 			Object[] storyColumns = (Object[]) storyListObj;
 			StoryListViewModel storyListViewModel = new StoryListViewModel();

@@ -21,14 +21,14 @@ import edu.pitt.sis.exp.colfusion.dal.utils.HibernateUtil;
  * @param <T>
  *
  */
-public abstract class GeneralManagerImpl<T extends Object, ID extends Serializable> implements GeneralManager<T, ID> {
+public abstract class GeneralManagerImpl<Dao extends GenericDAO<T, ID>, T extends Object, ID extends Serializable> implements GeneralManager<T, ID> {
 
 	private static Logger logger = LogManager.getLogger(GeneralManagerImpl.class.getName());
 	
-	protected final GenericDAO<T, ID> _dao;
+	protected final Dao _dao;
 	private final Class<?> _clazz;
 	
-	protected GeneralManagerImpl(final GenericDAO<T, ID>  dao, final Class<?> clazz) {
+	protected GeneralManagerImpl(final Dao dao, final Class<?> clazz) {
 		_dao = dao;
 		_clazz = clazz;
 	}

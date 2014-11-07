@@ -8,6 +8,7 @@ import org.apache.logging.log4j.Logger;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
 import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
@@ -37,7 +38,7 @@ public class HibernateUtil {
 		return sessionFactory;
 	}
 	 
-	public static Session beginTransaction() throws HibernateException {
+	public static void beginTransaction() throws HibernateException {
 		try {
 			Session hibernateSession = HibernateUtil.getSession();
 			
@@ -48,12 +49,12 @@ public class HibernateUtil {
 				logger.error("beginTransaction hibernateSession.getTransaction() != null and hibernateSession.getTransaction().isActive() is TURE. Does it mean "
 						+ "the code is trying to open nested tractions? Check!!!.");
 				
-				hibernateSession.getTransaction();
+				Transaction transaction = hibernateSession.getTransaction();
+				logger.info(String.format("beginTransaction: There is an active transaction %s", transaction));
 		    } else {
-		    	hibernateSession.beginTransaction();
+		    	Transaction transaction = hibernateSession.beginTransaction();
+		    	logger.info(String.format("beginTransaction: Began transaction %s", transaction));
 		    }
-			
-			return hibernateSession;
 		}
 		catch (Exception e) {
 			logger.error("beginTransaction failed. ", e);
@@ -83,6 +84,8 @@ public class HibernateUtil {
 					logger.error("commitTransaction: after while (!trans.wasCommitted()).");					
 				}
 				
+				String message = String.format("commitTransaction: commited trasaction %s", trans);
+				logger.info(message);
 			}
 			else {
 				logger.error("commitTransaction was trying to commit but HibernateUtil.getSession().getTransaction() equals NULL");
@@ -92,7 +95,7 @@ public class HibernateUtil {
 		catch (Exception e) {
 			logger.error("commitTransaction failed", e);
 			
-			//TODO should be throw e furher?
+			//TODO should be throw e further?
 			
 			throw new HibernateException(e);
 		}
@@ -127,6 +130,9 @@ public class HibernateUtil {
 					//TODO change from Error to INFO. right now use error, because I want to receive an email when it happens.
 					logger.error("rollbackTransaction: after while (!trans.wasRolledBack()).");					
 				}
+				
+				String message = String.format("commitTransaction: commited trasaction %s", trans);
+				logger.info(message);
 			} catch (Exception e) {
 				logger.error("rollbackTransaction: HibernateUtil.getSession().getTransaction().rollback()  failed even though HibernateUtil.getSession().getTransaction() not equals", e);
 			}
@@ -137,10 +143,6 @@ public class HibernateUtil {
 		}
 	}
 	 
-	public static void closeSession() throws HibernateException, Exception {
-		HibernateUtil.getSession().close();
-	}
-	 
 	/**
 	 * Gets current session.
 	 * 
@@ -149,14 +151,15 @@ public class HibernateUtil {
 	 * @throws Exception
 	 */
 	public static Session getSession() throws HibernateException {
+		
+		if (sessionFactory == null) {
+			String message = String.format("getSession: sessionFactory == null, need to do something here");
+			logger.error(message);
+			
+			throw new NullPointerException(message);
+		}
+		
 		try {
-			
-			if (sessionFactory == null) {
-				logger.error("getSession: sessionFactory == null, need to do something here");
-				
-				throw new Exception("getSession: sessionFactory == null, need to do something here");
-			}
-			
 			Session hibernateSession = sessionFactory.getCurrentSession();
 			return hibernateSession;
 		} catch (Exception e) {

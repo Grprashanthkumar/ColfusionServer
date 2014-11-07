@@ -8,6 +8,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import edu.pitt.sis.exp.colfusion.dal.dataModels.tableDataModel.RelationKey;
 import edu.pitt.sis.exp.colfusion.dal.managers.SourceInfoManagerImpl.HistoryItem;
 import edu.pitt.sis.exp.colfusion.dal.orm.ColfusionSourceinfo;
 import edu.pitt.sis.exp.colfusion.dal.orm.ColfusionSourceinfoDb;
@@ -147,7 +148,7 @@ public interface SourceInfoManager extends GeneralManager<ColfusionSourceinfo, I
 	 * @param integer sid.
 	 * @return tableName List.
 	 */
-	public List<String> getTableNames(int sid);
+	public List<RelationKey> getTableNames(int sid);
 
 	public ColfusionSourceinfoDb getColfusionSourceinfoDbFrom(int relId) throws Exception;
 

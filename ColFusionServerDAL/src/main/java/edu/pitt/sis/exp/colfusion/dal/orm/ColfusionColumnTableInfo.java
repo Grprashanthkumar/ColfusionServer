@@ -10,21 +10,23 @@ public class ColfusionColumnTableInfo implements java.io.Serializable {
 	private int cid;
 	private ColfusionDnameinfo colfusionDnameinfo;
 	private String tableName;
+	private String dbTableName;
 
 	public ColfusionColumnTableInfo() {
 	}
 
-	public ColfusionColumnTableInfo(ColfusionDnameinfo colfusionDnameinfo,
-			String tableName) {
+	public ColfusionColumnTableInfo(final ColfusionDnameinfo colfusionDnameinfo,
+			final String tableName, final String dbTableName) {
 		this.colfusionDnameinfo = colfusionDnameinfo;
 		this.tableName = tableName;
+		this.dbTableName = dbTableName;
 	}
 
 	public int getCid() {
 		return this.cid;
 	}
 
-	public void setCid(int cid) {
+	public void setCid(final int cid) {
 		this.cid = cid;
 	}
 
@@ -32,7 +34,7 @@ public class ColfusionColumnTableInfo implements java.io.Serializable {
 		return this.colfusionDnameinfo;
 	}
 
-	public void setColfusionDnameinfo(ColfusionDnameinfo colfusionDnameinfo) {
+	public void setColfusionDnameinfo(final ColfusionDnameinfo colfusionDnameinfo) {
 		this.colfusionDnameinfo = colfusionDnameinfo;
 	}
 
@@ -40,8 +42,16 @@ public class ColfusionColumnTableInfo implements java.io.Serializable {
 		return this.tableName;
 	}
 
-	public void setTableName(String tableName) {
+	public void setTableName(final String tableName) {
 		this.tableName = tableName;
+	}
+	
+	public String getDbTableName() {
+		return this.dbTableName;
+	}
+
+	public void setDbTableName(final String dbTableName) {
+		this.dbTableName = dbTableName;
 	}
 
 }

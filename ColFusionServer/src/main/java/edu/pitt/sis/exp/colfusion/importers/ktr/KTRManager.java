@@ -80,10 +80,6 @@ public class KTRManager {
 		
 		logger.info(String.format("Starting to create KTR file(s) for %s sid", sid));
 		
-		//TODO: why do we need that prefix at all???
-		//TODO: this should be done in some other place, because the same line is used DataSubmissionWizardBLL when saveVariablesMetadata.
-		String tableNamePrefix = file.getWorksheets().size() > 1 ? file.getFileName() + " - " : "";
-		
 		ArrayList<String> filesAbsoluteNames = new ArrayList<>();
 		filesAbsoluteNames.add(file.getFileAbsoluteName());
 		if (file.getOtherFilesAbsoluteNames() != null) {
@@ -94,7 +90,7 @@ public class KTRManager {
 		
 		for(WorksheetViewModel worksheet : file.getWorksheets()) {
 			
-			String tableName = tableNamePrefix + worksheet.getSheetName();
+			String tableName = worksheet.getUniqueShortName();
 			
 			IOUtilsStoredFileInfoModel copiedKTRFileInfo = createKTRFileFromTemplate(sid, file.getExtension(), tableName);  
 			
@@ -130,7 +126,7 @@ public class KTRManager {
 		
 		ktrDocumentAddFiles(dataFileExtension, filesAbsoluteNames);
 		ktrDocumentAddVariablesIntoInputInputSourceStep(dataFileExtension, worksheet.getVariables());
-		ktrDocumentAddTableNateIntoTargetSchemaStep(tableName);
+		ktrDocumentAddTableNameIntoTargetSchemaStep(tableName);
 		ktrDocumentAddVariablesIntoTargetSchemaStep(worksheet.getVariables());
 		
 		ktrDocumentChangeTransformationName(String.format("%d_%s", getSid(), tableName));
@@ -201,7 +197,7 @@ public class KTRManager {
 	 * @param tableName the name of the table.
 	 * @throws Exception
 	 */
-	private void ktrDocumentAddTableNateIntoTargetSchemaStep(final String tableName) throws Exception {
+	private void ktrDocumentAddTableNameIntoTargetSchemaStep(final String tableName) throws Exception {
 		logger.info("starting add table name into KTR document into Target Schema step");
 		
 		//XPath to get fields node to populate with selected variables
