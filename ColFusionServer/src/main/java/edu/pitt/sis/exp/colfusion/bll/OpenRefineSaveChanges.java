@@ -6,9 +6,9 @@ import java.sql.SQLException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import edu.pitt.sis.exp.colfusion.dal.databaseHandlers.DatabaseHandler;
+import edu.pitt.sis.exp.colfusion.dal.databaseHandlers.DatabaseHandlerBase;
 import edu.pitt.sis.exp.colfusion.dal.databaseHandlers.MetadataDbHandler;
-import edu.pitt.sis.exp.colfusion.dal.databaseHandlers.TargetDatabaseHandlerFactory;
+import edu.pitt.sis.exp.colfusion.dal.databaseHandlers.DatabaseHandlerFactory;
 import edu.pitt.sis.exp.colfusion.responseModels.GeneralResponseGen;
 import edu.pitt.sis.exp.colfusion.responseModels.GeneralResponseGenImpl;
 import edu.pitt.sis.exp.colfusion.utils.ConfigManager;
@@ -35,9 +35,9 @@ final Logger logger = LogManager.getLogger(OpenRefineSaveChanges.class.getName()
 		
 		result.setSuccessful(false);
 		
-		MetadataDbHandler metadataDbHandler = TargetDatabaseHandlerFactory.getMetadataDbHandler();
+		MetadataDbHandler metadataDbHandler = DatabaseHandlerFactory.getMetadataDbHandler();
         int sid = metadataDbHandler.getSid(projectId);
-        DatabaseHandler databaseHandler = TargetDatabaseHandlerFactory.getTargetDatabaseHandler(sid);
+        DatabaseHandlerBase databaseHandler = DatabaseHandlerFactory.getTargetDatabaseHandler(sid);
         String tableName = metadataDbHandler.getTableNameByProjectId(projectId);
 		
 		String msg = "No change needs to be saved!";
