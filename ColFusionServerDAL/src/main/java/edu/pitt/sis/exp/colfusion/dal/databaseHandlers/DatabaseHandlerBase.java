@@ -9,6 +9,7 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
@@ -23,12 +24,14 @@ import edu.pitt.sis.exp.colfusion.dal.dataModels.tableDataModel.RelationKey;
 import edu.pitt.sis.exp.colfusion.dal.dataModels.tableDataModel.Row;
 import edu.pitt.sis.exp.colfusion.dal.dataModels.tableDataModel.Table;
 import edu.pitt.sis.exp.colfusion.dal.managers.ExecutionInfoManager;
+//import edu.pitt.sis.exp.colfusion.dataModels.tableDataModel.Table;
 
 /**
  * @author Evgeny
  *
  */
 public abstract class DatabaseHandlerBase implements Closeable {
+//	public abstract class DatabaseHandlerBase  {	
 	private int sid;
 	private String host;
     private int port;
@@ -46,7 +49,32 @@ public abstract class DatabaseHandlerBase implements Closeable {
     protected int executionLogId;
     
     Logger logger = LogManager.getLogger(DatabaseHandlerBase.class.getName());
+    protected DatabaseConnectionInfo databaseConnectionInfo;
     
+    public DatabaseHandlerBase(DatabaseConnectionInfo databaseConnectionInfo,int sid){
+       this.databaseConnectionInfo = databaseConnectionInfo;
+       
+   	this.dbCharToWrapNamesWithSpaces = ' ';
+   	this.dbCharToWrapStrings = ' ';
+	setSid(sid);
+	setHost(databaseConnectionInfo.getHost());
+	setPort(databaseConnectionInfo.getPort());
+	setUser(databaseConnectionInfo.getUser());
+	setPassword(databaseConnectionInfo.getPassword());
+	setDatabase(databaseConnectionInfo.getDatabase());
+    }
+    public DatabaseHandlerBase(DatabaseConnectionInfo databaseConnectionInfo){
+        this.databaseConnectionInfo = databaseConnectionInfo;
+        
+    	this.dbCharToWrapNamesWithSpaces = ' ';
+    	this.dbCharToWrapStrings = ' ';
+// 	setSid(sid);
+ 	setHost(databaseConnectionInfo.getHost());
+ 	setPort(databaseConnectionInfo.getPort());
+ 	setUser(databaseConnectionInfo.getUser());
+ 	setPassword(databaseConnectionInfo.getPassword());
+ 	setDatabase(databaseConnectionInfo.getDatabase());
+     }
     public DatabaseHandlerBase(final int sid, final String host, final int port, final String user, final String password, final String database, final DatabaseHanderType databaseHanderType,
     		final ExecutionInfoManager executionInfoMgr, final int executionLogId, final char dbCharToWrapNamesWithSpaces, final char dbCharToWrapStrings) {
     	setSid(sid);
@@ -187,7 +215,7 @@ public abstract class DatabaseHandlerBase implements Closeable {
 	 * Closes the connection.
 	 * @throws SQLException 
 	 */
-	@Override
+//	@Override
 	public void close() {
 		if (connection != null) {
 			try { 
@@ -237,23 +265,50 @@ public abstract class DatabaseHandlerBase implements Closeable {
 	 * @param combineColumns - if true, only one index will be created where key will be combination of all columns, otherwise a separate index on each column will be created.
 	 * @throws SQLException 
 	 */
-	public abstract void createIndecesIfNotExist(RelationKey relationKey, String columnNames) throws SQLException;
+	public abstract void createIndecesIfNotExist(String tableName, String columnNames) throws SQLException;
 
-	public Table getAll(final RelationKey relationKey, final List<String> columnDbNames) throws SQLException {
-		String sqlString = constructSelectFromSQL(relationKey, columnDbNames);
+	// protected abstract String getConnectionString();
+    
+    public abstract boolean tempTableExist(int sid, String tableName)  throws SQLException;
+    
+    public abstract void removeTable(int sid, String tableName) throws SQLException;
+    
+    public abstract void backupOriginalTable(int sid, String tableName) throws SQLException;
+    
+    public abstract int getColCount(int sid, String tableName) throws SQLException;
+    
+    public abstract ArrayList<ArrayList<String>> getRows(String tableName, int colCount) throws SQLException;
+    
+    public abstract void createTable(int sid, String tableName) throws SQLException;
+    
+    public abstract void createTempTable(String query, int sid, String tableName) throws SQLException;
+    
+    public abstract void insertIntoTempTable(String query, int sid, String tableName) throws SQLException;
+    // addition here
+    public abstract void createOriginalTable(String query, int sid, String tableName) throws SQLException;
+    
+    public abstract void insertIntoTable(String query, int sid, String tableName) throws SQLException;
+    
+    public abstract void importCsvToTable(String dir, String tableName) throws SQLException;
+    
+    public abstract void insertIntoTable(int sid, String tableName, ArrayList<ArrayList<String>> rows, ArrayList<String> columnNames) throws SQLException;
+	
+	
+	public Table getAll(final String tableName, final List<String> columnDbNames) throws SQLException {
+		String sqlString = constructSelectFromSQL(tableName, columnDbNames);
 		
-		return runQuery(relationKey, columnDbNames, sqlString);
+		return runQuery(tableName, columnDbNames, sqlString);
 	}
 	
-	public Table getAll(final RelationKey relationKey, final List<String> columnDbNames, final int perPage, final int pageNumber) throws SQLException {
-		String sqlString = constructSelectFromSQL(relationKey, columnDbNames);
+	public Table getAll(final String tableName, final List<String> columnDbNames, final int perPage, final int pageNumber) throws SQLException {
+		String sqlString = constructSelectFromSQL(tableName, columnDbNames);
 		
 		String sqlWithLimit = wrapSQLIntoLimit(sqlString, perPage, pageNumber);
 		
-		return runQuery(relationKey, columnDbNames, sqlWithLimit);
+		return runQuery(tableName, columnDbNames, sqlWithLimit);
 	}
 
-	private Table runQuery(final RelationKey relationKey,
+	private Table runQuery(final String tableName,
 			final List<String> columnDbNames, final String sqlWithLimit)
 			throws SQLException {
 		logger.info(String.format("About to execute this query: %s", sqlWithLimit));
@@ -265,7 +320,7 @@ public abstract class DatabaseHandlerBase implements Closeable {
 			Table result = new Table();
 			long index = 0;
 			while (resultSet.next()) {
-				ColumnGroup columnGroup = new ColumnGroup(relationKey.getTableName(), sid);
+				ColumnGroup columnGroup = new ColumnGroup(tableName, sid);
 				
 				for (String column : columnDbNames) {
 					
@@ -293,7 +348,7 @@ public abstract class DatabaseHandlerBase implements Closeable {
 	protected abstract String wrapSQLIntoLimit(String sqlString, int perPage,
 			int pageNumber);
 
-	private String constructSelectFromSQL(final RelationKey relationKey,
+	private String constructSelectFromSQL(final String tableName,
 			final List<String> columnDbNames) {
 		StringBuilder sql = new StringBuilder();
 		
@@ -303,33 +358,33 @@ public abstract class DatabaseHandlerBase implements Closeable {
 		
 		sql.append(String.format("%s%c FROM %c%s%c", columnDbNamesCSV, 
 				this.getDbCharToWrapNamesWithSpaces(), this.getDbCharToWrapNamesWithSpaces(), 
-				relationKey.getDbTableName(), this.getDbCharToWrapNamesWithSpaces()));
+				tableName, this.getDbCharToWrapNamesWithSpaces()));
 		
 		String sqlString = sql.toString();
 		return sqlString;
 	}
 
-	public Table getAll(final RelationKey relationKey) throws SQLException {
+	public Table getAll(final String tableNameTo) throws SQLException {
 		
-		List<String> allColumnsInTable = getAllColumnsInTable(relationKey);
+		List<String> allColumnsInTable = getAllColumnsInTable(tableNameTo);
 		
-		return getAll(relationKey, allColumnsInTable);
+		return getAll(tableNameTo, allColumnsInTable);
 	}
 	
-	public Table getAll(final RelationKey relationKey, final int perPage, final int pageNumber) throws SQLException {
+	public Table getAll(final String tableNameTo, final int perPage, final int pageNumber) throws SQLException {
 		
-		List<String> allColumnsInTable = getAllColumnsInTable(relationKey);
+		List<String> allColumnsInTable = getAllColumnsInTable(tableNameTo);
 		
-		return getAll(relationKey, allColumnsInTable, perPage, pageNumber);
+		return getAll(tableNameTo, allColumnsInTable, perPage, pageNumber);
 	}
 
-	public abstract List<String> getAllColumnsInTable(RelationKey relationKey) throws SQLException;
+	public abstract List<String> getAllColumnsInTable(String tableNameTo) throws SQLException;
 
-	public abstract int getCount(RelationKey relationKey) throws SQLException;
+	public abstract int getCount(String tableName) throws SQLException;
 	
-	protected String wrapInEscapeChars(final RelationKey relationKey) {
+	protected String wrapInEscapeChars(final String tableName) {
 		return String.format("%s%s%s", getDbCharToWrapNamesWithSpaces(), 
-				relationKey.getDbTableName(), getDbCharToWrapNamesWithSpaces());
+				tableName, getDbCharToWrapNamesWithSpaces());
 	}
 
 	/**
@@ -345,4 +400,87 @@ public abstract class DatabaseHandlerBase implements Closeable {
 	public void setSid(final int sid) {
 		this.sid = sid;
 	}
+	private String constructSelectFromSQL(final RelationKey relationKey,
+			final List<String> columnDbNames) {
+		StringBuilder sql = new StringBuilder();
+		
+		sql.append("SELECT " + this.getDbCharToWrapNamesWithSpaces());
+		
+		String columnDbNamesCSV = StringUtils.join(columnDbNames, String.format("%c, %c", this.getDbCharToWrapNamesWithSpaces(), this.getDbCharToWrapNamesWithSpaces()));
+		
+		sql.append(String.format("%s%c FROM %c%s%c", columnDbNamesCSV, 
+				this.getDbCharToWrapNamesWithSpaces(), this.getDbCharToWrapNamesWithSpaces(), 
+				relationKey.getDbTableName(), this.getDbCharToWrapNamesWithSpaces()));
+		
+		String sqlString = sql.toString();
+		return sqlString;
+	}
+	public abstract void createIndecesIfNotExist(RelationKey relationKey, String columnNames) throws SQLException;
+	public Table getAll(final RelationKey relationKey) throws SQLException {
+		
+		List<String> allColumnsInTable = getAllColumnsInTable(relationKey);
+		
+		return getAll(relationKey, allColumnsInTable);
+	}
+public Table getAll(final RelationKey relationKey, final int perPage, final int pageNumber) throws SQLException {
+		
+		List<String> allColumnsInTable = getAllColumnsInTable(relationKey);
+		
+		return getAll(relationKey, allColumnsInTable, perPage, pageNumber);
+	}
+public Table getAll(final RelationKey relationKey, final List<String> columnDbNames) throws SQLException {
+	String sqlString = constructSelectFromSQL(relationKey, columnDbNames);
+	
+	return runQuery(relationKey, columnDbNames, sqlString);
+}
+public Table getAll(final RelationKey relationKey, final List<String> columnDbNames, final int perPage, final int pageNumber) throws SQLException {
+	String sqlString = constructSelectFromSQL(relationKey, columnDbNames);
+	
+	String sqlWithLimit = wrapSQLIntoLimit(sqlString, perPage, pageNumber);
+	
+	return runQuery(relationKey, columnDbNames, sqlWithLimit);
+}
+public abstract List<String> getAllColumnsInTable(RelationKey relationKey) throws SQLException;
+public abstract int getCount(RelationKey relationKey) throws SQLException;
+protected String wrapInEscapeChars(final RelationKey relationKey) {
+	return String.format("%s%s%s", getDbCharToWrapNamesWithSpaces(), 
+			relationKey.getDbTableName(), getDbCharToWrapNamesWithSpaces());
+}
+private Table runQuery(final RelationKey relationKey,
+		final List<String> columnDbNames, final String sqlWithLimit)
+		throws SQLException {
+	logger.info(String.format("About to execute this query: %s", sqlWithLimit));
+	
+	try (Statement statement = getConnection().createStatement()) {
+		
+		ResultSet resultSet = statement.executeQuery(sqlWithLimit);
+		
+		Table result = new Table();
+		long index = 0;
+		while (resultSet.next()) {
+			ColumnGroup columnGroup = new ColumnGroup(relationKey.getTableName(), sid);
+			
+			for (String column : columnDbNames) {
+				
+				Column colfusionColumn = new Column(column, new Cell(resultSet.getString(column)));
+				
+				columnGroup.getColumns().add(colfusionColumn);
+			}
+			
+			Row row = new Row();
+			row.getColumnGroups().add(columnGroup);
+			result.getRows().add(row);
+			logger.info(String.format("Query result table currently has %d rows.", ++index));
+		}
+		
+		logger.info(String.format("Query '%s' resulted in %d rows", sqlWithLimit, index));
+		
+		return result;
+	} catch (SQLException e) {
+		
+		logger.error("Something wrong happened when getAll tried to execute sql query.", e);
+		throw e;
+	}
+}
+
 }

@@ -3,12 +3,16 @@
  */
 package edu.pitt.sis.exp.colfusion.dal.databaseHandlers;
 
+import java.io.IOException;
+import java.sql.SQLException;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import edu.pitt.sis.exp.colfusion.dal.managers.ExecutionInfoManager;
 import edu.pitt.sis.exp.colfusion.dal.orm.ColfusionSourceinfoDb;
 import edu.pitt.sis.exp.colfusion.dal.viewmodels.StoryTargetDBViewModel;
+import edu.pitt.sis.exp.colfusion.utils.ConfigManager;
 
 /**
  * @author Evgeny
@@ -16,7 +20,7 @@ import edu.pitt.sis.exp.colfusion.dal.viewmodels.StoryTargetDBViewModel;
  */
 public class DatabaseHandlerFactory {
 	final static Logger logger = LogManager.getLogger(DatabaseHandlerFactory.class.getName());
-	
+	  private static MetadataDbHandler metadataDbHandler;
 	/**
 	 * Creates a database handler of specific vendor depending on the database handler type value.
 	 * @param host the url of the server.
@@ -28,6 +32,24 @@ public class DatabaseHandlerFactory {
 	 * @return the vendor specific implementation of the database handler.
 	 * @throws Exception
 	 */
+	    static { 
+	        String host = ConfigManager.getInstance().getPropertyByName("mysql_host");
+	        int port = Integer.valueOf(ConfigManager.getInstance().getPropertyByName("mysql_port"));
+	        String user = ConfigManager.getInstance().getPropertyByName("mysql_user"); 
+	        String password = ConfigManager.getInstance().getPropertyByName("mysql_password"); 
+	        String database = ConfigManager.getInstance().getPropertyByName("mysql_database"); 
+	    	
+	        //TODO:　Read host,port, etc. from config file and/or system properties
+	        DatabaseConnectionInfo connectioInfo = new DatabaseConnectionInfo(host, port, user, password, database);
+	        try{
+	        metadataDbHandler = new MetadataDbHandler(new MySQLDatabaseHandler(connectioInfo));
+	        }
+	        catch(ClassNotFoundException e)
+	        {
+	        	logger.error("Couldn't intinialize meatdata db handler", e);
+	        }
+	    }
+
 	public static DatabaseHandlerBase getDatabaseHandler(final int sid, final String host, final int port, final String user, final String password, final String database, 
 			final DatabaseHanderType databaseHanderType, final ExecutionInfoManager executionInfoMgr, final int executionLogId) throws Exception {
 		switch (databaseHanderType) {
@@ -51,6 +73,8 @@ public class DatabaseHandlerFactory {
 		return DatabaseHandlerFactory.getDatabaseHandler(storyDbInfo.getSid(), storyDbInfo.getServerAddress(), storyDbInfo.getPort(), 
 				storyDbInfo.getUserName(), storyDbInfo.getPassword(), storyDbInfo.getSourceDatabase(), DatabaseHanderType.fromString(storyDbInfo.getDriver()), 
 				null, -1);
+		
+	
 	}
 	
 	public static DatabaseHandlerBase getDatabaseHandler(final StoryTargetDBViewModel storyDbInfo) throws Exception {
@@ -58,4 +82,13 @@ public class DatabaseHandlerFactory {
 				storyDbInfo.getUserName(), storyDbInfo.getPassword(), storyDbInfo.getDatabaseName(), DatabaseHanderType.fromString(storyDbInfo.getDriver()), 
 				null, -1);
 	}
+    public static DatabaseHandlerBase getTargetDatabaseHandler(final int sid) throws SQLException, ClassNotFoundException {
+        DatabaseConnectionInfo connectioInfo = metadataDbHandler.getTargetDbConnectionInfo(sid);
+        
+       //TODO: this whole thing should be in a separate project and be shared with ColFusion
+        return new MySQLDatabaseHandler(connectioInfo);
+    }
+	    public static MetadataDbHandler getMetadataDbHandler() {
+	        return metadataDbHandler;
+	    }
 }

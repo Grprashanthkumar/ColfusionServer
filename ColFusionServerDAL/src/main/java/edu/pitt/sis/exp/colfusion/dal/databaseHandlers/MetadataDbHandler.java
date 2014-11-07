@@ -54,14 +54,16 @@ import org.apache.logging.log4j.Logger;
  */
 public class MetadataDbHandler {
 
-    private DatabaseHandler dbHandler;
+    private DatabaseHandlerBase dbHandler;
 
     final static Logger logger = LogManager.getLogger(MetadataDbHandler.class.getName());
 
-    public MetadataDbHandler(DatabaseHandler dbHandler) {
+    public MetadataDbHandler(DatabaseHandlerBase dbHandler) {
         this.dbHandler = dbHandler;
     }
-
+    public MetadataDbHandler(DatabaseConnectionInfo connectionInfo) {
+        
+    }
     public DatabaseConnectionInfo getTargetDbConnectionInfo(int sid)
             throws SQLException {
         logger.info(String.format("Getting target database connectio info for sid %d", sid));
