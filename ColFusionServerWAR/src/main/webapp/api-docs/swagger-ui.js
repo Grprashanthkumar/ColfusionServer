@@ -357,6 +357,7 @@ function program10(depth0,data) {
   stack2 = helpers['if'].call(depth0, depth0.validatorUrl, {hash:{},inverse:self.noop,fn:self.program(10, program10, data),data:data});
   if(stack2 || stack2 === 0) { buffer += stack2; }
   buffer += "\n    </h4>\n    </div>\n</div>\n";
+  buffer += "\n<br><div class='build-info'>[ This document is built by Swagger: <a herf=\"http://swagger.io/\">swagger.io</a> ]";
   return buffer;
   });
 })();

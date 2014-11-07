@@ -18,10 +18,12 @@ public class Bootstrap extends HttpServlet {
        // FilterFactory.setFilter(new CustomFilter());
 
         ApiInfo info = new ApiInfo(
-                "Swagger Sample App",                             /* title */
-                "This is a sample server Petstore server.  You can find out more about Swagger " +
-                        "at <a href=\"http://swagger.wordnik.com\">http://swagger.wordnik.com</a> or on irc.freenode.net, #swagger.  For this sample, " +
-                        "you can use the api key \"special-key\" to test the authorization filters",
+                "Colfusion Server",                             /* title */
+                "This is the REST API of Colfusion Server. Col*Fusion (Collaborative Data Fusion) is an advanced infrastructure for systematic accumulation, integration and utilization of historical data. "
+                + "It aims to support large-scale interdisciplinary research, where a comprehensive picture of the subject requires large amounts of historical data from disparate data sources from a variety of disciplines. "
+                + "As an example, consider the task of exploring long-term and short-term social changes, which requires consolidation of a comprehensive set of data on social-scientific, health, and environmental dynamics. "
+                + "While there are numerous historical data sets available from various groups worldwide, the existing data sources are principally oriented toward regional comparative efforts rather than global applications. "
+                + "They vary widely both in content and format, and cannot be easily integrated and maintained by small groups of developers. Devising efficient and scalable methods for integration of the existing and emerging historical data sources is a considerable research challenge.",
                 "http://helloreverb.com/terms/",                  /* TOS URL */
                 "apiteam@wordnik.com",                            /* Contact */
                 "Apache 2.0",                                     /* license */
