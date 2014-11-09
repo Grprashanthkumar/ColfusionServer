@@ -398,4 +398,36 @@ public class StoryRestService extends BaseController  {
 		return this.makeCORS(Response.status(200).entity(json));
 	}
 	
+	
+	/**
+	 * Finds story list
+	 * @param sid
+	 * @return storyListViewModel with story list in the payload.
+	 * storyListViewModel:  int sid;
+	 *						String title;
+	 *						UserViewModel user;
+	 *						String path;
+	 *						Date entryDate;
+	 *						Date lastUpdated;
+	 *						String status;
+	 *						String rawDataPath;
+	 *						String sourceType;
+	 *						LicenseViewModel license;
+	 */
+	@Path("sid/{sid}/")
+    @GET
+    @ApiOperation(
+    		value = "Finds story list, according to sid",
+    		notes = "",
+    		response = StoryListResponseModel.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 404, message = "StoryList not found") })
+    @Produces(MediaType.APPLICATION_JSON)
+	public Response getStoryList(@ApiParam(value = "sid", required = true) @PathParam("sid") final int sid) {
+		BasicTableBL basicBL = new BasicTableBL();
+		StoryListResponseModel result = basicBL.getStoryListBySid(sid);
+		String json = result.toJson();
+		return this.makeCORS(Response.status(200).entity(json));
+	}
+	
 }

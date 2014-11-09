@@ -1023,6 +1023,35 @@ public class SourceInfoManagerImpl extends GeneralManagerImpl<SourceInfoDAO, Col
 	    	throw ex;
 	    }	
 	}
+	
+	@Override
+	public List<StoryListViewModel> getStoryListViewModelBySid(final int sid) {
+		try{
+			HibernateUtil.beginTransaction();
+			String hql = "SELECT src.sid, src.title, cus.userId, cus.userLogin, src.path, src.entryDate, src.lastUpdated, src.status, src.rawDataPath, src.sourceType, cli.licenseId, cli.licenseName, cli.licenseUrl " 
+	                  + "FROM ColfusionSourceinfo src join src.colfusionUsers cus join src.colfusionLicense cli "
+	                  + "WHERE src.sid =:sid";
+	        Query query = HibernateUtil.getSession().createQuery(hql);
+	        query.setParameter("sid", sid);
+	        List<Object> storyListObjs = query.list();
+	        List<StoryListViewModel> result = new ArrayList<>();
+	        StoryListToStoryViewModelList(storyListObjs, result);  
+	        return result;
+  
+		} catch (NonUniqueResultException ex) {
+	
+	    	HibernateUtil.rollbackTransaction();
+	    	
+	    	this.logger.error("getStoryListViewModel failed NonUniqueResultException", ex);
+	        throw ex;
+	    } catch (HibernateException ex) {
+	
+	    	HibernateUtil.rollbackTransaction();
+	    	
+	    	this.logger.error("getStoryListViewModel failed HibernateException", ex);
+	    	throw ex;
+	    }	
+	}
 
 	private void StoryListToStoryViewModelList(final List<Object> storyListObjs,
 			final List<StoryListViewModel> result) {
@@ -1049,6 +1078,7 @@ public class SourceInfoManagerImpl extends GeneralManagerImpl<SourceInfoDAO, Col
 			result.add(storyListViewModel);
 		}
 	}
+
 
 
 	

@@ -172,5 +172,11 @@ public interface SourceInfoManager extends GeneralManager<ColfusionSourceinfo, I
 	 * @return Story list table info.
 	 */
 	public List<StoryListViewModel> getStoryListViewModel();
+	
+	/**
+	 * @param int sid
+	 * @return Story list table info.
+	 */
+	public List<StoryListViewModel> getStoryListViewModelBySid(int sid);
 
 }

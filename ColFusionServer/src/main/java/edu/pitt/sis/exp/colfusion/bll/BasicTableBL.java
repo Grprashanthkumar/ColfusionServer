@@ -246,4 +246,19 @@ public class BasicTableBL {
 		}
 		return result;
 	}
+	
+	public StoryListResponseModel getStoryListBySid(final int sid){
+		StoryListResponseModel result = new StoryListResponseModel();
+		try{
+			SourceInfoManagerImpl SourceInfoManagerImpl = new SourceInfoManagerImpl();
+			List<StoryListViewModel> contents = SourceInfoManagerImpl.getStoryListViewModelBySid(sid);
+			result.setPayload(contents);
+			result.isSuccessful=true;
+		}
+		catch(Exception e) {
+			result.isSuccessful=false;
+			result.message = "Get StoryList failed";
+		}
+		return result;
+	}
 }
