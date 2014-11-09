@@ -30,9 +30,10 @@ import edu.pitt.sis.exp.colfusion.responseModels.AddColumnMetadataEditHistoryRes
 import edu.pitt.sis.exp.colfusion.responseModels.AttachmentListResponseModel;
 import edu.pitt.sis.exp.colfusion.responseModels.BasicTableResponseModel;
 import edu.pitt.sis.exp.colfusion.responseModels.ColumnMetadataResponse;
+import edu.pitt.sis.exp.colfusion.responseModels.DnameResponseModel;
 import edu.pitt.sis.exp.colfusion.responseModels.GetColumnMetadataEditHistoryResponse;
-import edu.pitt.sis.exp.colfusion.responseModels.LicensesResponseModel;
 import edu.pitt.sis.exp.colfusion.responseModels.JointTableByRelationshipsResponeModel;
+import edu.pitt.sis.exp.colfusion.responseModels.LicensesResponseModel;
 import edu.pitt.sis.exp.colfusion.responseModels.RelationshipsResponseModel;
 import edu.pitt.sis.exp.colfusion.responseModels.StoryListResponseModel;
 import edu.pitt.sis.exp.colfusion.responseModels.StoryMetadataHistoryResponse;
@@ -430,4 +431,69 @@ public class StoryRestService extends BaseController  {
 		return this.makeCORS(Response.status(200).entity(json));
 	}
 	
+	/**
+	 * Finds dnameInfo list
+	 * @param sid
+	 * @return DnameViewModel list in the payload.
+	 * DnameViewModel:
+	 * Integer cid;
+	 * Integer sid;
+	 * String dname_chosen;
+	 * tring dname_value_type;
+	 * String dname_value_unit;
+	 * String dname_value_format;
+	 * String dname_value_description;
+	 * private String dname_original_name;
+	 * private String isConstant;
+	 * private String constant_value;
+	 * private String missing_value;
+	 */
+	@Path("dname/sid/{sid}/")
+	@GET
+    @ApiOperation(
+    		value = "Finds Dname list, according to sid",
+    		notes = "",
+    		response = DnameResponseModel.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 404, message = "DnameList not found") })
+    @Produces(MediaType.APPLICATION_JSON)
+	public Response getDnameListBySid(@ApiParam(value = "sid", required = true) @PathParam("sid") final int sid) {
+		BasicTableBL basicBL = new BasicTableBL();
+		DnameResponseModel result = basicBL.getDnameListBySid(sid);
+		String json = result.toJson();
+		return this.makeCORS(Response.status(200).entity(json));
+	}
+	
+	/**
+	 * Finds dnameInfo list
+	 * @param cid
+	 * @return DnameViewModel list in the payload.
+	 * DnameViewModel:
+	 * Integer cid;
+	 * Integer sid;
+	 * String dname_chosen;
+	 * tring dname_value_type;
+	 * String dname_value_unit;
+	 * String dname_value_format;
+	 * String dname_value_description;
+	 * private String dname_original_name;
+	 * private String isConstant;
+	 * private String constant_value;
+	 * private String missing_value;
+	 */
+	@Path("dname/cid/{cid}/")
+	@GET
+    @ApiOperation(
+    		value = "Finds Dname list, according to cid",
+    		notes = "",
+    		response = DnameResponseModel.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 404, message = "DnameList not found") })
+    @Produces(MediaType.APPLICATION_JSON)
+	public Response getDnameListByCid(@ApiParam(value = "cid", required = true) @PathParam("cid") final int cid) {
+		BasicTableBL basicBL = new BasicTableBL();
+		DnameResponseModel result = basicBL.getDnameListByCid(cid);
+		String json = result.toJson();
+		return this.makeCORS(Response.status(200).entity(json));
+	}
 }

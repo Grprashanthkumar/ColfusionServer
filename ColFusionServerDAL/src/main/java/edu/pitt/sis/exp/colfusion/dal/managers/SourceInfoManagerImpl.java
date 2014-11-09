@@ -1079,8 +1079,6 @@ public class SourceInfoManagerImpl extends GeneralManagerImpl<SourceInfoDAO, Col
 		}
 	}
 
-
-
 	
 
 }

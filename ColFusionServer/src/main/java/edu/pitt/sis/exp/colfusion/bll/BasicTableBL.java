@@ -21,12 +21,14 @@ import edu.pitt.sis.exp.colfusion.dal.orm.ColfusionExecuteinfo;
 import edu.pitt.sis.exp.colfusion.dal.orm.ColfusionSourceinfoDb;
 import edu.pitt.sis.exp.colfusion.dal.viewmodels.AttachmentListViewModel;
 import edu.pitt.sis.exp.colfusion.dal.viewmodels.BasicTableInfoViewModel;
+import edu.pitt.sis.exp.colfusion.dal.viewmodels.DnameViewModel;
 import edu.pitt.sis.exp.colfusion.dal.viewmodels.JoinTablesByRelationshipsViewModel;
 import edu.pitt.sis.exp.colfusion.dal.viewmodels.RelationshipsViewModel;
 import edu.pitt.sis.exp.colfusion.dal.viewmodels.StoryListViewModel;
 import edu.pitt.sis.exp.colfusion.dal.viewmodels.StoryStatusViewModel;
 import edu.pitt.sis.exp.colfusion.responseModels.AttachmentListResponseModel;
 import edu.pitt.sis.exp.colfusion.responseModels.BasicTableResponseModel;
+import edu.pitt.sis.exp.colfusion.responseModels.DnameResponseModel;
 import edu.pitt.sis.exp.colfusion.responseModels.JointTableByRelationshipsResponeModel;
 import edu.pitt.sis.exp.colfusion.responseModels.RelationshipsResponseModel;
 import edu.pitt.sis.exp.colfusion.responseModels.StoryListResponseModel;
@@ -258,6 +260,36 @@ public class BasicTableBL {
 		catch(Exception e) {
 			result.isSuccessful=false;
 			result.message = "Get StoryList failed";
+		}
+		return result;
+	}
+	
+	public DnameResponseModel getDnameListBySid(final int sid){
+		DnameResponseModel result = new DnameResponseModel();
+		try{
+			DNameInfoManagerImpl dNameInfoManagerImpl = new DNameInfoManagerImpl();
+			List<DnameViewModel> contents = dNameInfoManagerImpl.getDnameListViewModelBySid(sid);
+			result.setPayload(contents);
+			result.isSuccessful=true;
+		}
+		catch(Exception e){
+			result.isSuccessful=false;
+			result.message = "Get DnameList failed";
+		}
+		return result;
+	}
+	
+	public DnameResponseModel getDnameListByCid(final int cid){
+		DnameResponseModel result = new DnameResponseModel();
+		try{
+			DNameInfoManagerImpl dNameInfoManagerImpl = new DNameInfoManagerImpl();
+			List<DnameViewModel> contents = dNameInfoManagerImpl.getDnameListViewModelByCid(cid);
+			result.setPayload(contents);
+			result.isSuccessful=true;
+		}
+		catch(Exception e){
+			result.isSuccessful=false;
+			result.message = "Get DnameList failed";
 		}
 		return result;
 	}

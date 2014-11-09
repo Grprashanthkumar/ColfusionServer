@@ -7,6 +7,7 @@ import java.util.List;
 
 import edu.pitt.sis.exp.colfusion.dal.orm.ColfusionDnameinfo;
 import edu.pitt.sis.exp.colfusion.dal.viewmodels.BasicTableInfoViewModel;
+import edu.pitt.sis.exp.colfusion.dal.viewmodels.DnameViewModel;
 import edu.pitt.sis.exp.colfusion.dal.viewmodels.StoryMetadataHistoryLogRecordViewModel;
 import edu.pitt.sis.exp.colfusion.dal.viewmodels.WorksheetViewModel;
 
@@ -50,5 +51,18 @@ public interface DNameInfoManager extends GeneralManager<ColfusionDnameinfo, Int
 	 * @return
 	 */
 	List<BasicTableInfoViewModel> getTableInfo(int sid);
+	
+	/**
+	 * @param int sid
+	 * @return Dname list table info.
+	 */
+	public List<DnameViewModel> getDnameListViewModelBySid(int sid);
+	
+	/**
+	 * @param int cid
+	 * @return Dname list table info.
+	 */
+	public List<DnameViewModel> getDnameListViewModelByCid(int cid);
+
 	
 }

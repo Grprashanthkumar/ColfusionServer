@@ -11,4 +11,10 @@ public interface DNameInfoDAO extends GenericDAO<ColfusionDnameinfo, Integer> {
 	 * @return column table info.
 	 */
 	public List<ColfusionDnameinfo> findBySid(int sid);
+	
+	/**
+	 * @param int cid
+	 * @return column table info.
+	 */
+	public List<ColfusionDnameinfo> findByCid(int cid);
 }

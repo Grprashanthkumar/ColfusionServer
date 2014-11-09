@@ -19,6 +19,16 @@ public class DNameInfoDAOImpl extends GenericDAOImpl<ColfusionDnameinfo, Integer
 		return results;
 	}
 
+	@Override
+	public List<ColfusionDnameinfo> findByCid(final int cid) {
+		String hql = "SELECT cdi FROM ColfusionDnameinfo cdi WHERE cdi.cid = :cid";
+        
+        Query query = HibernateUtil.getSession().createQuery(hql);
+        query.setParameter("cid", cid);
+        List<ColfusionDnameinfo> results = findMany(query);
+		return results;
+	}
+
 	
 
 }

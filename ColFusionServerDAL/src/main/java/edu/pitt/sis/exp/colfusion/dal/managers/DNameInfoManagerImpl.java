@@ -32,6 +32,7 @@ import edu.pitt.sis.exp.colfusion.dal.utils.HibernateUtil;
 import edu.pitt.sis.exp.colfusion.dal.utils.MappingUtils;
 import edu.pitt.sis.exp.colfusion.dal.viewmodels.BasicTableInfoViewModel;
 import edu.pitt.sis.exp.colfusion.dal.viewmodels.DatasetVariableViewModel;
+import edu.pitt.sis.exp.colfusion.dal.viewmodels.DnameViewModel;
 import edu.pitt.sis.exp.colfusion.dal.viewmodels.StoryMetadataHistoryLogRecordViewModel;
 import edu.pitt.sis.exp.colfusion.dal.viewmodels.WorksheetViewModel;
 
@@ -408,6 +409,78 @@ public class DNameInfoManagerImpl extends GeneralManagerImpl<DNameInfoDAO, Colfu
 	    	HibernateUtil.rollbackTransaction();
 	    	
 	    	this.logger.error("getTableInfo failed HibernateException", ex);
+	    	throw ex;
+	    }	
+	}
+
+	@Override
+	public List<DnameViewModel> getDnameListViewModelBySid(final int sid) {
+		try{
+			HibernateUtil.beginTransaction();
+	        
+	        List<ColfusionDnameinfo> DNameInfoObjs = dNameInfoDao.findBySid(sid);
+	        
+	        List<DnameViewModel> result = new ArrayList<>();
+	        ColfusionDnameinfoToDnameViewModel(DNameInfoObjs, result);
+	                               
+	        return result;
+	    } catch (NonUniqueResultException ex) {
+	
+	    	HibernateUtil.rollbackTransaction();
+	    	
+	    	this.logger.error("getDnameListViewModelBySid failed NonUniqueResultException", ex);
+	        throw ex;
+	    } catch (HibernateException ex) {
+	
+	    	HibernateUtil.rollbackTransaction();
+	    	
+	    	this.logger.error("getDnameListViewModelBySid failed HibernateException", ex);
+	    	throw ex;
+	    }	
+		
+
+	}
+
+	private void ColfusionDnameinfoToDnameViewModel(
+			List<ColfusionDnameinfo> DNameInfoObjs, List<DnameViewModel> result) {
+		for(ColfusionDnameinfo DNameInfoObj : DNameInfoObjs){
+			DnameViewModel dnameViewModel =  new DnameViewModel();
+			dnameViewModel.setCid(DNameInfoObj.getCid());
+			dnameViewModel.setDname_chosen(DNameInfoObj.getDnameChosen());
+			dnameViewModel.setDname_value_type(DNameInfoObj.getDnameValueType());
+			dnameViewModel.setDname_value_unit(DNameInfoObj.getDnameValueUnit());
+			dnameViewModel.setDname_value_format(DNameInfoObj.getDnameValueFormat());
+			dnameViewModel.setDname_value_description(DNameInfoObj.getDnameValueDescription());
+			dnameViewModel.setDname_original_name(DNameInfoObj.getDnameOriginalName());
+			dnameViewModel.setIsConstant(DNameInfoObj.isIsConstant());
+			dnameViewModel.setConstant_value(DNameInfoObj.getConstantValue());
+			dnameViewModel.setMissing_value(DNameInfoObj.getMissingValue());
+			result.add(dnameViewModel);
+		}
+	}
+
+	@Override
+	public List<DnameViewModel> getDnameListViewModelByCid(final int cid) {
+		try{
+			HibernateUtil.beginTransaction();
+	        
+	        List<ColfusionDnameinfo> DNameInfoObjs = dNameInfoDao.findByCid(cid);
+	        
+	        List<DnameViewModel> result = new ArrayList<>();
+	        ColfusionDnameinfoToDnameViewModel(DNameInfoObjs, result);
+	                               
+	        return result;
+	    } catch (NonUniqueResultException ex) {
+	
+	    	HibernateUtil.rollbackTransaction();
+	    	
+	    	this.logger.error("getDnameListViewModelBySid failed NonUniqueResultException", ex);
+	        throw ex;
+	    } catch (HibernateException ex) {
+	
+	    	HibernateUtil.rollbackTransaction();
+	    	
+	    	this.logger.error("getDnameListViewModelBySid failed HibernateException", ex);
 	    	throw ex;
 	    }	
 	}
