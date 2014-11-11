@@ -1,5 +1,5 @@
-start /min java -jar ServiceMonitor.jar -start
+start /min "ServiceMonitorProcess" java -jar colfusionserverservicemonitor-2.0-SNAPSHOT.jar start ^> servicemonitor.out
 
-OR
+FOR /F "tokens=2" %%a in ('TASKLIST /NH /FI "WINDOWTITLE eq ServiceMonitorProcess"') DO SET PID=%%a
 
-javaw -jar ServiceMonitor.jar -start
+echo TASKKILL /PID %PID% > stopServiceMonitor.bat

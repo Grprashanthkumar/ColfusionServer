@@ -189,20 +189,20 @@ public class ServiceMonitor extends TimerTask{
 	 * Main function
 	 * */
 	public static void main(String[] args) {
-		//if(args.length <= 0) {
-		//	System.out.println("The valid input should be: ServiceMonitor.java start/stop");
-		//	System.exit(1);
-		//}
+		if(args.length <= 0) {
+			System.out.println("The valid input should be: ServiceMonitor.java start/stop");
+			System.exit(1);
+		}
 			
 		ServiceMonitor serviceMonitor = new ServiceMonitor();
 		
-		//if(args[1].equals("start")) {
+		if(args[1].equals("start")) {
 			serviceMonitor.startServiceMonitor();
 			System.out.println("Services Monitoring process started!");
-		//}
+		}
 		//else if(args[1].equals("stop")) {
-			serviceMonitor.stopServiceMonitor();
-			System.out.println("Services Monitoring process stopped!");
+		//	serviceMonitor.stopServiceMonitor();
+		//	System.out.println("Services Monitoring process stopped!");
 		//}
 	}
 	

@@ -1,5 +1,9 @@
-start /min java -jar ServiceMonitor.jar -stop
+start /min java -jar colfusionserverservicemonitor-2.0-SNAPSHOT.jar stop > servicemonitor.out
 
 OR
 
-javaw -jar ServiceMonitor.jar -stop
+javaw -jar colfusionserverservicemonitor-2.0-SNAPSHOT.jar stop > servicemonitor.out
+
+OR
+
+stopServiceMonitor.bat

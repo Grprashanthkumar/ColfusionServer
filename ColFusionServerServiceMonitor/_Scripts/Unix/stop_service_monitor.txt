@@ -1,1 +1,10 @@
-nohup java -jar ServiceMonitor.jar -stop & > log.txt
+nohup java -jar colfusionserverservicemonitor-2.0-SNAPSHOT.jar stop & > servicemonitor.out
+
+OR 
+
+nohup javaw -jar colfusionserverservicemonitor-2.0-SNAPSHOT.jar stop > servicemonitor.out
+
+OR
+
+./stopServiceMonitor.sh  
+# The PID of the running jar file should be recorded in this shell file.

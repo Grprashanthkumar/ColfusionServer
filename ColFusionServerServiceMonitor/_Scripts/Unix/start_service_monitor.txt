@@ -1,1 +1,13 @@
-nohup java -jar ServiceMonitor.jar -start & > log.txt
+nohup java -jar colfusionserverservicemonitor-2.0-SNAPSHOT.jar start & > servicemonitor.out
+SERVICEMONITOR_PID=$!                        
+echo $SERVICEMONITOR_PID                   
+echo "kill $SERVICEMONITOR_PID" > stopServiceMonitor.sh
+#The last three commands are used to record the PID of running jar file and write the stop command into a shell file.
+
+OR
+
+nohup javaw -jar colfusionserverservicemonitor-2.0-SNAPSHOT.jar start > servicemonitor.out
+SERVICEMONITOR_PID=$!                        
+echo $SERVICEMONITOR_PID                   
+echo "kill $SERVICEMONITOR_PID" > stopServiceMonitor.sh
+#The last three commands are used to record the PID of running jar file and write the stop command into a shell file.
