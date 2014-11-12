@@ -54,4 +54,11 @@ public interface SourceInfoDAO extends GenericDAO<ColfusionSourceinfo, Integer> 
 	 * @throws Exception 
 	 */
 	public List<ColfusionSourceinfo> lookupStories(String searchTerm, int limit) throws HibernateException;
+
+	/**
+	 * Find all sourceinfos which don't have relationships
+	 * Edited by haoyu Wang
+	*/
+	
+	public List<ColfusionSourceinfo> findOneSidsTrue() throws HibernateException;
 }

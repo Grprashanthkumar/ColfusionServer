@@ -3,6 +3,8 @@
  */
 package edu.pitt.sis.exp.colfusion.war.rest;
 
+import java.util.List;
+
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
@@ -24,7 +26,11 @@ import com.wordnik.swagger.annotations.ApiResponse;
 import com.wordnik.swagger.annotations.ApiResponses;
 
 import edu.pitt.sis.exp.colfusion.bll.BasicTableBL;
+import edu.pitt.sis.exp.colfusion.bll.RelationshipGraphBL;
 import edu.pitt.sis.exp.colfusion.bll.StoryBL;
+import edu.pitt.sis.exp.colfusion.dal.dao.DNameInfoDAO;
+import edu.pitt.sis.exp.colfusion.dal.dao.DNameInfoDAOImpl;
+import edu.pitt.sis.exp.colfusion.dal.orm.ColfusionDnameinfo;
 import edu.pitt.sis.exp.colfusion.dal.viewmodels.StoryMetadataViewModel;
 import edu.pitt.sis.exp.colfusion.responseModels.AddColumnMetadataEditHistoryResponse;
 import edu.pitt.sis.exp.colfusion.responseModels.AttachmentListResponseModel;
@@ -425,10 +431,13 @@ public class StoryRestService extends BaseController  {
 			@ApiResponse(code = 404, message = "StoryList not found") })
     @Produces(MediaType.APPLICATION_JSON)
 	public Response getStoryList(@ApiParam(value = "sid", required = true) @PathParam("sid") final int sid) {
+		
 		BasicTableBL basicBL = new BasicTableBL();
 		StoryListResponseModel result = basicBL.getStoryListBySid(sid);
 		String json = result.toJson();
 		return this.makeCORS(Response.status(200).entity(json));
+		
+		
 	}
 	
 	/**
@@ -496,4 +505,17 @@ public class StoryRestService extends BaseController  {
 		String json = result.toJson();
 		return this.makeCORS(Response.status(200).entity(json));
 	}
+	
+	//Edited by Haoyu Wang, to create a REST API to generate a relationship Graph.
+	
+	@Path("relationshipgraph")
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getRelationshipGraph(){
+		RelationshipGraphBL graphBL = new RelationshipGraphBL();
+		String json = graphBL.BuildJSON();
+		return this.makeCORS(Response.status(200).entity(json));
+		
+	}
+	
 }

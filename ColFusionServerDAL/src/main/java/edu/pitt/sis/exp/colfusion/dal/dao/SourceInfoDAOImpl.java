@@ -3,12 +3,15 @@
  */
 package edu.pitt.sis.exp.colfusion.dal.dao;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
+import org.hibernate.SQLQuery;
+import org.hibernate.Session;
 
 import edu.pitt.sis.exp.colfusion.dal.orm.ColfusionSourceinfo;
 import edu.pitt.sis.exp.colfusion.dal.utils.HibernateUtil;
@@ -35,6 +38,29 @@ public class SourceInfoDAOImpl extends GenericDAOImpl<ColfusionSourceinfo, Integ
 		return null;
 	}
 
+	
+	public List<ColfusionSourceinfo> findOneSidsTrue() throws HibernateException{
+		List<ColfusionSourceinfo> returnList = new ArrayList<ColfusionSourceinfo>();
+		String sql = "select {cs.*} from Colfusion_sourceinfo cs where cs.sid not in (Select sid1 from Colfusion_relationships union Select sid2 from Colfusion_relationships)";
+	
+		logger.info(String.format("Starting processing findOneSidsTrue "));
+		
+		SQLQuery query = null;
+		try {
+			HibernateUtil.beginTransaction();
+			query = this.getSession().createSQLQuery(sql);
+			query.addEntity("cs",ColfusionSourceinfo.class);
+			returnList =findMany(query);
+		} catch (Exception e) {
+			logger.error(String.format("findOneSidsTrue failed on HibernateUtil.getSession().createQuery(sql)"), e);
+			throw e;
+		}
+     
+        logger.info(String.format("Finish processing findOneSidsTrue"));
+		
+        return returnList;
+	}
+	
 	@Override
 	public ColfusionSourceinfo findDatasetInfoBySid(final int sid, final boolean includeDraft) throws HibernateException {
 		
