@@ -14,6 +14,14 @@ import java.util.TimerTask;
 
 
 
+
+
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+
+
 /**
  * Apache Commons Net library implements the client side of many basic Internet protocols. 
  * The purpose of the library is to provide fundamental protocol access, 
@@ -102,6 +110,102 @@ public class ServiceMonitor extends TimerTask{
 	}
 	
 	/**
+	 * This function returns all services's status 
+	 * with other information in a Service list.
+	 * Note: Either the name or the function of this function
+	 * is different from getServiceStatus() in Service.java
+	 */
+	public List<ColfusionServices> getServicesStatus() throws Exception{
+		if(this.getServiceList().isEmpty() == true)
+			return null;
+		
+		return this.getServiceList();
+	}
+	
+	public String getServiceStatusByID(int serviceID) {
+		String status = null;
+		try {
+			status = this.serviceManager.findByID(serviceID).getServiceStatus();
+		} 
+		catch (Exception ex) {
+			logger.error("In ServiceMonitor.getServiceStatusByID()\n"
+					+ ex.toString() + " " + ex.getCause());	
+		}
+		return status;
+	}
+	
+	public List<ColfusionServices> getServiceStatusByNamePattern(String namePattern) {
+		List<ColfusionServices> resultServiceList = new ArrayList<ColfusionServices>();
+		List<ColfusionServices> tempServiceList;
+		
+		String specialCharRegExp = namePattern;
+		Pattern pattern = Pattern.compile(specialCharRegExp);
+        Matcher matcher;
+        
+		try {
+			tempServiceList = this.serviceManager.findAll();
+			for(ColfusionServices service : tempServiceList) {
+				matcher = pattern.matcher(service.getServiceName());
+				if(matcher.find())
+					resultServiceList.add(service);
+			}
+		}
+		catch (Exception ex) {
+			logger.error("In ServiceMonitor.getServiceStatusByNamePattern()\n"
+					+ ex.toString() + " " + ex.getCause());	
+		}
+		return resultServiceList;	
+	}
+	
+	public boolean addNewService(ColfusionServices newService) {
+		try {
+			this.serviceManager.save(newService);
+			return true;
+		}
+		catch (Exception ex) {
+			logger.error("In ServiceMonitor.addNewService()\n"
+					+ ex.toString() + " " + ex.getCause());	
+			return false;
+		}
+	}
+	
+	public boolean updateServiceByID(int serviceID) {
+		try {
+			List<ColfusionServices> tempServiceList = this.serviceManager.findAll();
+			for(ColfusionServices service : tempServiceList) {
+				if(service.getServiceID() == serviceID) {
+					this.serviceManager.saveOrUpdate(service);
+					return true;
+				}
+			}
+			return false;
+		}
+		catch (Exception ex) {
+			logger.error("In ServiceMonitor.updateServiceByID()\n"
+					+ ex.toString() + " " + ex.getCause());	
+			return false;
+		}
+	}
+	
+	public boolean deleteServiceByID(int serviceID) {
+		try {
+			List<ColfusionServices> tempServiceList = this.serviceManager.findAll();
+			for(ColfusionServices service : tempServiceList) {
+				if(service.getServiceID() == serviceID) {
+					this.serviceManager.delete(service);
+					return true;
+				}
+			}
+			return false;
+		}
+		catch (Exception ex) {
+			logger.error("In ServiceMonitor.deleteServiceByID()\n"
+					+ ex.toString() + " " + ex.getCause());	
+			return false;
+		}
+	}
+	
+	/**
 	 * This function starts the process of service monitoring.
 	 * If monitoring is started successfully, returns true.
 	 * Otherwise, returns false.
@@ -137,19 +241,6 @@ public class ServiceMonitor extends TimerTask{
 					+ exception.toString() + " " + exception.getMessage() + " " + exception.getCause());		
 			return false;
 		}
-	}
-	
-	/**
-	 * This function returns all services's status 
-	 * with other information in a Service list.
-	 * Note: Either the name or the function of this function
-	 * is different from getServiceStatus() in Service.java
-	 */
-	public List<ColfusionServices> getServicesStatus() throws Exception{
-		if(this.getServiceList().isEmpty() == true)
-			return null;
-		
-		return this.getServiceList();
 	}
 	
 	/**
@@ -190,16 +281,19 @@ public class ServiceMonitor extends TimerTask{
 	 * */
 	public static void main(String[] args) {
 		if(args.length <= 0) {
-			System.out.println("The valid input should be: ServiceMonitor.java start/stop");
-			System.exit(1);
+		//	System.out.println("The valid input should be: ServiceMonitor.java start/stop");
+		//	System.exit(1);
 		}
 			
 		ServiceMonitor serviceMonitor = new ServiceMonitor();
 		
-		if(args[1].equals("start")) {
+		//if(args[1].equals("start")) {
 			serviceMonitor.startServiceMonitor();
 			System.out.println("Services Monitoring process started!");
-		}
+			
+			ServiceMonitorServer server = new ServiceMonitorServer(args);
+			server.run();
+		//}
 		//else if(args[1].equals("stop")) {
 		//	serviceMonitor.stopServiceMonitor();
 		//	System.out.println("Services Monitoring process stopped!");
@@ -264,54 +358,4 @@ public class ServiceMonitor extends TimerTask{
 					+ exception.toString() + " " + exception.getMessage() + " " + exception.getCause());
 		}
 	}
-	
-	/* Below are functions unavailable yet.
-	 * */
-	/*
-	 * This function starts the service which is currently
-	 * stopped or without running.
-	 * RETURN STATUS:
-	 *   0: Unknown service
-	 *   1: Already started
-	 *   2: successfully started
-	 *   3: Other Exceptions
-	 */
-	public int startService(final ColfusionServices service){
-		if(service.getServiceName() == null || service.getServiceName() == "") {
-			return 0;
-		} else if(service.getServiceStatus() == ServiceStatusEnum.RUNNING.getValue()) {
-			return 1;
-		} else if(service.getServiceStatus() == ServiceStatusEnum.STOPPED.getValue()){
-			try{
-				
-				//String s;
-		        Process proc;
-		        //proc= Runtime.getRuntime().exec(serv.getServiceDir()+ serv.getServiceCommand());
-		        proc= Runtime.getRuntime().exec("E:\\workspace\\delbat.bat");
-	            //BufferedReader br = new BufferedReader(
-	            //    new InputStreamReader(p.getInputStream()));
-	            //while ((s = br.readLine()) != null)
-	            //    System.out.println("line: " + s);
-		        proc.waitFor();
-	            //System.out.println ("exit: " + proc.exitValue());
-	            proc.destroy();
-	            
-				return 2;
-			}
-			catch(Exception exception){
-				logger.error("In ServiceMonitor.startService()\n"
-						+ exception.toString() + " " + exception.getMessage() + " " + exception.getCause());
-				return 3;
-			}
-		}
-		return 3;
-	}
-	
-	/*
-	 * This function stops the service which is currently
-	 * started.
-	 */
-	//public boolean stopService(Service serv){
-		
-	//}
 }
