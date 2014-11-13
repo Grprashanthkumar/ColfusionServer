@@ -4,8 +4,6 @@
 package edu.pitt.sis.exp.colfusion.war.rest;
 
 import javax.ws.rs.GET;
-import javax.ws.rs.HeaderParam;
-import javax.ws.rs.OPTIONS;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
@@ -23,20 +21,11 @@ import edu.pitt.sis.exp.colfusion.responseModels.AuthorsResponse;
  *
  */
 @Path("User/")
-public class UserRestService extends BaseController {
+public class UserRestService {
 
 	final Logger logger = LogManager.getLogger(UserRestService.class.getName());
 	
-	/**
-	 * Because we do cross domain AJAX calls, we need to use CORS. Actually it worked for me from simple form, but didn't work from file upload.
-	 * @param requestH
-	 * @return
-	 */
-	@OPTIONS
-    @Path("lookup")
-	public Response userLookUp(@HeaderParam("Access-Control-Request-Headers") final String requestH) {
-		return makeCORS(Response.ok()); //, requestH);
-    }
+
 	
 	/**
 	 * Creates new story in the database.
@@ -63,6 +52,6 @@ public class UserRestService extends BaseController {
 			logger.error("userLookUp failed", e);
 		}
 		    	
-		return makeCORS(Response.status(200).entity(result)); //.build();
+		return Response.status(200).entity(result).build(); //.build();
     }
 }

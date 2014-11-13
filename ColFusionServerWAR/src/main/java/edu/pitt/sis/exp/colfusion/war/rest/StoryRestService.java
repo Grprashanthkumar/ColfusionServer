@@ -3,12 +3,8 @@
  */
 package edu.pitt.sis.exp.colfusion.war.rest;
 
-import java.util.List;
-
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
-import javax.ws.rs.HeaderParam;
-import javax.ws.rs.OPTIONS;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -26,11 +22,7 @@ import com.wordnik.swagger.annotations.ApiResponse;
 import com.wordnik.swagger.annotations.ApiResponses;
 
 import edu.pitt.sis.exp.colfusion.bll.BasicTableBL;
-import edu.pitt.sis.exp.colfusion.bll.RelationshipGraphBL;
 import edu.pitt.sis.exp.colfusion.bll.StoryBL;
-import edu.pitt.sis.exp.colfusion.dal.dao.DNameInfoDAO;
-import edu.pitt.sis.exp.colfusion.dal.dao.DNameInfoDAOImpl;
-import edu.pitt.sis.exp.colfusion.dal.orm.ColfusionDnameinfo;
 import edu.pitt.sis.exp.colfusion.dal.viewmodels.StoryMetadataViewModel;
 import edu.pitt.sis.exp.colfusion.responseModels.AddColumnMetadataEditHistoryResponse;
 import edu.pitt.sis.exp.colfusion.responseModels.AttachmentListResponseModel;
@@ -52,19 +44,10 @@ import edu.pitt.sis.exp.colfusion.responseModels.StoryStatusResponseModel;
  */
 @Api(value = "/Story", description = "Operations on stories")
 @Path("Story/")
-public class StoryRestService extends BaseController  {
+public class StoryRestService  {
 	
 	final Logger logger = LogManager.getLogger(StoryRestService.class.getName());
 	
-	/**
-	 * Because we do cross domain AJAX calls, we need to use CORS. Actually it worked for me from simple form, but didn't work from file upload.
-	 * @param requestH
-	 * @return
-	 */
-	@OPTIONS
-	public Response newStoryMetadata(@HeaderParam("Access-Control-Request-Headers") final String requestH) {
-		return this.makeCORS(Response.ok()); //, requestH);
-    }
 	
 	/**
 	 * Creates new story in the database.
@@ -88,14 +71,10 @@ public class StoryRestService extends BaseController  {
 		
 		StoryMetadataResponse result = storyBL.createStory(userId);
     	
-    	return this.makeCORS(Response.status(200).entity(result)); //.build();
+    	return Response.status(200).entity(result).build(); //.build();
     }
 	
-	@OPTIONS
-    @Path("metadata/{sid: [0-9]+}")
-	public Response getStoryMetadata(@HeaderParam("Access-Control-Request-Headers") final String requestH) {
-		return this.makeCORS(Response.ok()); //, requestH);
-    }
+
 	
 	/**
 	 * Finds metadata for the story with provided sid.
@@ -119,7 +98,7 @@ public class StoryRestService extends BaseController  {
 		
 		StoryMetadataResponse result = storyBL.getStoryMetadata(sid);
     	
-    	return this.makeCORS(Response.status(200).entity(result)); //.build();
+    	return Response.status(200).entity(result).build(); //.build();
     }
 	
 	/**
@@ -139,14 +118,10 @@ public class StoryRestService extends BaseController  {
 		
 		StoryMetadataResponse result = storyBL.updateStoryMetadata(metadata);
     	
-    	return this.makeCORS(Response.status(200).entity(result)); //.build();
+    	return Response.status(200).entity(result).build(); //.build();
     }
 	
-	@OPTIONS
-    @Path("metadata/{sid: [0-9]+}/history/{historyItem}")
-	public Response getStoryMetadataHistory(@HeaderParam("Access-Control-Request-Headers") final String requestH) {
-		return this.makeCORS(Response.ok()); //, requestH);
-    }
+
 	
 	/**
 	 * Finds metadata for the story with provided sid.
@@ -164,14 +139,10 @@ public class StoryRestService extends BaseController  {
 		StoryMetadataHistoryResponse result = storyBL.getStoryMetadataHistory(sid, historyItem);
 		
     	
-    	return this.makeCORS(Response.status(200).entity(result)); //.build();
+    	return Response.status(200).entity(result).build(); //.build();
     }
 	
-	@OPTIONS
-    @Path("{sid}/{tableName}/metadata/columns")
-	public Response getColumnMetadata(@HeaderParam("Access-Control-Request-Headers") final String requestH) {
-		return this.makeCORS(Response.ok()); //, requestH);
-    }
+
 	
 	@Path("{sid}/{tableName}/metadata/columns")
 	@GET
@@ -182,15 +153,11 @@ public class StoryRestService extends BaseController  {
 		 
 		 ColumnMetadataResponse result= storyBL.getColumnMetaData(sid, tableName);
 		
-		 return this.makeCORS(Response.status(200).entity(result));
+		 return Response.status(200).entity(result).build();
 	}
 	
-	@OPTIONS
-    @Path("metadata/columns/addEditHistory/{cid}/{userid}/{editAttribute}/{reason}/{editValue}")
-	public Response addColumnMetadataEditHistory(@HeaderParam("Access-Control-Request-Headers") final String requestH) {
-		return this.makeCORS(Response.ok()); //, requestH);
-    }
-	
+
+
 	@Path("metadata/columns/addEditHistory/{cid}/{userid}/{editAttribute}/{reason}/{editValue}")
 	@GET
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -201,14 +168,10 @@ public class StoryRestService extends BaseController  {
 		String changededitValue = editValue.replace("*!~~!*", "/");
 		StoryBL storyBL = new StoryBL();
 		AddColumnMetadataEditHistoryResponse result = storyBL.addColumnMetaEditHistory(cid,userid,editAttribute,changedreason,changededitValue);
-		 return this.makeCORS(Response.status(200).entity(result));
+		 return Response.status(200).entity(result).build();
 	}
 	
-	@OPTIONS
-    @Path("metadata/columns/getEditHistory/{cid}/{editAttribute}")
-	public Response getColumnMetadataEditHistory(@HeaderParam("Access-Control-Request-Headers") final String requestH) {
-		return this.makeCORS(Response.ok()); //, requestH);
-    }
+
 	
 	@Path("metadata/columns/getEditHistory/{cid}/{showAttribute}")
 	@GET
@@ -220,14 +183,10 @@ public class StoryRestService extends BaseController  {
 		GetColumnMetadataEditHistoryResponse result = storyBL.getColumnMetaEditHistory(cid,editAttribute);
 		
 	
-		 return this.makeCORS(Response.status(200).entity(result));
+		 return Response.status(200).entity(result).build();
 	}
 	
-	@OPTIONS
-    @Path("{sid}/{tableName}/tableInfo")
-	public Response tableInfo(@HeaderParam("Access-Control-Request-Headers") final String requestH) {
-		return makeCORS(Response.ok()); //, requestH);
-    }
+
 	
 	
 	@Path("{sid}/{tableName}/tableInfo")
@@ -237,14 +196,10 @@ public class StoryRestService extends BaseController  {
     	
 		BasicTableBL basicBL=new BasicTableBL();
 		BasicTableResponseModel result= basicBL.getTableInfo(sid, tableName);
-		return this.makeCORS(Response.status(200).entity(result));
+		return Response.status(200).entity(result).build();
     }
 	
-	@OPTIONS
-    @Path("{sid}/{tableName}/tableData/{perPage}/{pageNumber}")
-	public Response getTableDataBySidAndName(@HeaderParam("Access-Control-Request-Headers") final String requestH) {
-		return makeCORS(Response.ok()); //, requestH);
-    }
+
 		
 	@Path("{sid}/{tableName}/tableData/{perPage}/{pageNumber}")
     @GET
@@ -257,7 +212,7 @@ public class StoryRestService extends BaseController  {
 		
 		String json = result.toJson();
 		
-		return this.makeCORS(Response.status(200).entity(json));
+		return Response.status(200).entity(json).build();
     }
 	
 	@Path("metadata/license")
@@ -267,14 +222,10 @@ public class StoryRestService extends BaseController  {
 		StoryBL storyBL = new StoryBL();
 		LicensesResponseModel  result = storyBL.getLicense();
 		//System.out.println(result.getPayload().toString());
-		return this.makeCORS(Response.status(200).entity(result));
+		return Response.status(200).entity(result).build();
 	}
 	
-	@OPTIONS
-    @Path("{sid}/StoryStatus")
-	public Response getStoryStatus(@HeaderParam("Access-Control-Request-Headers") final String requestH) {
-		return makeCORS(Response.ok()); //, requestH);
-	}
+
 
 	@Path("{sid}/StoryStatus")
     @GET
@@ -283,14 +234,10 @@ public class StoryRestService extends BaseController  {
 		BasicTableBL basicBL = new BasicTableBL();
 		StoryStatusResponseModel result = basicBL.getStoryStatus(sid);
 		String json = result.toJson();
-		return this.makeCORS(Response.status(200).entity(json));
+		return Response.status(200).entity(json).build();
 	}
 
-	@OPTIONS
-    @Path("{sid}/MineRelationships/{perPage}/{pageNumber}")
-	public Response getMineRelationships(@HeaderParam("Access-Control-Request-Headers") final String requestH) {
-		return makeCORS(Response.ok()); //, requestH);
-	}
+
 	
 	
 	@Path("{sid}/MineRelationships/{perPage}/{pageNumber}")
@@ -300,7 +247,7 @@ public class StoryRestService extends BaseController  {
 		BasicTableBL basicBL = new BasicTableBL();
 		RelationshipsResponseModel result = basicBL.getRelationships(sid, perPage, pageNumber);
 		String json = result.toJson();
-		return this.makeCORS(Response.status(200).entity(json));
+		return Response.status(200).entity(json).build();
 		
 	}
 
@@ -310,11 +257,7 @@ public class StoryRestService extends BaseController  {
 	 * @param sid
 	 * @return response with attachment list in the payload.
 	 */
-	@OPTIONS
-    @Path("{sid}/AttachmentList")
-	public Response getAttachmentList(@HeaderParam("Access-Control-Request-Headers") final String requestH) {
-		return makeCORS(Response.ok()); //, requestH);
-	}
+
 
 	@Path("{sid}/AttachmentList")
     @GET
@@ -323,7 +266,7 @@ public class StoryRestService extends BaseController  {
 		BasicTableBL basicBL = new BasicTableBL();
 		AttachmentListResponseModel result = basicBL.getAttachmentList(sid);
 		String json = result.toJson();
-		return this.makeCORS(Response.status(200).entity(json));
+		return Response.status(200).entity(json).build();
 	}
 
 	/**
@@ -343,11 +286,7 @@ public class StoryRestService extends BaseController  {
 	 *						String sourceType;
 	 *						LicenseViewModel license;
 	 */
-	@OPTIONS
-    @Path("all/{pageNo}/{perPage}")
-	public Response getStoryList(@HeaderParam("Access-Control-Request-Headers") final String requestH) {
-		return makeCORS(Response.ok()); //, requestH);
-	}
+
 
 	@Path("all/{pageNo}/{perPage}")
     @GET
@@ -363,7 +302,7 @@ public class StoryRestService extends BaseController  {
 		BasicTableBL basicBL = new BasicTableBL();
 		StoryListResponseModel result = basicBL.getStoryList(pageNo,perPage);
 		String json = result.toJson();
-		return this.makeCORS(Response.status(200).entity(json));
+		return Response.status(200).entity(json).build();
 	}
 
 	
@@ -383,11 +322,7 @@ public class StoryRestService extends BaseController  {
 	 *						LicenseViewModel license;
 	 */
 	
-	@OPTIONS
-    @Path("all/")
-	public Response getAllStoryList(final String requestH) {
-		return makeCORS(Response.ok()); //, requestH);
-	}
+
 
 	@Path("all/")
     @GET
@@ -402,7 +337,7 @@ public class StoryRestService extends BaseController  {
 		BasicTableBL basicBL = new BasicTableBL();
 		StoryListResponseModel result = basicBL.getAllStoryList();
 		String json = result.toJson();
-		return this.makeCORS(Response.status(200).entity(json));
+		return Response.status(200).entity(json).build();
 	}
 	
 	
@@ -431,13 +366,10 @@ public class StoryRestService extends BaseController  {
 			@ApiResponse(code = 404, message = "StoryList not found") })
     @Produces(MediaType.APPLICATION_JSON)
 	public Response getStoryList(@ApiParam(value = "sid", required = true) @PathParam("sid") final int sid) {
-		
 		BasicTableBL basicBL = new BasicTableBL();
 		StoryListResponseModel result = basicBL.getStoryListBySid(sid);
 		String json = result.toJson();
-		return this.makeCORS(Response.status(200).entity(json));
-		
-		
+		return Response.status(200).entity(json).build();
 	}
 	
 	/**
@@ -470,7 +402,7 @@ public class StoryRestService extends BaseController  {
 		BasicTableBL basicBL = new BasicTableBL();
 		DnameResponseModel result = basicBL.getDnameListBySid(sid);
 		String json = result.toJson();
-		return this.makeCORS(Response.status(200).entity(json));
+		return Response.status(200).entity(json).build();
 	}
 	
 	/**
@@ -503,19 +435,6 @@ public class StoryRestService extends BaseController  {
 		BasicTableBL basicBL = new BasicTableBL();
 		DnameResponseModel result = basicBL.getDnameListByCid(cid);
 		String json = result.toJson();
-		return this.makeCORS(Response.status(200).entity(json));
+		return Response.status(200).entity(json).build();
 	}
-	
-	//Edited by Haoyu Wang, to create a REST API to generate a relationship Graph.
-	
-	@Path("relationshipgraph")
-	@GET
-	@Produces(MediaType.APPLICATION_JSON)
-	public Response getRelationshipGraph(){
-		RelationshipGraphBL graphBL = new RelationshipGraphBL();
-		String json = graphBL.BuildJSON();
-		return this.makeCORS(Response.status(200).entity(json));
-		
-	}
-	
 }

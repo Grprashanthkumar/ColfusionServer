@@ -8,8 +8,6 @@ import java.util.Map;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
-import javax.ws.rs.HeaderParam;
-import javax.ws.rs.OPTIONS;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -34,20 +32,11 @@ import edu.pitt.sis.exp.colfusion.responseModels.OneNumberResponse;
 import edu.pitt.sis.exp.colfusion.responseModels.PreviewFileResponse;
 
 @Path("Wizard/")
-public class WizardRestService extends BaseController{
+public class WizardRestService {
 	
 	final Logger logger = LogManager.getLogger(WizardRestService.class.getName());
 	
-	/**
-	 * Because we do cross domain AJAX calls, we need to use CORS. Actually it worked for me from simple form, but didn't work from file upload.
-	 * @param requestH
-	 * @return
-	 */
-	@OPTIONS
-    @Path("acceptFileFromWizard")
-	public Response acceptFileFromWizard(@HeaderParam("Access-Control-Request-Headers") final String requestH) {
-		return makeCORS(Response.ok()); //, requestH);
-    }
+
 	
 	/**
 	 * Processes the form submitted from wizard step where data file is uploaded.
@@ -75,20 +64,10 @@ public class WizardRestService extends BaseController{
     	DataSubmissionWizzardBL wizardBLL = new DataSubmissionWizzardBL();
     	AcceptedFilesResponse result = wizardBLL.storeUploadedFiles(sid, uploadTimestamp, fileType, dbType, inputStreams);
     	
-    	return makeCORS(Response.status(200).entity(result)); //.build();
+    	return Response.status(200).entity(result).build(); //.build();
     }
 	
-	/**
-	 * Because we do cross domain AJAX calls, we need to use CORS. Actually it worked for me from simple form, but didn't work from file upload.
-	 * @param requestH
-	 * @return
-	 */
-	@OPTIONS
-    @Path("createTemplate")
-	public Response createTemplate(@HeaderParam("Access-Control-Request-Headers") final String requestH) {
-		return makeCORS(Response.ok()); //, requestH);
-    }
-	
+
 	/**
 	 * Creates new KTR file from a template depending on the file format.
 	 * 
@@ -108,19 +87,10 @@ public class WizardRestService extends BaseController{
     	result.isSuccessful = true;
     	result.message = "YEAH";
     	
-    	return makeCORS(Response.status(200).entity(result)); //.build();
+    	return Response.status(200).entity(result).build(); //.build();
     }
 	
-	/**
-	 * Because we do cross domain AJAX calls, we need to use CORS. Actually it worked for me from simple form, but didn't work from file upload.
-	 * @param requestH
-	 * @return
-	 */
-	@OPTIONS
-    @Path("getFilesContentInfo")
-	public Response getFilesContentInfo(@HeaderParam("Access-Control-Request-Headers") final String requestH) {
-		return makeCORS(Response.ok()); //, requestH);
-    }
+
 	
 	/**
 	 * For each file gets sheet names, extension and filename. For the unarchived fiels, return info about the first file only.
@@ -140,19 +110,10 @@ public class WizardRestService extends BaseController{
 		
 		FileContentInfoReponse result = wizardBLL.getFilesContentInfo(createTemplateViewModel);
 		
-    	return makeCORS(Response.status(200).entity(result)); //.build();
+    	return Response.status(200).entity(result).build(); //.build();
     }
 	
-	/**
-	 * Because we do cross domain AJAX calls, we need to use CORS. Actually it worked for me from simple form, but didn't work from file upload.
-	 * @param requestH
-	 * @return
-	 */
-	@OPTIONS
-    @Path("getFilesVariablesAndNameRecommendations")
-	public Response getFilesVariablesAndNameRecommendations(@HeaderParam("Access-Control-Request-Headers") final String requestH) {
-		return makeCORS(Response.ok()); //, requestH);
-    }
+
 	
 	/**
 	 * Retreive variable names from each file and try to guess data type for each of them. Also contains recommended variables names.
@@ -176,19 +137,10 @@ public class WizardRestService extends BaseController{
 		
 		FileContentInfoReponse result = wizardBLL.getFilesVariablesAndRecomendations(filesWithSelectedSheets);
 		
-    	return makeCORS(Response.status(200).entity(result)); //.build();
+    	return Response.status(200).entity(result).build(); //.build();
     }
 	
-	/**
-	 * Because we do cross domain AJAX calls, we need to use CORS. Actually it worked for me from simple form, but didn't work from file upload.
-	 * @param requestH
-	 * @return
-	 */
-	@OPTIONS
-    @Path("putDataMatchingStepData")
-	public Response putDataMatchingStepData(@HeaderParam("Access-Control-Request-Headers") final String requestH) {
-		return makeCORS(Response.ok()); //, requestH);
-    }
+
 	
 	/**
 	 * Retreive variable names from each file and try to guess data type for each of them. Also contains recommended variables names.
@@ -215,19 +167,10 @@ public class WizardRestService extends BaseController{
 			result = wizardBLL.generateKTR(dataMatchingStepData);
 		}
 		
-    	return makeCORS(Response.status(200).entity(result)); //.build();
+    	return Response.status(200).entity(result).build(); //.build();
     }
 	
-	/**
-	 * Because we do cross domain AJAX calls, we need to use CORS. Actually it worked for me from simple form, but didn't work from file upload.
-	 * @param requestH
-	 * @return
-	 */
-	@OPTIONS
-    @Path("triggerDataLoad/{sid}")
-	public Response triggerDataLoad(@HeaderParam("Access-Control-Request-Headers") final String requestH) {
-		return makeCORS(Response.ok()); //, requestH);
-    }
+
 	
 	/**
 	 * Retreive variable names from each file and try to guess data type for each of them. Also contains recommended variables names.
@@ -249,20 +192,11 @@ public class WizardRestService extends BaseController{
 		
 		GeneralResponseImpl result = wizardBLL.triggerDataLoadExecution(sid);
 		
-    	return makeCORS(Response.status(200).entity(result)); //.build();
+    	return Response.status(200).entity(result).build(); //.build();
     }
 	
-	/**
-	 * Because we do cross domain AJAX calls, we need to use CORS. Actually it worked for me from simple form, but didn't work from file upload.
-	 * @param requestH
-	 * @return
-	 */
-	@OPTIONS
-    @Path("getDataPreviewFromFile")
-	public Response getDataPreviewFromFile(@HeaderParam("Access-Control-Request-Headers") final String requestH) {
-		return makeCORS(Response.ok()); //, requestH);
-    }
-	
+
+
 	/**
 	 * Retreive variable names from each file and try to guess data type for each of them. Also contains recommended variables names.
 	 * 
@@ -282,19 +216,10 @@ public class WizardRestService extends BaseController{
 		
 		PreviewFileResponse result = wizardBLL.getDataPreviewFromFile(previewFileViewModel);
 		
-    	return makeCORS(Response.status(200).entity(result)); //.build();
+    	return Response.status(200).entity(result).build(); //.build();
     }
 	
-	/**
-	 * Because we do cross domain AJAX calls, we need to use CORS. Actually it worked for me from simple form, but didn't work from file upload.
-	 * @param requestH
-	 * @return
-	 */
-	@OPTIONS
-    @Path("estimateDataPreviewFromFile")
-	public Response estimateDataPreviewFromFile(@HeaderParam("Access-Control-Request-Headers") final String requestH) {
-		return makeCORS(Response.ok()); //, requestH);
-    }
+
 	
 	/**
 	 * Retreive variable names from each file and try to guess data type for each of them. Also contains recommended variables names.
@@ -315,6 +240,6 @@ public class WizardRestService extends BaseController{
 		
 		OneNumberResponse result = wizardBLL.estimateDataPreviewFromFile(previewFileViewModel);
 		
-    	return makeCORS(Response.status(200).entity(result)); //.build();
+    	return Response.status(200).entity(result).build(); //.build();
     }
 }

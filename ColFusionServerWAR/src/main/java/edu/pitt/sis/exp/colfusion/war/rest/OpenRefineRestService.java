@@ -4,8 +4,6 @@
 package edu.pitt.sis.exp.colfusion.war.rest;
 
 import javax.ws.rs.GET;
-import javax.ws.rs.HeaderParam;
-import javax.ws.rs.OPTIONS;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -24,14 +22,9 @@ import edu.pitt.sis.exp.colfusion.responseModels.GeneralResponseGen;
  *
  */
 @Path("OpenRefine/")
-public class OpenRefineRestService  extends BaseController{
+public class OpenRefineRestService{
 	final Logger logger = LogManager.getLogger(OpenRefineRestService.class.getName());
 	
-	@OPTIONS
-    @Path("createNewProject/{sid}/{tableName}")
-	public Response createNewProject(@HeaderParam("Access-Control-Request-Headers") final String requestH) {
-		return makeCORS(Response.ok()); //, requestH);
-    }
 	
 	@Path("createNewProject/{sid}/{tableName}")
     @GET
@@ -41,14 +34,10 @@ public class OpenRefineRestService  extends BaseController{
 		CreateProject createProject = new CreateProject();
 		GeneralResponseGen<String> result = createProject.testCreateProject(sid, tableName);
 		
-    	return makeCORS(Response.status(200).entity(result)); //.build();
+    	return Response.status(200).entity(result).build(); //.build();
     }
 	
-	@OPTIONS
-    @Path("saveChanges/{openRefinProjectId}/{colfusionUserId}")
-	public Response saveChanges(@HeaderParam("Access-Control-Request-Headers") final String requestH) {
-		return makeCORS(Response.ok()); //, requestH);
-    }
+
 	
 	@Path("saveChanges/{openRefinProjectId}/{colfusionUserId}")
     @GET
@@ -59,6 +48,6 @@ public class OpenRefineRestService  extends BaseController{
 		OpenRefineSaveChanges openRefineSaveChanges = new OpenRefineSaveChanges();
 		GeneralResponseGen<String> result = openRefineSaveChanges.saveChanges(openRefinProjectId, colfusionUserId);
 		
-    	return makeCORS(Response.status(200).entity(result)); //.build();
+    	return Response.status(200).entity(result).build(); //.build();
     }
 }

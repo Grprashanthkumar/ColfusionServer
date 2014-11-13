@@ -6,8 +6,6 @@ package edu.pitt.sis.exp.colfusion.war.rest;
 import java.math.BigDecimal;
 
 import javax.ws.rs.GET;
-import javax.ws.rs.HeaderParam;
-import javax.ws.rs.OPTIONS;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -27,20 +25,11 @@ import edu.pitt.sis.exp.colfusion.responseModels.RelationshipLinksResponse;
  *
  */
 @Path("Relationship/")
-public class RelationshipRestService extends BaseController {
+public class RelationshipRestService {
 	
 	final Logger logger = LogManager.getLogger(RelationshipRestService.class.getName());
 	
-	/**
-	 * Because we do cross domain AJAX calls, we need to use CORS. Actually it worked for me from simple form, but didn't work from file upload.
-	 * @param requestH
-	 * @return
-	 */
-	@OPTIONS
-    @Path("triggerDataMatching/{sid}/{similarityThreshold}")
-	public Response triggerDataMatchingRatiosCalculationsForAllNotCalculated(@HeaderParam("Access-Control-Request-Headers") final String requestH) {
-		return makeCORS(Response.ok()); //, requestH);
-    }
+
 	
 	/**
 	 * Starts background process to mine for relationships for a given story by sid.
@@ -66,19 +55,10 @@ public class RelationshipRestService extends BaseController {
 			result.setSuccessful(false);
 		}
     	
-    	return makeCORS(Response.status(200).entity(result)); //.build();
+    	return Response.status(200).entity(result).build(); //.build();
     }
 	
-	/**
-	 * Because we do cross domain AJAX calls, we need to use CORS. Actually it worked for me from simple form, but didn't work from file upload.
-	 * @param requestH
-	 * @return
-	 */
-	@OPTIONS
-    @Path("{relId}/dataMatchingRatios/{similarityThreshold}")
-	public Response dataMatchingRatios(@HeaderParam("Access-Control-Request-Headers") final String requestH) {
-		return makeCORS(Response.ok()); //, requestH);
-    }
+
 	
 	/**
 	 * Starts background process to mine for relationships for a given story by sid.
@@ -105,6 +85,6 @@ public class RelationshipRestService extends BaseController {
 			result.isSuccessful = false;
 		}
     	
-    	return makeCORS(Response.status(200).entity(result)); //.build();
+    	return Response.status(200).entity(result).build(); //.build();
     }
 }
