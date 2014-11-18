@@ -33,21 +33,21 @@ public class ServiceMonitorServer implements Runnable, ContextResolver<ServiceMo
 	private static final Logger logger = LogManager.getLogger(ServiceMonitorServer.class.getName());
 	
 	//private final String[] args;
-	private ServiceMonitor serviceMonitor;
+	private static ServiceMonitor serviceMonitor;
 	private int port;
 	
-	public ServiceMonitorServer(ServiceMonitor serviceMonitor, int port) {
-		this.serviceMonitor = serviceMonitor;
+	public ServiceMonitorServer(ServiceMonitor argMonitor, int port) {
+		serviceMonitor = argMonitor;
 		this.port = port;
 	}
 
 	public ServiceMonitorServer() {
-		this.serviceMonitor = new ServiceMonitor();
+		serviceMonitor = new ServiceMonitor();
 	}
 	
 	@Override
 	public ServiceMonitor getContext(Class<?> type) {
-		return this.serviceMonitor;
+		return serviceMonitor;
 	}
 
 	/**

@@ -122,16 +122,16 @@ public class ServiceMonitor extends TimerTask{
 		return this.getServiceList();
 	}
 	
-	public String getServiceStatusByID(int serviceID) {
-		String status = null;
+	public ColfusionServices getServiceStatusByID(int serviceID) {
+		ColfusionServices service = null;
 		try {
-			status = this.serviceManager.findByID(serviceID).getServiceStatus();
+			service = this.serviceManager.findByID(serviceID);
 		} 
 		catch (Exception ex) {
 			logger.error("In ServiceMonitor.getServiceStatusByID()\n"
 					+ ex.toString() + " " + ex.getCause());	
 		}
-		return status;
+		return service;
 	}
 	
 	public List<ColfusionServices> getServiceStatusByNamePattern(String namePattern) {
@@ -160,6 +160,7 @@ public class ServiceMonitor extends TimerTask{
 	public boolean addNewService(ColfusionServices newService) {
 		try {
 			this.serviceManager.save(newService);
+			this.serviceList.add(newService);
 			return true;
 		}
 		catch (Exception ex) {
@@ -175,6 +176,7 @@ public class ServiceMonitor extends TimerTask{
 			for(ColfusionServices service : tempServiceList) {
 				if(service.getServiceID() == serviceID) {
 					this.serviceManager.saveOrUpdate(service);
+					this.serviceList.set(this.serviceList.indexOf(service), service);
 					return true;
 				}
 			}
@@ -193,6 +195,7 @@ public class ServiceMonitor extends TimerTask{
 			for(ColfusionServices service : tempServiceList) {
 				if(service.getServiceID() == serviceID) {
 					this.serviceManager.delete(service);
+					this.serviceList.remove(this.serviceList.indexOf(service));
 					return true;
 				}
 			}
@@ -279,7 +282,7 @@ public class ServiceMonitor extends TimerTask{
 	/**
 	 * Main function
 	 * */
-	public static void main(String[] args) {
+/*	public static void main(String[] args) {
 		if(args.length <= 0) {
 		//	System.out.println("The valid input should be: ServiceMonitor.java start/stop");
 		//	System.exit(1);
@@ -299,7 +302,7 @@ public class ServiceMonitor extends TimerTask{
 		//	serviceMonitor.stopServiceMonitor();
 		//	System.out.println("Services Monitoring process stopped!");
 		//}
-	}
+	}*/
 	
 	/**
 	 * This TimerTask run() function gets services' information
