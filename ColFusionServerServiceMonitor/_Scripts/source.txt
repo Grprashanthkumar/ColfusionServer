@@ -1,0 +1,5 @@
+http://stackoverflow.com/questions/17164898/how-to-stop-an-executed-jar-file
+
+http://serverfault.com/questions/459146/how-can-i-stop-a-java-jar-file-application-that-was-started-with-this-command
+
+http://ravindrasinghgohil.blogspot.com/2012/09/windows-batch-script-to-start-stop-and.html

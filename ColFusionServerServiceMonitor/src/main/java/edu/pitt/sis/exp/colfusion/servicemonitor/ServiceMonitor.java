@@ -291,7 +291,8 @@ public class ServiceMonitor extends TimerTask{
 			serviceMonitor.startServiceMonitor();
 			System.out.println("Services Monitoring process started!");
 			
-			ServiceMonitorServer server = new ServiceMonitorServer(args);
+			//ServiceMonitorServer server = new ServiceMonitorServer(serviceMonitor, 0);
+			ServiceMonitorServer server = new ServiceMonitorServer();
 			server.run();
 		//}
 		//else if(args[1].equals("stop")) {
@@ -316,10 +317,10 @@ public class ServiceMonitor extends TimerTask{
 			if(this.serviceList.isEmpty() == true) {
 				this.serviceList = this.serviceManager.findAll();
 			}
-			for(ColfusionServices service : serviceList){
+			for(ColfusionServices service : this.serviceList){
 				currentStatus = this.updateServiceStatus(service);
 				this.serviceManager.saveOrUpdate(service);
-				serviceList.set(serviceList.indexOf(service), service);
+				this.serviceList.set(this.serviceList.indexOf(service), service);
 				//Print out service's name and status
 				System.out.println(service.getServiceName()+": "+service.getServiceStatus());
 				

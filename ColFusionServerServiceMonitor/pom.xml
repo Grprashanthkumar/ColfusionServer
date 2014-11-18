@@ -14,9 +14,12 @@
 	</parent>
 
 	<properties>
+		<jettyVersion>9.2.3.v20140905</jettyVersion>
+		<jersey.version>2.13</jersey.version>
 		<!-- ${project.parent.basedir} didn't work -->
 		<main.basedir>${project.basedir}/..</main.basedir>
 	</properties>
+	
 
 	<build>
 		<plugins>
@@ -66,6 +69,7 @@
 	                </execution>
 	            </executions>
 	        </plugin>
+	        
 		</plugins>
 	</build>
 	
@@ -74,7 +78,7 @@
 			<dependency>
 				<groupId>org.glassfish.jersey</groupId>
 				<artifactId>jersey-bom</artifactId>
-				<version>2.13</version>
+				<version>${jersey.version}</version>
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency>
@@ -148,21 +152,15 @@
 		<dependency>
 			<groupId>org.eclipse.jetty</groupId>
 			<artifactId>jetty-server</artifactId>
-			<version>9.2.3.v20140905</version>
+			<version>${jettyVersion}</version>
 		</dependency>
 
 		<dependency>
 			<groupId>org.eclipse.jetty</groupId>
 			<artifactId>jetty-servlet</artifactId>
-			<version>9.2.3.v20140905</version>
+			<version>${jettyVersion}</version>
 		</dependency>
 
-		<dependency>
-			<groupId>com.sun.jersey</groupId>
-			<artifactId>jersey-json</artifactId>
-			<version>1.8</version>
-		</dependency>
-		
 		<dependency>
 			<groupId>org.glassfish.jersey.containers</groupId>
 			<artifactId>jersey-container-servlet-core</artifactId>
@@ -174,12 +172,23 @@
 			<groupId>org.glassfish.jersey.media</groupId>
 			<artifactId>jersey-media-moxy</artifactId>
 		</dependency>
+
+		<dependency>
+			<groupId>com.sun.jersey</groupId>
+			<artifactId>jersey-json</artifactId>
+			<version>1.8</version>
+		</dependency>
 		
+		<dependency>
+			<groupId>com.sun.jersey</groupId>
+			<artifactId>jersey-server</artifactId>
+			<version>1.2</version>
+		</dependency>
+
 		<dependency>
 			<groupId>org.glassfish.jersey.core</groupId>
 			<artifactId>jersey-client</artifactId>
 		</dependency>
-		
 
 	</dependencies>
 

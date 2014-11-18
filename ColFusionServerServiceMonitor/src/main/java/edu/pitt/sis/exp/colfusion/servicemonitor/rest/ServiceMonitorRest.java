@@ -6,11 +6,15 @@ import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.ext.ContextResolver;
 
 import edu.pitt.sis.exp.colfusion.dal.orm.ColfusionServices;
+import edu.pitt.sis.exp.colfusion.servicemonitor.ServiceMonitor;
 
 /**
  * @author Hao Bai
@@ -22,33 +26,39 @@ public interface ServiceMonitorRest {
 	@GET
     @Produces(MediaType.APPLICATION_JSON)
 	public abstract Response getServicesStatus() throws Exception;
+	//function parameter: @Context ContextResolver<ServiceMonitor> serviceMonitor
 	
-	@Path("getServiceStatusByID")
+	@Path("getServiceStatusByID/id={id}")
 	@GET
     @Produces(MediaType.APPLICATION_JSON)
-	public abstract Response getServiceStatusByID(int serviceID) throws Exception;
+	public abstract Response getServiceStatusByID(@PathParam("id") String serviceID) throws Exception;
 	
-	@Path("getServiceStatusByNamePattern")
+	@Path("getServiceStatusByNamePattern/namePattern={pattern}")
 	@GET
     @Produces(MediaType.APPLICATION_JSON)
-	public abstract Response getServiceStatusByNamePattern(String namePattern) throws Exception;
+	public abstract Response getServiceStatusByNamePattern(@PathParam("pattern") String namePattern) throws Exception;
 	
 	@Path("addNewService")
-	@POST
-    @Consumes(MediaType.APPLICATION_JSON)
+	@GET
+	//@POST
+	//@Consumes("text/plain")
+	//@Produces("text/plain")
+	//@Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
 	public abstract Response addNewService(ColfusionServices newService) throws Exception;
 
-	@Path("updateServiceByID")
-	@PUT
-	@Consumes(MediaType.APPLICATION_JSON)
+	@Path("updateServiceByID/id={id}")
+	@GET
+	//@PUT
+	//@Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-	public abstract Response updateServiceByID(int serviceID) throws Exception;
+	public abstract Response updateServiceByID(@PathParam("id") String serviceID) throws Exception;
 	
-	@Path("deleteServiceByID")
-	@DELETE
-	@Consumes(MediaType.APPLICATION_JSON)
+	@Path("deleteServiceByID/id={id}")
+	@GET
+	//@DELETE
+	//@Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-	public abstract Response deleteServiceByID(int serviceID) throws Exception;
+	public abstract Response deleteServiceByID(@PathParam("id") String serviceID) throws Exception;
 	
 }

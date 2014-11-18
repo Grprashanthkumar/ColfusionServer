@@ -1,5 +1,9 @@
 package edu.pitt.sis.exp.colfusion.servicemonitor;
 
+
+import javax.ws.rs.ext.ContextResolver;
+import javax.ws.rs.ext.Provider;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.eclipse.jetty.server.Server;
@@ -8,23 +12,42 @@ import org.eclipse.jetty.servlet.ServletHolder;
 import org.glassfish.jersey.server.ServerProperties;
 import org.glassfish.jersey.servlet.ServletContainer;
 
+//import com.sun.jersey.*;
+//import com.sun.jersey.spi.container.servlet.ServletContainer;
+//import com.sun.jersey.api.core.ResourceConfig;
+//import com.sun.jersey.api.core.PackagesResourceConfig;
+//import com.sun.jersey.spi.inject.SingletonTypeInjectableProvider;
+
 /**
  * @author Hao Bai
  * 
  * Starts Jetty server on provided port (or default).
  * REST API is available on 0.0.0.0:PORT/rest/*
  */
-public class ServiceMonitorServer implements Runnable {
+@Provider
+public class ServiceMonitorServer implements Runnable, ContextResolver<ServiceMonitor> {
 
 
 	private static final int DEFAULT_PORT = 7473;
 	
 	private static final Logger logger = LogManager.getLogger(ServiceMonitorServer.class.getName());
 	
-	private final String[] args;
+	//private final String[] args;
+	private ServiceMonitor serviceMonitor;
+	private int port;
 	
-	public ServiceMonitorServer(final String... args) {
-		this.args = args;
+	public ServiceMonitorServer(ServiceMonitor serviceMonitor, int port) {
+		this.serviceMonitor = serviceMonitor;
+		this.port = port;
+	}
+
+	public ServiceMonitorServer() {
+		this.serviceMonitor = new ServiceMonitor();
+	}
+	
+	@Override
+	public ServiceMonitor getContext(Class<?> type) {
+		return this.serviceMonitor;
 	}
 
 	/**
@@ -34,12 +57,12 @@ public class ServiceMonitorServer implements Runnable {
 	private int getPortNumber() {
 		int port = DEFAULT_PORT;
 		
-		if (args.length > 0) {
+		if (this.port > 0) {
 			try {
-				port = Integer.parseInt(args[0]);
+				port = this.port;
 			}
 			catch (NumberFormatException ex) {
-				String message = String.format("Unable to parse port number from '%s'. %s", args[0], ex.getMessage());
+				String message = String.format("Unable to parse port number from '%d'. %s", this.port, ex.getMessage());
 				logger.info(message);
 				message = String.format("Going to use default port number '%d'.", DEFAULT_PORT);
 				logger.info(message);
@@ -59,13 +82,26 @@ public class ServiceMonitorServer implements Runnable {
 	public void run() {
 		logger.info("Starting Jetty Server for ServiceMonitor");
 		
-		ServletHolder servletHolder = new ServletHolder(ServletContainer.class);    
+			   
+	    
+		//ResourceConfig resourceConfig = new PackagesResourceConfig("edu.pitt.sis.exp.colfusion.servicemonitor.rest");
+		//resourceConfig.getSingletons().add(new SingletonTypeInjectableProvider<javax.ws.rs.core.Context, ServiceMonitor>(ServiceMonitor.class, new ServiceMonitor()){});
+		//ServletHolder servletHolder = new ServletHolder(new ServletContainer(resourceConfig));  
+		
+		ServletHolder servletHolder = new ServletHolder(ServletContainer.class);  
 
 		servletHolder.setInitParameter(ServerProperties.PROVIDER_PACKAGES, "edu.pitt.sis.exp.colfusion.servicemonitor.rest");
         
 		int port = getPortNumber();
 		Server server = new Server(port);
         
+		//***************
+		
+		
+	    //root.addServlet(new ServletHolder(new ServletContainer(rc)), "/");
+	    
+		//***************
+		
         ServletContextHandler context = new ServletContextHandler(server, "/", ServletContextHandler.SESSIONS);
         context.addServlet(servletHolder, "/rest/*");
         
