@@ -1,9 +1,11 @@
 package edu.pitt.sis.exp.colfusion.bll;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 
 import org.hibernate.mapping.Set;
 
@@ -15,6 +17,8 @@ import edu.pitt.sis.exp.colfusion.dal.dao.RelationshipsDAO;
 import edu.pitt.sis.exp.colfusion.dal.dao.RelationshipsDAOImpl;
 import edu.pitt.sis.exp.colfusion.dal.dao.SourceInfoDAO;
 import edu.pitt.sis.exp.colfusion.dal.dao.SourceInfoDAOImpl;
+import edu.pitt.sis.exp.colfusion.dal.dao.StatonverdictsDAO;
+import edu.pitt.sis.exp.colfusion.dal.dao.StatonverdictsDAOImpl;
 import edu.pitt.sis.exp.colfusion.dal.orm.ColfusionDnameinfo;
 import edu.pitt.sis.exp.colfusion.dal.orm.ColfusionRelationships;
 import edu.pitt.sis.exp.colfusion.dal.orm.ColfusionSourceinfo;
@@ -25,17 +29,14 @@ public class RelationshipGraphBL {
 
 	
 	public String BuildJSON(){
+		
 		List<Object> finalResult = new ArrayList(); //list include all elements;
-		//Following code is to search for data sets which are isolate.
-		List<ColfusionSourceinfo> sourceInfoList= this.getSourceInfoWithoutRelationships();// get sourceinfo without relationships.
-		for (int i = 0;i<sourceInfoList.size();i++){
-			ColfusionSourceinfo info = (ColfusionSourceinfo)sourceInfoList.get(i);
-			HashMap map =this.convertSourceInfoToMap(info);
-			finalResult.add(map);
-		}
+		
 		
 		
 		//Following code is to search for all relationship from relationship table;
+		StatonverdictsDAO dao = new StatonverdictsDAOImpl();
+		Map<Integer,BigDecimal> confidenceMap= dao.getAvgConfidence();
 		HashMap<String,Object> sidFalseMap = new HashMap();
 		sidFalseMap.put("oneSid", false);
 		HashMap<String,Object> pathMap = new HashMap();
@@ -44,8 +45,8 @@ public class RelationshipGraphBL {
 		sidFalseMap.put("allPaths",pathList);
 		sidFalseMap.put("title","newPath");
 		
-		pathMap.put("avgConfidence", 1);
-		pathMap.put("avgDataMatchingRatio", 1);
+		
+		
 		List<Object> relationshipList =new ArrayList();
 		pathMap.put("relationships",relationshipList);
 		HashSet<Integer> sidSet = new HashSet();
@@ -54,6 +55,8 @@ public class RelationshipGraphBL {
 		pathMap.put("sidTitles",sidTitleSet);
 		pathMap.put("sids", sidSet);
 		ArrayList<Object> relIds = new ArrayList<Object>();
+		pathMap.put("avgConfidence", null );
+		pathMap.put("avgDataMatchingRatio",null );
 		pathMap.put("relIds",relIds);
 		pathMap.put("allColumns",columnSet);
 		pathMap.put("oneSid", false);
@@ -79,12 +82,19 @@ public class RelationshipGraphBL {
 			oneRel.put("sidTo", sidTo);
 			oneRel.put("relId", rel.getRelId().toString());
 			oneRel.put("relName",rel.getName());
-			oneRel.put("confidence",new Double(1).toString());
+			oneRel.put("confidence",confidenceMap.get(rel.getRelId()).doubleValue());
 			oneRel.put("dataMatchingRatio", null);
 			relationshipList.add(oneRel);
 		}
 		finalResult.add(sidFalseMap);
 		
+		//Following code is to search for data sets which are isolate.
+		List<ColfusionSourceinfo> sourceInfoList= this.getSourceInfoWithoutRelationships();// get sourceinfo without relationships.
+		for (int i = 0;i<sourceInfoList.size();i++){
+			ColfusionSourceinfo info = (ColfusionSourceinfo)sourceInfoList.get(i);
+			HashMap map =this.convertSourceInfoToMap(info);
+			finalResult.add(map);
+		}
 		
 		Gson gson = new Gson();
 		String result = gson.toJson(finalResult);
@@ -106,7 +116,7 @@ public class RelationshipGraphBL {
 		HashMap<String,Object> map = new HashMap<String,Object>();
 		map.put("oneSid", true);
 		map.put("sid",info.getSid().toString());
-		map.put("title", info.getTitle());
+		map.put("title",info.getTitle());
 		map.put("tableName","Sheet1");
 		map.put("allColumns",this.convertDnameInfoToList(getColunmsBySid(info.getSid())));
 		map.put("foundSearchKeys",new ArrayList());

@@ -41,7 +41,7 @@ public class SourceInfoDAOImpl extends GenericDAOImpl<ColfusionSourceinfo, Integ
 	
 	public List<ColfusionSourceinfo> findOneSidsTrue() throws HibernateException{
 		List<ColfusionSourceinfo> returnList = new ArrayList<ColfusionSourceinfo>();
-		String sql = "select {cs.*} from Colfusion_sourceinfo cs where cs.sid not in (Select sid1 from Colfusion_relationships union Select sid2 from Colfusion_relationships)";
+		String sql = "select {cs.*} from Colfusion_sourceinfo cs where Status<>'draft' and cs.sid not in (Select sid1 from Colfusion_relationships union Select sid2 from Colfusion_relationships)";
 	
 		logger.info(String.format("Starting processing findOneSidsTrue "));
 		
