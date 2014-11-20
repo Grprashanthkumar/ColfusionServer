@@ -109,6 +109,13 @@ public class StoryRestService  {
 	 */
 	@Path("metadata/{sid: [0-9]+}")
     @POST
+    @ApiOperation(
+    		value = "Update StoryMetadata.",
+    		notes = "For valid response try integer IDs with value <= 5 or > 10. Other values will generated exceptions",
+    		response = StoryMetadataResponse.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 400, message = "Invalid ID supplied"),
+			@ApiResponse(code = 404, message = "StoryMetadata not found") })
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
 	public Response updateStoryMetadata(final StoryMetadataViewModel metadata) {
@@ -131,8 +138,14 @@ public class StoryRestService  {
 	 */
 	@Path("metadata/{sid: [0-9]+}/history/{historyItem}")
     @GET
+    @ApiOperation(
+    		value = "Get StoryMetadataHistory ",
+    		notes = " ",
+    		response = StoryMetadataHistoryResponse.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 404, message = "StoryMetadataHistory not found") })
     @Produces(MediaType.APPLICATION_JSON)
-	public Response getStoryMetadataHistory(@PathParam("sid") final int sid, @PathParam("historyItem") final String historyItem) {
+	public Response getStoryMetadataHistory(@ApiParam(value = "sid", required = true) @PathParam("sid") final int sid, @ApiParam(value = "historyItem", required = true) @PathParam("historyItem") final String historyItem) {
     	
 		StoryBL storyBL = new StoryBL();
 		
@@ -146,9 +159,15 @@ public class StoryRestService  {
 	
 	@Path("{sid}/{tableName}/metadata/columns")
 	@GET
+	@ApiOperation(
+    		value = "Get ColumnMetadata, according to sid, tableName",
+    		notes = " ",
+    		response = ColumnMetadataResponse.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 404, message = "ColumnMetadata not found") })
 	@Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-	public Response getColumnMetadata(@PathParam("sid") final int sid, @PathParam("tableName") final String tableName){
+	public Response getColumnMetadata(@ApiParam(value = "sid", required = true) @PathParam("sid") final int sid, @ApiParam(value = "tableName", required = true)  @PathParam("tableName") final String tableName){
 		 StoryBL storyBL= new StoryBL();
 		 
 		 ColumnMetadataResponse result= storyBL.getColumnMetaData(sid, tableName);
@@ -160,10 +179,16 @@ public class StoryRestService  {
 
 	@Path("metadata/columns/addEditHistory/{cid}/{userid}/{editAttribute}/{reason}/{editValue}")
 	@GET
+	@ApiOperation(
+    		value = "Add ColumnMetadata ",
+    		notes = " This action needs cid and userid, editAttribute, reason, editValue",
+    		response = AddColumnMetadataEditHistoryResponse.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 404, message = "ColumnMetadata not found") })
 	@Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-	public Response addColumnMetadataEditHistory(@PathParam("cid") final int cid, @PathParam("userid") final int userid,
-			@PathParam("editAttribute") final String editAttribute, @PathParam("reason") final String reason, @PathParam("editValue") final String editValue){
+	public Response addColumnMetadataEditHistory(@ApiParam(value = "cid", required = true) @PathParam("cid") final int cid, @ApiParam(value = "userid", required = true) @PathParam("userid") final int userid,
+			@ApiParam(value = "editAttribute", required = true) @PathParam("editAttribute") final String editAttribute, @ApiParam(value = "reason", required = true) @PathParam("reason") final String reason, @ApiParam(value = "editValue", required = true) @PathParam("editValue") final String editValue){
 		String changedreason = reason.replace("*!~~!*", "/");
 		String changededitValue = editValue.replace("*!~~!*", "/");
 		StoryBL storyBL = new StoryBL();
@@ -175,10 +200,16 @@ public class StoryRestService  {
 	
 	@Path("metadata/columns/getEditHistory/{cid}/{showAttribute}")
 	@GET
+	@ApiOperation(
+    		value = "Finds ColumnMetadata, according to cid and editAttribute",
+    		notes = "",
+    		response = GetColumnMetadataEditHistoryResponse.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 404, message = "ColumnMetadata not found") })
 	@Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-	public Response getColumnMetadataEditHistory(@PathParam("cid") final int cid,
-			@PathParam("showAttribute") final String editAttribute){ 
+	public Response getColumnMetadataEditHistory(@ApiParam(value = "cid", required = true) @PathParam("cid") final int cid,
+			@ApiParam(value = "editAttribute", required = true) @PathParam("showAttribute") final String editAttribute){ 
 		StoryBL storyBL = new StoryBL();
 		GetColumnMetadataEditHistoryResponse result = storyBL.getColumnMetaEditHistory(cid,editAttribute);
 		
@@ -191,8 +222,14 @@ public class StoryRestService  {
 	
 	@Path("{sid}/{tableName}/tableInfo")
     @GET
+    @ApiOperation(
+    		value = "Finds story data, according to sid and tableNmae",
+    		notes = "",
+    		response = BasicTableResponseModel.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 404, message = "story not found") })
     @Produces(MediaType.APPLICATION_JSON)
-	public Response tableInfo(@PathParam("sid") final int sid, @PathParam("tableName") final String tableName) {
+	public Response tableInfo(@ApiParam(value = "sid", required = true) @PathParam("sid") final int sid, @ApiParam(value = "tableName", required = true) @PathParam("tableName") final String tableName) {
     	
 		BasicTableBL basicBL=new BasicTableBL();
 		BasicTableResponseModel result= basicBL.getTableInfo(sid, tableName);
@@ -203,9 +240,15 @@ public class StoryRestService  {
 		
 	@Path("{sid}/{tableName}/tableData/{perPage}/{pageNumber}")
     @GET
+    @ApiOperation(
+    		value = "Finds story data, according to sid and tableNmae, perPage, pageNumebr",
+    		notes = "",
+    		response = JointTableByRelationshipsResponeModel.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 404, message = "story not found") })
     @Produces(MediaType.APPLICATION_JSON)
-	public Response getTableDataBySidAndName(@PathParam("sid") final int sid,
-    		@PathParam("tableName") final String tableName, @PathParam("perPage") final int perPage, @PathParam("pageNumber") final int pageNumber) {
+	public Response getTableDataBySidAndName(@ApiParam(value = "sid", required = true) @PathParam("sid") final int sid,
+			@ApiParam(value = "tableName", required = true) @PathParam("tableName") final String tableName, @ApiParam(value = "perPage", required = true) @PathParam("perPage") final int perPage, @ApiParam(value = "pageNumber", required = true) @PathParam("pageNumber") final int pageNumber) {
 		
 		BasicTableBL basicBL=new BasicTableBL();
 		JointTableByRelationshipsResponeModel result = basicBL.getTableDataBySidAndName(sid, tableName, perPage, pageNumber);
@@ -217,6 +260,12 @@ public class StoryRestService  {
 	
 	@Path("metadata/license")
 	@GET
+	 @ApiOperation(
+	    		value = "Finds license",
+	    		notes = "",
+	    		response = LicensesResponseModel.class)
+		@ApiResponses(value = {
+				@ApiResponse(code = 404, message = "license not found") })
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getLicense(){
 		StoryBL storyBL = new StoryBL();
@@ -229,8 +278,14 @@ public class StoryRestService  {
 
 	@Path("{sid}/StoryStatus")
     @GET
+    @ApiOperation(
+    		value = "Finds StoryStatus, according to sid",
+    		notes = "",
+    		response = StoryStatusResponseModel.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 404, message = "StoryStatus not found") })
     @Produces(MediaType.APPLICATION_JSON)
-	public Response getStoryStatus(@PathParam("sid") final int sid) {
+	public Response getStoryStatus(@ApiParam(value = "sid", required = true) @PathParam("sid") final int sid) {
 		BasicTableBL basicBL = new BasicTableBL();
 		StoryStatusResponseModel result = basicBL.getStoryStatus(sid);
 		String json = result.toJson();
@@ -242,8 +297,14 @@ public class StoryRestService  {
 	
 	@Path("{sid}/MineRelationships/{perPage}/{pageNumber}")
     @GET
+    @ApiOperation(
+    		value = "Finds Relationship list, according to perPage,pageNumber",
+    		notes = "",
+    		response = RelationshipsResponseModel.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 404, message = "Relationship not found") })
     @Produces(MediaType.APPLICATION_JSON)
-	public Response getMineRelationships(@PathParam("sid") final int sid, @PathParam("perPage") final int perPage, @PathParam("pageNumber") final int pageNumber) {
+	public Response getMineRelationships(@ApiParam(value = "sid", required = true) @PathParam("sid") final int sid, @ApiParam(value = "perPage", required = true) @PathParam("perPage") final int perPage, @ApiParam(value = "pageNumber", required = true) @PathParam("pageNumber") final int pageNumber) {
 		BasicTableBL basicBL = new BasicTableBL();
 		RelationshipsResponseModel result = basicBL.getRelationships(sid, perPage, pageNumber);
 		String json = result.toJson();
@@ -257,12 +318,16 @@ public class StoryRestService  {
 	 * @param sid
 	 * @return response with attachment list in the payload.
 	 */
-
-
 	@Path("{sid}/AttachmentList")
     @GET
+    @ApiOperation(
+    		value = "Finds attachment list, according to sid",
+    		notes = "",
+    		response = AttachmentListResponseModel.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 404, message = "attachment List not found") })
     @Produces(MediaType.APPLICATION_JSON)
-	public Response getAttachmentList(@PathParam("sid") final int sid) {
+	public Response getAttachmentList(@ApiParam(value = "sid", required = true) @PathParam("sid") final int sid) {
 		BasicTableBL basicBL = new BasicTableBL();
 		AttachmentListResponseModel result = basicBL.getAttachmentList(sid);
 		String json = result.toJson();
