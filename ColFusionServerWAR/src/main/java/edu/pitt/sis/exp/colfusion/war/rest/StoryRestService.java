@@ -22,6 +22,7 @@ import com.wordnik.swagger.annotations.ApiResponse;
 import com.wordnik.swagger.annotations.ApiResponses;
 
 import edu.pitt.sis.exp.colfusion.bll.BasicTableBL;
+import edu.pitt.sis.exp.colfusion.bll.RelationshipGraphBL;
 import edu.pitt.sis.exp.colfusion.bll.StoryBL;
 import edu.pitt.sis.exp.colfusion.dal.viewmodels.StoryMetadataViewModel;
 import edu.pitt.sis.exp.colfusion.responseModels.AddColumnMetadataEditHistoryResponse;
@@ -501,5 +502,16 @@ public class StoryRestService  {
 		DnameResponseModel result = basicBL.getDnameListByCid(cid);
 		String json = result.toJson();
 		return Response.status(200).entity(json).build();
+	}
+	
+	//Edited by Haoyu Wang, to create a REST API to generate a relationship Graph.
+	
+	@Path("relationshipgraph")
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getRelationshipGraph(){
+		RelationshipGraphBL graphBL = new RelationshipGraphBL();
+		String json = graphBL.BuildJSON();
+		return Response.status(200).entity(json).build();		
 	}
 }
