@@ -26,12 +26,9 @@ public class StatonverdictsDAOImpl implements StatonverdictsDAO{
 			HibernateUtil.beginTransaction();
 			query = session.createQuery(sql);
 			list = query.list();
-			System.out.println("***"+list.size()+"****");
 			Map<Integer,BigDecimal> resultMap = new HashMap<Integer,BigDecimal>();
-			for (int i = 0;i<list.size();i++){
-				System.out.println("-----"+list.get(i).getId().getRelId()+"----");
+			for (int i = 0; i < list.size(); i++){
 				resultMap.put(list.get(i).getId().getRelId(),list.get(i).getId().getAvgConfidence());
-				System.out.println("----*"+list.get(i).getId().getAvgConfidence().toString()+"---*");
 			}
 			return resultMap;
 		} catch (Exception e) {
