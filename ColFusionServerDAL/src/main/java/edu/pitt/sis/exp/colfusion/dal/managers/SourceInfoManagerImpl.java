@@ -946,7 +946,8 @@ public class SourceInfoManagerImpl extends GeneralManagerImpl<SourceInfoDAO, Col
             	relationshipViewModel.setAvgConfidence((BigDecimal) relationshipColumns[16]);
             	result.add(relationshipViewModel);
             }
-                                    
+                    
+            HibernateUtil.commitTransaction();
             
             return result;
 		

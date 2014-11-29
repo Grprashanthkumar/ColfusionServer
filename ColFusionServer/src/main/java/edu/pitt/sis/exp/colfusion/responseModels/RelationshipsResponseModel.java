@@ -10,7 +10,7 @@ import edu.pitt.sis.exp.colfusion.utils.Gsonazable;
 import edu.pitt.sis.exp.colfusion.utils.Gsonizer;
 
 
-public class RelationshipsResponseModel  implements Gsonazable{
+public class RelationshipsResponseModel extends GeneralResponseImpl implements Gsonazable{
 	@Expose private List<RelationshipsViewModel> data = new ArrayList<RelationshipsViewModel>();
 	@Expose private ControlModel Control = new ControlModel();
 	

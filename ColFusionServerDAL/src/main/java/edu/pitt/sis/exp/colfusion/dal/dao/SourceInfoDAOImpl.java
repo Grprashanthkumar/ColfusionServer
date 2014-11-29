@@ -11,7 +11,6 @@ import org.apache.logging.log4j.Logger;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.SQLQuery;
-import org.hibernate.Session;
 
 import edu.pitt.sis.exp.colfusion.dal.orm.ColfusionSourceinfo;
 import edu.pitt.sis.exp.colfusion.dal.utils.HibernateUtil;
@@ -38,7 +37,8 @@ public class SourceInfoDAOImpl extends GenericDAOImpl<ColfusionSourceinfo, Integ
 		return null;
 	}
 
-	
+	//TODO FIXME DON'T USE TRANSACTIONS ON THIS LEVEL
+	@Override
 	public List<ColfusionSourceinfo> findOneSidsTrue() throws HibernateException{
 		List<ColfusionSourceinfo> returnList = new ArrayList<ColfusionSourceinfo>();
 		String sql = "select {cs.*} from Colfusion_sourceinfo cs where Status<>'draft' and cs.sid not in (Select sid1 from Colfusion_relationships union Select sid2 from Colfusion_relationships)";
@@ -51,6 +51,7 @@ public class SourceInfoDAOImpl extends GenericDAOImpl<ColfusionSourceinfo, Integ
 			query = this.getSession().createSQLQuery(sql);
 			query.addEntity("cs",ColfusionSourceinfo.class);
 			returnList =findMany(query);
+			HibernateUtil.commitTransaction();
 		} catch (Exception e) {
 			logger.error(String.format("findOneSidsTrue failed on HibernateUtil.getSession().createQuery(sql)"), e);
 			throw e;

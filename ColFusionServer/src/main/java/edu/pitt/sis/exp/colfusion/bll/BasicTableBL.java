@@ -190,14 +190,15 @@ public class BasicTableBL {
 			result.getControl().setTotalPage(40);
 //			String [] cols = {"rel_id","name","description","creator","creationTime","creatorLogin","sidFrom","sidTo","titleFrom","titleTo","tableNameFrom","tableNameTo","numberOfVerdicts","numberOfApproved","numberOfNotSure","avgConfidence"};
 //			result.getControl().setCols(cols);
+			//TODO FIXME: this is wrong. Hardwired column names are wrong. They should be obtained programmatically.
 			if(contents.size() > 0){
 				result.getControl().setCols("rel_id,name,description,creator,creationTime,creatorLogin,sidFrom,sidTo,titleFrom,titleTo,tableNameFrom,tableNameTo,numberOfVerdicts,numberOfApproved,numberOfNotSure,avgConfidence");
 			}
 		}
 		catch(Exception e) {
-//			logger.error("failed to get relationshipResponseModel");
-//			result.isSuccessful=false;
-//			result.message = "Get MineRelationships failed";
+			logger.error("failed to get relationshipResponseModel");
+			result.isSuccessful=false;
+			result.message = "Get MineRelationships failed";
 		}
 
 		return result;

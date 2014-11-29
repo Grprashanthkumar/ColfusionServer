@@ -168,4 +168,19 @@ public class HibernateUtil {
 			throw new HibernateException(e);
 		}
 	}
+
+	/**
+	 * Checks whether there is an active transaction.
+	 * 
+	 * @return true if there is an active transaction, otherwise false
+	 */
+	public static boolean isTransactionOpen() {
+		Session hibernateSession = HibernateUtil.getSession();
+		
+		if (hibernateSession == null) {
+			return false;
+		}
+		
+		return hibernateSession.getTransaction() != null && hibernateSession.getTransaction().isActive();
+	}
 }

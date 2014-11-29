@@ -5,18 +5,18 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.hibernate.HibernateException;
 import org.hibernate.Query;
-import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 
-import edu.pitt.sis.exp.colfusion.dal.orm.ColfusionSourceinfo;
 import edu.pitt.sis.exp.colfusion.dal.orm.Statonverdicts;
-import edu.pitt.sis.exp.colfusion.dal.orm.StatonverdictsId;
 import edu.pitt.sis.exp.colfusion.dal.utils.HibernateUtil;
 
 public class StatonverdictsDAOImpl implements StatonverdictsDAO{
 	
+	//TODO FIXME:
+	// 1) put spaces
+	// 2) get rid of transactions here, all DAOs should be without transactions. See other examples
+	@Override
 	public Map<Integer,BigDecimal> getAvgConfidence(){
 		Session session = HibernateUtil.getSession();
 		String sql = "from Statonverdicts";	
@@ -30,6 +30,7 @@ public class StatonverdictsDAOImpl implements StatonverdictsDAO{
 			for (int i = 0; i < list.size(); i++){
 				resultMap.put(list.get(i).getId().getRelId(),list.get(i).getId().getAvgConfidence());
 			}
+			HibernateUtil.commitTransaction();
 			return resultMap;
 		} catch (Exception e) {
 			throw e;

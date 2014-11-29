@@ -511,7 +511,13 @@ public class StoryRestService  {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getRelationshipGraph(){
 		RelationshipGraphBL graphBL = new RelationshipGraphBL();
-		String json = graphBL.BuildJSON();
+		String json = "";
+		try {
+			json = graphBL.BuildJSON();
+		} catch (NoSuchFieldException | IllegalAccessException e) {
+			throw new RuntimeException(e);
+		} 
+		
 		return Response.status(200).entity(json).build();		
 	}
 }

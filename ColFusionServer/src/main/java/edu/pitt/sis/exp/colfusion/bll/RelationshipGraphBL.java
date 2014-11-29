@@ -7,8 +7,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
-import org.hibernate.mapping.Set;
-
 import com.google.gson.Gson;
 
 import edu.pitt.sis.exp.colfusion.dal.dao.DNameInfoDAO;
@@ -19,19 +17,22 @@ import edu.pitt.sis.exp.colfusion.dal.dao.SourceInfoDAO;
 import edu.pitt.sis.exp.colfusion.dal.dao.SourceInfoDAOImpl;
 import edu.pitt.sis.exp.colfusion.dal.dao.StatonverdictsDAO;
 import edu.pitt.sis.exp.colfusion.dal.dao.StatonverdictsDAOImpl;
+import edu.pitt.sis.exp.colfusion.dal.managers.GeneralManagerImpl;
 import edu.pitt.sis.exp.colfusion.dal.orm.ColfusionDnameinfo;
 import edu.pitt.sis.exp.colfusion.dal.orm.ColfusionRelationships;
 import edu.pitt.sis.exp.colfusion.dal.orm.ColfusionSourceinfo;
 import edu.pitt.sis.exp.colfusion.dal.utils.HibernateUtil;
-import edu.pitt.sis.exp.colfusion.utils.Gsonizer;
 
 public class RelationshipGraphBL {
 
+	//TODO FIXME: WHY FUNCTION NAME STARTS WITH CAPITAL LETTER???????????????????????
 	
-	public String BuildJSON(){
+	//TODO FIXME this whole thing should probably be done in the Relationship Manager
+	public String BuildJSON() throws NoSuchFieldException, IllegalAccessException{
 		
 		List<Object> finalResult = new ArrayList(); //list include all elements;
 		
+		//TODO FIXME don't use DAO classes at this level, use manager classes
 		//Following code is to search for all relationship from relationship table;
 		StatonverdictsDAO dao = new StatonverdictsDAOImpl();
 		Map<Integer, BigDecimal> confidenceMap = dao.getAvgConfidence();
@@ -66,10 +67,16 @@ public class RelationshipGraphBL {
 			HashMap<String, Object> oneRel = new HashMap();
 			HashMap<String, Object> sidFrom = new HashMap();
 			HashMap<String, Object> sidTo = new HashMap();
+			
+			rel = GeneralManagerImpl.initializeField(rel, "colfusionSourceinfoBySid1");
+			
 			ColfusionSourceinfo souInfo1 =rel.getColfusionSourceinfoBySid1();
 			sidFrom = this.convertSourceInfoToMap(columnSet,souInfo1, false);
 			sidSet.add(souInfo1.getSid());
 			sidTitleSet.add(souInfo1.getTitle());
+			
+			rel = GeneralManagerImpl.initializeField(rel, "colfusionSourceinfoBySid2");
+			
 			ColfusionSourceinfo souInfo2 =rel.getColfusionSourceinfoBySid2();
 			sidSet.add(souInfo2.getSid());
 			sidTitleSet.add(souInfo2.getTitle());
@@ -87,7 +94,7 @@ public class RelationshipGraphBL {
 		//Following code is to search for data sets which are isolate.
 		List<ColfusionSourceinfo> sourceInfoList = this.getSourceInfoWithoutRelationships();// get sourceinfo without relationships.
 		for (int i = 0 ; i < sourceInfoList.size(); i++){
-			ColfusionSourceinfo info = (ColfusionSourceinfo)sourceInfoList.get(i);
+			ColfusionSourceinfo info = sourceInfoList.get(i);
 			HashMap map = this.convertSourceInfoToMap(info);
 			finalResult.add(map);
 		}
@@ -100,15 +107,16 @@ public class RelationshipGraphBL {
 	
 	public List<ColfusionRelationships> getAllRelationShip(){
 		List<ColfusionRelationships> relationshipList = new ArrayList<ColfusionRelationships>();
-		
+		//TODO FIXME why you use DAO here???? There is the RelationshipsManager class that needs to be used here.
 		RelationshipsDAO relDAO = new RelationshipsDAOImpl();
 		HibernateUtil.beginTransaction();
 		relationshipList = relDAO.findAll(ColfusionRelationships.class);
+		HibernateUtil.commitTransaction();
 		
 		return relationshipList;
 	}
 	
-	public HashMap<String,Object> convertSourceInfoToMap(ColfusionSourceinfo info){
+	public HashMap<String,Object> convertSourceInfoToMap(final ColfusionSourceinfo info){
 		HashMap<String,Object> map = new HashMap<String,Object>();
 		map.put("oneSid", true);
 		map.put("sid", info.getSid().toString());
@@ -119,7 +127,7 @@ public class RelationshipGraphBL {
 		return  map;
 	}
 	
-	public HashMap<String,Object> convertSourceInfoToMap(HashSet<Object> columnSet,ColfusionSourceinfo info,boolean onesid){
+	public HashMap<String,Object> convertSourceInfoToMap(final HashSet<Object> columnSet,final ColfusionSourceinfo info,final boolean onesid){
 		HashMap<String,Object> map = new HashMap<String,Object>();
 		map.put("sid", info.getSid().toString());
 		map.put("sidTitle", info.getTitle());
@@ -134,7 +142,7 @@ public class RelationshipGraphBL {
 	}
 	
 	
-	public ArrayList<HashMap> convertDnameInfoToList(List<ColfusionDnameinfo> DNameList){
+	public ArrayList<HashMap> convertDnameInfoToList(final List<ColfusionDnameinfo> DNameList){
 		ArrayList<HashMap> list = new ArrayList<HashMap>();
 		for (ColfusionDnameinfo info: DNameList){
 			HashMap<String, Object> map = new HashMap<String,Object>();
@@ -149,9 +157,14 @@ public class RelationshipGraphBL {
 		return list;
 	}
 	
-	public List<ColfusionDnameinfo> getColunmsBySid(int sid){
+	public List<ColfusionDnameinfo> getColunmsBySid(final int sid){
+		
+		//TODO FIXME you cannot use DAOs at this level because DAOs don't know anything about transactions.
+		// For now I will just use transaction here, but it is not right.
+		HibernateUtil.beginTransaction();
 		DNameInfoDAO dnameInfoDao = new DNameInfoDAOImpl();
 		List<ColfusionDnameinfo> dNameInfoList = dnameInfoDao.findBySid(sid);
+		HibernateUtil.commitTransaction();
 		return dNameInfoList; 
 	}
 	

@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import edu.pitt.sis.exp.colfusion.dal.utils.HibernateUtil;
 import edu.pitt.sis.exp.colfusion.utils.StringUtils;
 
 public class LoggingFilter implements javax.servlet.Filter {
@@ -43,7 +44,15 @@ public class LoggingFilter implements javax.servlet.Filter {
 		
 		chain.doFilter(request, response);
 		
-		logger.info(String.format("END: %s %s%s", httpMethod, fullRequestUriWithParameters, StringUtils.NEWLINE));
+		if (HibernateUtil.isTransactionOpen()) {
+			String message = String.format("Was about to send the response, "
+					+ "but found out that there an open transaction that needs to be handled. %s %s", 
+					httpMethod, fullRequestUriWithParameters);
+			logger.error(message);
+			throw new RuntimeException(message);
+		}
+		
+		logger.info(String.format("END: %s %s%s", httpMethod, fullRequestUriWithParameters, StringUtils.NEWLINE));	
 	}
 
 	@Override
