@@ -32,44 +32,40 @@ public class RelationshipGraphBL {
 		
 		List<Object> finalResult = new ArrayList(); //list include all elements;
 		
-		
-		
 		//Following code is to search for all relationship from relationship table;
 		StatonverdictsDAO dao = new StatonverdictsDAOImpl();
-		Map<Integer,BigDecimal> confidenceMap= dao.getAvgConfidence();
-		HashMap<String,Object> sidFalseMap = new HashMap();
+		Map<Integer, BigDecimal> confidenceMap = dao.getAvgConfidence();
+		HashMap<String, Object> sidFalseMap = new HashMap();
 		sidFalseMap.put("oneSid", false);
-		HashMap<String,Object> pathMap = new HashMap();
+		HashMap<String, Object> pathMap = new HashMap();
 		ArrayList pathList = new ArrayList();
 		pathList.add(pathMap);
-		sidFalseMap.put("allPaths",pathList);
-		sidFalseMap.put("title","newPath");
+		sidFalseMap.put("allPaths", pathList);
+		sidFalseMap.put("title", "newPath");
 		
-		
-		
-		List<Object> relationshipList =new ArrayList();
-		pathMap.put("relationships",relationshipList);
+		List<Object> relationshipList = new ArrayList();
+		pathMap.put("relationships", relationshipList);
 		HashSet<Integer> sidSet = new HashSet();
 		HashSet<String> sidTitleSet = new HashSet();
 		HashSet<Object> columnSet = new HashSet();
-		pathMap.put("sidTitles",sidTitleSet);
+		pathMap.put("sidTitles", sidTitleSet);
 		pathMap.put("sids", sidSet);
 		ArrayList<Object> relIds = new ArrayList<Object>();
 		pathMap.put("avgConfidence", null );
-		pathMap.put("avgDataMatchingRatio",null );
-		pathMap.put("relIds",relIds);
-		pathMap.put("allColumns",columnSet);
+		pathMap.put("avgDataMatchingRatio", null );
+		pathMap.put("relIds", relIds);
+		pathMap.put("allColumns", columnSet);
 		pathMap.put("oneSid", false);
 		pathMap.put("tableName","NA");
-		pathMap.put("title","All relationships");
-		pathMap.put("sid","2197,2187,2192,3,1");
-		pathMap.put("foundSearchKeys",new ArrayList());
-		List<ColfusionRelationships> relList =this.getAllRelationShip();
-		for (ColfusionRelationships rel :relList){
+		pathMap.put("title", "All relationships");
+		pathMap.put("sid", "2197,2187,2192,3,1");
+		pathMap.put("foundSearchKeys", new ArrayList());
+		List<ColfusionRelationships> relList = this.getAllRelationShip();
+		for (ColfusionRelationships rel : relList){
 			relIds.add(rel.getRelId().toString());
-			HashMap<String,Object> oneRel =new HashMap();
-			HashMap<String,Object> sidFrom = new HashMap();
-			HashMap<String,Object> sidTo = new HashMap();
+			HashMap<String, Object> oneRel = new HashMap();
+			HashMap<String, Object> sidFrom = new HashMap();
+			HashMap<String, Object> sidTo = new HashMap();
 			ColfusionSourceinfo souInfo1 =rel.getColfusionSourceinfoBySid1();
 			sidFrom = this.convertSourceInfoToMap(columnSet,souInfo1, false);
 			sidSet.add(souInfo1.getSid());
@@ -81,18 +77,18 @@ public class RelationshipGraphBL {
 			oneRel.put("sidFrom", sidFrom);
 			oneRel.put("sidTo", sidTo);
 			oneRel.put("relId", rel.getRelId().toString());
-			oneRel.put("relName",rel.getName());
-			oneRel.put("confidence",confidenceMap.get(rel.getRelId()).doubleValue());
+			oneRel.put("relName", rel.getName());
+			oneRel.put("confidence", confidenceMap.get(rel.getRelId()).doubleValue());
 			oneRel.put("dataMatchingRatio", null);
 			relationshipList.add(oneRel);
 		}
 		finalResult.add(sidFalseMap);
 		
 		//Following code is to search for data sets which are isolate.
-		List<ColfusionSourceinfo> sourceInfoList= this.getSourceInfoWithoutRelationships();// get sourceinfo without relationships.
-		for (int i = 0;i<sourceInfoList.size();i++){
+		List<ColfusionSourceinfo> sourceInfoList = this.getSourceInfoWithoutRelationships();// get sourceinfo without relationships.
+		for (int i = 0 ; i < sourceInfoList.size(); i++){
 			ColfusionSourceinfo info = (ColfusionSourceinfo)sourceInfoList.get(i);
-			HashMap map =this.convertSourceInfoToMap(info);
+			HashMap map = this.convertSourceInfoToMap(info);
 			finalResult.add(map);
 		}
 		
@@ -115,25 +111,25 @@ public class RelationshipGraphBL {
 	public HashMap<String,Object> convertSourceInfoToMap(ColfusionSourceinfo info){
 		HashMap<String,Object> map = new HashMap<String,Object>();
 		map.put("oneSid", true);
-		map.put("sid",info.getSid().toString());
-		map.put("title",info.getTitle());
-		map.put("tableName","Sheet1");
-		map.put("allColumns",this.convertDnameInfoToList(getColunmsBySid(info.getSid())));
-		map.put("foundSearchKeys",new ArrayList());
+		map.put("sid", info.getSid().toString());
+		map.put("title", info.getTitle());
+		map.put("tableName", "Sheet1");
+		map.put("allColumns", this.convertDnameInfoToList(getColunmsBySid(info.getSid())));
+		map.put("foundSearchKeys", new ArrayList());
 		return  map;
 	}
 	
 	public HashMap<String,Object> convertSourceInfoToMap(HashSet<Object> columnSet,ColfusionSourceinfo info,boolean onesid){
 		HashMap<String,Object> map = new HashMap<String,Object>();
-		map.put("sid",info.getSid().toString());
+		map.put("sid", info.getSid().toString());
 		map.put("sidTitle", info.getTitle());
-		map.put("tableName","Sheet1");
-		ArrayList<HashMap> columns= this.convertDnameInfoToList(getColunmsBySid(info.getSid()));
-		for(HashMap col :columns){
+		map.put("tableName", "Sheet1");
+		ArrayList<HashMap> columns = this.convertDnameInfoToList(getColunmsBySid(info.getSid()));
+		for(HashMap col : columns){
 			columnSet.add(col);
 		}
 		
-		map.put("allColumns",this.convertDnameInfoToList(getColunmsBySid(info.getSid())));
+		map.put("allColumns", this.convertDnameInfoToList(getColunmsBySid(info.getSid())));
 		return  map;
 	}
 	
@@ -141,13 +137,13 @@ public class RelationshipGraphBL {
 	public ArrayList<HashMap> convertDnameInfoToList(List<ColfusionDnameinfo> DNameList){
 		ArrayList<HashMap> list = new ArrayList<HashMap>();
 		for (ColfusionDnameinfo info: DNameList){
-			HashMap<String,Object> map = new HashMap<String,Object>();
+			HashMap<String, Object> map = new HashMap<String,Object>();
 			map.put("cid", info.getCid().toString());
-			map.put("dname_chosen",info.getDnameChosen());
-			map.put("dname_value_type","String");
-			map.put("dname_value_unit",null);
+			map.put("dname_chosen", info.getDnameChosen());
+			map.put("dname_value_type", "String");
+			map.put("dname_value_unit", null);
 			map.put("dname_value_description", info.getDnameValueDescription());
-			map.put("dname_original_name",info.getDnameOriginalName());
+			map.put("dname_original_name", info.getDnameOriginalName());
 			list.add(map);
 		}
 		return list;
