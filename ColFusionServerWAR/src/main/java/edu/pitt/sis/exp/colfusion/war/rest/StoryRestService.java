@@ -25,6 +25,7 @@ import edu.pitt.sis.exp.colfusion.bll.BasicTableBL;
 import edu.pitt.sis.exp.colfusion.bll.RelationshipGraphBL;
 import edu.pitt.sis.exp.colfusion.bll.StoryBL;
 import edu.pitt.sis.exp.colfusion.dal.viewmodels.StoryMetadataViewModel;
+import edu.pitt.sis.exp.colfusion.relationships.relationshipGraph.RelationshipGraph;
 import edu.pitt.sis.exp.colfusion.responseModels.AddColumnMetadataEditHistoryResponse;
 import edu.pitt.sis.exp.colfusion.responseModels.AttachmentListResponseModel;
 import edu.pitt.sis.exp.colfusion.responseModels.BasicTableResponseModel;
@@ -33,6 +34,7 @@ import edu.pitt.sis.exp.colfusion.responseModels.DnameResponseModel;
 import edu.pitt.sis.exp.colfusion.responseModels.GetColumnMetadataEditHistoryResponse;
 import edu.pitt.sis.exp.colfusion.responseModels.JointTableByRelationshipsResponeModel;
 import edu.pitt.sis.exp.colfusion.responseModels.LicensesResponseModel;
+import edu.pitt.sis.exp.colfusion.responseModels.RelationshipGraphResponseModel;
 import edu.pitt.sis.exp.colfusion.responseModels.RelationshipsResponseModel;
 import edu.pitt.sis.exp.colfusion.responseModels.StoryListResponseModel;
 import edu.pitt.sis.exp.colfusion.responseModels.StoryMetadataHistoryResponse;
@@ -504,20 +506,22 @@ public class StoryRestService  {
 		return Response.status(200).entity(json).build();
 	}
 	
-	//Edited by Haoyu Wang, to create a REST API to generate a relationship Graph.
-	
 	@Path("relationshipgraph")
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getRelationshipGraph(){
 		RelationshipGraphBL graphBL = new RelationshipGraphBL();
-		String json = "";
+		
+		RelationshipGraphResponseModel result = new RelationshipGraphResponseModel();
 		try {
-			json = graphBL.BuildJSON();
-		} catch (NoSuchFieldException | IllegalAccessException e) {
-			throw new RuntimeException(e);
+			RelationshipGraph graph = graphBL.getRelationshipGraph();
+			result.isSuccessful = true;
+			result.setPayload(graph);
+		} catch (Exception e) {
+			result.isSuccessful = false;
+			result.message = e.getMessage();
 		} 
 		
-		return Response.status(200).entity(json).build();		
+		return Response.status(200).entity(result.toJson()).build();		
 	}
 }

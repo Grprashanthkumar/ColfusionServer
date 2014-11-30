@@ -2,187 +2,124 @@ package edu.pitt.sis.exp.colfusion.bll;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
-import com.google.gson.Gson;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
-import edu.pitt.sis.exp.colfusion.dal.dao.DNameInfoDAO;
-import edu.pitt.sis.exp.colfusion.dal.dao.DNameInfoDAOImpl;
-import edu.pitt.sis.exp.colfusion.dal.dao.RelationshipsDAO;
-import edu.pitt.sis.exp.colfusion.dal.dao.RelationshipsDAOImpl;
-import edu.pitt.sis.exp.colfusion.dal.dao.SourceInfoDAO;
-import edu.pitt.sis.exp.colfusion.dal.dao.SourceInfoDAOImpl;
 import edu.pitt.sis.exp.colfusion.dal.dao.StatonverdictsDAO;
 import edu.pitt.sis.exp.colfusion.dal.dao.StatonverdictsDAOImpl;
+import edu.pitt.sis.exp.colfusion.dal.dataModels.tableDataModel.RelationKey;
+import edu.pitt.sis.exp.colfusion.dal.managers.DNameInfoManager;
+import edu.pitt.sis.exp.colfusion.dal.managers.DNameInfoManagerImpl;
 import edu.pitt.sis.exp.colfusion.dal.managers.GeneralManagerImpl;
-import edu.pitt.sis.exp.colfusion.dal.orm.ColfusionDnameinfo;
+import edu.pitt.sis.exp.colfusion.dal.managers.RelationshipsManager;
+import edu.pitt.sis.exp.colfusion.dal.managers.RelationshipsManagerImpl;
+import edu.pitt.sis.exp.colfusion.dal.managers.SourceInfoManager;
+import edu.pitt.sis.exp.colfusion.dal.managers.SourceInfoManagerImpl;
 import edu.pitt.sis.exp.colfusion.dal.orm.ColfusionRelationships;
 import edu.pitt.sis.exp.colfusion.dal.orm.ColfusionSourceinfo;
-import edu.pitt.sis.exp.colfusion.dal.utils.HibernateUtil;
+import edu.pitt.sis.exp.colfusion.dal.viewmodels.DnameViewModel;
+import edu.pitt.sis.exp.colfusion.relationships.relationshipGraph.RelationshipGraph;
+import edu.pitt.sis.exp.colfusion.relationships.relationshipGraph.RelationshipGraphEdge;
+import edu.pitt.sis.exp.colfusion.relationships.relationshipGraph.RelationshipGraphEdge.NodeInfo;
+import edu.pitt.sis.exp.colfusion.relationships.relationshipGraph.RelationshipGraphNode;
 
 public class RelationshipGraphBL {
 
-	//TODO FIXME: WHY FUNCTION NAME STARTS WITH CAPITAL LETTER???????????????????????
+	final Logger logger = LogManager.getLogger(RelationshipGraphBL.class.getName());
 	
-	//TODO FIXME this whole thing should probably be done in the Relationship Manager
-	public String BuildJSON() throws NoSuchFieldException, IllegalAccessException{
+	/**
+	 * Construct Relationship Graph where nodes represent tables and edges represent relationships
+	 * @return
+	 * @throws Exception
+	 */
+	public RelationshipGraph getRelationshipGraph() throws Exception {
+		RelationshipGraph result = new RelationshipGraph();
 		
-		List<Object> finalResult = new ArrayList(); //list include all elements;
+		result.setNodes(getNodes());
+		result.setEdges(getEdges());
 		
-		//TODO FIXME don't use DAO classes at this level, use manager classes
-		//Following code is to search for all relationship from relationship table;
-		StatonverdictsDAO dao = new StatonverdictsDAOImpl();
-		Map<Integer, BigDecimal> confidenceMap = dao.getAvgConfidence();
-		HashMap<String, Object> sidFalseMap = new HashMap();
-		sidFalseMap.put("oneSid", false);
-		HashMap<String, Object> pathMap = new HashMap();
-		ArrayList pathList = new ArrayList();
-		pathList.add(pathMap);
-		sidFalseMap.put("allPaths", pathList);
-		sidFalseMap.put("title", "newPath");
-		
-		List<Object> relationshipList = new ArrayList();
-		pathMap.put("relationships", relationshipList);
-		HashSet<Integer> sidSet = new HashSet();
-		HashSet<String> sidTitleSet = new HashSet();
-		HashSet<Object> columnSet = new HashSet();
-		pathMap.put("sidTitles", sidTitleSet);
-		pathMap.put("sids", sidSet);
-		ArrayList<Object> relIds = new ArrayList<Object>();
-		pathMap.put("avgConfidence", null );
-		pathMap.put("avgDataMatchingRatio", null );
-		pathMap.put("relIds", relIds);
-		pathMap.put("allColumns", columnSet);
-		pathMap.put("oneSid", false);
-		pathMap.put("tableName","NA");
-		pathMap.put("title", "All relationships");
-		pathMap.put("sid", "2197,2187,2192,3,1");
-		pathMap.put("foundSearchKeys", new ArrayList());
-		List<ColfusionRelationships> relList = this.getAllRelationShip();
-		for (ColfusionRelationships rel : relList){
-			relIds.add(rel.getRelId().toString());
-			HashMap<String, Object> oneRel = new HashMap();
-			HashMap<String, Object> sidFrom = new HashMap();
-			HashMap<String, Object> sidTo = new HashMap();
-			
-			rel = GeneralManagerImpl.initializeField(rel, "colfusionSourceinfoBySid1");
-			
-			ColfusionSourceinfo souInfo1 =rel.getColfusionSourceinfoBySid1();
-			sidFrom = this.convertSourceInfoToMap(columnSet,souInfo1, false);
-			sidSet.add(souInfo1.getSid());
-			sidTitleSet.add(souInfo1.getTitle());
-			
-			rel = GeneralManagerImpl.initializeField(rel, "colfusionSourceinfoBySid2");
-			
-			ColfusionSourceinfo souInfo2 =rel.getColfusionSourceinfoBySid2();
-			sidSet.add(souInfo2.getSid());
-			sidTitleSet.add(souInfo2.getTitle());
-			sidTo =this.convertSourceInfoToMap(columnSet,souInfo2,false);
-			oneRel.put("sidFrom", sidFrom);
-			oneRel.put("sidTo", sidTo);
-			oneRel.put("relId", rel.getRelId().toString());
-			oneRel.put("relName", rel.getName());
-			oneRel.put("confidence", confidenceMap.get(rel.getRelId()).doubleValue());
-			oneRel.put("dataMatchingRatio", null);
-			relationshipList.add(oneRel);
-		}
-		finalResult.add(sidFalseMap);
-		
-		//Following code is to search for data sets which are isolate.
-		List<ColfusionSourceinfo> sourceInfoList = this.getSourceInfoWithoutRelationships();// get sourceinfo without relationships.
-		for (int i = 0 ; i < sourceInfoList.size(); i++){
-			ColfusionSourceinfo info = sourceInfoList.get(i);
-			HashMap map = this.convertSourceInfoToMap(info);
-			finalResult.add(map);
-		}
-		
-		Gson gson = new Gson();
-		String result = gson.toJson(finalResult);
-		System.out.println(result);
 		return result;
 	}
 	
-	public List<ColfusionRelationships> getAllRelationShip(){
-		List<ColfusionRelationships> relationshipList = new ArrayList<ColfusionRelationships>();
-		//TODO FIXME why you use DAO here???? There is the RelationshipsManager class that needs to be used here.
-		RelationshipsDAO relDAO = new RelationshipsDAOImpl();
-		HibernateUtil.beginTransaction();
-		relationshipList = relDAO.findAll(ColfusionRelationships.class);
-		HibernateUtil.commitTransaction();
-		
-		return relationshipList;
-	}
-	
-	public HashMap<String,Object> convertSourceInfoToMap(final ColfusionSourceinfo info){
-		HashMap<String,Object> map = new HashMap<String,Object>();
-		map.put("oneSid", true);
-		map.put("sid", info.getSid().toString());
-		map.put("title", info.getTitle());
-		map.put("tableName", "Sheet1");
-		map.put("allColumns", this.convertDnameInfoToList(getColunmsBySid(info.getSid())));
-		map.put("foundSearchKeys", new ArrayList());
-		return  map;
-	}
-	
-	public HashMap<String,Object> convertSourceInfoToMap(final HashSet<Object> columnSet,final ColfusionSourceinfo info,final boolean onesid){
-		HashMap<String,Object> map = new HashMap<String,Object>();
-		map.put("sid", info.getSid().toString());
-		map.put("sidTitle", info.getTitle());
-		map.put("tableName", "Sheet1");
-		ArrayList<HashMap> columns = this.convertDnameInfoToList(getColunmsBySid(info.getSid()));
-		for(HashMap col : columns){
-			columnSet.add(col);
+	/**
+	 * Edges represent relationships
+	 * 
+	 * @return
+	 * @throws Exception
+	 */
+	private List<RelationshipGraphEdge> getEdges() throws Exception {
+		RelationshipsManager relationshipMng = new RelationshipsManagerImpl();
+		try {
+			List<RelationshipGraphEdge> edges = new ArrayList<RelationshipGraphEdge>();
+			
+			List<ColfusionRelationships> relationships = relationshipMng.findAll(); //TODO FIXME: only need to find "valid" relationship (e.g. not deleted ones)
+			
+			//TODO FIXME this is wrong, need to fix, should use dao here
+			StatonverdictsDAO dao = new StatonverdictsDAOImpl();
+			Map<Integer, BigDecimal> confidenceMap = dao.getAvgConfidence();
+			
+			for (ColfusionRelationships relationship : relationships) {
+				
+				relationship = GeneralManagerImpl.initializeField(relationship, "colfusionSourceinfoBySid1");
+				
+				NodeInfo sidFrom = new NodeInfo(relationship.getColfusionSourceinfoBySid1().getSid(), 
+						relationship.getColfusionSourceinfoBySid1().getTitle(), relationship.getTableName1());
+				
+				relationship = GeneralManagerImpl.initializeField(relationship, "colfusionSourceinfoBySid2");
+				
+				NodeInfo sidTo = new NodeInfo(relationship.getColfusionSourceinfoBySid2().getSid(), 
+						relationship.getColfusionSourceinfoBySid2().getTitle(), relationship.getTableName2());
+				
+				RelationshipGraphEdge edge = new RelationshipGraphEdge(relationship.getRelId(), relationship.getName(), 
+						confidenceMap.get(relationship.getRelId()).doubleValue(), sidFrom, sidTo);
+				
+				edges.add(edge);
+			}
+			
+			return edges;
+		} catch (Exception e) {
+			String message = "Could not get all relationships from DB.";
+			
+			logger.error(message);
+			throw e;
 		}
-		
-		map.put("allColumns", this.convertDnameInfoToList(getColunmsBySid(info.getSid())));
-		return  map;
 	}
-	
-	
-	public ArrayList<HashMap> convertDnameInfoToList(final List<ColfusionDnameinfo> DNameList){
-		ArrayList<HashMap> list = new ArrayList<HashMap>();
-		for (ColfusionDnameinfo info: DNameList){
-			HashMap<String, Object> map = new HashMap<String,Object>();
-			map.put("cid", info.getCid().toString());
-			map.put("dname_chosen", info.getDnameChosen());
-			map.put("dname_value_type", "String");
-			map.put("dname_value_unit", null);
-			map.put("dname_value_description", info.getDnameValueDescription());
-			map.put("dname_original_name", info.getDnameOriginalName());
-			list.add(map);
+
+	/**
+	 * Nodes represent stories.
+	 * 
+	 * @throws Exception
+	 */
+	private List<RelationshipGraphNode> getNodes() throws Exception {
+		SourceInfoManager sourceInfoMng =  new SourceInfoManagerImpl();
+		DNameInfoManager dNameInfoMng = new DNameInfoManagerImpl();
+		
+		try {
+			List<ColfusionSourceinfo> allStories = sourceInfoMng.findAll(); //TODO FIXME: only need to get nodes that are not drafts (published to the public)
+			
+			List<RelationshipGraphNode> nodes = new ArrayList<RelationshipGraphNode>(allStories.size());
+			
+			for (ColfusionSourceinfo story : allStories) {
+				
+				List<RelationKey> tableNames = sourceInfoMng.getTableNames(story.getSid());
+				
+				for (RelationKey table : tableNames) {
+					List<DnameViewModel> allColumns = dNameInfoMng.getDnameListViewModel(story.getSid(), table.getTableName());
+					
+					RelationshipGraphNode node = new RelationshipGraphNode(story.getSid(), table.getTableName(), story.getTitle(), allColumns);
+					nodes.add(node);
+				}	
+			}
+			
+			return nodes;
+		} catch (Exception e) {
+			String message = "Could not get all stories from DB.";
+			
+			logger.error(message);
+			throw e;
 		}
-		return list;
-	}
-	
-	public List<ColfusionDnameinfo> getColunmsBySid(final int sid){
-		
-		//TODO FIXME you cannot use DAOs at this level because DAOs don't know anything about transactions.
-		// For now I will just use transaction here, but it is not right.
-		HibernateUtil.beginTransaction();
-		DNameInfoDAO dnameInfoDao = new DNameInfoDAOImpl();
-		List<ColfusionDnameinfo> dNameInfoList = dnameInfoDao.findBySid(sid);
-		HibernateUtil.commitTransaction();
-		return dNameInfoList; 
-	}
-	
-	public List<ColfusionSourceinfo> getAllSourceInfos(){
-		
-		SourceInfoDAO sourceInfoDao = new SourceInfoDAOImpl();
-		HibernateUtil.beginTransaction();
-		List<ColfusionSourceinfo> allSourceInfo =sourceInfoDao.findAll(ColfusionSourceinfo.class);
-		return allSourceInfo;
-		
-	}
-	
-	public List<ColfusionSourceinfo> getSourceInfoWithoutRelationships(){
-		
-		SourceInfoDAO sourceInfoDao = new SourceInfoDAOImpl();
-		
-		List<ColfusionSourceinfo> oneSidsTrue = sourceInfoDao.findOneSidsTrue();
-		
-		return oneSidsTrue;
 	}
 }

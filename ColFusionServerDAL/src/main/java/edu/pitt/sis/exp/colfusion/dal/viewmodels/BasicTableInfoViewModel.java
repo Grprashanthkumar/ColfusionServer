@@ -10,7 +10,7 @@ import com.google.gson.annotations.Expose;
  * @author Weichuan Hong
  *
  */
-
+//TODO: How is this different from DnameViewModel?
 @XmlRootElement
 public class BasicTableInfoViewModel {
 	@Expose private Integer cid;

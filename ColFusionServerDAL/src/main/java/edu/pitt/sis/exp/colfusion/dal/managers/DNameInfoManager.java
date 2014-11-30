@@ -56,7 +56,13 @@ public interface DNameInfoManager extends GeneralManager<ColfusionDnameinfo, Int
 	 * @param int sid
 	 * @return Dname list table info.
 	 */
-	public List<DnameViewModel> getDnameListViewModelBySid(int sid);
+	public List<DnameViewModel> getDnameListViewModel(int sid);
+	
+	/**
+	 * @param int sid
+	 * @return Dname list table info.
+	 */
+	public List<DnameViewModel> getDnameListViewModel(int sid, String tableName);
 	
 	/**
 	 * @param int cid

@@ -8,6 +8,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 /**
  * @author Evgeny
  *
+ * @see DnameViewModel DnameViewModel they might be describing the same thing.
  */
 @XmlRootElement
 public class DatasetVariableViewModel {

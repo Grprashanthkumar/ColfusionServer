@@ -9,8 +9,9 @@ import com.google.gson.annotations.Expose;
 /**
  * @author Weichuan Hong
  *
+ * @see DatasetVariableViewModel DatasetVariableViewModel they might be describing the same thing.
  */
-
+//TODO: How is this different from BasicTableInfoViewModel?
 @XmlRootElement
 public class DnameViewModel {
 	@Expose private Integer cid;

@@ -270,7 +270,7 @@ public class BasicTableBL {
 		DnameResponseModel result = new DnameResponseModel();
 		try{
 			DNameInfoManagerImpl dNameInfoManagerImpl = new DNameInfoManagerImpl();
-			List<DnameViewModel> contents = dNameInfoManagerImpl.getDnameListViewModelBySid(sid);
+			List<DnameViewModel> contents = dNameInfoManagerImpl.getDnameListViewModel(sid);
 			result.setPayload(contents);
 			result.isSuccessful=true;
 		}
