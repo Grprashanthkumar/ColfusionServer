@@ -24,7 +24,7 @@ public class ServiceMonitorRestImpl implements ServiceMonitorRest{
 	//private static final Logger logger = LogManager.getLogger(ServiceMonitorRestImpl.class.getName());
 	
 	public ServiceMonitorRestImpl() {
-	}
+	}  
 	
 	@Override
 	public Response getServicesStatus() throws Exception {
