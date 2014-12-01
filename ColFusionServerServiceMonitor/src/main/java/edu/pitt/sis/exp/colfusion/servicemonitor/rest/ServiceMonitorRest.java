@@ -45,7 +45,7 @@ public interface ServiceMonitorRest {
 	//@Produces("text/plain")
 	//@Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-	public abstract Response addNewService(ColfusionServices newService) throws Exception;
+	public abstract Response addNewService( ColfusionServices newService) throws Exception;
 
 	@Path("updateServiceByID/id={id}")
 	@GET

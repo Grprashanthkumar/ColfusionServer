@@ -11,7 +11,7 @@ import edu.pitt.sis.exp.colfusion.dal.managers.ServiceManager;
 import edu.pitt.sis.exp.colfusion.dal.managers.ServiceManagerImpl;
 import edu.pitt.sis.exp.colfusion.dal.orm.ColfusionServices;
 import edu.pitt.sis.exp.colfusion.servicemonitor.ServiceMonitor;
-import edu.pitt.sis.exp.colfusion.servicemonitor.ServiceMonitorDeamon;
+import edu.pitt.sis.exp.colfusion.servicemonitor.ServiceMonitorDaemon;
 
 /**
  * @author Hao Bai
@@ -33,7 +33,7 @@ public class ServiceMonitorRestImpl implements ServiceMonitorRest{
 		//List<ColfusionServices> resutlList = ServiceMonitor.getServicesStatus();
 		//String result = serviceManager.findAll().toString();
 		//String result = serviceMonitor.getContext(ServiceMonitorRestImpl.class).getServicesStatus().toString();
-		String result = ServiceMonitorDeamon.getServiceMonitorInstance().getServicesStatus().toString();
+		String result = ServiceMonitorDaemon.getInstance().getServiceMonitor().getServicesStatus().toString();
 		
 		return Response.status(200).entity(result).build();
 	}
@@ -41,7 +41,7 @@ public class ServiceMonitorRestImpl implements ServiceMonitorRest{
 	@Override
 	public Response getServiceStatusByID(String serviceID) throws Exception {
 		int ID = Integer.parseInt(serviceID);
-		ColfusionServices service = ServiceMonitorDeamon.getServiceMonitorInstance().getServiceStatusByID(ID);
+		ColfusionServices service = ServiceMonitorDaemon.getInstance().getServiceMonitor().getServiceStatusByID(ID);
 		String serviceName = service.getServiceName();
 		String serviceStatus = service.getServiceStatus();
 		
@@ -53,7 +53,7 @@ public class ServiceMonitorRestImpl implements ServiceMonitorRest{
 	@Override
 	public Response getServiceStatusByNamePattern(String namePattern) throws Exception {
 		
-		List<ColfusionServices> serviceList = ServiceMonitorDeamon.getServiceMonitorInstance().getServicesStatus();
+		List<ColfusionServices> serviceList = ServiceMonitorDaemon.getInstance().getServiceMonitor().getServicesStatus();
 		
 		List<String> resultList = new ArrayList<String>();
 		for(ColfusionServices service : serviceList) {
@@ -68,7 +68,7 @@ public class ServiceMonitorRestImpl implements ServiceMonitorRest{
 	@Override
 	public Response addNewService(ColfusionServices newService) throws Exception {
 		
-		ServiceMonitorDeamon.getServiceMonitorInstance().addNewService(newService);
+		ServiceMonitorDaemon.getInstance().getServiceMonitor().addNewService(newService);
 		String result = newService.getServiceName() + " is added.";
 		
 		return Response.status(201).entity(result).build();
@@ -78,9 +78,9 @@ public class ServiceMonitorRestImpl implements ServiceMonitorRest{
 	public Response updateServiceByID(String serviceID) throws Exception {
 		
 		int ID = Integer.parseInt(serviceID);
-		ColfusionServices service = ServiceMonitorDeamon.getServiceMonitorInstance().getServiceStatusByID(ID);
+		ColfusionServices service = ServiceMonitorDaemon.getInstance().getServiceMonitor().getServiceStatusByID(ID);
 		
-		ServiceMonitorDeamon.getServiceMonitorInstance().updateServiceByID(ID);
+		ServiceMonitorDaemon.getInstance().getServiceMonitor().updateServiceByID(ID);
 		String result = service.getServiceName() + " is updated.";
 		
 		return Response.status(200).entity(result).build();
@@ -90,9 +90,9 @@ public class ServiceMonitorRestImpl implements ServiceMonitorRest{
 	public Response deleteServiceByID(String serviceID) throws Exception {
 		
 		int ID = Integer.parseInt(serviceID);
-		ColfusionServices service = ServiceMonitorDeamon.getServiceMonitorInstance().getServiceStatusByID(ID);
+		ColfusionServices service = ServiceMonitorDaemon.getInstance().getServiceMonitor().getServiceStatusByID(ID);
 		
-		ServiceMonitorDeamon.getServiceMonitorInstance().deleteServiceByID(ID);
+		ServiceMonitorDaemon.getInstance().getServiceMonitor().deleteServiceByID(ID);
 		String result = service.getServiceName() + " is deleted.";
 		
 		return Response.status(200).entity(result).build();
