@@ -157,11 +157,15 @@ public class ServiceMonitor extends TimerTask{
 		return resultServiceList;	
 	}
 	
-	public boolean addNewService(ColfusionServices newService) {
+	public boolean addNewService(ColfusionServicesViewModel viewModel) {
 		try {
-			this.serviceManager.save(newService);
-			this.serviceList.add(newService);
-			return true;
+			ColfusionServices newService = this.convertViewModel(viewModel);
+			if( newService != null) {
+				this.serviceList.add(newService);
+				this.serviceManager.save(newService);
+				return true;
+			}
+			return false;
 		}
 		catch (Exception ex) {
 			logger.error("In ServiceMonitor.addNewService()\n"
@@ -170,13 +174,15 @@ public class ServiceMonitor extends TimerTask{
 		}
 	}
 	
-	public boolean updateServiceByID(int serviceID) {
+	public boolean updateServiceByID(int serviceID, ColfusionServicesViewModel viewModel) {
 		try {
-			List<ColfusionServices> tempServiceList = this.serviceManager.findAll();
-			for(ColfusionServices service : tempServiceList) {
+			ColfusionServices newService = this.convertViewModel(viewModel);
+			
+			for(ColfusionServices service : this.serviceList) {
 				if(service.getServiceID() == serviceID) {
-					this.serviceManager.saveOrUpdate(service);
-					this.serviceList.set(this.serviceList.indexOf(service), service);
+					newService.setServiceID(serviceID);
+					this.serviceList.set(this.serviceList.indexOf(service), newService);
+					this.serviceManager.saveOrUpdate(newService);
 					return true;
 				}
 			}
@@ -191,11 +197,10 @@ public class ServiceMonitor extends TimerTask{
 	
 	public boolean deleteServiceByID(int serviceID) {
 		try {
-			List<ColfusionServices> tempServiceList = this.serviceManager.findAll();
-			for(ColfusionServices service : tempServiceList) {
+			for(ColfusionServices service : this.serviceList) {
 				if(service.getServiceID() == serviceID) {
-					this.serviceManager.delete(service);
 					this.serviceList.remove(this.serviceList.indexOf(service));
+					this.serviceManager.delete(service);
 					return true;
 				}
 			}
@@ -206,6 +211,19 @@ public class ServiceMonitor extends TimerTask{
 					+ ex.toString() + " " + ex.getCause());	
 			return false;
 		}
+	}
+	
+	private ColfusionServices convertViewModel(ColfusionServicesViewModel viewModel) {
+		ColfusionServices service = new ColfusionServices();
+		
+		service.setServiceName(viewModel.getServiceName());
+		service.setServiceAddress(viewModel.getServiceAddress());
+		service.setPortNumber(viewModel.getPortNumber());
+		service.setServiceDir(viewModel.getServiceDir());
+		service.setServiceCommand(viewModel.getServiceCommand());
+		service.setServiceStatus(viewModel.getServiceStatus());
+		
+		return service;
 	}
 	
 	/**

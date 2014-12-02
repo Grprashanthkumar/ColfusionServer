@@ -7,9 +7,13 @@ import javax.ws.rs.Path;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.ContextResolver;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import edu.pitt.sis.exp.colfusion.dal.managers.ServiceManager;
 import edu.pitt.sis.exp.colfusion.dal.managers.ServiceManagerImpl;
 import edu.pitt.sis.exp.colfusion.dal.orm.ColfusionServices;
+import edu.pitt.sis.exp.colfusion.servicemonitor.ColfusionServicesViewModel;
 import edu.pitt.sis.exp.colfusion.servicemonitor.ServiceMonitor;
 import edu.pitt.sis.exp.colfusion.servicemonitor.ServiceMonitorDaemon;
 
@@ -21,80 +25,120 @@ import edu.pitt.sis.exp.colfusion.servicemonitor.ServiceMonitorDaemon;
 public class ServiceMonitorRestImpl implements ServiceMonitorRest{
 
 	//@Context ServiceMonitor serviceMonitor;
-	//private static final Logger logger = LogManager.getLogger(ServiceMonitorRestImpl.class.getName());
+	private static final Logger logger = LogManager.getLogger(ServiceMonitorRestImpl.class.getName());
 	
 	public ServiceMonitorRestImpl() {
 	}  
 	
 	@Override
-	public Response getServicesStatus() throws Exception {
+	public Response getServicesStatus() {
 		
 		//logger.info("Got request with this payload length: " + twoJointTables.length());
-		//List<ColfusionServices> resutlList = ServiceMonitor.getServicesStatus();
-		//String result = serviceManager.findAll().toString();
-		//String result = serviceMonitor.getContext(ServiceMonitorRestImpl.class).getServicesStatus().toString();
-		String result = ServiceMonitorDaemon.getInstance().getServiceMonitor().getServicesStatus().toString();
-		
-		return Response.status(200).entity(result).build();
+		String result = "";
+		try {
+			result = ServiceMonitorDaemon.getInstance().getServiceMonitor().getServicesStatus().toString();
+			return Response.status(200).entity(result).build();
+		} 
+		catch (Exception ex) {
+			logger.error("In ServiceMonitorRestImpl.getServicesStatus()\n"
+					+ ex.toString() + " " + ex.getCause());	
+			return Response.status(500).entity(result).build();
+		}	
 	}
 	
 	@Override
-	public Response getServiceStatusByID(String serviceID) throws Exception {
-		int ID = Integer.parseInt(serviceID);
-		ColfusionServices service = ServiceMonitorDaemon.getInstance().getServiceMonitor().getServiceStatusByID(ID);
-		String serviceName = service.getServiceName();
-		String serviceStatus = service.getServiceStatus();
-		
-		String result = serviceName + " is " + serviceStatus;
-		
-		return Response.status(200).entity(result).build();
-	}
-	
-	@Override
-	public Response getServiceStatusByNamePattern(String namePattern) throws Exception {
-		
-		List<ColfusionServices> serviceList = ServiceMonitorDaemon.getInstance().getServiceMonitor().getServicesStatus();
-		
-		List<String> resultList = new ArrayList<String>();
-		for(ColfusionServices service : serviceList) {
-			if(service.getServiceName().indexOf(namePattern) >= 0) {
-				resultList.add(service.getServiceName() + " is " + service.getServiceStatus());
-			}
+	public Response getServiceStatusByID(String serviceID) {
+		String result = "";
+		try {
+			int ID = Integer.parseInt(serviceID);
+			ColfusionServices service = ServiceMonitorDaemon.getInstance().getServiceMonitor().getServiceStatusByID(ID);
+			String serviceName = service.getServiceName();
+			String serviceStatus = service.getServiceStatus();
+			
+			result = serviceName + " is " + serviceStatus;
+			
+			return Response.status(200).entity(result).build();
 		}
-		
-		return Response.status(200).entity(resultList.toString()).build();
+		catch (Exception ex) {
+			logger.error("In ServiceMonitorRestImpl.getServiceStatusByID()\n"
+					+ ex.toString() + " " + ex.getCause());	
+			return Response.status(500).entity(result).build();
+		}	
 	}
 	
 	@Override
-	public Response addNewService(ColfusionServices newService) throws Exception {
-		
-		ServiceMonitorDaemon.getInstance().getServiceMonitor().addNewService(newService);
-		String result = newService.getServiceName() + " is added.";
-		
-		return Response.status(201).entity(result).build();
+	public Response getServiceStatusByNamePattern(String namePattern) {
+		List<ColfusionServices> serviceList = null;
+		try {
+			serviceList = ServiceMonitorDaemon.getInstance().getServiceMonitor().getServicesStatus();
+			
+			List<String> resultList = new ArrayList<String>();
+			for(ColfusionServices service : serviceList) {
+				if(service.getServiceName().indexOf(namePattern) >= 0) {
+					resultList.add(service.getServiceName() + " is " + service.getServiceStatus());
+				}
+			}
+			return Response.status(200).entity(resultList.toString()).build();
+		}
+		catch (Exception ex) {
+			logger.error("In ServiceMonitorRestImpl.getServiceStatusByNamePattern()\n"
+					+ ex.toString() + " " + ex.getCause());	
+			return Response.status(500).entity(serviceList).build();
+		}	
 	}
 	
 	@Override
-	public Response updateServiceByID(String serviceID) throws Exception {
+	public Response addNewService(ColfusionServicesViewModel newService) {
+
+		String result = "";
+		try {
+			ServiceMonitorDaemon.getInstance().getServiceMonitor().addNewService(newService);
+			result = newService.getServiceName() + " is added.";
 		
-		int ID = Integer.parseInt(serviceID);
-		ColfusionServices service = ServiceMonitorDaemon.getInstance().getServiceMonitor().getServiceStatusByID(ID);
-		
-		ServiceMonitorDaemon.getInstance().getServiceMonitor().updateServiceByID(ID);
-		String result = service.getServiceName() + " is updated.";
-		
-		return Response.status(200).entity(result).build();
+			return Response.status(201).entity(result).build();
+		}
+		catch (Exception ex) {
+			logger.error("In ServiceMonitorRestImpl.addNewService()\n"
+					+ ex.toString() + " " + ex.getCause());	
+			return Response.status(500).entity(result).build();
+		}	
 	}
 	
 	@Override
-	public Response deleteServiceByID(String serviceID) throws Exception {
+	public Response updateServiceByID(String serviceID, ColfusionServicesViewModel newService) {
+		String result = "";
+		try {
+			int ID = Integer.parseInt(serviceID);
+			ColfusionServices service = ServiceMonitorDaemon.getInstance().getServiceMonitor().getServiceStatusByID(ID);
 		
-		int ID = Integer.parseInt(serviceID);
-		ColfusionServices service = ServiceMonitorDaemon.getInstance().getServiceMonitor().getServiceStatusByID(ID);
+			ServiceMonitorDaemon.getInstance().getServiceMonitor().updateServiceByID(ID, newService);
+			result = service.getServiceName() + " is updated.";
 		
-		ServiceMonitorDaemon.getInstance().getServiceMonitor().deleteServiceByID(ID);
-		String result = service.getServiceName() + " is deleted.";
+			return Response.status(200).entity(result).build();
+		}
+		catch (Exception ex) {
+			logger.error("In ServiceMonitorRestImpl.updateServiceByID()\n"
+					+ ex.toString() + " " + ex.getCause());	
+			return Response.status(500).entity(result).build();
+		}	
+	}
+	
+	@Override
+	public Response deleteServiceByID(String serviceID) {
+		String result = "";
+		try {
+			int ID = Integer.parseInt(serviceID);
+			ColfusionServices service = ServiceMonitorDaemon.getInstance().getServiceMonitor().getServiceStatusByID(ID);
 		
-		return Response.status(200).entity(result).build();
+			ServiceMonitorDaemon.getInstance().getServiceMonitor().deleteServiceByID(ID);
+			result = service.getServiceName() + " is deleted.";
+		
+			return Response.status(200).entity(result).build();
+		}
+		catch (Exception ex) {
+			logger.error("In ServiceMonitorRestImpl.deleteServiceByID()\n"
+					+ ex.toString() + " " + ex.getCause());	
+			return Response.status(500).entity(result).build();
+		}	
 	}
 }

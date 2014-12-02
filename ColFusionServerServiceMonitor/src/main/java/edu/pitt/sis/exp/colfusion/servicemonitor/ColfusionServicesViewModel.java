@@ -7,25 +7,26 @@ import com.google.gson.annotations.Expose;
 /**
  * @author Hao Bai
  *
+ *Example JSON format is 
+{
+	"serviceName": "testService1",
+	"serviceAddress": "127.0.0.1",
+	"portNumber": 50,
+	"serviceDir": "./",
+	"serviceCommand": "cmd",
+	"serviceStatus": "stopped"
+}
  */
 @XmlRootElement
-public class ServiceMonitorViewModel {
-	@Expose private int serviceId;
+public class ColfusionServicesViewModel {
+
 	@Expose private String serviceName;
 	@Expose private String serviceAddress;
 	@Expose private int portNumber;
 	@Expose private String serviceDir;
 	@Expose private String serviceCommand;
 	@Expose private String serviceStatus;
-	
-	public int getServiceId() {
-		return serviceId;
-	}
-	
-	public void setServiceId(int serviceId) {
-		this.serviceId = serviceId;
-	}
-	
+
 	public String getServiceName() {
 		return serviceName;
 	}
