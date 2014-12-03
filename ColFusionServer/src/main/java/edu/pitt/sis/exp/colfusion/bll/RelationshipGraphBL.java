@@ -52,10 +52,13 @@ public class RelationshipGraphBL {
 	 */
 	private List<RelationshipGraphEdge> getEdges() throws Exception {
 		RelationshipsManager relationshipMng = new RelationshipsManagerImpl();
+		//Only show relationship with status = 2 (new)
+		Integer status = 2;
 		try {
 			List<RelationshipGraphEdge> edges = new ArrayList<RelationshipGraphEdge>();
 			
-			List<ColfusionRelationships> relationships = relationshipMng.findAll(); //TODO FIXME: only need to find "valid" relationship (e.g. not deleted ones)
+			//List<ColfusionRelationships> relationships = relationshipMng.findAll(); //TODO FIXME: only need to find "valid" relationship (e.g. not deleted ones)
+			List<ColfusionRelationships> relationships = relationshipMng.getRelationshipsByStatus(status);
 			
 			//TODO FIXME this is wrong, need to fix, should use dao here
 			StatonverdictsDAO dao = new StatonverdictsDAOImpl();
