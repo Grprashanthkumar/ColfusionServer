@@ -1081,10 +1081,20 @@ public class SourceInfoManagerImpl extends GeneralManagerImpl<SourceInfoDAO, Col
 	}
 	
 	public List<ColfusionSourceinfo> getSourceInfoByStatus(String status){
-		List<ColfusionSourceinfo> returnList = null;
-		SourceInfoDAO sourceInfoDAO = new SourceInfoDAOImpl();
-		returnList = sourceInfoDAO.findSourceInfoByStatus(status);
-		return returnList;
+		try{
+			HibernateUtil.beginTransaction();
+			List<ColfusionSourceinfo> returnList = null;
+			SourceInfoDAO sourceInfoDAO = new SourceInfoDAOImpl();
+			returnList = sourceInfoDAO.findSourceInfoByStatus(status);
+			HibernateUtil.commitTransaction();
+			return returnList;
+		} catch (HibernateException ex) {
+	
+	    	HibernateUtil.rollbackTransaction();
+	    	
+	    	this.logger.error("getSourceInfoByStatus failed HibernateException", ex);
+	    	throw ex;
+	    }	
 	}
 
 }

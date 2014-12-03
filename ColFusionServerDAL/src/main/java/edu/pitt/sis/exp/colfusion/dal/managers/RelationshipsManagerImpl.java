@@ -231,9 +231,20 @@ public class RelationshipsManagerImpl extends GeneralManagerImpl<RelationshipsDA
 
 	@Override
 	public List<ColfusionRelationships> getRelationshipsByStatus(Integer status) {
-		List<ColfusionRelationships> returnList = null;
-		RelationshipsDAO relationshipsDAO = new RelationshipsDAOImpl();
-		returnList = relationshipsDAO.findRelationshipByStatus(status);
-		return returnList;
+		try{
+			HibernateUtil.beginTransaction();
+			List<ColfusionRelationships> returnList = null;
+			RelationshipsDAO relationshipsDAO = new RelationshipsDAOImpl();
+			returnList = relationshipsDAO.findRelationshipByStatus(status);
+			HibernateUtil.commitTransaction();
+			return returnList;
+		} catch (HibernateException ex) {
+
+        	HibernateUtil.rollbackTransaction();
+        	
+        	logger.error("getRelationshipsByStatus failed HibernateException", ex);
+        	throw ex;
+        } 
+		
 	}
 }
