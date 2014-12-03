@@ -61,4 +61,10 @@ public interface SourceInfoDAO extends GenericDAO<ColfusionSourceinfo, Integer> 
 	*/
 	
 	public List<ColfusionSourceinfo> findOneSidsTrue() throws HibernateException;
+	
+	/**
+	 * Find all sourceinfos that are published, with a status of "queued"
+	 * Edited by haoyu Wang
+	*/
+	public List<ColfusionSourceinfo> findSourceInfoByStatus(String status) throws HibernateException;
 }

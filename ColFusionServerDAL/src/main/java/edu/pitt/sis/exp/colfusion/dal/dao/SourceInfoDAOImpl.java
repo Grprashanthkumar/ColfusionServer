@@ -31,8 +31,7 @@ public class SourceInfoDAOImpl extends GenericDAOImpl<ColfusionSourceinfo, Integ
 	}
 
 	@Override
-	public List<ColfusionSourceinfo> findDatasetInfoBySidOrTitle(
-			final String searchTerm) {
+	public List<ColfusionSourceinfo> findDatasetInfoBySidOrTitle(final String searchTerm) {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -103,6 +102,20 @@ public class SourceInfoDAOImpl extends GenericDAOImpl<ColfusionSourceinfo, Integ
 			throw e;
 		}
 		
+		return this.findMany(query);
+	}
+
+	@Override
+	public List<ColfusionSourceinfo> findSourceInfoByStatus(String status) throws HibernateException{
+		String sql = "select si from ColfusionSourceinfo si where si.status = :status";
+		Query query =null;
+		try {
+			HibernateUtil.beginTransaction();
+			query = HibernateUtil.getSession().createQuery(sql).setParameter("status",status);
+		}catch (Exception e){
+			logger.error(String.format("findSourceInfoByStatus failed on HibernateUtil.getSession().... for status = %s ", status), e);
+			throw e;
+		}
 		return this.findMany(query);
 	}
 
