@@ -110,7 +110,6 @@ public class SourceInfoDAOImpl extends GenericDAOImpl<ColfusionSourceinfo, Integ
 		String sql = "select si from ColfusionSourceinfo si where si.status = :status";
 		Query query =null;
 		try {
-			HibernateUtil.beginTransaction();
 			query = HibernateUtil.getSession().createQuery(sql).setParameter("status",status);
 		}catch (Exception e){
 			logger.error(String.format("findSourceInfoByStatus failed on HibernateUtil.getSession().... for status = %s ", status), e);
