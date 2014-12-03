@@ -97,9 +97,11 @@ public class RelationshipGraphBL {
 		SourceInfoManager sourceInfoMng =  new SourceInfoManagerImpl();
 		DNameInfoManager dNameInfoMng = new DNameInfoManagerImpl();
 		
+		//Just use queued as the status, we can add a paramaeter in the method if you want;
+		String status = "queued";
 		try {
-			List<ColfusionSourceinfo> allStories = sourceInfoMng.findAll(); //TODO FIXME: only need to get nodes that are not drafts (published to the public)
-			
+			//List<ColfusionSourceinfo> allStories = sourceInfoMng.findAll(); //TODO FIXME: only need to get nodes that are not drafts (published to the public)
+			List<ColfusionSourceinfo> allStories = sourceInfoMng.getSourceInfoByStatus(status);
 			List<RelationshipGraphNode> nodes = new ArrayList<RelationshipGraphNode>(allStories.size());
 			
 			for (ColfusionSourceinfo story : allStories) {
