@@ -228,4 +228,12 @@ public class RelationshipsManagerImpl extends GeneralManagerImpl<RelationshipsDA
         	throw ex;
         } 
 	}
+
+	@Override
+	public List<ColfusionRelationships> getRelationshipsByStatus(Integer status) {
+		List<ColfusionRelationships> returnList = null;
+		RelationshipsDAO relationshipsDAO = new RelationshipsDAOImpl();
+		returnList = relationshipsDAO.findRelationshipByStatus(status);
+		return returnList;
+	}
 }

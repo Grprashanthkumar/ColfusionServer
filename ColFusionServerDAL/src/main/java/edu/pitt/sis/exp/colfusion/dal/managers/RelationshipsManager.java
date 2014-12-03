@@ -56,4 +56,7 @@ public interface RelationshipsManager extends GeneralManager<ColfusionRelationsh
       */
      List<RelationshipLinkViewModel> getRelationshipLinks(int relId,
 			BigDecimal similarityThreshold) throws Exception;
+     
+     public List<ColfusionRelationships> getRelationshipsByStatus(Integer status);
+     
 }
