@@ -3,6 +3,8 @@
  */
 package edu.pitt.sis.exp.colfusion.dal.dao;
 
+import java.util.List;
+
 import edu.pitt.sis.exp.colfusion.dal.orm.ColfusionRelationships;
 
 /**
@@ -10,5 +12,7 @@ import edu.pitt.sis.exp.colfusion.dal.orm.ColfusionRelationships;
  *
  */
 public interface RelationshipsDAO extends GenericDAO<ColfusionRelationships, Integer> {
+	
+	public List<ColfusionRelationships> findRelationshipByStatus(Integer status);
 
 }
