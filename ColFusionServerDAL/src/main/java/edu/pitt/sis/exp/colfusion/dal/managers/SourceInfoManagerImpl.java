@@ -1079,7 +1079,12 @@ public class SourceInfoManagerImpl extends GeneralManagerImpl<SourceInfoDAO, Col
 			result.add(storyListViewModel);
 		}
 	}
-
 	
+	public List<ColfusionSourceinfo> getSourceInfoByStatus(String status){
+		List<ColfusionSourceinfo> returnList = null;
+		SourceInfoDAO sourceInfoDAO = new SourceInfoDAOImpl();
+		returnList = sourceInfoDAO.findSourceInfoByStatus(status);
+		return returnList;
+	}
 
 }
