@@ -106,16 +106,20 @@ public class SourceInfoDAOImpl extends GenericDAOImpl<ColfusionSourceinfo, Integ
 	}
 
 	@Override
-	public List<ColfusionSourceinfo> findSourceInfoByStatus(String status) throws HibernateException{
+	public List<ColfusionSourceinfo> findSourceInfoByStatus(final SourceInfoStatus status) throws HibernateException{
 		String sql = "select si from ColfusionSourceinfo si where si.status = :status";
-		Query query =null;
+		Query query = null;
 		try {
-			query = HibernateUtil.getSession().createQuery(sql).setParameter("status",status);
+			query = HibernateUtil.getSession().createQuery(sql).setParameter("status", status.getDatabaseStatusValue());
+			
+			List<ColfusionSourceinfo> result = this.findMany(query);
+			
+			HibernateUtil.commitTransaction();
+			
+			return result;
 		}catch (Exception e){
-			logger.error(String.format("findSourceInfoByStatus failed on HibernateUtil.getSession().... for status = %s ", status), e);
+			logger.error(String.format("findSourceInfoByStatus failed on HibernateUtil.getSession().... for status = %s ", status.getDatabaseStatusValue()), e);
 			throw e;
-		}
-		return this.findMany(query);
+		}		
 	}
-
 }

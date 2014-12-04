@@ -24,6 +24,7 @@ import edu.pitt.sis.exp.colfusion.dal.dao.LicenseInfoDAOImpl;
 import edu.pitt.sis.exp.colfusion.dal.dao.LinksDAO;
 import edu.pitt.sis.exp.colfusion.dal.dao.LinksDAOImpl;
 import edu.pitt.sis.exp.colfusion.dal.dao.SourceInfoDAO;
+import edu.pitt.sis.exp.colfusion.dal.dao.SourceInfoDAO.SourceInfoStatus;
 import edu.pitt.sis.exp.colfusion.dal.dao.SourceInfoDAOImpl;
 import edu.pitt.sis.exp.colfusion.dal.dao.SourceInfoDBDAO;
 import edu.pitt.sis.exp.colfusion.dal.dao.SourceInfoDBDAOImpl;
@@ -1081,12 +1082,11 @@ public class SourceInfoManagerImpl extends GeneralManagerImpl<SourceInfoDAO, Col
 	}
 	
 	@Override
-	public List<ColfusionSourceinfo> getSourceInfoByStatus(final String status){
+	public List<ColfusionSourceinfo> getSourceInfoByStatus(final SourceInfoStatus status){
 		try{
 			HibernateUtil.beginTransaction();
-			List<ColfusionSourceinfo> returnList = null;
 			SourceInfoDAO sourceInfoDAO = new SourceInfoDAOImpl();
-			returnList = sourceInfoDAO.findSourceInfoByStatus(status);
+			List<ColfusionSourceinfo> returnList = sourceInfoDAO.findSourceInfoByStatus(status);
 			HibernateUtil.commitTransaction();
 			return returnList;
 		} catch (HibernateException ex) {

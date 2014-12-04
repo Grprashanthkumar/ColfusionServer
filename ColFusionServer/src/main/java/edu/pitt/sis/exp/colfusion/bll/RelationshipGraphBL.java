@@ -8,6 +8,7 @@ import java.util.Map;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import edu.pitt.sis.exp.colfusion.dal.dao.SourceInfoDAO.SourceInfoStatus;
 import edu.pitt.sis.exp.colfusion.dal.dao.StatonverdictsDAO;
 import edu.pitt.sis.exp.colfusion.dal.dao.StatonverdictsDAOImpl;
 import edu.pitt.sis.exp.colfusion.dal.dataModels.tableDataModel.RelationKey;
@@ -101,10 +102,10 @@ public class RelationshipGraphBL {
 		DNameInfoManager dNameInfoMng = new DNameInfoManagerImpl();
 		
 		//Just use queued as the status, we can add a paramaeter in the method if you want;
-		String status = "queued";
+		
 		try {
 			//List<ColfusionSourceinfo> allStories = sourceInfoMng.findAll(); //TODO FIXME: only need to get nodes that are not drafts (published to the public)
-			List<ColfusionSourceinfo> allStories = sourceInfoMng.getSourceInfoByStatus(status);
+			List<ColfusionSourceinfo> allStories = sourceInfoMng.getSourceInfoByStatus(SourceInfoStatus.QUEUED);
 			List<RelationshipGraphNode> nodes = new ArrayList<RelationshipGraphNode>(allStories.size());
 			
 			for (ColfusionSourceinfo story : allStories) {

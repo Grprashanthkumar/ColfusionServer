@@ -8,7 +8,7 @@ package edu.pitt.sis.exp.colfusion.utils;
 public final class StringUtils {
 	
 	public static final String SPACE_REPLACEMENT_CHARACTER = "_";
-	public static final int UNIQUE_SHORT_LAX_LENGTH_DEFAULT = 64;
+	public static final int UNIQUE_SHORT_MAX_LENGTH_DEFAULT = 64;
 	public static final String NEWLINE = System.lineSeparator();
 	
 	/**
@@ -68,14 +68,17 @@ public final class StringUtils {
 	 * 			the short version of the given string.
 	 */
 	public static String makeShortUnique(final String value) {
-		
+		return makeShortUnique(value, UNIQUE_SHORT_MAX_LENGTH_DEFAULT);		
+	}
+	
+	public static String makeShortUnique(final String value, final int maxLength) {
 		if (StringUtils.isNullOrEmpty(value)) {
 			return "";
 		}
 		
 		String hashValue = String.valueOf(value.hashCode());
 		
-		int endIndex = (UNIQUE_SHORT_LAX_LENGTH_DEFAULT - hashValue.length() < 0) ? 0 : UNIQUE_SHORT_LAX_LENGTH_DEFAULT - hashValue.length();
+		int endIndex = (maxLength - hashValue.length() < 0) ? 0 : maxLength - hashValue.length();
 		endIndex = value.length() > endIndex ? endIndex : value.length();
 		
 		String result = value.substring(0, endIndex) + hashValue;

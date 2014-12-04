@@ -57,6 +57,7 @@
   <mapping resource="hibernate/orm_mappings/ColfusionPentahoLogStep.hbm.xml"/>
   <mapping resource="hibernate/orm_mappings/ColfusionPentahoLogTransformaion.hbm.xml"/>
   <mapping resource="hibernate/orm_mappings/ColfusionProcesses.hbm.xml"/>
+  <mapping resource="hibernate/orm_mappings/ColfusionPscSourceinfoTable.hbm.xml"/>
   <mapping resource="hibernate/orm_mappings/ColfusionRedirects.hbm.xml"/>
   <mapping resource="hibernate/orm_mappings/ColfusionRelationships.hbm.xml"/>
   <mapping resource="hibernate/orm_mappings/ColfusionRelationshipsColumns.hbm.xml"/>

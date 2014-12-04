@@ -66,5 +66,20 @@ public interface SourceInfoDAO extends GenericDAO<ColfusionSourceinfo, Integer> 
 	 * Find all sourceinfos that are published, with a status of "queued"
 	 * Edited by haoyu Wang
 	*/
-	public List<ColfusionSourceinfo> findSourceInfoByStatus(String status) throws HibernateException;
+	public List<ColfusionSourceinfo> findSourceInfoByStatus(SourceInfoStatus status) throws HibernateException;
+	
+	public static enum SourceInfoStatus {
+		DRAFT("draft"),
+		QUEUED("queued");
+		
+		private final String databaseStatusValue;
+		
+		SourceInfoStatus(final String databaseStatusValue) {
+			this.databaseStatusValue = databaseStatusValue;
+		}
+		
+		public String getDatabaseStatusValue() {
+			return databaseStatusValue;
+		}
+	}
 }

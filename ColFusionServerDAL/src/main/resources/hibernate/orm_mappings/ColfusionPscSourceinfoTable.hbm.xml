@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Dec 3, 2014 8:12:54 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="edu.pitt.sis.exp.colfusion.dal.orm.ColfusionPscSourceinfoTable" table="colfusion_psc_sourceinfo_table">
+        <composite-id name="id" class="edu.pitt.sis.exp.colfusion.dal.orm.ColfusionPscSourceinfoTableId">
+            <key-property name="sid" type="int">
+                <column name="sid" />
+            </key-property>
+            <key-property name="tableName" type="string">
+                <column name="tableName" />
+            </key-property>
+        </composite-id>
+        <many-to-one name="colfusionSourceinfo" class="edu.pitt.sis.exp.colfusion.dal.orm.ColfusionSourceinfo" update="false" insert="false" fetch="select">
+            <column name="sid" not-null="true" />
+        </many-to-one>
+        <many-to-one name="colfusionProcesses" class="edu.pitt.sis.exp.colfusion.dal.orm.ColfusionProcesses" fetch="select">
+            <column name="pid" />
+        </many-to-one>
+        <property name="pscDatabase" type="string">
+            <column name="pscDatabase" length="64" not-null="true" />
+        </property>
+        <property name="pscTableName" type="string">
+            <column name="pscTableName" length="64" not-null="true">
+                <comment>THIS COMMENT SHOULD BE ON A TABLE LEVEL The table that maps colfusion sid and table name to the database and table on psd server</comment>
+            </column>
+        </property>
+        <property name="whenReplicationStarted" type="timestamp">
+            <column name="whenReplicationStarted" length="19" />
+        </property>
+        <property name="whenReplicationFinished" type="timestamp">
+            <column name="whenReplicationFinished" length="19" />
+        </property>
+    </class>
+</hibernate-mapping>

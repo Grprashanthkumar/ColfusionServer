@@ -8,6 +8,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import edu.pitt.sis.exp.colfusion.dal.dao.SourceInfoDAO.SourceInfoStatus;
 import edu.pitt.sis.exp.colfusion.dal.dataModels.tableDataModel.RelationKey;
 import edu.pitt.sis.exp.colfusion.dal.managers.SourceInfoManagerImpl.HistoryItem;
 import edu.pitt.sis.exp.colfusion.dal.orm.ColfusionSourceinfo;
@@ -179,7 +180,7 @@ public interface SourceInfoManager extends GeneralManager<ColfusionSourceinfo, I
 	 */
 	public List<StoryListViewModel> getStoryListViewModelBySid(int sid);
 	
-	public List<ColfusionSourceinfo> getSourceInfoByStatus(String status);
+	public List<ColfusionSourceinfo> getSourceInfoByStatus(SourceInfoStatus status);
 	
 	/**
 	 * Do the relationship mining

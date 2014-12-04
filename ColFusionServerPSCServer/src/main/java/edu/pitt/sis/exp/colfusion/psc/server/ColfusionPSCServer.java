@@ -24,7 +24,7 @@ public class ColfusionPSCServer implements Runnable{
 	
 	// nice blog: http://jlunaquiroga.blogspot.com/2014/01/restful-web-services-with-jetty-and.html
 	
-	private static final int DEFAULT_PORT = 7473;
+	private static final int DEFAULT_PORT = 7373;
 	
 	private static final Logger logger = LogManager.getLogger(ColfusionPSCServer.class.getName());
 	
