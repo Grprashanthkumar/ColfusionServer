@@ -271,4 +271,20 @@ public class RelationshipBL {
 		
 		return result;
 	}
+	
+	
+	/**
+	 * Do the Relationship Mining procedure.
+	 * @param sid
+	 * @throws Exception 
+	 */
+	public void doRelationshipMining(final int sid){
+		try{
+			SourceInfoManager sourceInfoManagerImpl = new SourceInfoManagerImpl();
+			sourceInfoManagerImpl.doRelationshipMining(sid);
+		}
+		catch(Exception e) {
+			logger.error("failed to doRelationshipMining");
+		}
+	}
 }

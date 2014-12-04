@@ -22,6 +22,7 @@ import com.wordnik.swagger.annotations.ApiResponse;
 import com.wordnik.swagger.annotations.ApiResponses;
 
 import edu.pitt.sis.exp.colfusion.bll.BasicTableBL;
+import edu.pitt.sis.exp.colfusion.bll.RelationshipBL;
 import edu.pitt.sis.exp.colfusion.bll.RelationshipGraphBL;
 import edu.pitt.sis.exp.colfusion.bll.StoryBL;
 import edu.pitt.sis.exp.colfusion.dal.viewmodels.StoryMetadataViewModel;
@@ -302,13 +303,15 @@ public class StoryRestService  {
     @GET
     @ApiOperation(
     		value = "Finds Relationship list, according to perPage,pageNumber",
-    		notes = "",
+    		notes = "Also do the relationship mining",
     		response = RelationshipsResponseModel.class)
 	@ApiResponses(value = {
 			@ApiResponse(code = 404, message = "Relationship not found") })
     @Produces(MediaType.APPLICATION_JSON)
 	public Response getMineRelationships(@ApiParam(value = "sid", required = true) @PathParam("sid") final int sid, @ApiParam(value = "perPage", required = true) @PathParam("perPage") final int perPage, @ApiParam(value = "pageNumber", required = true) @PathParam("pageNumber") final int pageNumber) {
 		BasicTableBL basicBL = new BasicTableBL();
+		RelationshipBL relationshipBL = new RelationshipBL();
+		relationshipBL.doRelationshipMining(sid);
 		RelationshipsResponseModel result = basicBL.getRelationships(sid, perPage, pageNumber);
 		String json = result.toJson();
 		return Response.status(200).entity(json).build();

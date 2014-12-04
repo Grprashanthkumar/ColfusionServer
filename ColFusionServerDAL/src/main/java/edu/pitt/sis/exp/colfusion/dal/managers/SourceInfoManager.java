@@ -180,5 +180,10 @@ public interface SourceInfoManager extends GeneralManager<ColfusionSourceinfo, I
 	public List<StoryListViewModel> getStoryListViewModelBySid(int sid);
 	
 	public List<ColfusionSourceinfo> getSourceInfoByStatus(String status);
+	
+	/**
+	 * Do the relationship mining
+	 */
+	public void doRelationshipMining(int sid);
 
 }

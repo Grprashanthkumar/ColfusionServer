@@ -1080,7 +1080,8 @@ public class SourceInfoManagerImpl extends GeneralManagerImpl<SourceInfoDAO, Col
 		}
 	}
 	
-	public List<ColfusionSourceinfo> getSourceInfoByStatus(String status){
+	@Override
+	public List<ColfusionSourceinfo> getSourceInfoByStatus(final String status){
 		try{
 			HibernateUtil.beginTransaction();
 			List<ColfusionSourceinfo> returnList = null;
@@ -1095,6 +1096,28 @@ public class SourceInfoManagerImpl extends GeneralManagerImpl<SourceInfoDAO, Col
 	    	this.logger.error("getSourceInfoByStatus failed HibernateException", ex);
 	    	throw ex;
 	    }	
+	}
+
+	@Override
+	public void doRelationshipMining(final int sid) {
+		try{
+			HibernateUtil.beginTransaction();			
+	        HibernateUtil.getSession().createSQLQuery("CALL doRelationshipMining('" + sid + "')").executeUpdate();			
+	        HibernateUtil.commitTransaction();
+	        
+		} catch (NonUniqueResultException ex) {
+	
+	    	HibernateUtil.rollbackTransaction();
+	    	
+	    	this.logger.error("Realitonship mining is failed", ex);
+	        throw ex;
+	    } catch (HibernateException ex) {
+	
+	    	HibernateUtil.rollbackTransaction();
+	    	
+	    	this.logger.error("Realitonship mining is failed HibernateException", ex);
+	    	throw ex;
+	    }
 	}
 
 }
