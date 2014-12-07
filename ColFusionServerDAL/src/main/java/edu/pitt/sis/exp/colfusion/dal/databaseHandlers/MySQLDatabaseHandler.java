@@ -28,6 +28,8 @@ public class MySQLDatabaseHandler extends DatabaseHandlerBase {
 	
 	private static int MYSQL_INDEX_KEY_LENGTH = 100;
 	
+	private static final String MYSQL_DRIVER_CLASS = "com.mysql.jdbc.Driver";
+	
 	/**
 	 * Creates a MySQL database handler. Also the connection is initialized at this time. So always wrap it in try/catch/finally and call close in finally.
 	 * @param host the url of the server.
@@ -38,18 +40,18 @@ public class MySQLDatabaseHandler extends DatabaseHandlerBase {
 	 * @param databaseHanderType the type of the database (vendor).
 	 * @throws Exception 
 	 */
-	private static MetadataDbHandler metadataDbHandler;
-    public MySQLDatabaseHandler(DatabaseConnectionInfo databaseConnectionInfo) throws ClassNotFoundException {
-        super(databaseConnectionInfo);// TODO Auto-generated constructor stub
+	public MySQLDatabaseHandler(final DatabaseConnectionInfo databaseConnectionInfo) throws Exception {
+        super(databaseConnectionInfo);
 
-        Class.forName("com.mysql.jdbc.Driver");
+        loadDriverClass(null, -1);
     }
     
-    public MySQLDatabaseHandler(DatabaseConnectionInfo databaseConnectionInfo,int sid) throws ClassNotFoundException {
-        super(databaseConnectionInfo,sid);// TODO Auto-generated constructor stub
+    public MySQLDatabaseHandler(final DatabaseConnectionInfo databaseConnectionInfo, final int sid) throws Exception {
+        super(databaseConnectionInfo, sid);
 
-        Class.forName("com.mysql.jdbc.Driver");
+        loadDriverClass(null, -1);
     }
+	
 	public MySQLDatabaseHandler(final int sid, final String host, final int port, final String user,
 			final String password, final String database,
 			final DatabaseHanderType databaseHanderType,
@@ -57,8 +59,18 @@ public class MySQLDatabaseHandler extends DatabaseHandlerBase {
 		super(sid, host, port, user, password, database, databaseHanderType, executionInfoMgr, executionLogId,
 				'`', '\'');
 		
-		try {
-			Class.forName("com.mysql.jdbc.Driver");
+		loadDriverClass(executionInfoMgr, executionLogId);
+	}
+
+	/**
+	 * Load MySQL driver class ({@value #MYSQL_DRIVER_CLASS})
+	 * @param executionInfoMgr
+	 * @param executionLogId
+	 * @throws Exception
+	 */
+	private void loadDriverClass(final ExecutionInfoManager executionInfoMgr, final int executionLogId) throws Exception {
+    	try {
+			Class.forName(MYSQL_DRIVER_CLASS);
 		} catch (ClassNotFoundException e) {
 			
 			if (executionInfoMgr != null) {
@@ -70,7 +82,7 @@ public class MySQLDatabaseHandler extends DatabaseHandlerBase {
 			throw e;
 		}
 	}
-
+	
 	@Override
 	public String getConnectionString() {
 		return String.format("jdbc:mysql://%s:%d/%s", getHost(), getPort(), getDatabase());
@@ -277,32 +289,6 @@ public class MySQLDatabaseHandler extends DatabaseHandlerBase {
 		logger.info(String.format("Generated index name %s", indexName));
 		return indexName;
 	}
-
-	@Override
-	public List<String> getAllColumnsInTable(final String tableName) throws SQLException {
-		logger.info(String.format("Getting all columns in table '%s'", tableName));
-		
-		String sql = "SELECT `COLUMN_NAME` as columnName FROM `INFORMATION_SCHEMA`.`COLUMNS` WHERE `TABLE_SCHEMA`= ? AND `TABLE_NAME`= ?";
-		
-		try (java.sql.PreparedStatement statement = getConnection().prepareStatement(sql)) {
-			statement.setString(1, this.getDatabase());
-			statement.setString(2, tableName);
-			
-			ResultSet rs = statement.executeQuery();
-			List<String> result = new ArrayList<String>(); 
-			while (rs.next()) {
-				result.add(rs.getString("columnName"));				
-			}
-			
-			logger.info(String.format("Got %d columns in table '%s'", result.size(), tableName));
-			
-			return result;
-		} catch (SQLException e) {
-			logger.error(String.format("getAllColumnsInTable FAILED on table '%s'", tableName), e);
-			
-			throw e;
-		}
-	}
 	
 	@Override
 	protected String wrapSQLIntoLimit(final String sqlString, final int perPage,
@@ -312,26 +298,6 @@ public class MySQLDatabaseHandler extends DatabaseHandlerBase {
 		return String.format("%s LIMIT %d, %d", sqlString, startPoint, perPage);
 	}
 
-	@Override
-	public int getCount(final String tableName) throws SQLException {
-		String sql = String.format("SELECT COUNT(*) as ct from %s", wrapInEscapeChars(tableName));
-		
-		try (Statement statement = getConnection().createStatement()) {
-			
-			ResultSet rs = statement.executeQuery(sql);
-			
-			while (rs.next()) {
-				return rs.getInt("ct");				
-			}
-			
-			return 0;
-		} catch (SQLException e) {
-			logger.error(String.format("getAllColumnsInTable FAILED on table '%s'", tableName), e);
-			
-			throw e;
-		}
-	}
-	//...
 	 @Override
 	    protected Connection getConnection()
 	            throws SQLException {
@@ -355,7 +321,7 @@ public class MySQLDatabaseHandler extends DatabaseHandlerBase {
 	    }
 */
 	    @Override
-	    public boolean tempTableExist(int sid, String tableName)
+	    public boolean tempTableExist(final int sid, final String tableName)
 	            throws SQLException {
 	        logger.info(String.format("Getting if temp table exists for sid %d and tablename %s", sid, tableName));
 
@@ -386,7 +352,7 @@ public class MySQLDatabaseHandler extends DatabaseHandlerBase {
 	    }
 
 	    @Override
-	    public void removeTable(int sid, String tableName)
+	    public void removeTable(final int sid, final String tableName)
 	            throws SQLException {
 	        logger.info(String.format("Removing table for sid %d and tablename %s", sid, tableName));
 
@@ -410,7 +376,7 @@ public class MySQLDatabaseHandler extends DatabaseHandlerBase {
 	    }
 
 	    @Override
-	    public void backupOriginalTable(int sid, String tableName)
+	    public void backupOriginalTable(final int sid, final String tableName)
 	            throws SQLException {
 
 	        logger.info(String.format("Backing up table for sid %d and tablename %s", sid, tableName));
@@ -435,7 +401,7 @@ public class MySQLDatabaseHandler extends DatabaseHandlerBase {
 	    }
 
 	    @Override
-	    public int getColCount(int sid, String tableName) throws SQLException {
+	    public int getColCount(final int sid, final String tableName) throws SQLException {
 	        logger.info(String.format("Getting column count for sid %d", sid));
 
 	        try (Connection connection = getConnection()) {
@@ -465,7 +431,7 @@ public class MySQLDatabaseHandler extends DatabaseHandlerBase {
 	    }
 	    
 	    @Override
-	    public ArrayList<ArrayList<String>> getRows(String tableName, int colCount) throws SQLException {
+	    public ArrayList<ArrayList<String>> getRows(final String tableName, final int colCount) throws SQLException {
 	        logger.info(String.format("Getting rows for table %s", tableName));
 	        ArrayList<ArrayList<String>> rows = new ArrayList<ArrayList<String>>();
 	        try (Connection connection = getConnection()) {
@@ -497,7 +463,7 @@ public class MySQLDatabaseHandler extends DatabaseHandlerBase {
 	        }
 	    }
 	    @Override
-	    public void createTable(int sid, String tableName)
+	    public void createTable(final int sid, final String tableName)
 	            throws SQLException {
 	        logger.info(String.format("Creating table from temp_table for sid %d and tablename %s", sid, tableName));
 
@@ -521,7 +487,7 @@ public class MySQLDatabaseHandler extends DatabaseHandlerBase {
 	    }
 	    
 	    @Override
-	    public void createTempTable(String query, int sid, String tableName)
+	    public void createTempTable(final String query, final int sid, final String tableName)
 	            throws SQLException {
 
 	        logger.info(String.format("Creating temp table for sid %d and table %s", sid, tableName));
@@ -544,7 +510,7 @@ public class MySQLDatabaseHandler extends DatabaseHandlerBase {
 	    }
 	    
 	    @Override
-	    public void insertIntoTempTable(String query, int sid, String tableName)
+	    public void insertIntoTempTable(final String query, final int sid, final String tableName)
 	            throws SQLException {
 
 	        logger.info(String.format("Inserting into temp table temp_%s for sid %d", tableName, sid));
@@ -568,7 +534,7 @@ public class MySQLDatabaseHandler extends DatabaseHandlerBase {
 	    
 	    // addition here
 	    @Override
-	    public void createOriginalTable( String query,  int sid,  String tableName)
+	    public void createOriginalTable( final String query,  final int sid,  final String tableName)
 	            throws SQLException {
 
 	        logger.info(String.format("Creating table for sid %d and table %s", sid, tableName));
@@ -614,7 +580,7 @@ public class MySQLDatabaseHandler extends DatabaseHandlerBase {
 	    }
 	    
 	    @Override
-	    public void insertIntoTable(int sid, String tableName, ArrayList<ArrayList<String>> rows, ArrayList<String> columnNames)
+	    public void insertIntoTable(final int sid, final String tableName, final ArrayList<ArrayList<String>> rows, final ArrayList<String> columnNames)
 	            throws SQLException {
 
 	        logger.info(String.format("New!!!!!!!!!!!!!!!Inserting into table %s for sid %d", tableName, sid));

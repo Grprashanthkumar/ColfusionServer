@@ -51,7 +51,7 @@ public abstract class DatabaseHandlerBase implements Closeable {
     Logger logger = LogManager.getLogger(DatabaseHandlerBase.class.getName());
     protected DatabaseConnectionInfo databaseConnectionInfo;
     
-    public DatabaseHandlerBase(DatabaseConnectionInfo databaseConnectionInfo,int sid){
+    public DatabaseHandlerBase(final DatabaseConnectionInfo databaseConnectionInfo,final int sid){
        this.databaseConnectionInfo = databaseConnectionInfo;
        
    	this.dbCharToWrapNamesWithSpaces = ' ';
@@ -63,7 +63,7 @@ public abstract class DatabaseHandlerBase implements Closeable {
 	setPassword(databaseConnectionInfo.getPassword());
 	setDatabase(databaseConnectionInfo.getDatabase());
     }
-    public DatabaseHandlerBase(DatabaseConnectionInfo databaseConnectionInfo){
+    public DatabaseHandlerBase(final DatabaseConnectionInfo databaseConnectionInfo){
         this.databaseConnectionInfo = databaseConnectionInfo;
         
     	this.dbCharToWrapNamesWithSpaces = ' ';
@@ -216,6 +216,7 @@ public abstract class DatabaseHandlerBase implements Closeable {
 	 * @throws SQLException 
 	 */
 //	@Override
+	@Override
 	public void close() {
 		if (connection != null) {
 			try { 
@@ -293,21 +294,6 @@ public abstract class DatabaseHandlerBase implements Closeable {
     
     public abstract void insertIntoTable(int sid, String tableName, ArrayList<ArrayList<String>> rows, ArrayList<String> columnNames) throws SQLException;
 	
-	
-	public Table getAll(final String tableName, final List<String> columnDbNames) throws SQLException {
-		String sqlString = constructSelectFromSQL(tableName, columnDbNames);
-		
-		return runQuery(tableName, columnDbNames, sqlString);
-	}
-	
-	public Table getAll(final String tableName, final List<String> columnDbNames, final int perPage, final int pageNumber) throws SQLException {
-		String sqlString = constructSelectFromSQL(tableName, columnDbNames);
-		
-		String sqlWithLimit = wrapSQLIntoLimit(sqlString, perPage, pageNumber);
-		
-		return runQuery(tableName, columnDbNames, sqlWithLimit);
-	}
-
 	private Table runQuery(final String tableName,
 			final List<String> columnDbNames, final String sqlWithLimit)
 			throws SQLException {
@@ -364,24 +350,6 @@ public abstract class DatabaseHandlerBase implements Closeable {
 		return sqlString;
 	}
 
-	public Table getAll(final String tableNameTo) throws SQLException {
-		
-		List<String> allColumnsInTable = getAllColumnsInTable(tableNameTo);
-		
-		return getAll(tableNameTo, allColumnsInTable);
-	}
-	
-	public Table getAll(final String tableNameTo, final int perPage, final int pageNumber) throws SQLException {
-		
-		List<String> allColumnsInTable = getAllColumnsInTable(tableNameTo);
-		
-		return getAll(tableNameTo, allColumnsInTable, perPage, pageNumber);
-	}
-
-	public abstract List<String> getAllColumnsInTable(String tableNameTo) throws SQLException;
-
-	public abstract int getCount(String tableName) throws SQLException;
-	
 	protected String wrapInEscapeChars(final String tableName) {
 		return String.format("%s%s%s", getDbCharToWrapNamesWithSpaces(), 
 				tableName, getDbCharToWrapNamesWithSpaces());

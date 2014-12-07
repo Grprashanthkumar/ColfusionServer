@@ -1,33 +1,26 @@
 package edu.pitt.sis.exp.colfusion.bll;
 
-import java.io.IOException;
-import java.sql.SQLException;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import edu.pitt.sis.exp.colfusion.dal.databaseHandlers.DatabaseHandlerBase;
-import edu.pitt.sis.exp.colfusion.dal.databaseHandlers.MetadataDbHandler;
 import edu.pitt.sis.exp.colfusion.dal.databaseHandlers.DatabaseHandlerFactory;
+import edu.pitt.sis.exp.colfusion.dal.databaseHandlers.MetadataDbHandler;
 import edu.pitt.sis.exp.colfusion.responseModels.GeneralResponseGen;
 import edu.pitt.sis.exp.colfusion.responseModels.GeneralResponseGenImpl;
 import edu.pitt.sis.exp.colfusion.utils.ConfigManager;
 
 public class OpenRefineSaveChanges {
-final Logger logger = LogManager.getLogger(OpenRefineSaveChanges.class.getName());
+	final Logger logger = LogManager.getLogger(OpenRefineSaveChanges.class.getName());
 	
-	
-
 	/**
 	 * 
 	 * @param sid
 	 * @param tableName
 	 * @return
-	 * @throws SQLException 
-	 * @throws ClassNotFoundException 
-	 * @throws IOException 
+	 * @throws Exception 
 	 */
-	public GeneralResponseGen<String> saveChanges(final String projectId, final String colfusionUserId) throws SQLException, ClassNotFoundException, IOException {
+	public GeneralResponseGen<String> saveChanges(final String projectId, final String colfusionUserId) throws Exception {
 		
         int lockTime = Integer.valueOf(ConfigManager.getInstance().getPropertyByName("lock_time"));// Integer.valueOf(p.getProperty("lock_time"));
 		
@@ -38,6 +31,7 @@ final Logger logger = LogManager.getLogger(OpenRefineSaveChanges.class.getName()
 		MetadataDbHandler metadataDbHandler = DatabaseHandlerFactory.getMetadataDbHandler();
         int sid = metadataDbHandler.getSid(projectId);
         DatabaseHandlerBase databaseHandler = DatabaseHandlerFactory.getTargetDatabaseHandler(sid);
+				
         String tableName = metadataDbHandler.getTableNameByProjectId(projectId);
 		
 		String msg = "No change needs to be saved!";
@@ -55,7 +49,6 @@ final Logger logger = LogManager.getLogger(OpenRefineSaveChanges.class.getName()
 		result.setMessage("OK");
 		result.setPayload(msg);
 		result.setSuccessful(true);
-			
 		
 		return result;
 	}

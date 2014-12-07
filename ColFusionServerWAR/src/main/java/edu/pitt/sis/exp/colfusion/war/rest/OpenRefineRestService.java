@@ -42,6 +42,7 @@ public class OpenRefineRestService{
 	@Path("saveChanges/{openRefinProjectId}/{colfusionUserId}")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
+	//TODO: see if the throwing exception is OK, or they should be handled
 	public Response saveChanges(@PathParam("openRefinProjectId") final String openRefinProjectId,
     		@PathParam("colfusionUserId") final String colfusionUserId) throws ClassNotFoundException, Exception {
 

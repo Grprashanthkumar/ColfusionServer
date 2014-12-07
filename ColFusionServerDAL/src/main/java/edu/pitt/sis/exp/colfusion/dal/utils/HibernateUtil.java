@@ -53,7 +53,7 @@ public class HibernateUtil {
 				logger.info(String.format("beginTransaction: There is an active transaction %s", transaction));
 		    } else {
 		    	Transaction transaction = hibernateSession.beginTransaction();
-		    	logger.info(String.format("beginTransaction: Began transaction %s", transaction));
+//		    	logger.info(String.format("beginTransaction: Began transaction %s", transaction));
 		    }
 		}
 		catch (Exception e) {
@@ -85,7 +85,7 @@ public class HibernateUtil {
 				}
 				
 				String message = String.format("commitTransaction: commited trasaction %s", trans);
-				logger.info(message);
+//				logger.info(message);
 			}
 			else {
 				logger.error("commitTransaction was trying to commit but HibernateUtil.getSession().getTransaction() equals NULL");

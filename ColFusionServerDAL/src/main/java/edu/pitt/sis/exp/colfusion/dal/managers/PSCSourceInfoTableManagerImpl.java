@@ -6,7 +6,9 @@ import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.hibernate.Hibernate;
 import org.hibernate.HibernateException;
+import org.hibernate.NonUniqueResultException;
 import org.hibernate.Query;
 
 import edu.pitt.sis.exp.colfusion.dal.dao.PSCSourceInfoTableDAO;
@@ -23,6 +25,38 @@ public class PSCSourceInfoTableManagerImpl extends
 	public PSCSourceInfoTableManagerImpl() {
 		super(new PSCSourceInfoTableDAOImpl(), ColfusionPscSourceinfoTable.class);
 	}
+	
+	@Override
+	public ColfusionPscSourceinfoTable findByID(final ColfusionPscSourceinfoTableId id) throws Exception {
+		checkIfDaoSet();
+		
+		ColfusionPscSourceinfoTable result = null;
+		try {
+            HibernateUtil.beginTransaction();
+            
+            result = _dao.findByID(ColfusionPscSourceinfoTable.class, id);
+            
+            Hibernate.initialize(result.getColfusionProcesses());
+            Hibernate.initialize(result.getColfusionSourceinfo());
+            Hibernate.initialize(result.getColfusionSourceinfo().getColfusionSourceinfoDb());
+            
+            HibernateUtil.commitTransaction();
+        } catch (NonUniqueResultException ex) {
+
+        	HibernateUtil.rollbackTransaction();
+        	
+        	logger.error("findByID failed NonUniqueResultException", ex);
+        	throw ex;
+        } catch (HibernateException ex) {
+
+        	HibernateUtil.rollbackTransaction();
+        	
+        	logger.error("findByID failed HibernateException", ex);
+        	throw ex;
+        }
+		return result;	
+	}
+	
 	
 	@Override
 	public List<SourceInfoAndTable> findAllNotReplicated() {
