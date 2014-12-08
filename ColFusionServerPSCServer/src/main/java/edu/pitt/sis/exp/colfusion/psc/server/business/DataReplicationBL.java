@@ -5,6 +5,7 @@ import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import edu.pitt.sis.exp.colfusion.dal.databaseHandlers.DatabaseHanderType;
 import edu.pitt.sis.exp.colfusion.dal.managers.PSCSourceInfoTableManager;
 import edu.pitt.sis.exp.colfusion.dal.managers.PSCSourceInfoTableManagerImpl;
 import edu.pitt.sis.exp.colfusion.dal.managers.PSCSourceInfoTableManagerImpl.SourceInfoAndTable;
@@ -23,7 +24,13 @@ public class DataReplicationBL {
 	
 	transient static Logger logger = LogManager.getLogger(DataReplicationBL.class.getName());
 	
+	//TODO: move it to properties
+	private final static String PSC_HOST = "tioga.psc.edu";
+	private final static int PSC_DATABASE_PORT = 3306;
 	private final static String PSC_DATABASE_NAME = "colfusion";
+	private final static String PSC_DATABASE_USER = "evgeny";
+	private final static String PSC_DATABASE_PASSWORD = "^&BdZYI[e]UB";
+	private final static DatabaseHanderType PSC_DATABASE_VENDOR = DatabaseHanderType.MYSQL;
 	
 	public int doDataReplication() throws Exception {
 		PSCSourceInfoTableManager pscSourceInfoTableMng = new PSCSourceInfoTableManagerImpl();
@@ -100,9 +107,9 @@ public class DataReplicationBL {
 		String pscTableName = generateUniquePSCTableName(sourceInfoAndTable.getSourceInfoId(), sourceInfoAndTable.getTableName());
 		
 		ColfusionPscSourceinfoTableId id = new ColfusionPscSourceinfoTableId(sourceInfoAndTable.getSourceInfoId(), sourceInfoAndTable.getTableName());
-		ColfusionPscSourceinfoTable pscSourceInfoTable = new ColfusionPscSourceinfoTable(id,
-				sourceInfoMng.findByID(sourceInfoAndTable.getSourceInfoId()), PSC_DATABASE_NAME,
-				pscTableName);
+		ColfusionPscSourceinfoTable pscSourceInfoTable = new ColfusionPscSourceinfoTable(id, 
+				sourceInfoMng.findByID(sourceInfoAndTable.getSourceInfoId()), PSC_DATABASE_NAME, 
+				pscTableName, PSC_HOST, PSC_DATABASE_PORT, PSC_DATABASE_USER, PSC_DATABASE_PASSWORD, PSC_DATABASE_VENDOR.getValue()); 
 		
 		pscSourceInfoTableMng.saveOrUpdate(pscSourceInfoTable);
 		return pscSourceInfoTable;

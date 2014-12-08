@@ -7,6 +7,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
@@ -663,7 +664,7 @@ public class MySQLDatabaseHandler extends DatabaseHandlerBase {
 	//...
 	    @Override
 		public int getCount(final RelationKey relationKey) throws SQLException {
-			String sql = String.format("SELECT COUNT(*) as ct from %s", wrapInEscapeChars(relationKey));
+			String sql = String.format("SELECT COUNT(*) as ct from %s", wrapName(relationKey.getDbTableName()));
 			
 			try (Statement statement = getConnection().createStatement()) {
 				
@@ -753,5 +754,17 @@ public class MySQLDatabaseHandler extends DatabaseHandlerBase {
 				logger.error(String.format("createIndecesIfNotExist FAILED for table %s and column name %s and index name %s", relationKey.getDbTableName(), columnName, indexName), e);
 				throw e;
 			}
+		}
+
+		@Override
+		public String makeInsertPreparedSQL(final RelationKey tableName, final ResultSetMetaData metaData) throws SQLException {
+			StringBuilder result = new StringBuilder("INSERT INTO ").append(wrapName(tableName.getDbTableName())).append(" VALUES (");
+			for (int i = 0; i < metaData.getColumnCount(); i++) {
+				
+			}
+			
+			result.append(")");
+			
+			return result.toString();
 		}
 }

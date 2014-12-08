@@ -12,8 +12,16 @@ public class ColfusionPscSourceinfoTable implements java.io.Serializable {
 	private ColfusionPscSourceinfoTableId id;
 	private ColfusionSourceinfo colfusionSourceinfo;
 	private ColfusionProcesses colfusionProcesses;
-	private String pscDatabase;
+	
+	private String pscHost;
+	private int pscDatabasePort;
+	private String pscDatabaseName;
 	private String pscTableName;
+	
+	private String pscDatabaseUser;
+	private String pscDatabasePassword;
+	private String pscDatabaseVendor;
+	
 	private Date whenReplicationStarted;
 	private Date whenReplicationFinished;
 
@@ -21,24 +29,40 @@ public class ColfusionPscSourceinfoTable implements java.io.Serializable {
 	}
 
 	public ColfusionPscSourceinfoTable(final ColfusionPscSourceinfoTableId id,
-			final ColfusionSourceinfo colfusionSourceinfo, final String pscDatabase,
-			final String pscTableName) {
+			final ColfusionSourceinfo colfusionSourceinfo, final String pscDatabaseName,
+			final String pscTableName, final String pscHost, final int pscDatabasePort, 
+			final String pscDatabaseUser, final String pscDatabasePassword, final String pscDatabaseVendor) {
 		this.id = id;
 		this.colfusionSourceinfo = colfusionSourceinfo;
-		this.pscDatabase = pscDatabase;
+		this.pscDatabaseName = pscDatabaseName;
 		this.pscTableName = pscTableName;
+		
+		this.pscHost = pscHost;
+		this.pscDatabasePort = pscDatabasePort;
+		this.pscDatabaseUser = pscDatabaseUser;
+		this.pscDatabasePassword = pscDatabasePassword;
+		this.pscDatabaseVendor = pscDatabaseVendor;
 	}
 
 	public ColfusionPscSourceinfoTable(final ColfusionPscSourceinfoTableId id,
 			final ColfusionSourceinfo colfusionSourceinfo,
-			final ColfusionProcesses colfusionProcesses, final String pscDatabase,
-			final String pscTableName, final Date whenReplicationStarted,
+			final ColfusionProcesses colfusionProcesses, final String pscDatabaseName,
+			final String pscTableName, final String pscHost, final int pscDatabasePort, 
+			final String pscDatabaseUser, final String pscDatabasePassword, final String pscDatabaseVendor,
+			final Date whenReplicationStarted,
 			final Date whenReplicationFinished) {
 		this.id = id;
 		this.colfusionSourceinfo = colfusionSourceinfo;
 		this.colfusionProcesses = colfusionProcesses;
-		this.pscDatabase = pscDatabase;
+		this.pscDatabaseName = pscDatabaseName;
 		this.pscTableName = pscTableName;
+		
+		this.pscHost = pscHost;
+		this.pscDatabasePort = pscDatabasePort;
+		this.pscDatabaseUser = pscDatabaseUser;
+		this.pscDatabasePassword = pscDatabasePassword;
+		this.pscDatabaseVendor = pscDatabaseVendor;
+		
 		this.whenReplicationStarted = whenReplicationStarted;
 		this.whenReplicationFinished = whenReplicationFinished;
 	}
@@ -67,12 +91,12 @@ public class ColfusionPscSourceinfoTable implements java.io.Serializable {
 		this.colfusionProcesses = colfusionProcesses;
 	}
 
-	public String getPscDatabase() {
-		return this.pscDatabase;
+	public String getPscDatabaseName() {
+		return this.pscDatabaseName;
 	}
 
-	public void setPscDatabase(final String pscDatabase) {
-		this.pscDatabase = pscDatabase;
+	public void setPscDatabaseName(final String pscDatabaseName) {
+		this.pscDatabaseName = pscDatabaseName;
 	}
 
 	public String getPscTableName() {
@@ -97,6 +121,76 @@ public class ColfusionPscSourceinfoTable implements java.io.Serializable {
 
 	public void setWhenReplicationFinished(final Date whenReplicationFinished) {
 		this.whenReplicationFinished = whenReplicationFinished;
+	}
+
+	/**
+	 * @return the pscHost
+	 */
+	public String getPscHost() {
+		return pscHost;
+	}
+
+	/**
+	 * @param pscHost the pscHost to set
+	 */
+	public void setPscHost(final String pscHost) {
+		this.pscHost = pscHost;
+	}
+
+	/**
+	 * @return the pscDatabasePort
+	 */
+	public int getPscDatabasePort() {
+		return pscDatabasePort;
+	}
+
+	/**
+	 * @param pscDatabasePort the pscDatabasePort to set
+	 */
+	public void setPscDatabasePort(final int pscDatabasePort) {
+		this.pscDatabasePort = pscDatabasePort;
+	}
+
+	/**
+	 * @return the pscDatabaseUser
+	 */
+	public String getPscDatabaseUser() {
+		return pscDatabaseUser;
+	}
+
+	/**
+	 * @param pscDatabaseUser the pscDatabaseUser to set
+	 */
+	public void setPscDatabaseUser(final String pscDatabaseUser) {
+		this.pscDatabaseUser = pscDatabaseUser;
+	}
+
+	/**
+	 * @return the pscDatabasePassword
+	 */
+	public String getPscDatabasePassword() {
+		return pscDatabasePassword;
+	}
+
+	/**
+	 * @param pscDatabasePassword the pscDatabasePassword to set
+	 */
+	public void setPscDatabasePassword(final String pscDatabasePassword) {
+		this.pscDatabasePassword = pscDatabasePassword;
+	}
+
+	/**
+	 * @return the pscDatabaseVendor
+	 */
+	public String getPscDatabaseVendor() {
+		return pscDatabaseVendor;
+	}
+
+	/**
+	 * @param pscDatabaseVendor the pscDatabaseVendor to set
+	 */
+	public void setPscDatabaseVendor(final String pscDatabaseVendor) {
+		this.pscDatabaseVendor = pscDatabaseVendor;
 	}
 
 }

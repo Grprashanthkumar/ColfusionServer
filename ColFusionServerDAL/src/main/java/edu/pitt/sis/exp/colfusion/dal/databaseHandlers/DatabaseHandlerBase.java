@@ -6,7 +6,9 @@ package edu.pitt.sis.exp.colfusion.dal.databaseHandlers;
 import java.io.Closeable;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
@@ -40,7 +42,7 @@ public abstract class DatabaseHandlerBase implements Closeable {
     private String database;
     private DatabaseHanderType databaseHanderType;
     
-    private final char dbCharToWrapNamesWithSpaces;
+    private final char dbCharToWrapNames;
     private final char dbCharToWrapStrings;
     
     private Connection connection;
@@ -51,10 +53,11 @@ public abstract class DatabaseHandlerBase implements Closeable {
     Logger logger = LogManager.getLogger(DatabaseHandlerBase.class.getName());
     protected DatabaseConnectionInfo databaseConnectionInfo;
     
+    //TODO:this is SUPER wrong, especially the 	this.dbCharToWrapNamesWithSpaces = ' ';  	this.dbCharToWrapStrings = ' ';
     public DatabaseHandlerBase(final DatabaseConnectionInfo databaseConnectionInfo,final int sid){
        this.databaseConnectionInfo = databaseConnectionInfo;
        
-   	this.dbCharToWrapNamesWithSpaces = ' ';
+   	this.dbCharToWrapNames = ' ';
    	this.dbCharToWrapStrings = ' ';
 	setSid(sid);
 	setHost(databaseConnectionInfo.getHost());
@@ -66,7 +69,7 @@ public abstract class DatabaseHandlerBase implements Closeable {
     public DatabaseHandlerBase(final DatabaseConnectionInfo databaseConnectionInfo){
         this.databaseConnectionInfo = databaseConnectionInfo;
         
-    	this.dbCharToWrapNamesWithSpaces = ' ';
+    	this.dbCharToWrapNames = ' ';
     	this.dbCharToWrapStrings = ' ';
 // 	setSid(sid);
  	setHost(databaseConnectionInfo.getHost());
@@ -85,7 +88,7 @@ public abstract class DatabaseHandlerBase implements Closeable {
     	setDatabase(database);
     	setDatabaseHanderType(databaseHanderType);
     	
-    	this.dbCharToWrapNamesWithSpaces = dbCharToWrapNamesWithSpaces;
+    	this.dbCharToWrapNames = dbCharToWrapNamesWithSpaces;
     	this.dbCharToWrapStrings = dbCharToWrapStrings;
     	
     	this.executionInfoMgr = executionInfoMgr;
@@ -166,14 +169,20 @@ public abstract class DatabaseHandlerBase implements Closeable {
 	}
     
 	/**
-	 * @return the dbCharToWrapNamesWithSpaces
+	 * The character that is used in the database to wrap/escape names with spaces or other specific characters.
+	 * E.g. given a table name TABLE NAME to use it in the select statement, the name need to wrapped for example as `TABLE NAME`
+	 * 
+	 * @return the character that is used in the database to wrap names.
 	 */
-	public char getDbCharToWrapNamesWithSpaces() {
-		return dbCharToWrapNamesWithSpaces;
+	public char getDbCharToWrapNames() {
+		return dbCharToWrapNames;
 	}
 
 	/**
-	 * @return the dbCharToWrapStrings
+	 * The character that is used in the database to wrap/escape string values (e.g. in the where condition).
+	 * E.g. where attr = 'STRING VALUE HERE'
+	 * 
+	 * @return the character that is used in the database to wrap string values.
 	 */
 	public char getDbCharToWrapStrings() {
 		return dbCharToWrapStrings;
@@ -215,7 +224,6 @@ public abstract class DatabaseHandlerBase implements Closeable {
 	 * Closes the connection.
 	 * @throws SQLException 
 	 */
-//	@Override
 	@Override
 	public void close() {
 		if (connection != null) {
@@ -294,66 +302,7 @@ public abstract class DatabaseHandlerBase implements Closeable {
     
     public abstract void insertIntoTable(int sid, String tableName, ArrayList<ArrayList<String>> rows, ArrayList<String> columnNames) throws SQLException;
 	
-	private Table runQuery(final String tableName,
-			final List<String> columnDbNames, final String sqlWithLimit)
-			throws SQLException {
-		logger.info(String.format("About to execute this query: %s", sqlWithLimit));
-		
-		try (Statement statement = getConnection().createStatement()) {
-			
-			ResultSet resultSet = statement.executeQuery(sqlWithLimit);
-			
-			Table result = new Table();
-			long index = 0;
-			while (resultSet.next()) {
-				ColumnGroup columnGroup = new ColumnGroup(tableName, sid);
-				
-				for (String column : columnDbNames) {
-					
-					Column colfusionColumn = new Column(column, new Cell(resultSet.getString(column)));
-					
-					columnGroup.getColumns().add(colfusionColumn);
-				}
-				
-				Row row = new Row();
-				row.getColumnGroups().add(columnGroup);
-				result.getRows().add(row);
-				logger.info(String.format("Query result table currently has %d rows.", ++index));
-			}
-			
-			logger.info(String.format("Query '%s' resulted in %d rows", sqlWithLimit, index));
-			
-			return result;
-		} catch (SQLException e) {
-			
-			logger.error("Something wrong happened when getAll tried to execute sql query.", e);
-			throw e;
-		}
-	}
-
-	protected abstract String wrapSQLIntoLimit(String sqlString, int perPage,
-			int pageNumber);
-
-	private String constructSelectFromSQL(final String tableName,
-			final List<String> columnDbNames) {
-		StringBuilder sql = new StringBuilder();
-		
-		sql.append("SELECT " + this.getDbCharToWrapNamesWithSpaces());
-		
-		String columnDbNamesCSV = StringUtils.join(columnDbNames, String.format("%c, %c", this.getDbCharToWrapNamesWithSpaces(), this.getDbCharToWrapNamesWithSpaces()));
-		
-		sql.append(String.format("%s%c FROM %c%s%c", columnDbNamesCSV, 
-				this.getDbCharToWrapNamesWithSpaces(), this.getDbCharToWrapNamesWithSpaces(), 
-				tableName, this.getDbCharToWrapNamesWithSpaces()));
-		
-		String sqlString = sql.toString();
-		return sqlString;
-	}
-
-	protected String wrapInEscapeChars(final String tableName) {
-		return String.format("%s%s%s", getDbCharToWrapNamesWithSpaces(), 
-				tableName, getDbCharToWrapNamesWithSpaces());
-	}
+	protected abstract String wrapSQLIntoLimit(String sqlString, int perPage, int pageNumber);
 
 	/**
 	 * @return the sid
@@ -368,87 +317,190 @@ public abstract class DatabaseHandlerBase implements Closeable {
 	public void setSid(final int sid) {
 		this.sid = sid;
 	}
+	
 	private String constructSelectFromSQL(final RelationKey relationKey,
 			final List<String> columnDbNames) {
 		StringBuilder sql = new StringBuilder();
 		
-		sql.append("SELECT " + this.getDbCharToWrapNamesWithSpaces());
+		sql.append("SELECT " + this.getDbCharToWrapNames());
 		
-		String columnDbNamesCSV = StringUtils.join(columnDbNames, String.format("%c, %c", this.getDbCharToWrapNamesWithSpaces(), this.getDbCharToWrapNamesWithSpaces()));
+		String columnDbNamesCSV = StringUtils.join(columnDbNames, String.format("%c, %c", this.getDbCharToWrapNames(), this.getDbCharToWrapNames()));
 		
 		sql.append(String.format("%s%c FROM %c%s%c", columnDbNamesCSV, 
-				this.getDbCharToWrapNamesWithSpaces(), this.getDbCharToWrapNamesWithSpaces(), 
-				relationKey.getDbTableName(), this.getDbCharToWrapNamesWithSpaces()));
+				this.getDbCharToWrapNames(), this.getDbCharToWrapNames(), 
+				relationKey.getDbTableName(), this.getDbCharToWrapNames()));
 		
 		String sqlString = sql.toString();
 		return sqlString;
 	}
+	
 	public abstract void createIndecesIfNotExist(RelationKey relationKey, String columnNames) throws SQLException;
+	
 	public Table getAll(final RelationKey relationKey) throws SQLException {
 		
 		List<String> allColumnsInTable = getAllColumnsInTable(relationKey);
 		
 		return getAll(relationKey, allColumnsInTable);
 	}
-public Table getAll(final RelationKey relationKey, final int perPage, final int pageNumber) throws SQLException {
+	
+	public Table getAll(final RelationKey relationKey, final int perPage, final int pageNumber) throws SQLException {
 		
 		List<String> allColumnsInTable = getAllColumnsInTable(relationKey);
 		
 		return getAll(relationKey, allColumnsInTable, perPage, pageNumber);
 	}
-public Table getAll(final RelationKey relationKey, final List<String> columnDbNames) throws SQLException {
-	String sqlString = constructSelectFromSQL(relationKey, columnDbNames);
 	
-	return runQuery(relationKey, columnDbNames, sqlString);
-}
-public Table getAll(final RelationKey relationKey, final List<String> columnDbNames, final int perPage, final int pageNumber) throws SQLException {
-	String sqlString = constructSelectFromSQL(relationKey, columnDbNames);
+	public Table getAll(final RelationKey relationKey, final List<String> columnDbNames) throws SQLException {
+		String sqlString = constructSelectFromSQL(relationKey, columnDbNames);
 	
-	String sqlWithLimit = wrapSQLIntoLimit(sqlString, perPage, pageNumber);
+		return runQuery(relationKey, columnDbNames, sqlString);
+	}
+
+	public Table getAll(final RelationKey relationKey, final List<String> columnDbNames, final int perPage, final int pageNumber) throws SQLException {
+		String sqlString = constructSelectFromSQL(relationKey, columnDbNames);
+		
+		String sqlWithLimit = wrapSQLIntoLimit(sqlString, perPage, pageNumber);
+		
+		return runQuery(relationKey, columnDbNames, sqlWithLimit);
+	}
 	
-	return runQuery(relationKey, columnDbNames, sqlWithLimit);
-}
-public abstract List<String> getAllColumnsInTable(RelationKey relationKey) throws SQLException;
-public abstract int getCount(RelationKey relationKey) throws SQLException;
-protected String wrapInEscapeChars(final RelationKey relationKey) {
-	return String.format("%s%s%s", getDbCharToWrapNamesWithSpaces(), 
-			relationKey.getDbTableName(), getDbCharToWrapNamesWithSpaces());
-}
-private Table runQuery(final RelationKey relationKey,
+	public abstract List<String> getAllColumnsInTable(RelationKey relationKey) throws SQLException;
+	
+	public abstract int getCount(RelationKey relationKey) throws SQLException;
+	
+	/**
+	 * Wrap provided {@link String} value into {@link #getDbCharToWrapNames()} characters.
+	 * 
+	 * @param value to wrap
+	 * @return wrapped string
+	 */
+	protected String wrapName(final String value) {
+		return wrapInEscapeChars(value, getDbCharToWrapNames());
+	}
+	
+	/**
+	 * Wrap provided {@link String} value into {@link #getDbCharToWrapStrings()} characters.
+	 * 
+	 * @param value to wrap
+	 * @return wrapped string
+	 */
+	protected String wrapString(final String value) {
+		return wrapInEscapeChars(value, getDbCharToWrapStrings());
+	}
+	
+	/**
+	 * Wrap provided {@link String} into given character.
+	 * 
+	 * @param value
+	 * 				the string to wrap
+	 * @param wrappingCharacter
+	 * 				the wrapping character
+	 * @return
+	 * 			wrapped string.
+	 */
+	private String wrapInEscapeChars(final String value, final char wrappingCharacter) {
+		return String.format("%s%s%s", wrappingCharacter, 
+				value, wrappingCharacter);
+	}
+	
+	private Table runQuery(final RelationKey relationKey,
 		final List<String> columnDbNames, final String sqlWithLimit)
 		throws SQLException {
-	logger.info(String.format("About to execute this query: %s", sqlWithLimit));
-	
-	try (Statement statement = getConnection().createStatement()) {
+		logger.info(String.format("About to execute this query: %s", sqlWithLimit));
 		
-		ResultSet resultSet = statement.executeQuery(sqlWithLimit);
-		
-		Table result = new Table();
-		long index = 0;
-		while (resultSet.next()) {
-			ColumnGroup columnGroup = new ColumnGroup(relationKey.getTableName(), sid);
+		try (Statement statement = getConnection().createStatement()) {
 			
-			for (String column : columnDbNames) {
-				
-				Column colfusionColumn = new Column(column, new Cell(resultSet.getString(column)));
-				
-				columnGroup.getColumns().add(colfusionColumn);
+			ResultSet resultSet = statement.executeQuery(sqlWithLimit);
+			
+			Table result = new Table();
+			long index = 0;
+			while (resultSet.next()) {
+				Row row = resultSetToRow(sid, relationKey, columnDbNames, resultSet);
+				result.getRows().add(row);
+				logger.info(String.format("Query result table currently has %d rows.", ++index));
 			}
 			
-			Row row = new Row();
-			row.getColumnGroups().add(columnGroup);
-			result.getRows().add(row);
-			logger.info(String.format("Query result table currently has %d rows.", ++index));
+			logger.info(String.format("Query '%s' resulted in %d rows", sqlWithLimit, index));
+			
+			return result;
+		} catch (SQLException e) {
+			
+			logger.error("Something wrong happened when getAll tried to execute sql query.", e);
+			throw e;
+		}
+	}
+	/**
+	 * @param relationKey
+	 * @param columnDbNames
+	 * @param resultSet
+	 * @return
+	 * @throws SQLException
+	 */
+	private static Row resultSetToRow(final int sid, final RelationKey relationKey,
+			final List<String> columnDbNames, final ResultSet resultSet)
+			throws SQLException {
+		ColumnGroup columnGroup = new ColumnGroup(relationKey.getTableName(), sid);
+		
+		for (String column : columnDbNames) {
+			
+			Column colfusionColumn = new Column(column, new Cell(resultSet.getString(column)));
+			
+			columnGroup.getColumns().add(colfusionColumn);
 		}
 		
-		logger.info(String.format("Query '%s' resulted in %d rows", sqlWithLimit, index));
-		
-		return result;
-	} catch (SQLException e) {
-		
-		logger.error("Something wrong happened when getAll tried to execute sql query.", e);
-		throw e;
+		Row row = new Row();
+		row.getColumnGroups().add(columnGroup);
+		return row;
 	}
-}
-
+	
+	/**
+	 * Copy data form one table form one database to another table in another database.
+	 * 
+	 * @param databaseFrom database to copy from
+	 * @param tableFrom table in the from where to copy data
+	 * @param databaseTo database to copy to
+	 * @param tableTo table to where to copy data
+	 * @throws SQLException 
+	 */
+	public static void copyData(final DatabaseHandlerBase databaseFrom, final RelationKey tableFrom,
+			final DatabaseHandlerBase databaseTo, final RelationKey tableTo) throws SQLException {
+		
+		try (Connection connectionFrom = databaseFrom.getConnection(); 
+				Connection connectionTo = databaseTo.getConnection()) {
+			
+			List<String> allColumnsInFromTable = databaseFrom.getAllColumnsInTable(tableFrom);
+			String sqlString = databaseFrom.constructSelectFromSQL(tableFrom, allColumnsInFromTable);
+			
+			try (PreparedStatement preparedFromStmp = connectionFrom.prepareStatement(sqlString)) {
+				ResultSet tableFromData = preparedFromStmp.executeQuery();
+				
+				ResultSetMetaData tableFromMetadata = tableFromData.getMetaData();
+				String insertSQL = databaseTo.makeInsertPreparedSQL(tableTo, tableFromMetadata);
+				try (PreparedStatement preparedToStmp = connectionTo.prepareStatement(insertSQL)) {				
+					while (tableFromData.next()) {
+						preparedToStmp.clearParameters();
+						
+						for (int i = 0; i < tableFromMetadata.getColumnCount(); i++) {
+							preparedToStmp.setObject(i, tableFromData.getObject(i));
+						}
+						
+						preparedToStmp.executeUpdate();				
+			        }
+				}
+			}
+		}
+		catch(Exception e) {
+			throw e;
+		}
+	}
+	
+	/**
+	 * Constructs an insert SQL query that can be used as prepared statement from given
+	 * metadata.
+	 * 
+	 * @param tableName the relation where to insert.
+	 * @param metaData {@link ResultSetMetaData} that describes columns from which to create insert SQL statement
+	 * @return an SQL insert query that can be used in the {@link Connection#prepareStatement(String)}
+	 */
+	public abstract String makeInsertPreparedSQL(final RelationKey tableName, final ResultSetMetaData metaData) throws SQLException;
 }

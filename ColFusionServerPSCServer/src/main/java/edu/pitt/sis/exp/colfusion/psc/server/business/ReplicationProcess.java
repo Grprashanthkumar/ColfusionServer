@@ -7,6 +7,10 @@ import org.apache.logging.log4j.Logger;
 
 import com.google.gson.annotations.Expose;
 
+import edu.pitt.sis.exp.colfusion.dal.dataModels.tableDataModel.RelationKey;
+import edu.pitt.sis.exp.colfusion.dal.databaseHandlers.DatabaseHanderType;
+import edu.pitt.sis.exp.colfusion.dal.databaseHandlers.DatabaseHandlerBase;
+import edu.pitt.sis.exp.colfusion.dal.databaseHandlers.DatabaseHandlerFactory;
 import edu.pitt.sis.exp.colfusion.dal.managers.PSCSourceInfoTableManager;
 import edu.pitt.sis.exp.colfusion.dal.managers.PSCSourceInfoTableManagerImpl;
 import edu.pitt.sis.exp.colfusion.dal.orm.ColfusionPscSourceinfoTable;
@@ -39,7 +43,15 @@ public class ReplicationProcess extends ProcessBase {
 		pscSourceinfoTable.setWhenReplicationStarted(new Date());
 		pscManager.saveOrUpdate(pscSourceinfoTable);
 		
+		DatabaseHandlerBase databaseFrom = DatabaseHandlerFactory.getDatabaseHandler(pscSourceinfoTable.getColfusionSourceinfo().getColfusionSourceinfoDb());
 		
+		DatabaseHandlerBase pscDatabase = DatabaseHandlerFactory.getDatabaseHandler(pscSourceinfoTable.getColfusionSourceinfo().getSid(), 
+				pscSourceinfoTable.getPscHost(), pscSourceinfoTable.getPscDatabasePort(), 
+				pscSourceinfoTable.getPscDatabaseUser(), pscSourceinfoTable.getPscDatabasePassword(), 
+				pscSourceinfoTable.getPscDatabaseName(), DatabaseHanderType.fromString(pscSourceinfoTable.getPscDatabaseVendor()), null, -1);
+		
+		DatabaseHandlerBase.copyData(databaseFrom, new RelationKey(pscSourceinfoTable.getId().getTableName(), pscSourceinfoTable.getId().getTableName()),
+				pscDatabase, new RelationKey(pscSourceinfoTable.getPscTableName(), pscSourceinfoTable.getPscTableName()));
 		
 		pscSourceinfoTable.setWhenReplicationFinished(new Date());
 		pscManager.saveOrUpdate(pscSourceinfoTable);
