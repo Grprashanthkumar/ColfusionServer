@@ -37,16 +37,16 @@ public class DatabaseHandlerFactoryTest extends TestCase {
 		DatabaseHandlerBase dbHandler2 = null;
 		
 		try {
-			dbHandler1 = DatabaseHandlerFactory.getDatabaseHandler(123, configManager.getPropertyByName(PropertyKeysTest.testTargetFileToDBDatabase_Server), 
-					Integer.valueOf(configManager.getPropertyByName(PropertyKeysTest.testTargetFileToDBDatabase_Port)), 
-					configManager.getPropertyByName(PropertyKeysTest.testTargetFileToDBDatabase_UserName), 
-					configManager.getPropertyByName(PropertyKeysTest.testTargetFileToDBDatabase_Password), 
+			dbHandler1 = DatabaseHandlerFactory.getDatabaseHandler(123, configManager.getProperty(PropertyKeysTest.testTargetFileToDBDatabase_Server), 
+					Integer.valueOf(configManager.getProperty(PropertyKeysTest.testTargetFileToDBDatabase_Port)), 
+					configManager.getProperty(PropertyKeysTest.testTargetFileToDBDatabase_UserName), 
+					configManager.getProperty(PropertyKeysTest.testTargetFileToDBDatabase_Password), 
 					"", DatabaseHanderType.MYSQL, null, 0);
 			
-			dbHandler2 = DatabaseHandlerFactory.getDatabaseHandler(123, configManager.getPropertyByName(PropertyKeysTest.testTargetFileToDBDatabase_Server), 
-					Integer.valueOf(configManager.getPropertyByName(PropertyKeysTest.testTargetFileToDBDatabase_Port)), 
-					configManager.getPropertyByName(PropertyKeysTest.testTargetFileToDBDatabase_UserName), 
-					configManager.getPropertyByName(PropertyKeysTest.testTargetFileToDBDatabase_Password), 
+			dbHandler2 = DatabaseHandlerFactory.getDatabaseHandler(123, configManager.getProperty(PropertyKeysTest.testTargetFileToDBDatabase_Server), 
+					Integer.valueOf(configManager.getProperty(PropertyKeysTest.testTargetFileToDBDatabase_Port)), 
+					configManager.getProperty(PropertyKeysTest.testTargetFileToDBDatabase_UserName), 
+					configManager.getProperty(PropertyKeysTest.testTargetFileToDBDatabase_Password), 
 					"", DatabaseHanderType.MYSQL, null, 0);
 			
 		} catch (NumberFormatException e) {
@@ -76,22 +76,22 @@ public class DatabaseHandlerFactoryTest extends TestCase {
 		DatabaseHandlerBase dbHandler1 = null;
 		
 		try {
-			dbHandler1 = DatabaseHandlerFactory.getDatabaseHandler(123, configManager.getPropertyByName(PropertyKeysTest.testTargetFileToDBDatabase_Server), 
-					Integer.valueOf(configManager.getPropertyByName(PropertyKeysTest.testTargetFileToDBDatabase_Port)), 
-					configManager.getPropertyByName(PropertyKeysTest.testTargetFileToDBDatabase_UserName), 
-					configManager.getPropertyByName(PropertyKeysTest.testTargetFileToDBDatabase_Password), 
+			dbHandler1 = DatabaseHandlerFactory.getDatabaseHandler(123, configManager.getProperty(PropertyKeysTest.testTargetFileToDBDatabase_Server), 
+					Integer.valueOf(configManager.getProperty(PropertyKeysTest.testTargetFileToDBDatabase_Port)), 
+					configManager.getProperty(PropertyKeysTest.testTargetFileToDBDatabase_UserName), 
+					configManager.getProperty(PropertyKeysTest.testTargetFileToDBDatabase_Password), 
 					"", DatabaseHanderType.MYSQL, null, 0);
 			
 			//Should not fail even though the database does not exist yet.
-			dbHandler1.deleteDatabaseIfExists(configManager.getPropertyByName(PropertyKeysTest.testTargetFileToDBDatabase_DatabaseNamePrefix));
+			dbHandler1.deleteDatabaseIfExists(configManager.getProperty(PropertyKeysTest.testTargetFileToDBDatabase_DatabaseNamePrefix));
 			
 			
-			dbHandler1.createDatabaseIfNotExist(configManager.getPropertyByName(PropertyKeysTest.testTargetFileToDBDatabase_DatabaseNamePrefix));
+			dbHandler1.createDatabaseIfNotExist(configManager.getProperty(PropertyKeysTest.testTargetFileToDBDatabase_DatabaseNamePrefix));
 			
 			// Should not fail even though the database already exists.
-			dbHandler1.createDatabaseIfNotExist(configManager.getPropertyByName(PropertyKeysTest.testTargetFileToDBDatabase_DatabaseNamePrefix));
+			dbHandler1.createDatabaseIfNotExist(configManager.getProperty(PropertyKeysTest.testTargetFileToDBDatabase_DatabaseNamePrefix));
 			
-			dbHandler1.deleteDatabaseIfExists(configManager.getPropertyByName(PropertyKeysTest.testTargetFileToDBDatabase_DatabaseNamePrefix));
+			dbHandler1.deleteDatabaseIfExists(configManager.getProperty(PropertyKeysTest.testTargetFileToDBDatabase_DatabaseNamePrefix));
 			
 		} catch (NumberFormatException e) {
 			// TODO Auto-generated catch block
@@ -116,14 +116,14 @@ public class DatabaseHandlerFactoryTest extends TestCase {
 		DatabaseHandlerBase dbHandler1 = null;
 		
 		try {
-			dbHandler1 = DatabaseHandlerFactory.getDatabaseHandler(123, configManager.getPropertyByName(PropertyKeysTest.testTargetFileToDBDatabase_Server), 
-					Integer.valueOf(configManager.getPropertyByName(PropertyKeysTest.testTargetFileToDBDatabase_Port)), 
-					configManager.getPropertyByName(PropertyKeysTest.testTargetFileToDBDatabase_UserName), 
-					configManager.getPropertyByName(PropertyKeysTest.testTargetFileToDBDatabase_Password), 
+			dbHandler1 = DatabaseHandlerFactory.getDatabaseHandler(123, configManager.getProperty(PropertyKeysTest.testTargetFileToDBDatabase_Server), 
+					Integer.valueOf(configManager.getProperty(PropertyKeysTest.testTargetFileToDBDatabase_Port)), 
+					configManager.getProperty(PropertyKeysTest.testTargetFileToDBDatabase_UserName), 
+					configManager.getProperty(PropertyKeysTest.testTargetFileToDBDatabase_Password), 
 					"", DatabaseHanderType.MYSQL, null, 0);
 			
 			
-			dbHandler1.createDatabaseIfNotExist(configManager.getPropertyByName(PropertyKeysTest.testTargetFileToDBDatabase_DatabaseNamePrefix));
+			dbHandler1.createDatabaseIfNotExist(configManager.getProperty(PropertyKeysTest.testTargetFileToDBDatabase_DatabaseNamePrefix));
 			
 			String tableName = "testTable";
 			List<String> variables = new ArrayList<String>();
@@ -132,7 +132,7 @@ public class DatabaseHandlerFactoryTest extends TestCase {
 						
 			dbHandler1.createTableIfNotExist(tableName, variables);
 			
-			dbHandler1.deleteDatabaseIfExists(configManager.getPropertyByName(PropertyKeysTest.testTargetFileToDBDatabase_DatabaseNamePrefix));
+			dbHandler1.deleteDatabaseIfExists(configManager.getProperty(PropertyKeysTest.testTargetFileToDBDatabase_DatabaseNamePrefix));
 			
 		} catch (NumberFormatException e) {
 			// TODO Auto-generated catch block

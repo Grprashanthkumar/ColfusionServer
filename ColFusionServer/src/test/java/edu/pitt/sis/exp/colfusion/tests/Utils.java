@@ -33,7 +33,7 @@ public class Utils {
 		// TODO the same code is used in the KTRManagerTest, should be probably moved to somewhere like TestUtils
 		
 		SourceInfoManager storyMgr = new SourceInfoManagerImpl();
-		List<ColfusionSourceinfo> stories = storyMgr.findByTitle(ConfigManager.getInstance().getPropertyByName(PropertyKeysTest.testStoryTitle), 1);
+		List<ColfusionSourceinfo> stories = storyMgr.findByTitle(ConfigManager.getInstance().getProperty(PropertyKeysTest.testStoryTitle), 1);
 		
 		ColfusionSourceinfo story = null;
 		
@@ -41,14 +41,14 @@ public class Utils {
 			
 			UserManager userMgr = new UserManagerImpl();
 			
-			List<ColfusionUsers> users = userMgr.lookUpUser(ConfigManager.getInstance().getPropertyByName(PropertyKeysTest.testUserLogin), 1);
+			List<ColfusionUsers> users = userMgr.lookUpUser(ConfigManager.getInstance().getProperty(PropertyKeysTest.testUserLogin), 1);
 			ColfusionUsers user = null;
 			
 			if (users.size() == 0 || users.get(0) == null) {
 				user = new ColfusionUsers(new Date(), new Date(),
 						new Date(), new Date(), new Date(), true);
 				
-				user.setUserLogin(ConfigManager.getInstance().getPropertyByName(PropertyKeysTest.testUserLogin));
+				user.setUserLogin(ConfigManager.getInstance().getProperty(PropertyKeysTest.testUserLogin));
 				
 				userMgr.save(user);
 				
@@ -59,7 +59,7 @@ public class Utils {
 			}
 			
 			story = storyMgr.newStory(user.getUserId(), new Date(), DataSourceTypes.DATA_FILE);
-			story.setTitle(ConfigManager.getInstance().getPropertyByName(PropertyKeysTest.testStoryTitle));
+			story.setTitle(ConfigManager.getInstance().getProperty(PropertyKeysTest.testStoryTitle));
 			storyMgr.saveOrUpdate(story);
 		}
 		else {

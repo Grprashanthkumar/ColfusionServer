@@ -442,12 +442,12 @@ public class KTRManager {
 		
 		ConfigManager configManager = ConfigManager.getInstance();
 		
-		setConnectionNode(connectionNode, configManager.getPropertyByName(PropertyKeys.targetFileToDBDatabase_DatabaseNamePrefix) + sid,
-				configManager.getPropertyByName(PropertyKeys.targetFileToDBDatabase_UserName),
-				configManager.getPropertyByName(PropertyKeys.targetFileToDBDatabase_Password),
-				configManager.getPropertyByName(PropertyKeys.targetFileToDBDatabase_Server),
-				configManager.getPropertyByName(PropertyKeys.targetFileToDBDatabase_Port),
-				configManager.getPropertyByName(PropertyKeys.targetFileToDBDatabase_Type));
+		setConnectionNode(connectionNode, configManager.getProperty(PropertyKeys.targetFileToDBDatabase_DatabaseNamePrefix) + sid,
+				configManager.getProperty(PropertyKeys.targetFileToDBDatabase_UserName),
+				configManager.getProperty(PropertyKeys.targetFileToDBDatabase_Password),
+				configManager.getProperty(PropertyKeys.targetFileToDBDatabase_Server),
+				configManager.getProperty(PropertyKeys.targetFileToDBDatabase_Port),
+				configManager.getProperty(PropertyKeys.targetFileToDBDatabase_Type));
 		
 			
 		//XPath to get connection for logging database
@@ -464,12 +464,12 @@ public class KTRManager {
 	
 		connectionNode = connectionTag.item(0);
 		
-		setConnectionNode(connectionNode, configManager.getPropertyByName(PropertyKeys.logginDatabase_DatabaseNamePrefix),
-				configManager.getPropertyByName(PropertyKeys.logginDatabase_UserName),
-				configManager.getPropertyByName(PropertyKeys.logginDatabase_Password),
-				configManager.getPropertyByName(PropertyKeys.logginDatabase_Server),
-				configManager.getPropertyByName(PropertyKeys.logginDatabase_Port),
-				configManager.getPropertyByName(PropertyKeys.logginDatabase_Type));
+		setConnectionNode(connectionNode, configManager.getProperty(PropertyKeys.logginDatabase_DatabaseNamePrefix),
+				configManager.getProperty(PropertyKeys.logginDatabase_UserName),
+				configManager.getProperty(PropertyKeys.logginDatabase_Password),
+				configManager.getProperty(PropertyKeys.logginDatabase_Server),
+				configManager.getProperty(PropertyKeys.logginDatabase_Port),
+				configManager.getProperty(PropertyKeys.logginDatabase_Type));
 		
 	}
 	
@@ -598,13 +598,13 @@ public class KTRManager {
 	 */
 	private IOUtilsStoredFileInfoModel createKTRFileFromTemplate(final int sid, final String dataFileExtension, final String tableName) throws IOException {
 		
-		String ktrBaseDirLocation = IOUtils.getAbsolutePathInColfutionRoot(ConfigManager.getInstance().getPropertyByName(PropertyKeys.ktrFielsBaseLocation));
+		String ktrBaseDirLocation = IOUtils.getAbsolutePathInColfutionRoot(ConfigManager.getInstance().getProperty(PropertyKeys.ktrFielsBaseLocation));
 		String ktrDirectoryLocation = ktrBaseDirLocation + File.separator +	sid;
 		
 		//TODO for now simple check for csv, but what if we going to have more extensions, need to rewrite this.
 		String ktrTemplateName = dataFileExtension.equals("csv") 
-				? ConfigManager.getInstance().getPropertyByName(PropertyKeys.csvToDatabaseKTRTemplate) 
-				: ConfigManager.getInstance().getPropertyByName(PropertyKeys.excelToDatabaseKTRTemplate);
+				? ConfigManager.getInstance().getProperty(PropertyKeys.csvToDatabaseKTRTemplate) 
+				: ConfigManager.getInstance().getProperty(PropertyKeys.excelToDatabaseKTRTemplate);
 				
 		InputStream ktrTemplate = ResourceUtils.getResourceAsStream(this.getClass(), ktrTemplateName);
 			

@@ -180,8 +180,8 @@ public class DataLoadExecutorKTRImpl extends DataLoadExecutorBaseImpl implements
 		
 		CredentialsProvider credsProvider = new BasicCredentialsProvider();
         credsProvider.setCredentials(
-                new AuthScope(configManager.getPropertyByName(PropertyKeys.carteServer), Integer.valueOf(configManager.getPropertyByName(PropertyKeys.cartePort))),
-                new UsernamePasswordCredentials(configManager.getPropertyByName(PropertyKeys.carteUser), configManager.getPropertyByName(PropertyKeys.cartePassword)));
+                new AuthScope(configManager.getProperty(PropertyKeys.carteServer), Integer.valueOf(configManager.getProperty(PropertyKeys.cartePort))),
+                new UsernamePasswordCredentials(configManager.getProperty(PropertyKeys.carteUser), configManager.getProperty(PropertyKeys.cartePassword)));
         
         CloseableHttpClient client = HttpClients.custom()
                 .setDefaultCredentialsProvider(credsProvider)
@@ -225,7 +225,7 @@ public class DataLoadExecutorKTRImpl extends DataLoadExecutorBaseImpl implements
 		
 		ktrFileURL = URLEncoder.encode(ktrFileURL, "UTF-8");
 
-		String carteServerURL = ConfigManager.getInstance().getPropertyByName(PropertyKeys.carteServerURL);
+		String carteServerURL = ConfigManager.getInstance().getProperty(PropertyKeys.carteServerURL);
 		
         String result = String.format("%s?trans=%s&Sid=%d&Eid=%d", carteServerURL, ktrFileURL, sid, executionLogId);
         

@@ -1,5 +1,13 @@
 package edu.pitt.sis.exp.colfusion.utils;
 
+/**
+ * This class is used to collect all properties for the whole colfusion system. 
+ * These properties can be specified either via the config.properties file 
+ * or via system properties passed to JVM.
+ * 
+ * @author Evgeny
+ *
+ */
 public class PropertyKeys {
 	
 	
@@ -8,11 +16,15 @@ public class PropertyKeys {
 	// The key values should correspond to property keys in config.properties file.
 	//*******************************************************************************
 	
-	//******************************************************************************
-	//
-	// Keys for Production
-	//
-	//******************************************************************************
+	/**
+	 * This is used only for testing.
+	 */
+	public static String COLFUSION_PROPERTIES_SOURCE = "colfusion.properties.source";
+	
+	/**
+	 * This is used only for testing.
+	 */
+	public static String COLFUSION_PROPERTIES_TEST_NEVER_EXISTING_PROPERTY = "colfusion.properties.test.never.existing.property";
 	
 	public static String colfusionURL = "colfusionURL";
 	

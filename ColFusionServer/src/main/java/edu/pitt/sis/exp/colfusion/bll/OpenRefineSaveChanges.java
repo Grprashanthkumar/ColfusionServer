@@ -24,7 +24,7 @@ public class OpenRefineSaveChanges {
 	 */
 	public GeneralResponseGen<String> saveChanges(final String projectId, final String colfusionUserId) throws Exception {
 		
-        int lockTime = Integer.valueOf(ConfigManager.getInstance().getPropertyByName(PROPERTY_LOCK_TIME));// Integer.valueOf(p.getProperty("lock_time"));
+        int lockTime = Integer.valueOf(ConfigManager.getInstance().getProperty(PROPERTY_LOCK_TIME));// Integer.valueOf(p.getProperty("lock_time"));
 		
 		GeneralResponseGen<String> result = new GeneralResponseGenImpl<>();
 		

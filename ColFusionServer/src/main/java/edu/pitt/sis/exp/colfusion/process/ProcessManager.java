@@ -44,7 +44,7 @@ public class ProcessManager {
     	int maxNumberOfConcurrentProceses = 5; //This number comes from config file, but if it is missing in the config file then use this value as default.
     	
     	try {
-    		maxNumberOfConcurrentProceses= Integer.parseInt(ConfigManager.getInstance().getPropertyByName(PropertyKeys.maxNumberOfConcurrentProceses));
+    		maxNumberOfConcurrentProceses= Integer.parseInt(ConfigManager.getInstance().getProperty(PropertyKeys.maxNumberOfConcurrentProceses));
     	}
     	catch (Exception e) {
     		logger.info("maxNumberOfConcurrentProceses property was not parsed into int correctly (e.g., it might be missing), therefore is going to use the defaul number of max threads.");

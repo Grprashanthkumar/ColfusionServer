@@ -30,9 +30,9 @@ public class IOUtilsTest extends TestCase {
 	 */
 	public void testWriteExcelAsInputStreamToFile() {
 			
-		String testFileUploadDir = IOUtils.getAbsolutePathInColfutionRoot(configManager.getPropertyByName(PropertyKeysTest.testUploadRawFilesBaseLocation));
+		String testFileUploadDir = IOUtils.getAbsolutePathInColfutionRoot(configManager.getProperty(PropertyKeysTest.testUploadRawFilesBaseLocation));
 	
-		String testEcelFileName = configManager.getPropertyByName(PropertyKeysTest.testExcelFileNameInResourceFolder);
+		String testEcelFileName = configManager.getProperty(PropertyKeysTest.testExcelFileNameInResourceFolder);
 		
 		assertEquals("testExcelFile.xlsx", testEcelFileName);
 		
@@ -58,9 +58,9 @@ public class IOUtilsTest extends TestCase {
 	 * Test if the TarGz Archive file from the test/resources is written to specified in the properties location.
 	 */
 	public void testWriteTarGzArchiveAsInputStremToFile() {
-		String testFileUploadDir = IOUtils.getAbsolutePathInColfutionRoot(configManager.getPropertyByName(PropertyKeysTest.testUploadRawFilesBaseLocation));
+		String testFileUploadDir = IOUtils.getAbsolutePathInColfutionRoot(configManager.getProperty(PropertyKeysTest.testUploadRawFilesBaseLocation));
 		
-		String testFileName = configManager.getPropertyByName(PropertyKeysTest.testTarGzArchiveFileNameInResourceFolder);
+		String testFileName = configManager.getProperty(PropertyKeysTest.testTarGzArchiveFileNameInResourceFolder);
 		
 		assertEquals("testTarGzArchive.tar.gz", testFileName);
 		
@@ -86,9 +86,9 @@ public class IOUtilsTest extends TestCase {
 	 * Test unarchival of a zip archive
 	 */
 	public void testUnarchive() {
-		String testFileUploadDir = IOUtils.getAbsolutePathInColfutionRoot(configManager.getPropertyByName(PropertyKeysTest.testUploadRawFilesBaseLocation));
+		String testFileUploadDir = IOUtils.getAbsolutePathInColfutionRoot(configManager.getProperty(PropertyKeysTest.testUploadRawFilesBaseLocation));
 		
-		String testFileName = configManager.getPropertyByName(PropertyKeysTest.testZipArchive);
+		String testFileName = configManager.getProperty(PropertyKeysTest.testZipArchive);
 		
 		assertEquals("testZipArchive.zip", testFileName);
 		
@@ -111,9 +111,9 @@ public class IOUtilsTest extends TestCase {
 	}
 	
 	public void testCopyFileContentOnKTRTemplates() {
-		String testKTRBaseDirLocation = IOUtils.getAbsolutePathInColfutionRoot(configManager.getPropertyByName(PropertyKeysTest.testKtrFielsBaseLocation));
+		String testKTRBaseDirLocation = IOUtils.getAbsolutePathInColfutionRoot(configManager.getProperty(PropertyKeysTest.testKtrFielsBaseLocation));
 		
-		String fileToCopyName = configManager.getPropertyByName(PropertyKeysTest.testCsvToDatabaseKTRTemplate);
+		String fileToCopyName = configManager.getProperty(PropertyKeysTest.testCsvToDatabaseKTRTemplate);
 		String fileToCopyLocation = this.getClass().getResource(fileToCopyName).getFile();
 		
 		try {

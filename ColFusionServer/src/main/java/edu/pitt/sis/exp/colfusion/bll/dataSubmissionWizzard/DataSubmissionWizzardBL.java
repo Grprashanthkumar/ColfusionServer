@@ -67,7 +67,7 @@ public class DataSubmissionWizzardBL {
 	public AcceptedFilesResponse storeUploadedFiles(final String sid, final String uploadTimestamp, 
     		final String fileType, final String dbType, final Map<String, InputStream> inputStreams) {
 				
-		String uploadFilesLocation = IOUtils.getAbsolutePathInColfutionRoot(ConfigManager.getInstance().getPropertyByName(PropertyKeys.uploadRawFileLocationKey));
+		String uploadFilesLocation = IOUtils.getAbsolutePathInColfutionRoot(ConfigManager.getInstance().getProperty(PropertyKeys.uploadRawFileLocationKey));
 		String uploadFileAbsolutePath = uploadFilesLocation + File.separator + sid; 
 		
 		AcceptedFilesResponse result = new AcceptedFilesResponse();

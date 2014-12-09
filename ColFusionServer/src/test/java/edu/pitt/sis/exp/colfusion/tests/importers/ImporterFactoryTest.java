@@ -51,7 +51,7 @@ public class ImporterFactoryTest extends TestCase {
 	private Collection<WorksheetViewModel> getCSVWorksheets() throws Exception {
 		Importer importer = getImporter(ImporterType.CSVImporter);
 		
-		String testFileName = configManager.getPropertyByName(PropertyKeysTest.testCSVFileNameInResourceFolder);
+		String testFileName = configManager.getProperty(PropertyKeysTest.testCSVFileNameInResourceFolder);
 				
 		String testFileNameAbsolute = this.getClass().getResource(testFileName).getFile();
 		
@@ -74,7 +74,7 @@ public class ImporterFactoryTest extends TestCase {
 	private Collection<WorksheetViewModel> getExcelWorksheets() throws Exception {
 		Importer importer = getImporter(ImporterType.ExcelImporter);
 		
-		String testFileName = configManager.getPropertyByName(PropertyKeysTest.testExcelFileNameInResourceFolder);
+		String testFileName = configManager.getProperty(PropertyKeysTest.testExcelFileNameInResourceFolder);
 				
 		String testFileNameAbsolute = this.getClass().getResource(testFileName).getFile();
 		
@@ -103,7 +103,7 @@ public class ImporterFactoryTest extends TestCase {
 			
 			WorksheetViewModel worksheet = tables.iterator().next();
 			
-			String testFileName = configManager.getPropertyByName(PropertyKeysTest.testCSVFileNameInResourceFolder);
+			String testFileName = configManager.getProperty(PropertyKeysTest.testCSVFileNameInResourceFolder);
 			assertEquals(testFileName, worksheet.getSheetName());
 			
 			assertEquals(1, worksheet.getHeaderRow());
@@ -151,7 +151,7 @@ public class ImporterFactoryTest extends TestCase {
 	private HashMap<String, ArrayList<DatasetVariableViewModel>> getVariablesCSV() throws Exception {
 		Importer importer = getImporter(ImporterType.CSVImporter);
 		
-		String testFileName = configManager.getPropertyByName(PropertyKeysTest.testCSVFileNameInResourceFolder);
+		String testFileName = configManager.getProperty(PropertyKeysTest.testCSVFileNameInResourceFolder);
 				
 		String testFileNameAbsolute = this.getClass().getResource(testFileName).getFile();
 		
@@ -174,7 +174,7 @@ public class ImporterFactoryTest extends TestCase {
 	private HashMap<String, ArrayList<DatasetVariableViewModel>> getVariablesExcel() throws Exception {
 		Importer importer = getImporter(ImporterType.ExcelImporter);
 		
-		String testFileName = configManager.getPropertyByName(PropertyKeysTest.testExcelFileNameInResourceFolder);
+		String testFileName = configManager.getProperty(PropertyKeysTest.testExcelFileNameInResourceFolder);
 				
 		String testFileNameAbsolute = this.getClass().getResource(testFileName).getFile();
 		
@@ -196,7 +196,7 @@ public class ImporterFactoryTest extends TestCase {
 	
 	public void testReadVariablesCSV() {
 			
-		String testFileName = configManager.getPropertyByName(PropertyKeysTest.testCSVFileNameInResourceFolder);
+		String testFileName = configManager.getProperty(PropertyKeysTest.testCSVFileNameInResourceFolder);
 		
 		try {
 			HashMap<String, ArrayList<DatasetVariableViewModel>> variables = getVariablesCSV();
@@ -280,7 +280,7 @@ public class ImporterFactoryTest extends TestCase {
 		try {
 			Importer importer = getImporter(ImporterType.CSVImporter);
 			
-			String testFileName = configManager.getPropertyByName(PropertyKeysTest.testCSVFileNameInResourceFolder);
+			String testFileName = configManager.getProperty(PropertyKeysTest.testCSVFileNameInResourceFolder);
 			
 			String testFileNameAbsolute = this.getClass().getResource(testFileName).getFile();
 			
@@ -341,7 +341,7 @@ public class ImporterFactoryTest extends TestCase {
 		try {
 			Importer importer = getImporter(ImporterType.ExcelImporter);
 			
-			String testFileName = configManager.getPropertyByName(PropertyKeysTest.testExcelFileNameInResourceFolder);
+			String testFileName = configManager.getProperty(PropertyKeysTest.testExcelFileNameInResourceFolder);
 			
 			String testFileNameAbsolute = this.getClass().getResource(testFileName).getFile();
 			

@@ -70,8 +70,8 @@ public class ServiceMonitor extends TimerTask{
 	public ServiceMonitor(){
 		timer = new Timer();
 		this.serviceList = new ArrayList<ColfusionServices>();
-		this.timeOut = Integer.parseInt(ConfigManager.getInstance().getPropertyByName(PropertyKeys.ServiceMonitorTimeOut));;
-		this.monitorPeriod = Integer.parseInt(ConfigManager.getInstance().getPropertyByName(PropertyKeys.ServiceMonitorPeriod));;
+		this.timeOut = Integer.parseInt(ConfigManager.getInstance().getProperty(PropertyKeys.ServiceMonitorTimeOut));;
+		this.monitorPeriod = Integer.parseInt(ConfigManager.getInstance().getProperty(PropertyKeys.ServiceMonitorPeriod));;
 
 		serviceManager = new ServiceManagerImpl();
 		userManager = new UserManagerImpl();
@@ -462,7 +462,7 @@ public class ServiceMonitor extends TimerTask{
 							service.getServiceDir(),
 							service.getServiceCommand(),
 							service.getServiceStatus());
-					for(String userLevel : ConfigManager.getInstance().getPropertyByName(PropertyKeys.userLevel).split(",")){
+					for(String userLevel : ConfigManager.getInstance().getProperty(PropertyKeys.userLevel).split(",")){
 						for(String emailAddress : this.userManager.queryUserEmails(userLevel)){
 							emailNotifier.sendMail(emailAddress, emailSubject, emailText);
 						}

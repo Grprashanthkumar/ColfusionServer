@@ -77,11 +77,11 @@ public class DatabaseHandlerFactory {
 	public static MetadataDbHandler getMetadataDbHandler() {
 		//TODO FIXME: this is wrong
 		if (metadataDbHandler == null) {
-			String host = ConfigManager.getInstance().getPropertyByName("mysql_host");
-	        int port = Integer.valueOf(ConfigManager.getInstance().getPropertyByName("mysql_port"));
-	        String user = ConfigManager.getInstance().getPropertyByName("mysql_user"); 
-	        String password = ConfigManager.getInstance().getPropertyByName("mysql_password"); 
-	        String database = ConfigManager.getInstance().getPropertyByName("mysql_database"); 
+			String host = ConfigManager.getInstance().getProperty("mysql_host");
+	        int port = Integer.valueOf(ConfigManager.getInstance().getProperty("mysql_port"));
+	        String user = ConfigManager.getInstance().getProperty("mysql_user"); 
+	        String password = ConfigManager.getInstance().getProperty("mysql_password"); 
+	        String database = ConfigManager.getInstance().getProperty("mysql_database"); 
 	    	
 	        //TODO:　Read host,port, etc. from config file and/or system properties
 	        DatabaseConnectionInfo connectioInfo = new DatabaseConnectionInfo(host, port, user, password, database);

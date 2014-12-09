@@ -13,6 +13,7 @@ import edu.pitt.sis.exp.colfusion.dal.orm.ColfusionServices;
 import edu.pitt.sis.exp.colfusion.servicemonitor.ColfusionServicesViewModel;
 import edu.pitt.sis.exp.colfusion.servicemonitor.ServiceMonitorDaemon;
 import edu.pitt.sis.exp.colfusion.utils.Gsonizer;
+import edu.pitt.sis.exp.colfusion.utils.StringUtils;
 
 /**
  * @author Hao Bai
@@ -37,6 +38,9 @@ public class ServiceMonitorRestImpl implements ServiceMonitorRest{
 		try {
 			resultList = ServiceMonitorDaemon.getInstance().getServiceMonitor().getServicesStatus();
 			jsonResult = Gsonizer.toJson(resultList, false);
+			if (StringUtils.isNullOrEmpty(jsonResult)) {
+				jsonResult = "[]";
+			}
 			return Response.status(200).entity(jsonResult).build();
 		} 
 		catch (Exception ex) {
@@ -134,7 +138,8 @@ public class ServiceMonitorRestImpl implements ServiceMonitorRest{
 			ColfusionServices service = ServiceMonitorDaemon.getInstance().getServiceMonitor().getServiceStatusByID(ID);
 		
 			ServiceMonitorDaemon.getInstance().getServiceMonitor().deleteServiceByID(ID);
-			result = service.getServiceName() + " is deleted.";
+			//TODO FIXME workaround
+			result = String.format("{\"message\": \"%s is deleted\"}", service.getServiceName());
 		
 			return Response.status(200).entity(result).build();
 		}

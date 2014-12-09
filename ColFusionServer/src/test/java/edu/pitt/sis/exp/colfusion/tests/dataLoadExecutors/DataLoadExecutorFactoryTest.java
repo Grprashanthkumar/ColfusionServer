@@ -81,22 +81,22 @@ public class DataLoadExecutorFactoryTest  extends TestCase {
 			
 			ConfigManager configManager = ConfigManager.getInstance();
 			
-			assertEquals(configManager.getPropertyByName(PropertyKeys.targetFileToDBDatabase_DatabaseNamePrefix) + sid, // + alterValue
+			assertEquals(configManager.getProperty(PropertyKeys.targetFileToDBDatabase_DatabaseNamePrefix) + sid, // + alterValue
 					storyTargetDB.getSourceDatabase());
 			
-			assertEquals(configManager.getPropertyByName(PropertyKeys.targetFileToDBDatabase_UserName), // + alterValue
+			assertEquals(configManager.getProperty(PropertyKeys.targetFileToDBDatabase_UserName), // + alterValue
 					storyTargetDB.getUserName());
 			
-			assertEquals(configManager.getPropertyByName(PropertyKeys.targetFileToDBDatabase_Password), // + alterValue
+			assertEquals(configManager.getProperty(PropertyKeys.targetFileToDBDatabase_Password), // + alterValue
 					storyTargetDB.getPassword());
 			
-			assertEquals(configManager.getPropertyByName(PropertyKeys.targetFileToDBDatabase_Server), // + alterValue 
+			assertEquals(configManager.getProperty(PropertyKeys.targetFileToDBDatabase_Server), // + alterValue 
 					storyTargetDB.getServerAddress());
 			
-			assertEquals(configManager.getPropertyByName(PropertyKeys.targetFileToDBDatabase_Port), // + alterValue 
+			assertEquals(configManager.getProperty(PropertyKeys.targetFileToDBDatabase_Port), // + alterValue 
 					String.valueOf(storyTargetDB.getPort()));
 			
-			assertEquals(configManager.getPropertyByName(PropertyKeys.targetFileToDBDatabase_Type), // + alterValue 
+			assertEquals(configManager.getProperty(PropertyKeys.targetFileToDBDatabase_Type), // + alterValue 
 					storyTargetDB.getDriver());
 			
 			assertEquals(sid, 
@@ -151,12 +151,12 @@ public class DataLoadExecutorFactoryTest  extends TestCase {
 							
 				ConfigManager configManager = ConfigManager.getInstance();
 				
-				ktrManager.updateTargetDBConnectionInfo(configManager.getPropertyByName(PropertyKeys.targetFileToDBDatabase_DatabaseNamePrefix) + sid + alterValue,
-						configManager.getPropertyByName(PropertyKeys.targetFileToDBDatabase_UserName) + alterValue,
-						configManager.getPropertyByName(PropertyKeys.targetFileToDBDatabase_Password) + alterValue,
-						configManager.getPropertyByName(PropertyKeys.targetFileToDBDatabase_Server) + alterValue,
-						configManager.getPropertyByName(PropertyKeys.targetFileToDBDatabase_Port) + alterValue,
-						configManager.getPropertyByName(PropertyKeys.targetFileToDBDatabase_Type) + alterValue);
+				ktrManager.updateTargetDBConnectionInfo(configManager.getProperty(PropertyKeys.targetFileToDBDatabase_DatabaseNamePrefix) + sid + alterValue,
+						configManager.getProperty(PropertyKeys.targetFileToDBDatabase_UserName) + alterValue,
+						configManager.getProperty(PropertyKeys.targetFileToDBDatabase_Password) + alterValue,
+						configManager.getProperty(PropertyKeys.targetFileToDBDatabase_Server) + alterValue,
+						configManager.getProperty(PropertyKeys.targetFileToDBDatabase_Port) + alterValue,
+						configManager.getProperty(PropertyKeys.targetFileToDBDatabase_Type) + alterValue);
 								
 				return;
 			} catch (Exception e) {

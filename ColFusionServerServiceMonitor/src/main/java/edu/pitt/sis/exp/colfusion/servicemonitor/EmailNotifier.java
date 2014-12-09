@@ -24,13 +24,13 @@ import edu.pitt.sis.exp.colfusion.utils.PropertyKeys;
  */
 public class EmailNotifier {
 
-    private static String senderAddress = ConfigManager.getInstance().getPropertyByName(PropertyKeys.emailSenderAddress);
-    private static String senderPassword = ConfigManager.getInstance().getPropertyByName(PropertyKeys.emailSenderPassword);
+    private static String senderAddress = ConfigManager.getInstance().getProperty(PropertyKeys.emailSenderAddress);
+    private static String senderPassword = ConfigManager.getInstance().getProperty(PropertyKeys.emailSenderPassword);
     
-    private static String smtpStarttlsEnable = ConfigManager.getInstance().getPropertyByName(PropertyKeys.smtpStarttlsEnable);
-    private static String smtpAuth = ConfigManager.getInstance().getPropertyByName(PropertyKeys.smtpAuth);
-    private static String smtpHost = ConfigManager.getInstance().getPropertyByName(PropertyKeys.smtpHost);
-    private static String smtpPort = ConfigManager.getInstance().getPropertyByName(PropertyKeys.smtpPort);
+    private static String smtpStarttlsEnable = ConfigManager.getInstance().getProperty(PropertyKeys.smtpStarttlsEnable);
+    private static String smtpAuth = ConfigManager.getInstance().getProperty(PropertyKeys.smtpAuth);
+    private static String smtpHost = ConfigManager.getInstance().getProperty(PropertyKeys.smtpHost);
+    private static String smtpPort = ConfigManager.getInstance().getProperty(PropertyKeys.smtpPort);
     
     private Logger logger = LogManager.getLogger(ServiceMonitor.class.getName());
     

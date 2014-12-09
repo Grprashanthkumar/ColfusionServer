@@ -33,8 +33,8 @@ public class DataSubmissionWizzardTest extends TestCase {
 	public void testStoreUploadedFiles() {
 		
 		
-		String testFileName = configManager.getPropertyByName(PropertyKeysTest.testExcelFileNameInResourceFolder);
-		String testArchiveFileName = configManager.getPropertyByName(PropertyKeysTest.testZipArchive);
+		String testFileName = configManager.getProperty(PropertyKeysTest.testExcelFileNameInResourceFolder);
+		String testArchiveFileName = configManager.getProperty(PropertyKeysTest.testZipArchive);
 		
 		InputStream testFileNameIS = ResourceUtils.getResourceAsStream(this.getClass(), testFileName);
 		InputStream testArchiveFileIS = ResourceUtils.getResourceAsStream(this.getClass(), testArchiveFileName);
