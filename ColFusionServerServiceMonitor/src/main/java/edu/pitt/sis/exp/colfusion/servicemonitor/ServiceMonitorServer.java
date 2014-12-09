@@ -1,6 +1,9 @@
 package edu.pitt.sis.exp.colfusion.servicemonitor;
 
 
+import java.util.EnumSet;
+
+import javax.servlet.DispatcherType;
 import javax.ws.rs.ext.ContextResolver;
 import javax.ws.rs.ext.Provider;
 
@@ -28,6 +31,8 @@ import org.glassfish.jersey.servlet.ServletContainer;
 public class ServiceMonitorServer implements Runnable, ContextResolver<ServiceMonitor> {
 
 
+	private static final String CONTEXT_PATH = "/rest/*";
+
 	private static final int DEFAULT_PORT = 7473;
 	
 	private static final Logger logger = LogManager.getLogger(ServiceMonitorServer.class.getName());
@@ -42,7 +47,7 @@ public class ServiceMonitorServer implements Runnable, ContextResolver<ServiceMo
 	 * @param entity of ServiceMonitor
 	 * @param port number
 	 */
-	public ServiceMonitorServer(ServiceMonitor argMonitor, int port) {
+	public ServiceMonitorServer(final ServiceMonitor argMonitor, final int port) {
 		serviceMonitor = argMonitor;
 		this.port = port;
 	}
@@ -52,7 +57,7 @@ public class ServiceMonitorServer implements Runnable, ContextResolver<ServiceMo
 	}
 	
 	@Override
-	public ServiceMonitor getContext(Class<?> type) {
+	public ServiceMonitor getContext(final Class<?> type) {
 		return serviceMonitor;
 	}
 
@@ -110,7 +115,9 @@ public class ServiceMonitorServer implements Runnable, ContextResolver<ServiceMo
 		//***************
 		
         ServletContextHandler context = new ServletContextHandler(server, "/", ServletContextHandler.SESSIONS);
-        context.addServlet(servletHolder, "/rest/*");
+        context.addServlet(servletHolder, CONTEXT_PATH);
+        
+        context.addFilter(ApiOriginFilter.class, CONTEXT_PATH, EnumSet.of(DispatcherType.INCLUDE, DispatcherType.REQUEST));
         
         server.setStopAtShutdown(true);
         

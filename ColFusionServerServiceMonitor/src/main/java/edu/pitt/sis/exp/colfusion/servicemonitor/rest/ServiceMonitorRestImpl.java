@@ -5,16 +5,12 @@ import java.util.List;
 
 import javax.ws.rs.Path;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.ext.ContextResolver;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import edu.pitt.sis.exp.colfusion.dal.managers.ServiceManager;
-import edu.pitt.sis.exp.colfusion.dal.managers.ServiceManagerImpl;
 import edu.pitt.sis.exp.colfusion.dal.orm.ColfusionServices;
 import edu.pitt.sis.exp.colfusion.servicemonitor.ColfusionServicesViewModel;
-import edu.pitt.sis.exp.colfusion.servicemonitor.ServiceMonitor;
 import edu.pitt.sis.exp.colfusion.servicemonitor.ServiceMonitorDaemon;
 import edu.pitt.sis.exp.colfusion.utils.Gsonizer;
 
@@ -35,6 +31,7 @@ public class ServiceMonitorRestImpl implements ServiceMonitorRest{
 	public Response getServicesStatus() {
 		
 		//logger.info("Got request with this payload length: " + twoJointTables.length());
+
 		List<ColfusionServices> resultList = new ArrayList<ColfusionServices>();
 		String jsonResult = "";
 		try {
@@ -45,12 +42,12 @@ public class ServiceMonitorRestImpl implements ServiceMonitorRest{
 		catch (Exception ex) {
 			logger.error("In ServiceMonitorRestImpl.getServicesStatus()\n"
 					+ ex.toString() + " " + ex.getCause());	
-			return Response.status(500).entity(jsonResult).build();
+			return Response.status(500).entity(ex.getMessage()).build();
 		}	
 	}
 	
 	@Override
-	public Response getServiceStatusByID(String serviceID) {
+	public Response getServiceStatusByID(final String serviceID) {
 		String result = "";
 		try {
 			int ID = Integer.parseInt(serviceID);
@@ -70,7 +67,7 @@ public class ServiceMonitorRestImpl implements ServiceMonitorRest{
 	}
 	
 	@Override
-	public Response getServiceStatusByNamePattern(String namePattern) {
+	public Response getServiceStatusByNamePattern(final String namePattern) {
 		List<ColfusionServices> serviceList = null;
 		String jsonResult = "";
 		
@@ -94,7 +91,7 @@ public class ServiceMonitorRestImpl implements ServiceMonitorRest{
 	}
 	
 	@Override
-	public Response addNewService(ColfusionServicesViewModel newService) {
+	public Response addNewService(final ColfusionServicesViewModel newService) {
 
 		String result = "";
 		try {
@@ -111,7 +108,7 @@ public class ServiceMonitorRestImpl implements ServiceMonitorRest{
 	}
 	
 	@Override
-	public Response updateServiceByID(String serviceID, ColfusionServicesViewModel newService) {
+	public Response updateServiceByID(final String serviceID, final ColfusionServicesViewModel newService) {
 		String result = "";
 		try {
 			int ID = Integer.parseInt(serviceID);
@@ -130,7 +127,7 @@ public class ServiceMonitorRestImpl implements ServiceMonitorRest{
 	}
 	
 	@Override
-	public Response deleteServiceByID(String serviceID) {
+	public Response deleteServiceByID(final String serviceID) {
 		String result = "";
 		try {
 			int ID = Integer.parseInt(serviceID);
