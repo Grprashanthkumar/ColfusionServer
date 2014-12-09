@@ -36,6 +36,12 @@ public class ServiceMonitorServer implements Runnable, ContextResolver<ServiceMo
 	private static ServiceMonitor serviceMonitor;
 	private int port;
 	
+	/**
+	 * constructor 
+	 * 
+	 * @param entity of ServiceMonitor
+	 * @param port number
+	 */
 	public ServiceMonitorServer(ServiceMonitor argMonitor, int port) {
 		serviceMonitor = argMonitor;
 		this.port = port;
@@ -51,8 +57,9 @@ public class ServiceMonitorServer implements Runnable, ContextResolver<ServiceMo
 	}
 
 	/**
-	 * @param args
-	 * @return
+	 * get port number
+	 * 
+	 * @return port number
 	 */
 	private int getPortNumber() {
 		int port = DEFAULT_PORT;
@@ -148,6 +155,11 @@ class ShutdownSignalHandler implements Runnable {
     
     private final Server _server;
 
+    /**
+     * Shutdown Signal Handler
+     * 
+     * @param entity of server
+     */
     public ShutdownSignalHandler(final Server server) {
         this._server = server;
     }

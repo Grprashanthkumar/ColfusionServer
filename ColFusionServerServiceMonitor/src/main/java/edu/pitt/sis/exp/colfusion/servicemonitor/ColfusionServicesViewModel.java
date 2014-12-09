@@ -27,50 +27,110 @@ public class ColfusionServicesViewModel {
 	@Expose private String serviceCommand;
 	@Expose private String serviceStatus;
 
+	/**
+     * get name of service.
+     * 
+     * @return serviceName.
+     */
 	public String getServiceName() {
 		return serviceName;
 	}
 	
+	/**
+	 * set name of service
+	 * 
+	 * @param serviceName
+	 */
 	public void setServiceName(String serviceName) {
 		this.serviceName = serviceName;
 	}
 	
+	/**
+	 * get address of service
+	 * 
+	 * @return serviceAddress
+	 */
 	public String getServiceAddress() {
 		return serviceAddress;
 	}
 	
+	/**
+	 * set address of service
+	 * 
+	 * @param serviceAddress
+	 */
 	public void setServiceAddress(String serviceAddress) {
 		this.serviceAddress = serviceAddress;
 	}
 	
+	/**
+	 * get port number of service
+	 * 
+	 * @return portNumber
+	 */
 	public int getPortNumber() {
 		return portNumber;
 	}
 	
+	/**
+	 * set port number of service
+	 * 
+	 * @param portNumber
+	 */
 	public void setPortNumber(int portNumber) {
 		this.portNumber = portNumber;
 	}
 	
+	/**
+	 * get directory of service
+	 * 
+	 * @return serviceDir
+	 */
 	public String getServiceDir() {
 		return serviceDir;
 	}
 	
+	/**
+	 * set directory of service
+	 * 
+	 * @param serviceDir
+	 */
 	public void setServiceDir(String serviceDir) {
 		this.serviceDir = serviceDir;
 	}
 	
+	/**
+	 * get Command of service
+	 * 
+	 * @return serviceCommand
+	 */
 	public String getServiceCommand() {
 		return serviceCommand;
 	}
 	
+	/**
+	 * set Command of service
+	 * 
+	 * @param serviceCommand
+	 */
 	public void setServiceCommand(String serviceCommand) {
 		this.serviceCommand = serviceCommand;
 	}
 	
+	/**
+	 * get status of service
+	 * 
+	 * @return serviceStatus
+	 */
 	public String getServiceStatus() {
 		return serviceStatus;
 	}
 	
+	/**
+	 * set status of service
+	 * 
+	 * @param serviceStatus
+	 */
 	public void setServiceStatus(String serviceStatus) {
 		this.serviceStatus = serviceStatus;
 	}

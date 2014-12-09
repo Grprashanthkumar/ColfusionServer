@@ -16,6 +16,7 @@ import edu.pitt.sis.exp.colfusion.dal.orm.ColfusionServices;
 import edu.pitt.sis.exp.colfusion.servicemonitor.ColfusionServicesViewModel;
 import edu.pitt.sis.exp.colfusion.servicemonitor.ServiceMonitor;
 import edu.pitt.sis.exp.colfusion.servicemonitor.ServiceMonitorDaemon;
+import edu.pitt.sis.exp.colfusion.utils.Gsonizer;
 
 /**
  * @author Hao Bai
@@ -34,15 +35,17 @@ public class ServiceMonitorRestImpl implements ServiceMonitorRest{
 	public Response getServicesStatus() {
 		
 		//logger.info("Got request with this payload length: " + twoJointTables.length());
-		String result = "";
+		List<ColfusionServices> resultList = new ArrayList<ColfusionServices>();
+		String jsonResult = "";
 		try {
-			result = ServiceMonitorDaemon.getInstance().getServiceMonitor().getServicesStatus().toString();
-			return Response.status(200).entity(result).build();
+			resultList = ServiceMonitorDaemon.getInstance().getServiceMonitor().getServicesStatus();
+			jsonResult = Gsonizer.toJson(resultList, false);
+			return Response.status(200).entity(jsonResult).build();
 		} 
 		catch (Exception ex) {
 			logger.error("In ServiceMonitorRestImpl.getServicesStatus()\n"
 					+ ex.toString() + " " + ex.getCause());	
-			return Response.status(500).entity(result).build();
+			return Response.status(500).entity(jsonResult).build();
 		}	
 	}
 	
@@ -69,6 +72,8 @@ public class ServiceMonitorRestImpl implements ServiceMonitorRest{
 	@Override
 	public Response getServiceStatusByNamePattern(String namePattern) {
 		List<ColfusionServices> serviceList = null;
+		String jsonResult = "";
+		
 		try {
 			serviceList = ServiceMonitorDaemon.getInstance().getServiceMonitor().getServicesStatus();
 			
@@ -78,7 +83,8 @@ public class ServiceMonitorRestImpl implements ServiceMonitorRest{
 					resultList.add(service.getServiceName() + " is " + service.getServiceStatus());
 				}
 			}
-			return Response.status(200).entity(resultList.toString()).build();
+			jsonResult = Gsonizer.toJson(resultList, false);
+			return Response.status(200).entity(jsonResult).build();
 		}
 		catch (Exception ex) {
 			logger.error("In ServiceMonitorRestImpl.getServiceStatusByNamePattern()\n"

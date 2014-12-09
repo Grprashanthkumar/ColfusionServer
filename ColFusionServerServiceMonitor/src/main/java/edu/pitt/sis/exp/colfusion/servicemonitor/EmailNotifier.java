@@ -37,6 +37,13 @@ public class EmailNotifier {
 	public EmailNotifier(){
 	}
 	
+	/**
+	 * send e-mail to users
+	 * 
+	 * @param to address
+	 * @param e-mail subject
+	 * @param e-mail text
+	 */
 	public void sendMail(String toAddress, String mailSubject, String mailText){
 		Properties properties = new Properties();
 		properties.put("mail.smtp.starttls.enable", smtpStarttlsEnable);

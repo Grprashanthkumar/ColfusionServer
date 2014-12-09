@@ -28,72 +28,159 @@ public class ColfusionServices implements java.io.Serializable {
 	public ColfusionServices(){
 	}
 	
+	/**
+	 * constructor
+	 * 
+	 * @param servicename
+	 * @param address
+	 * @param portnum
+	 */
 	public ColfusionServices(String servicename, String address, int portnum){
 		this.serviceName = servicename;
 		this.serviceAddress = address;
 		this.portNumber = portnum;
 	}
 	
+	/**
+	 * set Service ID
+	 * 
+	 * @param id
+	 */
 	public void setServiceID(int id){
 		this.serviceID = id;
 	}
 	
+	/**
+	 * get Service ID
+	 * 
+	 * @return id
+	 */
 	public int getServiceID(){
 		return this.serviceID;
 	}
 	
+	/**
+	 * set Service name
+	 * 
+	 * @param servicename
+	 */
 	public void setServiceName(String servicename){
 		this.serviceName = servicename;
 	}
 	
+	/**
+	 * get Service name
+	 * 
+	 * @return servicename
+	 */
 	public String getServiceName(){
 		return this.serviceName;
 	}
 	
+	/**
+	 * set Service address
+	 * 
+	 * @param address
+	 */
 	public void setServiceAddress(String address){
 		this.serviceAddress = address;
 	}
 	
+	/**
+	 * get Service address
+	 * 
+	 * @return address
+	 */
 	public String getServiceAddress(){
 		return this.serviceAddress;
 	}
 	
+	/**
+	 * set Service port number
+	 * 
+	 * @param portnum
+	 */
 	public void setPortNumber(int portnum){
 		this.portNumber = portnum;
 	}
 	
+	/**
+	 * get Service port number
+	 * 
+	 * @return portnum
+	 */
 	public int getPortNumber(){
 		return this.portNumber;
 	}
 	
+	/**
+	 * set Service directory
+	 * 
+	 * @param dir
+	 */
 	public void setServiceDir(String dir){
 		this.serviceDir = dir;
 	}
 	
+	/**
+	 * get Service directory
+	 * 
+	 * @return dir
+	 */
 	public String getServiceDir(){
 		return this.serviceDir;
 	}
 	
+	/**
+	 * set Service command
+	 * 
+	 * @param command
+	 */
 	public void setServiceCommand(String command){
 		this.serviceCommand = command;
 	}
 	
+	/**
+	 * get Service command
+	 * 
+	 * @return command
+	 */
 	public String getServiceCommand(){
 		return this.serviceCommand;
 	}
 	
+	/**
+	 * set Service status
+	 * 
+	 * @param status
+	 */
 	public void setServiceStatus(String status){
 		this.serviceStatus = status;
 	}
 	
+	/**
+	 * get Service status
+	 * 
+	 * @return status
+	 */
 	public String getServiceStatus(){
 		return this.serviceStatus;
 	}
 	
+	/**
+	 * set Service Previous Status
+	 * 
+	 * @param status
+	 */
 	public void setServicePreviousStatus(String status){
 		this.servicePreviousStatus = status;
 	}
 	
+	/**
+	 * get Service Previous Status
+	 * 
+	 * @return servicePreviousStatus
+	 */
 	public String getServicePreviousStatus(){
 		return this.servicePreviousStatus;
 	}

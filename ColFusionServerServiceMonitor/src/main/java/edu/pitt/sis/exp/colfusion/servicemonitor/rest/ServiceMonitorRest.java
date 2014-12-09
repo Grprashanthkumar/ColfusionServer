@@ -23,22 +23,45 @@ import edu.pitt.sis.exp.colfusion.servicemonitor.ServiceMonitor;
  */
 public interface ServiceMonitorRest {
 	
+	/**
+     * Find status of all services.
+     * 
+     * @return HTTP response.
+     */
 	@Path("getServicesStatus")
 	@GET
     @Produces(MediaType.APPLICATION_JSON)
 	public abstract Response getServicesStatus();
 	//function parameter: @Context ContextResolver<ServiceMonitor> serviceMonitor
 	
+	/**
+     * Find status of service by id.
+     * 
+     * @param id of service
+     * @return HTTP response.
+     */
 	@Path("getServiceStatusByID/{id}")
 	@GET
     @Produces(MediaType.APPLICATION_JSON)
 	public abstract Response getServiceStatusByID(@PathParam("id") String serviceID);
 	
+	/**
+     * Find status of service by its name pattern.
+     * 
+     * @param pattern of service's name
+     * @return HTTP response.
+     */
 	@Path("getServiceStatusByNamePattern/{pattern}")
 	@GET
     @Produces(MediaType.APPLICATION_JSON)
 	public abstract Response getServiceStatusByNamePattern(@PathParam("pattern") String namePattern);
 	
+	/**
+     * add a new service.
+     * 
+     * @param entity of ColfusionServicesViewModel
+     * @return HTTP response.
+     */
 	@Path("addNewService")
 	@POST
 	//@Consumes("text/plain")
@@ -47,12 +70,25 @@ public interface ServiceMonitorRest {
     @Produces(MediaType.APPLICATION_JSON)
 	public abstract Response addNewService(ColfusionServicesViewModel newService);
 
+	/**
+     * update a service.
+     * 
+     * @param id of the service
+     * @param entity of ColfusionServicesViewModel
+     * @return HTTP response.
+     */
 	@Path("updateServiceByID/{id}")
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
 	public abstract Response updateServiceByID(@PathParam("id") String serviceID, ColfusionServicesViewModel newService);
 	
+	/**
+     * delete a service by id.
+     * 
+     * @param id of the service
+     * @return HTTP response.
+     */
 	@Path("deleteServiceByID/{id}")
 	@GET
 	//@DELETE

@@ -48,6 +48,10 @@ import edu.pitt.sis.exp.colfusion.utils.PropertyKeys;
  *   1) monitoring a specific service's status;
  *   2) start or stop a specific service.
  */
+/**
+ * @author duke
+ *
+ */
 public class ServiceMonitor extends TimerTask{
 	
 	private List<ColfusionServices> serviceList;
@@ -74,6 +78,12 @@ public class ServiceMonitor extends TimerTask{
 		emailNotifier = new EmailNotifier();
 	}
 	
+	/**
+	 * @param service list
+	 * @param timeout
+	 * @param period
+	 * @param timer parameter
+	 */
 	public ServiceMonitor(List<ColfusionServices> servicelist, int timeout, int period, Timer timerParameter){
 		this.serviceList = servicelist;
 		this.timeOut = timeout;
@@ -81,30 +91,68 @@ public class ServiceMonitor extends TimerTask{
 		this.timer = timerParameter;
 	}
 	
+	/**
+	 * set service list
+	 * 
+	 * @param list of entity ColfusionServices
+	 */
 	public void setServiceList(final List<ColfusionServices> servicelist){
 		this.serviceList = servicelist;
 	}
 	
+	/**
+	 * get service list
+	 * 
+	 * @return list of entity ColfusionServices
+	 */
 	public List<ColfusionServices> getServiceList(){
 		return this.serviceList;
 	}
 	
+	
+	/**
+	 * set time out
+	 * 
+	 * @param timeout
+	 */
 	public void setTimeOut(final int timeout){
 		this.timeOut = timeout;
 	}
 	
+	/**
+	 * get time out
+	 * 
+	 * @return timeout
+	 */
 	public int getTimeOut(){
 		return this.timeOut;
 	}
 	
+	
+	/**
+	 * set monitor period 
+	 * 
+	 * @param period
+	 */
 	public void setMonitorPeriod(int period){
 		this.monitorPeriod = period;
 	}
 	
+	/**
+	 * get monitor period 
+	 * 
+	 * @return period
+	 */
 	public int getMonitorPeriod(){
 		return this.monitorPeriod;
 	}
 	
+	/**
+	 * get service num in database
+	 * 
+	 * @return number of all services
+	 * @throws Exception
+	 */
 	public int getServiceNumInDatabase() throws Exception{
 		return this.serviceManager.findAll().size();
 	}
@@ -114,6 +162,9 @@ public class ServiceMonitor extends TimerTask{
 	 * with other information in a Service list.
 	 * Note: Either the name or the function of this function
 	 * is different from getServiceStatus() in Service.java
+	 * 
+	 * @return list of entity ColfusionServices
+	 * @throws Exception
 	 */
 	public List<ColfusionServices> getServicesStatus() throws Exception{
 		if(this.getServiceList().isEmpty() == true)
@@ -122,6 +173,13 @@ public class ServiceMonitor extends TimerTask{
 		return this.getServiceList();
 	}
 	
+	
+	/**
+	 * get service status by id
+	 * 
+	 * @param serviceID
+	 * @return entity of ColfusionServices
+	 */
 	public ColfusionServices getServiceStatusByID(int serviceID) {
 		ColfusionServices service = null;
 		try {
@@ -134,6 +192,12 @@ public class ServiceMonitor extends TimerTask{
 		return service;
 	}
 	
+	/**
+	 * get service status by name pattern
+	 * 
+	 * @param namePattern
+	 * @return entity of ColfusionServices
+	 */
 	public List<ColfusionServices> getServiceStatusByNamePattern(String namePattern) {
 		List<ColfusionServices> resultServiceList = new ArrayList<ColfusionServices>();
 		List<ColfusionServices> tempServiceList;
@@ -157,6 +221,12 @@ public class ServiceMonitor extends TimerTask{
 		return resultServiceList;	
 	}
 	
+	/**
+	 * add New Service
+	 * 
+	 * @param entity of ColfusionServicesViewModel
+	 * @return boolean result
+	 */
 	public boolean addNewService(ColfusionServicesViewModel viewModel) {
 		try {
 			ColfusionServices newService = this.convertViewModel(viewModel);
@@ -174,6 +244,13 @@ public class ServiceMonitor extends TimerTask{
 		}
 	}
 	
+	/**
+	 * update Service By ID
+	 * 
+	 * @param serviceID
+	 * @param entity of ColfusionServicesViewModel
+	 * @return boolean result
+	 */
 	public boolean updateServiceByID(int serviceID, ColfusionServicesViewModel viewModel) {
 		try {
 			ColfusionServices newService = this.convertViewModel(viewModel);
@@ -195,6 +272,12 @@ public class ServiceMonitor extends TimerTask{
 		}
 	}
 	
+	/**
+	 * delete Service By ID
+	 * 
+	 * @param serviceID
+	 * @return boolean result
+	 */
 	public boolean deleteServiceByID(int serviceID) {
 		try {
 			for(ColfusionServices service : this.serviceList) {
@@ -213,6 +296,12 @@ public class ServiceMonitor extends TimerTask{
 		}
 	}
 	
+	/**
+	 * convert entity of ColfusionServicesViewModel to entity of ColfusionServices
+	 * 
+	 * @param entity of ColfusionServicesViewModel
+	 * @return entity of ColfusionServices
+	 */
 	private ColfusionServices convertViewModel(ColfusionServicesViewModel viewModel) {
 		ColfusionServices service = new ColfusionServices();
 		
@@ -230,6 +319,8 @@ public class ServiceMonitor extends TimerTask{
 	 * This function starts the process of service monitoring.
 	 * If monitoring is started successfully, returns true.
 	 * Otherwise, returns false.
+	 * 
+	 * @return boolean result
 	 */
 	public boolean startServiceMonitor(){
 		try{
@@ -248,6 +339,8 @@ public class ServiceMonitor extends TimerTask{
 	 * This function stops the process of service monitoring.
 	 * If monitoring is stopped successfully, returns true.
 	 * Otherwise, returns false.
+	 * 
+	 * @return boolean result
 	 */
 	public boolean stopServiceMonitor(){
 		if(this.timer == null)
@@ -270,6 +363,9 @@ public class ServiceMonitor extends TimerTask{
 	 * Also set the timeout, with default 3 seconds.
 	 * If the service is connected, returns true;
 	 * Else, connect() reports connect exceptions, thus, returns false.
+	 * 
+	 * @param entity of ColfusionServices
+	 * @return boolean result
 	 */
 	public boolean isServiceConnected(final ColfusionServices service){	
         try{
@@ -286,6 +382,9 @@ public class ServiceMonitor extends TimerTask{
 	
 	/**
 	 * Return current service's status.
+	 * 
+	 * @param entity of ColfusionServices
+	 * @return status of service
 	 */
 	public String updateServiceStatus(final ColfusionServices service){
 		if(this.isServiceConnected(service) == true){

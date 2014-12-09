@@ -12,10 +12,20 @@ public enum ServiceStatusEnum{
 	
     private String value;
 
+    /**
+     * set Service Status Enum
+     * 
+     * @param value
+     */
     private ServiceStatusEnum(String value){
             this.value = value;
     }
     
+    /**
+     * get value
+     * 
+     * @return value
+     */
     public String getValue(){
     	return this.value;
     }
