@@ -266,7 +266,7 @@ public abstract class DatabaseHandlerBase implements Closeable {
 	 * @throws SQLException 
 	 * @throws Exception 
 	 */
-	public abstract boolean createTableIfNotExist(String tableName, List<String> variables) throws SQLException, Exception;
+	public abstract void createTableIfNotExist(String tableName, List<String> variables) throws SQLException, Exception;
 
 	/**
 	 * Creates indices on a list of columns. Depending on combineColumns parameter one or many indices will be created.
@@ -280,27 +280,32 @@ public abstract class DatabaseHandlerBase implements Closeable {
     
     public abstract boolean tempTableExist(int sid, String tableName)  throws SQLException;
     
-    public abstract void removeTable(int sid, String tableName) throws SQLException;
-    
-    public abstract void backupOriginalTable(int sid, String tableName) throws SQLException;
+    /**
+     * Drop table if exists.
+     * 
+     * @param tableName table name to drop
+     * @throws SQLException
+     */
+    public abstract void removeTable(String tableName) throws SQLException;
     
     public abstract int getColCount(int sid, String tableName) throws SQLException;
     
     public abstract ArrayList<ArrayList<String>> getRows(String tableName, int colCount) throws SQLException;
     
-    public abstract void createTable(int sid, String tableName) throws SQLException;
-    
-    public abstract void createTempTable(String query, int sid, String tableName) throws SQLException;
-    
-    public abstract void insertIntoTempTable(String query, int sid, String tableName) throws SQLException;
-    // addition here
-    public abstract void createOriginalTable(String query, int sid, String tableName) throws SQLException;
+    /**
+     * Creates table based on another table (CREATE TABLE tableNameToCreate SELECT * FROM tableNameFromWhichToCreate).
+     * 
+     * @param tableNameToCreate 
+     * 				the name of the table which should be created
+     * @param tableNameFromWhichToCreate
+     * 				the name of the table based on which to create a new table.
+     * @throws SQLException
+     */
+    public abstract void createTableFromTable(String tableNameToCreate, String tableNameFromWhichToCreate) throws SQLException;
     
     public abstract void insertIntoTable(String query, int sid, String tableName) throws SQLException;
     
     public abstract void importCsvToTable(String dir, String tableName) throws SQLException;
-    
-    public abstract void insertIntoTable(int sid, String tableName, ArrayList<ArrayList<String>> rows, ArrayList<String> columnNames) throws SQLException;
 	
 	protected abstract String wrapSQLIntoLimit(String sqlString, int perPage, int pageNumber);
 
@@ -372,7 +377,10 @@ public abstract class DatabaseHandlerBase implements Closeable {
 	 * Wrap provided {@link String} value into {@link #getDbCharToWrapNames()} characters.
 	 * 
 	 * @param value to wrap
-	 * @return wrapped string
+	 * @return wrapped string.
+ 	 * 			If the value is empty or null, the it is return without any changes.
+	 * 			If the value starts and ends with the provided wrapping character, 
+	 * 			then it is returned without any changes.
 	 */
 	protected String wrapName(final String value) {
 		return wrapInEscapeChars(value, getDbCharToWrapNames());
@@ -382,7 +390,10 @@ public abstract class DatabaseHandlerBase implements Closeable {
 	 * Wrap provided {@link String} value into {@link #getDbCharToWrapStrings()} characters.
 	 * 
 	 * @param value to wrap
-	 * @return wrapped string
+	 * @return wrapped string.
+	 * 	 		If the value is empty or null, the it is return without any changes.
+	 * 			If the value starts and ends with the provided wrapping character, 
+	 * 			then it is returned without any changes.
 	 */
 	protected String wrapString(final String value) {
 		return wrapInEscapeChars(value, getDbCharToWrapStrings());
@@ -396,11 +407,21 @@ public abstract class DatabaseHandlerBase implements Closeable {
 	 * @param wrappingCharacter
 	 * 				the wrapping character
 	 * @return
-	 * 			wrapped string.
+	 * 			wrapped string. 
+	 * 			If the value is empty or null, the it is return without any changes.
+	 * 			If the value starts and ends with the provided wrapping character, 
+	 * 			then it is returned without any changes.
 	 */
 	private String wrapInEscapeChars(final String value, final char wrappingCharacter) {
-		return String.format("%s%s%s", wrappingCharacter, 
-				value, wrappingCharacter);
+		if (edu.pitt.sis.exp.colfusion.utils.StringUtils.isNullOrEmpty(value)) {
+			return value;
+		}
+		
+		if (value.charAt(0) == wrappingCharacter && value.charAt(value.length() - 1) == wrappingCharacter) {
+			return value;
+		}
+		
+		return String.format("%s%s%s", wrappingCharacter, value, wrappingCharacter);
 	}
 	
 	private Table runQuery(final RelationKey relationKey,
@@ -429,6 +450,20 @@ public abstract class DatabaseHandlerBase implements Closeable {
 			throw e;
 		}
 	}
+	
+	/**
+	 * Executes
+	 * @param query
+	 * @throws SQLException
+	 */
+	protected void executeUpdate(final String query) throws SQLException {
+		try (Statement statement = getConnection().createStatement()) {            
+           
+			logger.info(String.format("About to execute update query '%s'", query));
+			statement.executeUpdate(query);            
+	    } 
+	}
+	
 	/**
 	 * @param relationKey
 	 * @param columnDbNames
@@ -460,39 +495,51 @@ public abstract class DatabaseHandlerBase implements Closeable {
 	 * @param tableFrom table in the from where to copy data
 	 * @param databaseTo database to copy to
 	 * @param tableTo table to where to copy data
-	 * @throws SQLException 
+	 * @throws Exception 
 	 */
 	public static void copyData(final DatabaseHandlerBase databaseFrom, final RelationKey tableFrom,
-			final DatabaseHandlerBase databaseTo, final RelationKey tableTo) throws SQLException {
+			final DatabaseHandlerBase databaseTo, final RelationKey tableTo) throws Exception {
 		
-		try (Connection connectionFrom = databaseFrom.getConnection(); 
-				Connection connectionTo = databaseTo.getConnection()) {
+		String databaseToName = databaseTo.getDatabase();
+		databaseTo.setDatabase("");
+		
+		databaseTo.createDatabaseIfNotExist(databaseToName);
 			
-			List<String> allColumnsInFromTable = databaseFrom.getAllColumnsInTable(tableFrom);
-			String sqlString = databaseFrom.constructSelectFromSQL(tableFrom, allColumnsInFromTable);
+		List<String> allColumnsInFromTable = databaseFrom.getAllColumnsInTable(tableFrom);
+		String sqlString = databaseFrom.constructSelectFromSQL(tableFrom, allColumnsInFromTable);
+		
+		try (PreparedStatement preparedFromStmp = databaseFrom.getConnection().prepareStatement(sqlString)) {
+			ResultSet tableFromData = preparedFromStmp.executeQuery();
 			
-			try (PreparedStatement preparedFromStmp = connectionFrom.prepareStatement(sqlString)) {
-				ResultSet tableFromData = preparedFromStmp.executeQuery();
-				
-				ResultSetMetaData tableFromMetadata = tableFromData.getMetaData();
-				String insertSQL = databaseTo.makeInsertPreparedSQL(tableTo, tableFromMetadata);
-				try (PreparedStatement preparedToStmp = connectionTo.prepareStatement(insertSQL)) {				
-					while (tableFromData.next()) {
-						preparedToStmp.clearParameters();
-						
-						for (int i = 0; i < tableFromMetadata.getColumnCount(); i++) {
-							preparedToStmp.setObject(i, tableFromData.getObject(i));
-						}
-						
-						preparedToStmp.executeUpdate();				
-			        }
-				}
+			ResultSetMetaData tableFromMetadata = tableFromData.getMetaData();
+			
+			databaseTo.removeTable(tableTo.getDbTableName());
+			databaseTo.createTableIfNotExist(tableTo, tableFromMetadata);
+			
+			String insertSQL = databaseTo.makeInsertPreparedSQL(tableTo, tableFromMetadata);
+			try (PreparedStatement preparedToStmp = databaseTo.getConnection().prepareStatement(insertSQL)) {				
+				while (tableFromData.next()) {
+					preparedToStmp.clearParameters();
+					
+					for (int i = 1; i <= tableFromMetadata.getColumnCount(); i++) {
+						preparedToStmp.setObject(i, tableFromData.getObject(i));
+					}
+					
+					preparedToStmp.executeUpdate();				
+		        }
 			}
-		}
-		catch(Exception e) {
-			throw e;
-		}
+		}		
 	}
+	
+	/**
+	 * Creates table in the current database ({@link #database} must be set and database must exists).
+	 * 
+	 * @param tableTo table name to create
+	 * @param tableFromMetadata columns metadata 
+	 * @throws SQLException 
+	 * @throws Exception 
+	 */
+	public abstract void createTableIfNotExist(RelationKey tableTo, ResultSetMetaData tableFromMetadata) throws SQLException, Exception;
 	
 	/**
 	 * Constructs an insert SQL query that can be used as prepared statement from given

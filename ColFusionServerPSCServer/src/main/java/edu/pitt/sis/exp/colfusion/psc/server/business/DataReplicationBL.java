@@ -17,6 +17,7 @@ import edu.pitt.sis.exp.colfusion.dal.orm.ColfusionProcesses;
 import edu.pitt.sis.exp.colfusion.dal.orm.ColfusionPscSourceinfoTable;
 import edu.pitt.sis.exp.colfusion.dal.orm.ColfusionPscSourceinfoTableId;
 import edu.pitt.sis.exp.colfusion.process.ProcessManager;
+import edu.pitt.sis.exp.colfusion.psc.server.util.Utils;
 import edu.pitt.sis.exp.colfusion.utils.StringUtils;
 
 
@@ -31,6 +32,13 @@ public class DataReplicationBL {
 	private final static String PSC_DATABASE_USER = "evgeny";
 	private final static String PSC_DATABASE_PASSWORD = "^&BdZYI[e]UB";
 	private final static DatabaseHanderType PSC_DATABASE_VENDOR = DatabaseHanderType.MYSQL;
+	
+	private final static String PROPERTY_PSC_HOST = "psc.host";
+	private final static String PROPERTY_PSC_DATABASE_PORT = "psc.database.port";
+	private final static String PROPERTY_PSC_DATABASE_NAME = "psc.database.name";
+	private final static String PROPERTY_PSC_DATABASE_USER = "psc.database.user";
+	private final static String PROPERTY_PSC_DATABASE_PASSWORD = "psc.database.password";
+	private final static String PROPERTY_PSC_DATABASE_VENDOR = "psc.database.vendor";
 	
 	public int doDataReplication() throws Exception {
 		PSCSourceInfoTableManager pscSourceInfoTableMng = new PSCSourceInfoTableManagerImpl();
@@ -108,8 +116,14 @@ public class DataReplicationBL {
 		
 		ColfusionPscSourceinfoTableId id = new ColfusionPscSourceinfoTableId(sourceInfoAndTable.getSourceInfoId(), sourceInfoAndTable.getTableName());
 		ColfusionPscSourceinfoTable pscSourceInfoTable = new ColfusionPscSourceinfoTable(id, 
-				sourceInfoMng.findByID(sourceInfoAndTable.getSourceInfoId()), PSC_DATABASE_NAME, 
-				pscTableName, PSC_HOST, PSC_DATABASE_PORT, PSC_DATABASE_USER, PSC_DATABASE_PASSWORD, PSC_DATABASE_VENDOR.getValue()); 
+				sourceInfoMng.findByID(sourceInfoAndTable.getSourceInfoId()), 
+				Utils.getProperty(PROPERTY_PSC_DATABASE_NAME, PSC_DATABASE_NAME), 
+				pscTableName, 
+				Utils.getProperty(PROPERTY_PSC_HOST, PSC_HOST), 
+				Integer.parseInt(Utils.getProperty(PROPERTY_PSC_DATABASE_PORT, String.valueOf(PSC_DATABASE_PORT))),
+				Utils.getProperty(PROPERTY_PSC_DATABASE_USER, PSC_DATABASE_USER), 
+				Utils.getProperty(PROPERTY_PSC_DATABASE_PASSWORD, PSC_DATABASE_PASSWORD), 
+				Utils.getProperty(PROPERTY_PSC_DATABASE_VENDOR, PSC_DATABASE_VENDOR.getValue())); 
 		
 		pscSourceInfoTableMng.saveOrUpdate(pscSourceInfoTable);
 		return pscSourceInfoTable;

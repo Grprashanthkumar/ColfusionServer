@@ -75,6 +75,10 @@ public class Utils {
 		return properties.getProperty(propertyKey);
 	}
 	
+	public static String getProperty(final String propertyKey, final String defaultValue) {
+		return properties.getProperty(propertyKey, defaultValue);
+	}
+	
 	public static String getBaseRestURL(final ServerType serverType) {
 		String host = Utils.getHost(serverType);
 		String port = Utils.getPort(serverType);

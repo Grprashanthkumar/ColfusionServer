@@ -11,6 +11,8 @@ import edu.pitt.sis.exp.colfusion.responseModels.GeneralResponseGenImpl;
 import edu.pitt.sis.exp.colfusion.utils.ConfigManager;
 
 public class OpenRefineSaveChanges {
+	private static final String PROPERTY_LOCK_TIME = "lock_time";
+	
 	final Logger logger = LogManager.getLogger(OpenRefineSaveChanges.class.getName());
 	
 	/**
@@ -22,7 +24,7 @@ public class OpenRefineSaveChanges {
 	 */
 	public GeneralResponseGen<String> saveChanges(final String projectId, final String colfusionUserId) throws Exception {
 		
-        int lockTime = Integer.valueOf(ConfigManager.getInstance().getPropertyByName("lock_time"));// Integer.valueOf(p.getProperty("lock_time"));
+        int lockTime = Integer.valueOf(ConfigManager.getInstance().getPropertyByName(PROPERTY_LOCK_TIME));// Integer.valueOf(p.getProperty("lock_time"));
 		
 		GeneralResponseGen<String> result = new GeneralResponseGenImpl<>();
 		
@@ -37,9 +39,9 @@ public class OpenRefineSaveChanges {
 		String msg = "No change needs to be saved!";
 		if(!metadataDbHandler.isTimeOutForCurrentUser(sid, tableName, Integer.valueOf(colfusionUserId), lockTime)) {
 			if(databaseHandler.tempTableExist(sid, tableName)) {
-				databaseHandler.removeTable(sid, tableName);
-				databaseHandler.createTable(sid, tableName);
-				databaseHandler.removeTable(sid, "temp_" + tableName);
+				databaseHandler.removeTable(tableName);
+				databaseHandler.createTableFromTable(tableName, "temp_" + tableName);
+				databaseHandler.removeTable("temp_" + tableName);
 				msg = "Changes have been saved!";
 			}
 		} else {

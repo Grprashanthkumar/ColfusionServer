@@ -18,13 +18,28 @@
         <many-to-one name="colfusionProcesses" class="edu.pitt.sis.exp.colfusion.dal.orm.ColfusionProcesses" fetch="select">
             <column name="pid" />
         </many-to-one>
-        <property name="pscDatabase" type="string">
-            <column name="pscDatabase" length="64" not-null="true" />
+        <property name="pscDatabaseName" type="string">
+            <column name="pscDatabaseName" length="64" not-null="true" />
         </property>
         <property name="pscTableName" type="string">
             <column name="pscTableName" length="64" not-null="true">
                 <comment>THIS COMMENT SHOULD BE ON A TABLE LEVEL The table that maps colfusion sid and table name to the database and table on psd server</comment>
             </column>
+        </property>
+        <property name="pscHost" type="string">
+            <column name="pscHost" not-null="true" />
+        </property>
+        <property name="pscDatabasePort" type="int">
+            <column name="pscDatabasePort" not-null="true" />
+        </property>
+        <property name="pscDatabaseUser" type="string">
+            <column name="pscDatabaseUser" not-null="true" />
+        </property>
+        <property name="pscDatabasePassword" type="string">
+            <column name="pscDatabasePassword" not-null="true" />
+        </property>
+        <property name="pscDatabaseVendor" type="string">
+            <column name="pscDatabaseVendor" not-null="true" />
         </property>
         <property name="whenReplicationStarted" type="timestamp">
             <column name="whenReplicationStarted" length="19" />

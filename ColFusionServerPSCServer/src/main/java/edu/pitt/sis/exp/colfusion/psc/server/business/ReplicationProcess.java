@@ -53,6 +53,9 @@ public class ReplicationProcess extends ProcessBase {
 		DatabaseHandlerBase.copyData(databaseFrom, new RelationKey(pscSourceinfoTable.getId().getTableName(), pscSourceinfoTable.getId().getTableName()),
 				pscDatabase, new RelationKey(pscSourceinfoTable.getPscTableName(), pscSourceinfoTable.getPscTableName()));
 		
+		databaseFrom.close();
+		pscDatabase.close();
+		
 		pscSourceinfoTable.setWhenReplicationFinished(new Date());
 		pscManager.saveOrUpdate(pscSourceinfoTable);
 		
