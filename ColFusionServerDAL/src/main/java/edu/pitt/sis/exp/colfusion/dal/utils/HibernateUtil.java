@@ -63,7 +63,7 @@ public class HibernateUtil {
 		cfg.setProperty(PropertyKeys.HIBERNATE_C3P0_IDLE_TEST_PERIOD, configMng.getProperty(PropertyKeys.HIBERNATE_C3P0_IDLE_TEST_PERIOD));
 		
 		// Somehow setting this property at this time doesn't work. So it is set via the hibernate config file.
-		//cfg.setProperty(PropertyKeys.HIBERNATE_CURRENT_SESSION_CONTEXT_CLASS, configMng.getProperty(PropertyKeys.HIBERNATE_CURRENT_SESSION_CONTEXT_CLASS));
+		cfg.setProperty(PropertyKeys.HIBERNATE_CURRENT_SESSION_CONTEXT_CLASS, configMng.getProperty(PropertyKeys.HIBERNATE_CURRENT_SESSION_CONTEXT_CLASS));
 		cfg.setProperty(PropertyKeys.HIBERNATE_SHOW_SQL, configMng.getProperty(PropertyKeys.HIBERNATE_SHOW_SQL));
 		cfg.setProperty(PropertyKeys.HIBERNATE_FORMAT_SQL, configMng.getProperty(PropertyKeys.HIBERNATE_FORMAT_SQL));
 	}

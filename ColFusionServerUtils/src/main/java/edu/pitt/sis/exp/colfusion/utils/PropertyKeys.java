@@ -228,11 +228,11 @@ public class PropertyKeys {
 	
 	public static String HIBERNATE_C3P0_IDLE_TEST_PERIOD = "hibernate.c3p0.idle_test_period";
 	
-	public static String HIBERNATE_CURRENT_SESSION_CONTEXT_CLASS = "current_session_context_class";
+	public static String HIBERNATE_CURRENT_SESSION_CONTEXT_CLASS = "hibernate.current_session_context_class";
 	
-	public static String HIBERNATE_SHOW_SQL = "show_sql";
+	public static String HIBERNATE_SHOW_SQL = "hibernate.show_sql";
 	
-	public static String HIBERNATE_FORMAT_SQL = "format_sql";
+	public static String HIBERNATE_FORMAT_SQL = "hibernate.format_sql";
 	
 	//***** END OF HIBERNATE PROPERTIES *****************//
 	

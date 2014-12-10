@@ -3,29 +3,7 @@
                                          "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
 <hibernate-configuration>
  <session-factory>
- <!-- All properties are defined in the config_default.properties file
- 
-  <property name="hibernate.connection.driver_class">com.mysql.jdbc.Driver</property>
-  <property name="hibernate.connection.url">jdbc:mysql://localhost:3306/colfusion</property>
-  <property name="hibernate.default_catalog">colfusion</property>
-  <property name="hibernate.connection.username">dataverse</property>
-  <property name="hibernate.connection.password">dataverse</property>
-  <property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect</property>
-  
-  <property name="hibernate.connection.zeroDateTimeBehavior">convertToNull</property>
-  
-  <property name="hibernate.c3p0.min_size">5</property>
-  <property name="hibernate.c3p0.max_size">20</property>
-  <property name="hibernate.c3p0.timeout">300</property>
-  <property name="hibernate.c3p0.max_statements">50</property>
-  <property name="hibernate.c3p0.idle_test_period">300</property>
-   -->
-  
-  <!-- Enable Hibernate's automatic session context management. Somehow this property only works when set form here, not from properties file. -->
-  <property name="current_session_context_class">thread</property>
-  <!-- Display and format all executed SQL to stdout 
-  <property name="show_sql">false</property>
-  <property name="format_sql">true</property>-->
+ <!-- All properties are defined in the config_default.properties file -->
   
   <mapping resource="hibernate/orm_mappings/ColfusionAdditionalCategories.hbm.xml"/>
   <mapping resource="hibernate/orm_mappings/ColfusionCachedQueriesInfo.hbm.xml"/>
