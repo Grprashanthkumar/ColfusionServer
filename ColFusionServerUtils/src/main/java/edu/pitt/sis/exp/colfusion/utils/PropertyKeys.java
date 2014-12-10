@@ -200,4 +200,40 @@ public class PropertyKeys {
 	*/
 	public static String userLevel = "userLevel";
 	
+	
+	
+	
+	//******* Hibernate properties (don't rename these properties) *************//
+	public static String HIBERNATE_CONNECTION_DRIVER_CLASS = "hibernate.connection.driver_class";
+	
+	public static String HIBERNATE_CONNECTION_URL = "hibernate.connection.url";
+	
+	public static String HIBERNATE_DEFAULT_CATALOG = "hibernate.default_catalog";
+	
+	public static String HIBERNATE_CONNECTION_USERNAME = "hibernate.connection.username";
+			
+	public static String HIBERNATE_CONNECTION_PASSWORD = "hibernate.connection.password";
+	
+	public static String HIBERNATE_DIALECT = "hibernate.dialect";
+	
+	public static String HIBERNATE_CONNECTION_ZERO_DATE_TIME_BEHAVIOR = "hibernate.connection.zeroDateTimeBehavior";
+		
+	public static String HIBERNATE_C3P0_MIN_SIZE = "hibernate.c3p0.min_size";
+	
+	public static String HIBERNATE_C3P0_MAX_SIZE = "hibernate.c3p0.max_size";
+	
+	public static String HIBERNATE_C3P0_TIMEOUT = "hibernate.c3p0.timeout";
+	
+	public static String HIBERNATE_C3P0_MAX_STATEMENTS = "hibernate.c3p0.max_statements";
+	
+	public static String HIBERNATE_C3P0_IDLE_TEST_PERIOD = "hibernate.c3p0.idle_test_period";
+	
+	public static String HIBERNATE_CURRENT_SESSION_CONTEXT_CLASS = "current_session_context_class";
+	
+	public static String HIBERNATE_SHOW_SQL = "show_sql";
+	
+	public static String HIBERNATE_FORMAT_SQL = "format_sql";
+	
+	//***** END OF HIBERNATE PROPERTIES *****************//
+	
 }

@@ -13,6 +13,9 @@ import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
 
+import edu.pitt.sis.exp.colfusion.utils.ConfigManager;
+import edu.pitt.sis.exp.colfusion.utils.PropertyKeys;
+
 
 
 public class HibernateUtil {
@@ -24,9 +27,9 @@ public class HibernateUtil {
 		try {
 			Configuration cfg = new Configuration().configure("hibernate.cfg.xml"); 
 			
-			//cfg.setProperty(propertyName, value);
+			setProperties(cfg);
 			
-	        StandardServiceRegistryBuilder sb = new StandardServiceRegistryBuilder();
+			StandardServiceRegistryBuilder sb = new StandardServiceRegistryBuilder();
 	        sb.applySettings(cfg.getProperties());
 	        StandardServiceRegistry standardServiceRegistry = sb.build();                   
 	        sessionFactory = cfg.buildSessionFactory(standardServiceRegistry);
@@ -37,10 +40,38 @@ public class HibernateUtil {
 		}
 	}
  
+	/**
+	 * Set hibernate properties from {@link ConfigManager}
+	 * 
+	 * @param cfg
+	 * 			hibernate configuration to set properties to 
+	 */
+	private static void setProperties(final Configuration cfg) {
+		ConfigManager configMng = ConfigManager.getInstance();
+		cfg.setProperty(PropertyKeys.HIBERNATE_CONNECTION_DRIVER_CLASS, configMng.getProperty(PropertyKeys.HIBERNATE_CONNECTION_DRIVER_CLASS));
+		cfg.setProperty(PropertyKeys.HIBERNATE_CONNECTION_URL, configMng.getProperty(PropertyKeys.HIBERNATE_CONNECTION_URL));
+		cfg.setProperty(PropertyKeys.HIBERNATE_DEFAULT_CATALOG, configMng.getProperty(PropertyKeys.HIBERNATE_DEFAULT_CATALOG));
+		cfg.setProperty(PropertyKeys.HIBERNATE_CONNECTION_USERNAME, configMng.getProperty(PropertyKeys.HIBERNATE_CONNECTION_USERNAME));
+		cfg.setProperty(PropertyKeys.HIBERNATE_CONNECTION_PASSWORD, configMng.getProperty(PropertyKeys.HIBERNATE_CONNECTION_PASSWORD));		
+		cfg.setProperty(PropertyKeys.HIBERNATE_DIALECT, configMng.getProperty(PropertyKeys.HIBERNATE_DIALECT));
+		cfg.setProperty(PropertyKeys.HIBERNATE_CONNECTION_ZERO_DATE_TIME_BEHAVIOR, configMng.getProperty(PropertyKeys.HIBERNATE_CONNECTION_ZERO_DATE_TIME_BEHAVIOR));
+		
+		cfg.setProperty(PropertyKeys.HIBERNATE_C3P0_MIN_SIZE, configMng.getProperty(PropertyKeys.HIBERNATE_C3P0_MIN_SIZE));
+		cfg.setProperty(PropertyKeys.HIBERNATE_C3P0_MAX_SIZE, configMng.getProperty(PropertyKeys.HIBERNATE_C3P0_MAX_SIZE));
+		cfg.setProperty(PropertyKeys.HIBERNATE_C3P0_TIMEOUT, configMng.getProperty(PropertyKeys.HIBERNATE_C3P0_TIMEOUT));
+		cfg.setProperty(PropertyKeys.HIBERNATE_C3P0_MAX_STATEMENTS, configMng.getProperty(PropertyKeys.HIBERNATE_C3P0_MAX_STATEMENTS));
+		cfg.setProperty(PropertyKeys.HIBERNATE_C3P0_IDLE_TEST_PERIOD, configMng.getProperty(PropertyKeys.HIBERNATE_C3P0_IDLE_TEST_PERIOD));
+		
+		// Somehow setting this property at this time doesn't work. So it is set via the hibernate config file.
+		//cfg.setProperty(PropertyKeys.HIBERNATE_CURRENT_SESSION_CONTEXT_CLASS, configMng.getProperty(PropertyKeys.HIBERNATE_CURRENT_SESSION_CONTEXT_CLASS));
+		cfg.setProperty(PropertyKeys.HIBERNATE_SHOW_SQL, configMng.getProperty(PropertyKeys.HIBERNATE_SHOW_SQL));
+		cfg.setProperty(PropertyKeys.HIBERNATE_FORMAT_SQL, configMng.getProperty(PropertyKeys.HIBERNATE_FORMAT_SQL));
+	}
+	
 	public static SessionFactory getSessionFactory() {
 		return sessionFactory;
 	}
-	 
+	
 	public static void beginTransaction() throws HibernateException {
 		try {
 			Session hibernateSession = HibernateUtil.getSession();

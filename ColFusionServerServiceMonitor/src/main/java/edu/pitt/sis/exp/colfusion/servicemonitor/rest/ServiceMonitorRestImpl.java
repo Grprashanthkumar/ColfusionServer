@@ -93,18 +93,21 @@ public class ServiceMonitorRestImpl implements ServiceMonitorRest{
 	@Override
 	public Response addNewService(final ColfusionServicesViewModel newService) {
 
-		String result = "";
+		//String result = "";
 		try {
-			ServiceMonitorDaemon.getInstance().getServiceMonitor().addNewService(newService);
-			//TODO FIXME workaround
-			result = String.format("{\"message\": \"%s is added.\"}", newService.getServiceName());
-		
-			return Response.status(201).entity(result).build();
+			ColfusionServices addedService = ServiceMonitorDaemon.getInstance().getServiceMonitor().addNewService(newService);
+			
+			//TODO FIXME view model should be returned
+			//ColfusionServicesViewModel addedServiceViewModel = 
+			
+			//result = String.format("{\"message\": \"%s is added.\"}", newService.getServiceName());
+			String json = Gsonizer.toJson(addedService, false);
+			return Response.status(201).entity(json).build();
 		}
 		catch (Exception ex) {
 			logger.error("In ServiceMonitorRestImpl.addNewService()\n"
 					+ ex.toString() + " " + ex.getCause());	
-			return Response.status(500).entity(result).build();
+			return Response.status(500).entity(ex.getMessage()).build();
 		}	
 	}
 	

@@ -4,23 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
-
-
-
-
-
-
-
-
-
-
-
-
-
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-
 
 /**
  * Apache Commons Net library implements the client side of many basic Internet protocols. 
@@ -80,7 +65,7 @@ public class ServiceMonitor extends TimerTask{
 	 * @param period
 	 * @param timer parameter
 	 */
-	public ServiceMonitor(List<ColfusionServices> servicelist, int timeout, int period, Timer timerParameter){
+	public ServiceMonitor(final List<ColfusionServices> servicelist, final int timeout, final int period, final Timer timerParameter){
 		this.serviceList = servicelist;
 		this.timeOut = timeout;
 		this.monitorPeriod = period;
@@ -130,7 +115,7 @@ public class ServiceMonitor extends TimerTask{
 	 * 
 	 * @param period
 	 */
-	public void setMonitorPeriod(int period){
+	public void setMonitorPeriod(final int period){
 		this.monitorPeriod = period;
 	}
 	
@@ -163,8 +148,9 @@ public class ServiceMonitor extends TimerTask{
 	 * @throws Exception
 	 */
 	public List<ColfusionServices> getServicesStatus() throws Exception{
-		if(this.getServiceList().isEmpty() == true)
+		if(this.getServiceList().isEmpty() == true) {
 			return null;
+		}
 		
 		return this.getServiceList();
 	}
@@ -176,7 +162,7 @@ public class ServiceMonitor extends TimerTask{
 	 * @param serviceID
 	 * @return entity of ColfusionServices
 	 */
-	public ColfusionServices getServiceStatusByID(int serviceID) {
+	public ColfusionServices getServiceStatusByID(final int serviceID) {
 		ColfusionServices service = null;
 		try {
 			service = this.serviceManager.findByID(serviceID);
@@ -194,7 +180,7 @@ public class ServiceMonitor extends TimerTask{
 	 * @param namePattern
 	 * @return entity of ColfusionServices
 	 */
-	public List<ColfusionServices> getServiceStatusByNamePattern(String namePattern) {
+	public List<ColfusionServices> getServiceStatusByNamePattern(final String namePattern) {
 		List<ColfusionServices> resultServiceList = new ArrayList<ColfusionServices>();
 		List<ColfusionServices> tempServiceList;
 		
@@ -206,8 +192,9 @@ public class ServiceMonitor extends TimerTask{
 			tempServiceList = this.serviceManager.findAll();
 			for(ColfusionServices service : tempServiceList) {
 				matcher = pattern.matcher(service.getServiceName());
-				if(matcher.find())
+				if(matcher.find()) {
 					resultServiceList.add(service);
+				}
 			}
 		}
 		catch (Exception ex) {
@@ -223,20 +210,20 @@ public class ServiceMonitor extends TimerTask{
 	 * @param entity of ColfusionServicesViewModel
 	 * @return boolean result
 	 */
-	public boolean addNewService(ColfusionServicesViewModel viewModel) {
+	public ColfusionServices addNewService(final ColfusionServicesViewModel viewModel) {
 		try {
 			ColfusionServices newService = this.convertViewModel(viewModel);
 			if( newService != null) {
 				this.serviceList.add(newService);
 				this.serviceManager.save(newService);
-				return true;
+				return newService;
 			}
-			return false;
+			return null;
 		}
 		catch (Exception ex) {
 			logger.error("In ServiceMonitor.addNewService()\n"
 					+ ex.toString() + " " + ex.getCause());	
-			return false;
+			return null;
 		}
 	}
 	
@@ -247,7 +234,7 @@ public class ServiceMonitor extends TimerTask{
 	 * @param entity of ColfusionServicesViewModel
 	 * @return boolean result
 	 */
-	public boolean updateServiceByID(int serviceID, ColfusionServicesViewModel viewModel) {
+	public boolean updateServiceByID(final int serviceID, final ColfusionServicesViewModel viewModel) {
 		try {
 			ColfusionServices newService = this.convertViewModel(viewModel);
 			
@@ -274,7 +261,7 @@ public class ServiceMonitor extends TimerTask{
 	 * @param serviceID
 	 * @return boolean result
 	 */
-	public boolean deleteServiceByID(int serviceID) {
+	public boolean deleteServiceByID(final int serviceID) {
 		try {
 			for(ColfusionServices service : this.serviceList) {
 				if(service.getServiceID() == serviceID) {
@@ -298,10 +285,13 @@ public class ServiceMonitor extends TimerTask{
 	 * @param entity of ColfusionServicesViewModel
 	 * @return entity of ColfusionServices
 	 */
-	private ColfusionServices convertViewModel(ColfusionServicesViewModel viewModel) {
+	private ColfusionServices convertViewModel(final ColfusionServicesViewModel viewModel) {
 		ColfusionServices service = new ColfusionServices();
 		
-		service.setServiceID(viewModel.getServiceID());
+		if (viewModel.getServiceID() > 0) {
+			service.setServiceID(viewModel.getServiceID());
+		}
+		
 		service.setServiceName(viewModel.getServiceName());
 		service.setServiceAddress(viewModel.getServiceAddress());
 		service.setPortNumber(viewModel.getPortNumber());
@@ -340,8 +330,9 @@ public class ServiceMonitor extends TimerTask{
 	 * @return boolean result
 	 */
 	public boolean stopServiceMonitor(){
-		if(this.timer == null)
+		if(this.timer == null) {
 			return true;
+		}
 		try{
 			//this.timer.cancel();
 			this.cancel();

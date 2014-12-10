@@ -143,7 +143,7 @@ public final class ConfigManager {
 			throws RuntimeException {
 		String propertyFilePath = getSystemProperty(CONFIG_FILE_NAME_SYSTEM_PROPERTY);
 		if (propertyFilePath == null) {
-			logger.info(String.format("System property '%s' was not provided, so no properies to load", CONFIG_FILE_NAME_SYSTEM_PROPERTY));
+			logger.info(String.format("System property '%s' was not provided, so no properties to load", CONFIG_FILE_NAME_SYSTEM_PROPERTY));
 		}
 		else {
 			logger.info(String.format("System property '%s' was provided, "
