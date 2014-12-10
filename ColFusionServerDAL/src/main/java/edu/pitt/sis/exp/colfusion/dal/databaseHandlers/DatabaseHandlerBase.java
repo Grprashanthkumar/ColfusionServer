@@ -268,17 +268,7 @@ public abstract class DatabaseHandlerBase implements Closeable {
 	 */
 	public abstract void createTableIfNotExist(String tableName, List<String> variables) throws SQLException, Exception;
 
-	/**
-	 * Creates indices on a list of columns. Depending on combineColumns parameter one or many indices will be created.
-	 * @param columnNames - a list of names of columns on which index (indices) need to be created.
-	 * @param combineColumns - if true, only one index will be created where key will be combination of all columns, otherwise a separate index on each column will be created.
-	 * @throws SQLException 
-	 */
-	public abstract void createIndecesIfNotExist(String tableName, String columnNames) throws SQLException;
-
-	// protected abstract String getConnectionString();
-    
-    public abstract boolean tempTableExist(int sid, String tableName)  throws SQLException;
+	public abstract boolean tempTableExist(int sid, String tableName)  throws SQLException;
     
     /**
      * Drop table if exists.
@@ -339,6 +329,12 @@ public abstract class DatabaseHandlerBase implements Closeable {
 		return sqlString;
 	}
 	
+	/**
+	 * Creates indices on a list of columns. Depending on combineColumns parameter one or many indices will be created.
+	 * @param columnNames - a list of names of columns on which index (indices) need to be created.
+	 * @param combineColumns - if true, only one index will be created where key will be combination of all columns, otherwise a separate index on each column will be created.
+	 * @throws SQLException 
+	 */
 	public abstract void createIndecesIfNotExist(RelationKey relationKey, String columnNames) throws SQLException;
 	
 	public Table getAll(final RelationKey relationKey) throws SQLException {
@@ -437,8 +433,8 @@ public abstract class DatabaseHandlerBase implements Closeable {
 			long index = 0;
 			while (resultSet.next()) {
 				Row row = resultSetToRow(sid, relationKey, columnDbNames, resultSet);
-				result.getRows().add(row);
-				logger.info(String.format("Query result table currently has %d rows.", ++index));
+				result.getRows().add(row);	
+				index++;
 			}
 			
 			logger.info(String.format("Query '%s' resulted in %d rows", sqlWithLimit, index));
@@ -446,7 +442,7 @@ public abstract class DatabaseHandlerBase implements Closeable {
 			return result;
 		} catch (SQLException e) {
 			
-			logger.error("Something wrong happened when getAll tried to execute sql query.", e);
+			logger.error(String.format("Something wrong happened when tried to run query '%s'.", sqlWithLimit), e);
 			throw e;
 		}
 	}

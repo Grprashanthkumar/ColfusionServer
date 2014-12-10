@@ -19,6 +19,7 @@ import org.apache.logging.log4j.Logger;
 
 import edu.pitt.sis.exp.colfusion.dal.dataModels.tableDataModel.RelationKey;
 import edu.pitt.sis.exp.colfusion.dal.managers.ExecutionInfoManager;
+import edu.pitt.sis.exp.colfusion.utils.StringUtils;
 
 /**
  * @author Evgeny
@@ -29,9 +30,14 @@ public class MySQLDatabaseHandler extends DatabaseHandlerBase {
 	Logger logger = LogManager.getLogger(MySQLDatabaseHandler.class.getName());
 	
 	private static int MYSQL_INDEX_KEY_LENGTH = 100;
+
+	/**
+	 * Maximum lengths of index name;
+	 */
+	private static final int INDEX_NAME_MAX_LENGTH = 64;
 	
 	private static final String MYSQL_DRIVER_CLASS = "com.mysql.jdbc.Driver";
-	
+
 	/**
 	 * Creates a MySQL database handler. Also the connection is initialized at this time. So always wrap it in try/catch/finally and call close in finally.
 	 * @param host the url of the server.
@@ -250,70 +256,6 @@ public class MySQLDatabaseHandler extends DatabaseHandlerBase {
 	}
 
 	@Override
-	public void createIndecesIfNotExist(final String tableName, final String columnName) throws SQLException {
-		String sql = "";
-		
-		String indexName = makeIndexName(tableName, columnName);
-		
-		if (doesIndexExist(tableName, indexName)) {
-			return;
-		}
-		
-		try (Statement statement = getConnection().createStatement()) {
-			//TODO: escape query, SQL injection is possible. See if it is possible to use prepared statement.
-			sql = String.format("ALTER TABLE `%s` ADD INDEX `%s` (`%s`(%d));", tableName, indexName, columnName, MYSQL_INDEX_KEY_LENGTH);
-			
-			statement.executeUpdate(sql);			
-		} catch (SQLException e) {
-			
-			logger.error(String.format("createIndecesIfNotExist FAILED for table %s and column name %s and index name %s", tableName, columnName, indexName), e);
-			throw e;
-		}
-	}
-
-	/**
-	 * Check whether index exist or not by comparing provided index name with existing indeces in the database.
-	 * @param indexName
-	 * @return
-	 * @throws SQLException 
-	 */
-	private boolean doesIndexExist(final String tableName, final String indexName) throws SQLException {
-		
-		logger.info(String.format("Checking if an index exists with name %s for table %s", indexName, tableName));
-		
-		String sql = "SELECT COUNT(*) as cnt FROM INFORMATION_SCHEMA.STATISTICS WHERE table_name = ? and index_name = ?";
-		
-		try (java.sql.PreparedStatement statement = getConnection().prepareStatement(sql)) {
-			statement.setString(1, tableName);
-			statement.setString(2, indexName);
-			
-			ResultSet rs = statement.executeQuery();
-			while (rs.next()) {
-				return rs.getInt("cnt") != 0;				
-			}
-			
-			return false;
-		} catch (SQLException e) {
-			logger.error(String.format("doesIndexExist FAILED on table %s and index name %s", tableName, indexName), e);
-			
-			throw e;
-		}
-	}
-
-	/**
-	 * Generates/makes an index name based on table name and column name. The index name is not unique.
-	 * @param tableName
-	 * @param columnName
-	 * @return generated index name
-	 */
-	private String makeIndexName(final String tableName, final String columnName) {
-		String indexName = String.format("Index_%s_%s_%s", this.getDatabase(), tableName, columnName);
-		
-		logger.info(String.format("Generated index name %s", indexName));
-		return indexName;
-	}
-	
-	@Override
 	protected String wrapSQLIntoLimit(final String sqlString, final int perPage,
 			final int pageNumber) {
 		int startPoint = (pageNumber - 1) * perPage;
@@ -509,11 +451,19 @@ public class MySQLDatabaseHandler extends DatabaseHandlerBase {
 		}
 	}
     
+    /**
+	 * Generates/makes an index name based on table name and column name. The index name is not unique.
+	 * @param tableName
+	 * @param columnName
+	 * @return generated index name
+	 */
     private String makeIndexName(final RelationKey relationKey, final String columnName) {
 		String indexName = String.format("Index_%s_%s_%s", this.getDatabase(), relationKey.getDbTableName(), columnName);
 		
-		logger.info(String.format("Generated index name %s", indexName));
-		return indexName;
+		String indexShortName = StringUtils.makeShortUnique(indexName, INDEX_NAME_MAX_LENGTH);
+		
+		logger.info(String.format("Generated index name %s", indexShortName));
+		return indexShortName;
 	}
 	    
     @Override
@@ -542,6 +492,12 @@ public class MySQLDatabaseHandler extends DatabaseHandlerBase {
 		}
 	}
 	    
+    /**
+	 * Check whether index exist or not by comparing provided index name with existing indeces in the database.
+	 * @param indexName
+	 * @return
+	 * @throws SQLException 
+	 */
     private boolean doesIndexExist(final RelationKey relationKey, final String indexName) throws SQLException {
 		
 		logger.info(String.format("Checking if an index exists with name %s for table %s", indexName, relationKey.getDbTableName()));
