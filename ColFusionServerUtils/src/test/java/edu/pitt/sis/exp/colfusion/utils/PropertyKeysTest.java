@@ -2,16 +2,33 @@ package edu.pitt.sis.exp.colfusion.utils;
 
 public class PropertyKeysTest {
 	
-	//******************************************************************************
-	// The following public static fields should be used to look up property values.
-	// The key values should correspond to property keys in config.properties file.
-	//*******************************************************************************
+	/*
+	 We used have this test configs:
+	  #the id of the sourceinfo to use in the tests
+testStoryTitle=UnitTestStory
+testUserLogin=UnitTester
+
+# Used for testing IOUtils for uploading files. 
+testUploadRawFilesBaseLocation=upload_raw_data/test
+
+# Used for testing IOUtils for ktr files.
+testKtrFilesBaseLocation=temp/test
+
+testExcelFileNameInResourceFolder=testExcelFile.xlsx
+testCSVFileNameInResourceFolder=testCSVFile.csv
+testTarGzArchiveFileNameInResourceFolder=testTarGzArchive.tar.gz
+testZipArchive=testZipArchive.zip
+
+#Target databases:
+#File To DB database - used to test database and table creation
+testTargetFileToDBDatabase_DatabaseNamePrefix=colfusion_fileToDB_TEST
+testTargetFileToDBDatabase_UserName=dataverse
+testTargetFileToDBDatabase_Password=dataverse
+testTargetFileToDBDatabase_Server=localhost
+testTargetFileToDBDatabase_Port=3306
+testTargetFileToDBDatabase_Type=mysql
+	 */
 	
-	//******************************************************************************
-	//
-	// Keys for Debug/Tests
-	//
-	//******************************************************************************
 	
 	public static String colfusionURL = "colfusionURL";
 	

@@ -3,6 +3,9 @@
  */
 package edu.pitt.sis.exp.colfusion.dal.databaseHandlers;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -12,6 +15,7 @@ import edu.pitt.sis.exp.colfusion.dal.managers.SourceInfoManagerImpl;
 import edu.pitt.sis.exp.colfusion.dal.orm.ColfusionSourceinfoDb;
 import edu.pitt.sis.exp.colfusion.dal.viewmodels.StoryTargetDBViewModel;
 import edu.pitt.sis.exp.colfusion.utils.ConfigManager;
+import edu.pitt.sis.exp.colfusion.utils.PropertyKeys;
 
 /**
  * @author Evgeny
@@ -77,16 +81,26 @@ public class DatabaseHandlerFactory {
 	public static MetadataDbHandler getMetadataDbHandler() {
 		//TODO FIXME: this is wrong
 		if (metadataDbHandler == null) {
-			String host = ConfigManager.getInstance().getProperty("mysql_host");
-	        int port = Integer.valueOf(ConfigManager.getInstance().getProperty("mysql_port"));
-	        String user = ConfigManager.getInstance().getProperty("mysql_user"); 
-	        String password = ConfigManager.getInstance().getProperty("mysql_password"); 
-	        String database = ConfigManager.getInstance().getProperty("mysql_database"); 
-	    	
-	        //TODO:　Read host,port, etc. from config file and/or system properties
-	        DatabaseConnectionInfo connectioInfo = new DatabaseConnectionInfo(host, port, user, password, database);
-	        try{
-	        	metadataDbHandler = new MetadataDbHandler(new MySQLDatabaseHandler(connectioInfo));
+			try{
+				Pattern pattern = Pattern.compile("/([A-Za-z0-9.]+):([0-9]+)/");
+				Matcher matcher = pattern.matcher(ConfigManager.getInstance().getProperty(PropertyKeys.HIBERNATE_CONNECTION_URL));
+				
+				if (matcher.find()) {
+					String host = matcher.group(1);
+			        int port = Integer.valueOf(matcher.group(2));
+			        
+			        String user = ConfigManager.getInstance().getProperty(PropertyKeys.HIBERNATE_CONNECTION_USERNAME); 
+			        String password = ConfigManager.getInstance().getProperty(PropertyKeys.HIBERNATE_CONNECTION_PASSWORD); 
+			        String database = ConfigManager.getInstance().getProperty(PropertyKeys.HIBERNATE_DEFAULT_CATALOG); 
+			    	
+			        //TODO:　Read host,port, etc. from config file and/or system properties
+			        DatabaseConnectionInfo connectioInfo = new DatabaseConnectionInfo(host, port, user, password, database);
+		      
+		        	metadataDbHandler = new MetadataDbHandler(new MySQLDatabaseHandler(connectioInfo));
+				}
+				else {
+					throw new Exception("Couldn't parse host and port from connection url.");
+				}
 	        }
 	        catch(Exception e)
 	        {

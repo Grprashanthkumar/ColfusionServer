@@ -180,8 +180,8 @@ public class DataLoadExecutorKTRImpl extends DataLoadExecutorBaseImpl implements
 		
 		CredentialsProvider credsProvider = new BasicCredentialsProvider();
         credsProvider.setCredentials(
-                new AuthScope(configManager.getProperty(PropertyKeys.carteServer), Integer.valueOf(configManager.getProperty(PropertyKeys.cartePort))),
-                new UsernamePasswordCredentials(configManager.getProperty(PropertyKeys.carteUser), configManager.getProperty(PropertyKeys.cartePassword)));
+                new AuthScope(configManager.getProperty(PropertyKeys.COLFUSION_PENTAHO_CARTE_HOST), Integer.valueOf(configManager.getProperty(PropertyKeys.COLFUSION_PENTAHO_CARTE_PORT))),
+                new UsernamePasswordCredentials(configManager.getProperty(PropertyKeys.COLFUSION_PENTAHO_CARTE_USER), configManager.getProperty(PropertyKeys.COLFUSION_PENTAHO_CARTE_PASSWORD)));
         
         CloseableHttpClient client = HttpClients.custom()
                 .setDefaultCredentialsProvider(credsProvider)
@@ -225,7 +225,7 @@ public class DataLoadExecutorKTRImpl extends DataLoadExecutorBaseImpl implements
 		
 		ktrFileURL = URLEncoder.encode(ktrFileURL, "UTF-8");
 
-		String carteServerURL = ConfigManager.getInstance().getProperty(PropertyKeys.carteServerURL);
+		String carteServerURL = ConfigManager.getInstance().getProperty(PropertyKeys.COLFUSION_PENTAHO_CARTE_URL);
 		
         String result = String.format("%s?trans=%s&Sid=%d&Eid=%d", carteServerURL, ktrFileURL, sid, executionLogId);
         

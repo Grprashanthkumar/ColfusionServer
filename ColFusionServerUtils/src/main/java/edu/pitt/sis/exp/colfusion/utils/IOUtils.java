@@ -290,13 +290,13 @@ public class IOUtils {
 	 */
 	public static String getFileURLFromName(String fileAbsoluteName) {
 		
-		String colfusionRoot = ConfigManager.getInstance().getProperty(PropertyKeys.colfusionRootLocation);
+		String colfusionRoot = ConfigManager.getInstance().getProperty(PropertyKeys.COLFUSION_STATIC_FILES_ROOT_LOCATION);
 		
 		fileAbsoluteName = fileAbsoluteName.replace('\\', '/');
 		
 		String fileRelativeName = fileAbsoluteName.replace(colfusionRoot, "");
 		
-		String colfusionURL = ConfigManager.getInstance().getProperty(PropertyKeys.colfusionURL);
+		String colfusionURL = ConfigManager.getInstance().getProperty(PropertyKeys.COLFUSION_URL);
 		
 		return colfusionURL + "/" + fileRelativeName;
 	}
@@ -307,7 +307,7 @@ public class IOUtils {
 	 * @return
 	 */
 	public static String getAbsolutePathInColfutionRoot(final String dir) {
-		String colfusionRoot = ConfigManager.getInstance().getProperty(PropertyKeys.colfusionRootLocation);
+		String colfusionRoot = ConfigManager.getInstance().getProperty(PropertyKeys.COLFUSION_STATIC_FILES_ROOT_LOCATION);
 		
 		return colfusionRoot + File.separator + dir;
 	}

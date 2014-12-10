@@ -61,7 +61,7 @@ public class KTRManagerTest extends TestCase {
 		String textExcelFileName = configManager.getProperty(PropertyKeysTest.testExcelFileNameInResourceFolder);
 		//This depends on the fact that the file is already copied to the uplaod_row_data folder.
 		
-		String uploadFilesLocation = IOUtils.getAbsolutePathInColfutionRoot(ConfigManager.getInstance().getProperty(PropertyKeys.uploadRawFileLocationKey));
+		String uploadFilesLocation = IOUtils.getAbsolutePathInColfutionRoot(ConfigManager.getInstance().getProperty(PropertyKeys.COLFUSION_UPLOAD_FILES_FOLDER));
 		String uploadFileAbsolutePath = uploadFilesLocation + File.separator + sid; 
 		
 		String textExcelFileNameLocation =  uploadFileAbsolutePath + File.separator + textExcelFileName;
@@ -117,15 +117,15 @@ public class KTRManagerTest extends TestCase {
 			
 			StoryTargetDBViewModel dbInfo = ktrManager.readTargetDatabaseInfo();
 			
-			String dbNameExpected = configManager.getProperty(PropertyKeys.targetFileToDBDatabase_DatabaseNamePrefix) + sid;
+			String dbNameExpected = configManager.getProperty(PropertyKeys.COLFUSION_DATA_FROM_FILE_DATABASE_DATABASE_NAME_PREFIX) + sid;
 			String dbNameActual =  dbInfo.getDatabaseName();
 			
 			assertEquals(dbNameExpected, dbNameActual);
-			assertEquals(configManager.getProperty(PropertyKeys.targetFileToDBDatabase_Type), dbInfo.getDriver());
-			assertEquals(configManager.getProperty(PropertyKeys.targetFileToDBDatabase_Password), dbInfo.getPassword());
-			assertEquals(configManager.getProperty(PropertyKeys.targetFileToDBDatabase_Port), String.valueOf(dbInfo.getPort()));
-			assertEquals(configManager.getProperty(PropertyKeys.targetFileToDBDatabase_Server), dbInfo.getServerAddress());
-			assertEquals(configManager.getProperty(PropertyKeys.targetFileToDBDatabase_UserName), dbInfo.getUserName());
+			assertEquals(configManager.getProperty(PropertyKeys.COLFUSION_DATA_FROM_FILE_DATABASE_VENDOR), dbInfo.getDriver());
+			assertEquals(configManager.getProperty(PropertyKeys.COLFUSION_DATA_FROM_FILE_DATABASE_PASSWORD), dbInfo.getPassword());
+			assertEquals(configManager.getProperty(PropertyKeys.COLFUSION_DATA_FROM_FILE_DATABASE_PORT), String.valueOf(dbInfo.getPort()));
+			assertEquals(configManager.getProperty(PropertyKeys.COLFUSION_DATA_FROM_FILE_DATABASE_HOST), dbInfo.getServerAddress());
+			assertEquals(configManager.getProperty(PropertyKeys.COLFUSION_DATA_FROM_FILE_DATABASE_USERNAME), dbInfo.getUserName());
 			
 		} catch (IOException e) {
 			logger.error("testCreateKTR failed!", e);

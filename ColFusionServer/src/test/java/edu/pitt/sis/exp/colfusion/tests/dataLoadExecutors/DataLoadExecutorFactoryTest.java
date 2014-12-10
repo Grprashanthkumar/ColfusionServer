@@ -81,22 +81,22 @@ public class DataLoadExecutorFactoryTest  extends TestCase {
 			
 			ConfigManager configManager = ConfigManager.getInstance();
 			
-			assertEquals(configManager.getProperty(PropertyKeys.targetFileToDBDatabase_DatabaseNamePrefix) + sid, // + alterValue
+			assertEquals(configManager.getProperty(PropertyKeys.COLFUSION_DATA_FROM_FILE_DATABASE_DATABASE_NAME_PREFIX) + sid, // + alterValue
 					storyTargetDB.getSourceDatabase());
 			
-			assertEquals(configManager.getProperty(PropertyKeys.targetFileToDBDatabase_UserName), // + alterValue
+			assertEquals(configManager.getProperty(PropertyKeys.COLFUSION_DATA_FROM_FILE_DATABASE_USERNAME), // + alterValue
 					storyTargetDB.getUserName());
 			
-			assertEquals(configManager.getProperty(PropertyKeys.targetFileToDBDatabase_Password), // + alterValue
+			assertEquals(configManager.getProperty(PropertyKeys.COLFUSION_DATA_FROM_FILE_DATABASE_PASSWORD), // + alterValue
 					storyTargetDB.getPassword());
 			
-			assertEquals(configManager.getProperty(PropertyKeys.targetFileToDBDatabase_Server), // + alterValue 
+			assertEquals(configManager.getProperty(PropertyKeys.COLFUSION_DATA_FROM_FILE_DATABASE_HOST), // + alterValue 
 					storyTargetDB.getServerAddress());
 			
-			assertEquals(configManager.getProperty(PropertyKeys.targetFileToDBDatabase_Port), // + alterValue 
+			assertEquals(configManager.getProperty(PropertyKeys.COLFUSION_DATA_FROM_FILE_DATABASE_PORT), // + alterValue 
 					String.valueOf(storyTargetDB.getPort()));
 			
-			assertEquals(configManager.getProperty(PropertyKeys.targetFileToDBDatabase_Type), // + alterValue 
+			assertEquals(configManager.getProperty(PropertyKeys.COLFUSION_DATA_FROM_FILE_DATABASE_VENDOR), // + alterValue 
 					storyTargetDB.getDriver());
 			
 			assertEquals(sid, 
@@ -151,12 +151,12 @@ public class DataLoadExecutorFactoryTest  extends TestCase {
 							
 				ConfigManager configManager = ConfigManager.getInstance();
 				
-				ktrManager.updateTargetDBConnectionInfo(configManager.getProperty(PropertyKeys.targetFileToDBDatabase_DatabaseNamePrefix) + sid + alterValue,
-						configManager.getProperty(PropertyKeys.targetFileToDBDatabase_UserName) + alterValue,
-						configManager.getProperty(PropertyKeys.targetFileToDBDatabase_Password) + alterValue,
-						configManager.getProperty(PropertyKeys.targetFileToDBDatabase_Server) + alterValue,
-						configManager.getProperty(PropertyKeys.targetFileToDBDatabase_Port) + alterValue,
-						configManager.getProperty(PropertyKeys.targetFileToDBDatabase_Type) + alterValue);
+				ktrManager.updateTargetDBConnectionInfo(configManager.getProperty(PropertyKeys.COLFUSION_DATA_FROM_FILE_DATABASE_DATABASE_NAME_PREFIX) + sid + alterValue,
+						configManager.getProperty(PropertyKeys.COLFUSION_DATA_FROM_FILE_DATABASE_USERNAME) + alterValue,
+						configManager.getProperty(PropertyKeys.COLFUSION_DATA_FROM_FILE_DATABASE_PASSWORD) + alterValue,
+						configManager.getProperty(PropertyKeys.COLFUSION_DATA_FROM_FILE_DATABASE_HOST) + alterValue,
+						configManager.getProperty(PropertyKeys.COLFUSION_DATA_FROM_FILE_DATABASE_PORT) + alterValue,
+						configManager.getProperty(PropertyKeys.COLFUSION_DATA_FROM_FILE_DATABASE_VENDOR) + alterValue);
 								
 				return;
 			} catch (Exception e) {

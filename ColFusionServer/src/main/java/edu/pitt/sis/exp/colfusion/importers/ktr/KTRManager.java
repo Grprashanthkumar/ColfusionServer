@@ -442,12 +442,12 @@ public class KTRManager {
 		
 		ConfigManager configManager = ConfigManager.getInstance();
 		
-		setConnectionNode(connectionNode, configManager.getProperty(PropertyKeys.targetFileToDBDatabase_DatabaseNamePrefix) + sid,
-				configManager.getProperty(PropertyKeys.targetFileToDBDatabase_UserName),
-				configManager.getProperty(PropertyKeys.targetFileToDBDatabase_Password),
-				configManager.getProperty(PropertyKeys.targetFileToDBDatabase_Server),
-				configManager.getProperty(PropertyKeys.targetFileToDBDatabase_Port),
-				configManager.getProperty(PropertyKeys.targetFileToDBDatabase_Type));
+		setConnectionNode(connectionNode, configManager.getProperty(PropertyKeys.COLFUSION_DATA_FROM_FILE_DATABASE_DATABASE_NAME_PREFIX) + sid,
+				configManager.getProperty(PropertyKeys.COLFUSION_DATA_FROM_FILE_DATABASE_USERNAME),
+				configManager.getProperty(PropertyKeys.COLFUSION_DATA_FROM_FILE_DATABASE_PASSWORD),
+				configManager.getProperty(PropertyKeys.COLFUSION_DATA_FROM_FILE_DATABASE_HOST),
+				configManager.getProperty(PropertyKeys.COLFUSION_DATA_FROM_FILE_DATABASE_PORT),
+				configManager.getProperty(PropertyKeys.COLFUSION_DATA_FROM_FILE_DATABASE_VENDOR));
 		
 			
 		//XPath to get connection for logging database
@@ -464,12 +464,12 @@ public class KTRManager {
 	
 		connectionNode = connectionTag.item(0);
 		
-		setConnectionNode(connectionNode, configManager.getProperty(PropertyKeys.logginDatabase_DatabaseNamePrefix),
-				configManager.getProperty(PropertyKeys.logginDatabase_UserName),
-				configManager.getProperty(PropertyKeys.logginDatabase_Password),
-				configManager.getProperty(PropertyKeys.logginDatabase_Server),
-				configManager.getProperty(PropertyKeys.logginDatabase_Port),
-				configManager.getProperty(PropertyKeys.logginDatabase_Type));
+		setConnectionNode(connectionNode, configManager.getProperty(PropertyKeys.COLFUSION_PENTAHO_LOGGING_DATABASE_DATABASE_NAME),
+				configManager.getProperty(PropertyKeys.COLFUSION_PENTAHO_LOGGING_DATABASE_USERNAME),
+				configManager.getProperty(PropertyKeys.COLFUSION_PENTAHO_LOGGING_DATABASE_PASSWORD),
+				configManager.getProperty(PropertyKeys.COLFUSION_PENTAHO_LOGGING_DATABASE_HOST),
+				configManager.getProperty(PropertyKeys.COLFUSION_PENTAHO_LOGGING_DATABASE_PORT),
+				configManager.getProperty(PropertyKeys.COLFUSION_PENTAHO_LOGGING_DATABASE_VENDOR));
 		
 	}
 	
@@ -598,13 +598,13 @@ public class KTRManager {
 	 */
 	private IOUtilsStoredFileInfoModel createKTRFileFromTemplate(final int sid, final String dataFileExtension, final String tableName) throws IOException {
 		
-		String ktrBaseDirLocation = IOUtils.getAbsolutePathInColfutionRoot(ConfigManager.getInstance().getProperty(PropertyKeys.ktrFielsBaseLocation));
+		String ktrBaseDirLocation = IOUtils.getAbsolutePathInColfutionRoot(ConfigManager.getInstance().getProperty(PropertyKeys.COLFUSION_KTR_FOLDER));
 		String ktrDirectoryLocation = ktrBaseDirLocation + File.separator +	sid;
 		
 		//TODO for now simple check for csv, but what if we going to have more extensions, need to rewrite this.
 		String ktrTemplateName = dataFileExtension.equals("csv") 
-				? ConfigManager.getInstance().getProperty(PropertyKeys.csvToDatabaseKTRTemplate) 
-				: ConfigManager.getInstance().getProperty(PropertyKeys.excelToDatabaseKTRTemplate);
+				? ConfigManager.getInstance().getProperty(PropertyKeys.COLFUSION_KTR_TEMPLATES_CSV_TO_DATABASE) 
+				: ConfigManager.getInstance().getProperty(PropertyKeys.COLFUSION_KTR_TEMPLATES_EXCEL_TO_DATABASE);
 				
 		InputStream ktrTemplate = ResourceUtils.getResourceAsStream(this.getClass(), ktrTemplateName);
 			

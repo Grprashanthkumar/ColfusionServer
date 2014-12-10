@@ -15,6 +15,6 @@ public class StoryUtils {
 	 * @return linked server name.
 	 */
 	public static String generateLinkedServerName(final int sid) {
-		return ConfigManager.getInstance().getProperty(PropertyKeys.targetFileToDBDatabase_DatabaseNamePrefix) + sid;
+		return ConfigManager.getInstance().getProperty(PropertyKeys.COLFUSION_DATA_FROM_FILE_DATABASE_DATABASE_NAME_PREFIX) + sid;
 	}
 }
