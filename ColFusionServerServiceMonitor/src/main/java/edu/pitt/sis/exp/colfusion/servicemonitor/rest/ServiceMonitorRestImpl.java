@@ -33,7 +33,7 @@ public class ServiceMonitorRestImpl implements ServiceMonitorRest{
 		
 		//logger.info("Got request with this payload length: " + twoJointTables.length());
 
-		List<ColfusionServices> resultList = new ArrayList<ColfusionServices>();
+		List<ColfusionServicesViewModel> resultList = new ArrayList<ColfusionServicesViewModel>();
 		String jsonResult = "";
 		try {
 			resultList = ServiceMonitorDaemon.getInstance().getServiceMonitor().getServicesStatus();
@@ -55,9 +55,9 @@ public class ServiceMonitorRestImpl implements ServiceMonitorRest{
 		String result = "";
 		try {
 			int ID = Integer.parseInt(serviceID);
-			ColfusionServices service = ServiceMonitorDaemon.getInstance().getServiceMonitor().getServiceStatusByID(ID);		
+			ColfusionServicesViewModel serviceViewModel = ServiceMonitorDaemon.getInstance().getServiceMonitor().getServiceStatusByID(ID);		
 			
-			return Response.status(200).entity(service).build();
+			return Response.status(200).entity(serviceViewModel).build();
 		}
 		catch (Exception ex) {
 			logger.error("In ServiceMonitorRestImpl.getServiceStatusByID()\n"
@@ -68,14 +68,14 @@ public class ServiceMonitorRestImpl implements ServiceMonitorRest{
 	
 	@Override
 	public Response getServiceStatusByNamePattern(final String namePattern) {
-		List<ColfusionServices> serviceList = null;
+		List<ColfusionServicesViewModel> serviceList = null;
 		String jsonResult = "";
 		
 		try {
 			serviceList = ServiceMonitorDaemon.getInstance().getServiceMonitor().getServicesStatus();
 			
-			List<ColfusionServices> resultList = new ArrayList<ColfusionServices>();
-			for(ColfusionServices service : serviceList) {
+			List<ColfusionServicesViewModel> resultList = new ArrayList<ColfusionServicesViewModel>();
+			for(ColfusionServicesViewModel service : serviceList) {
 				if(service.getServiceName().indexOf(namePattern) >= 0) {
 					resultList.add(service);
 				}
@@ -95,7 +95,7 @@ public class ServiceMonitorRestImpl implements ServiceMonitorRest{
 
 		//String result = "";
 		try {
-			ColfusionServices addedService = ServiceMonitorDaemon.getInstance().getServiceMonitor().addNewService(newService);
+			ColfusionServicesViewModel addedService = ServiceMonitorDaemon.getInstance().getServiceMonitor().addNewService(newService);
 			
 			//TODO FIXME view model should be returned
 			//ColfusionServicesViewModel addedServiceViewModel = 
@@ -116,7 +116,7 @@ public class ServiceMonitorRestImpl implements ServiceMonitorRest{
 		String result = "";
 		try {
 			int ID = Integer.parseInt(serviceID);
-			ColfusionServices service = ServiceMonitorDaemon.getInstance().getServiceMonitor().getServiceStatusByID(ID);
+			ColfusionServicesViewModel service = ServiceMonitorDaemon.getInstance().getServiceMonitor().getServiceStatusByID(ID);
 		
 			ServiceMonitorDaemon.getInstance().getServiceMonitor().updateServiceByID(ID, newService);
 			//TODO FIXME workaround
@@ -136,7 +136,7 @@ public class ServiceMonitorRestImpl implements ServiceMonitorRest{
 		String result = "";
 		try {
 			int ID = Integer.parseInt(serviceID);
-			ColfusionServices service = ServiceMonitorDaemon.getInstance().getServiceMonitor().getServiceStatusByID(ID);
+			ColfusionServicesViewModel service = ServiceMonitorDaemon.getInstance().getServiceMonitor().getServiceStatusByID(ID);
 		
 			ServiceMonitorDaemon.getInstance().getServiceMonitor().deleteServiceByID(ID);
 			//TODO FIXME workaround

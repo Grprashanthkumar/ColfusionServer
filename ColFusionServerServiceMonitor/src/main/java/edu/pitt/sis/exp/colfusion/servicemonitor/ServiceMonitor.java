@@ -147,12 +147,25 @@ public class ServiceMonitor extends TimerTask{
 	 * @return list of entity ColfusionServices
 	 * @throws Exception
 	 */
-	public List<ColfusionServices> getServicesStatus() throws Exception{
+	public List<ColfusionServicesViewModel> getServicesStatus() throws Exception{
 		if(this.getServiceList().isEmpty() == true) {
 			return null;
 		}
-		
-		return this.getServiceList();
+		List<ColfusionServicesViewModel> serviceViewModelList = new ArrayList<ColfusionServicesViewModel>();
+		ColfusionServicesViewModel serviceViewModel;
+		for(ColfusionServices service : this.getServiceList()) {
+			serviceViewModel = new ColfusionServicesViewModel();
+			serviceViewModel.setServiceID(service.getServiceID());
+			serviceViewModel.setServiceName(service.getServiceName());
+			serviceViewModel.setServiceAddress(service.getServiceAddress());
+			serviceViewModel.setPortNumber(service.getPortNumber());
+			serviceViewModel.setServiceDir(service.getServiceDir());
+			serviceViewModel.setServiceCommand(service.getServiceCommand());
+			serviceViewModel.setServiceStatus(service.getServiceStatus());
+			serviceViewModelList.add(serviceViewModel);
+		}
+		//return this.getServiceList();
+		return serviceViewModelList;
 	}
 	
 	
@@ -162,16 +175,18 @@ public class ServiceMonitor extends TimerTask{
 	 * @param serviceID
 	 * @return entity of ColfusionServices
 	 */
-	public ColfusionServices getServiceStatusByID(final int serviceID) {
+	public ColfusionServicesViewModel getServiceStatusByID(final int serviceID) {
 		ColfusionServices service = null;
+		ColfusionServicesViewModel serviceViewModel = new ColfusionServicesViewModel();
 		try {
 			service = this.serviceManager.findByID(serviceID);
+			serviceViewModel = this.convertToViewModel(service);
 		} 
 		catch (Exception ex) {
 			logger.error("In ServiceMonitor.getServiceStatusByID()\n"
 					+ ex.toString() + " " + ex.getCause());	
 		}
-		return service;
+		return serviceViewModel;
 	}
 	
 	/**
@@ -210,13 +225,15 @@ public class ServiceMonitor extends TimerTask{
 	 * @param entity of ColfusionServicesViewModel
 	 * @return boolean result
 	 */
-	public ColfusionServices addNewService(final ColfusionServicesViewModel viewModel) {
+	public ColfusionServicesViewModel addNewService(final ColfusionServicesViewModel viewModel) {
 		try {
 			ColfusionServices newService = this.convertViewModel(viewModel);
+			ColfusionServicesViewModel newServiceViewModel = null;
 			if( newService != null) {
 				this.serviceList.add(newService);
 				this.serviceManager.save(newService);
-				return newService;
+				newServiceViewModel = this.convertToViewModel(newService);
+				return newServiceViewModel;
 			}
 			return null;
 		}
@@ -300,6 +317,26 @@ public class ServiceMonitor extends TimerTask{
 		service.setServiceStatus(viewModel.getServiceStatus());
 		
 		return service;
+	}
+	
+	/**
+	 * convert entity of ColfusionServices to entity of ColfusionServicesViewModel
+	 * 
+	 * @param entity of ColfusionServices
+	 * @return entity of ColfusionServicesViewModel
+	 */
+	private ColfusionServicesViewModel convertToViewModel(ColfusionServices service) {
+		ColfusionServicesViewModel serviceViewModel = new ColfusionServicesViewModel();
+		
+		serviceViewModel.setServiceID(service.getServiceID());
+		serviceViewModel.setServiceName(service.getServiceName());
+		serviceViewModel.setServiceAddress(service.getServiceAddress());
+		serviceViewModel.setPortNumber(service.getPortNumber());
+		serviceViewModel.setServiceDir(service.getServiceDir());
+		serviceViewModel.setServiceCommand(service.getServiceCommand());
+		serviceViewModel.setServiceStatus(service.getServiceStatus());
+		
+		return serviceViewModel;
 	}
 	
 	/**
