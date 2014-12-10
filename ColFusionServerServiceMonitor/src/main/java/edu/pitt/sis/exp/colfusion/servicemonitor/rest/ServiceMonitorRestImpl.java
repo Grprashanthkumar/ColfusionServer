@@ -55,13 +55,9 @@ public class ServiceMonitorRestImpl implements ServiceMonitorRest{
 		String result = "";
 		try {
 			int ID = Integer.parseInt(serviceID);
-			ColfusionServices service = ServiceMonitorDaemon.getInstance().getServiceMonitor().getServiceStatusByID(ID);
-			String serviceName = service.getServiceName();
-			String serviceStatus = service.getServiceStatus();
+			ColfusionServices service = ServiceMonitorDaemon.getInstance().getServiceMonitor().getServiceStatusByID(ID);		
 			
-			result = serviceName + " is " + serviceStatus;
-			
-			return Response.status(200).entity(result).build();
+			return Response.status(200).entity(service).build();
 		}
 		catch (Exception ex) {
 			logger.error("In ServiceMonitorRestImpl.getServiceStatusByID()\n"
@@ -78,10 +74,10 @@ public class ServiceMonitorRestImpl implements ServiceMonitorRest{
 		try {
 			serviceList = ServiceMonitorDaemon.getInstance().getServiceMonitor().getServicesStatus();
 			
-			List<String> resultList = new ArrayList<String>();
+			List<ColfusionServices> resultList = new ArrayList<ColfusionServices>();
 			for(ColfusionServices service : serviceList) {
 				if(service.getServiceName().indexOf(namePattern) >= 0) {
-					resultList.add(service.getServiceName() + " is " + service.getServiceStatus());
+					resultList.add(service);
 				}
 			}
 			jsonResult = Gsonizer.toJson(resultList, false);
@@ -100,7 +96,8 @@ public class ServiceMonitorRestImpl implements ServiceMonitorRest{
 		String result = "";
 		try {
 			ServiceMonitorDaemon.getInstance().getServiceMonitor().addNewService(newService);
-			result = newService.getServiceName() + " is added.";
+			//TODO FIXME workaround
+			result = String.format("{\"message\": \"%s is added.\"}", newService.getServiceName());
 		
 			return Response.status(201).entity(result).build();
 		}
@@ -119,7 +116,8 @@ public class ServiceMonitorRestImpl implements ServiceMonitorRest{
 			ColfusionServices service = ServiceMonitorDaemon.getInstance().getServiceMonitor().getServiceStatusByID(ID);
 		
 			ServiceMonitorDaemon.getInstance().getServiceMonitor().updateServiceByID(ID, newService);
-			result = service.getServiceName() + " is updated.";
+			//TODO FIXME workaround
+			result = String.format("{\"message\": \"%s is updated.\"}", service.getServiceName());
 		
 			return Response.status(200).entity(result).build();
 		}
@@ -139,7 +137,7 @@ public class ServiceMonitorRestImpl implements ServiceMonitorRest{
 		
 			ServiceMonitorDaemon.getInstance().getServiceMonitor().deleteServiceByID(ID);
 			//TODO FIXME workaround
-			result = String.format("{\"message\": \"%s is deleted\"}", service.getServiceName());
+			result = String.format("{\"message\": \"%s is deleted.\"}", service.getServiceName());
 		
 			return Response.status(200).entity(result).build();
 		}

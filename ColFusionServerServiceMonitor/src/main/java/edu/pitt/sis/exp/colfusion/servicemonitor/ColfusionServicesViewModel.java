@@ -20,12 +20,31 @@ import com.google.gson.annotations.Expose;
 @XmlRootElement
 public class ColfusionServicesViewModel {
 
+	@Expose private int serviceID;
 	@Expose private String serviceName;
 	@Expose private String serviceAddress;
 	@Expose private int portNumber;
 	@Expose private String serviceDir;
 	@Expose private String serviceCommand;
 	@Expose private String serviceStatus;
+
+	/**
+	 * get id of service
+	 * 
+	 * @return serviceID
+	 */
+	public int getServiceID() {
+		return serviceID;
+	}
+
+	/**
+	 * set id of service
+	 * 
+	 * @param serviceID
+	 */
+	public void setServiceID(int serviceID) {
+		this.serviceID = serviceID;
+	}
 
 	/**
      * get name of service.

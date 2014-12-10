@@ -48,10 +48,6 @@ import edu.pitt.sis.exp.colfusion.utils.PropertyKeys;
  *   1) monitoring a specific service's status;
  *   2) start or stop a specific service.
  */
-/**
- * @author duke
- *
- */
 public class ServiceMonitor extends TimerTask{
 	
 	private List<ColfusionServices> serviceList;
@@ -305,6 +301,7 @@ public class ServiceMonitor extends TimerTask{
 	private ColfusionServices convertViewModel(ColfusionServicesViewModel viewModel) {
 		ColfusionServices service = new ColfusionServices();
 		
+		service.setServiceID(viewModel.getServiceID());
 		service.setServiceName(viewModel.getServiceName());
 		service.setServiceAddress(viewModel.getServiceAddress());
 		service.setPortNumber(viewModel.getPortNumber());
