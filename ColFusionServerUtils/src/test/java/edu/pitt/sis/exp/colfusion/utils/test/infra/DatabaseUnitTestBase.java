@@ -5,7 +5,7 @@ public abstract class DatabaseUnitTestBase extends UnitTestBase {
 	/**
 	 * Set's up database for test.
 	 */
-	@Override
+	//@Override
 	protected void setUp() {
 		
 	}
@@ -13,7 +13,7 @@ public abstract class DatabaseUnitTestBase extends UnitTestBase {
 	/**
 	 * Removes the database after test
 	 */
-	@Override
+//	@Override
 	protected void tearDown() {
 		
 	}

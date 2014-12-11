@@ -3,6 +3,10 @@
  */
 package edu.pitt.sis.exp.colfusion.tests.importers;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -34,8 +38,6 @@ public class ImporterFactoryTest extends UnitTestBase {
 	Logger logger = LogManager.getLogger(ImporterFactoryTest.class.getName());
 	
 	ConfigManager configManager = ConfigManager.getInstance();
-	
-	
 	
 	private Importer getImporter(final ImporterType importerType) throws Exception {
 		try {

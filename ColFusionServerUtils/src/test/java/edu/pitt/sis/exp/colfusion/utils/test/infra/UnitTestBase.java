@@ -2,16 +2,14 @@ package edu.pitt.sis.exp.colfusion.utils.test.infra;
 
 import java.io.InputStream;
 
-import junit.framework.TestCase;
 import edu.pitt.sis.exp.colfusion.utils.ResourceUtils;
-
 /**
  * Some functionality that is commonly used by many unit tests.
  * 
  * @author Evgeny
  *
  */
-public abstract class UnitTestBase extends TestCase {
+public abstract class UnitTestBase  {
 	
 	/**
 	 * Get resource by given name and returns its URI as string.
@@ -28,4 +26,5 @@ public abstract class UnitTestBase extends TestCase {
 	protected InputStream getResourceAsStream(final String resourceName) {
 		return ResourceUtils.getResourceAsStream(this.getClass(), resourceName);
 	}
+
 }
