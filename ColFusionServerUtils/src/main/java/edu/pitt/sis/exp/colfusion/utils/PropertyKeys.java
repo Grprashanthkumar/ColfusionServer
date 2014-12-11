@@ -145,43 +145,40 @@ public enum PropertyKeys {
 	 * This value is used for setting timeout for connecting services 
 	 * in ServiceMonitor.java of colfusionserverservicemonitor project
 	*/
-	ServiceMonitorTimeOut ("ServiceMonitorTimeOut"),
+	COLFUSION_SERVICE_MONITOR_TIMEOUT ("colfusion.service_monitor.timeout"),
 	/*Appended by Hao Bai
 	 * This value is used for setting period for monitoring services 
 	 * in ServiceMonitorController.java of colfusionserverservicemonitor project
 	*/
-	ServiceMonitorPeriod ("ServiceMonitorPeriod"),
+	COLFUSION_SERVICE_MONITOR_PERIOD ("colfusion.service_monitor.period"),
 	/*Appended by Hao Bai
 	 * This value is used for setting email sender's address.
 	*/
-	emailSenderAddress ("emailSenderAddress"),
+	COLFUSION_SERVICE_MONITOR_EMAIL_NOTIFICATION_SENDER_ADDRESS ("colfusion.service_monitor.email_notification.sender_address"),
 	/*Appended by Hao Bai
 	 * This value is used for setting email sender's password.
 	*/
-	emailSenderPassword ("emailSenderPassword"),
+	COLFUSION_SERVICE_MONITOR_EMAIL_NOTIFICATION_SENDER_PASSWORD ("colfusion.service_monitor.email_notification.sender_password"),
 	/*Appended by Hao Bai
 	 * This value is used for setting email smtp starttls boolean value.
 	*/
-	smtpStarttlsEnable ("smtpStarttlsEnable"),
+	COLFUSION_SERVICE_MONITOR_EMAIL_NOTIFICATION_SMTP_START_TLS_ENABLE ("colfusion.service_monitor.email_notification.smtp.start_tls_enable"),
 	/*Appended by Hao Bai
 	 * This value is used for setting email smtp authentication boolean value.
 	*/
-	smtpAuth ("smtpAuth"),
+	COLFUSION_SERVICE_MONITOR_EMAIL_NOTIFICATION_SMTP_AUTH ("colfusion.service_monitor.email_notification.smtp.auth"),
 	/*Appended by Hao Bai
 	 * This value is used for setting email smtp server host.
 	*/
-	smtpHost ("smtpHost"),
+	COLFUSION_SERVICE_MONITOR_EMAIL_NOTIFICATION_SMTP_HOST ("colfusion.service_monitor.email_notification.smtp.host"),
 	/*Appended by Hao Bai
 	 * This value is used for setting email smtp port number.
 	*/
-	smtpPort ("smtpPort"),
+	COLFUSION_SERVICE_MONITOR_EMAIL_NOTIFICATION_SMTP_PORT ("colfusion.service_monitor.email_notification.smtp.port"),
 	/*Appended by Hao Bai
 	 * This value is used for setting email receiver's userLevel.
 	*/
-	userLevel ("userLevel"),
-	
-	
-	
+	COLFUSION_SERVICE_MONITOR_EMAIL_NOTIFICATION_SMTP_USER_LEVEL ("colfusion.service_monitor.email_notification.user_level"),
 	
 	//******* Hibernate properties (don't rename these properties) *************//
 	HIBERNATE_CONNECTION_DRIVER_CLASS ("hibernate.connection.driver_class"),

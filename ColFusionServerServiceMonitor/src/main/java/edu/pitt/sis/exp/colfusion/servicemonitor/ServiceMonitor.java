@@ -51,8 +51,8 @@ public class ServiceMonitor extends TimerTask{
 	public ServiceMonitor(){
 		timer = new Timer();
 		this.serviceList = new ArrayList<ColfusionServices>();
-		this.timeOut = Integer.parseInt(ConfigManager.getInstance().getProperty(PropertyKeys.ServiceMonitorTimeOut));;
-		this.monitorPeriod = Integer.parseInt(ConfigManager.getInstance().getProperty(PropertyKeys.ServiceMonitorPeriod));;
+		this.timeOut = Integer.parseInt(ConfigManager.getInstance().getProperty(PropertyKeys.COLFUSION_SERVICE_MONITOR_TIMEOUT));;
+		this.monitorPeriod = Integer.parseInt(ConfigManager.getInstance().getProperty(PropertyKeys.COLFUSION_SERVICE_MONITOR_PERIOD));;
 
 		serviceManager = new ServiceManagerImpl();
 		userManager = new UserManagerImpl();
@@ -487,7 +487,7 @@ public class ServiceMonitor extends TimerTask{
 							service.getServiceDir(),
 							service.getServiceCommand(),
 							service.getServiceStatus());
-					for(String userLevel : ConfigManager.getInstance().getProperty(PropertyKeys.userLevel).split(",")){
+					for(String userLevel : ConfigManager.getInstance().getProperty(PropertyKeys.COLFUSION_SERVICE_MONITOR_EMAIL_NOTIFICATION_SMTP_USER_LEVEL).split(",")){
 						for(String emailAddress : this.userManager.queryUserEmails(userLevel)){
 							emailNotifier.sendMail(emailAddress, emailSubject, emailText);
 						}

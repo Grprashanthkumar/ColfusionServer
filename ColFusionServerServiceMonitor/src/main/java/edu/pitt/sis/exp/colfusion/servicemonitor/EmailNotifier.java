@@ -24,13 +24,13 @@ import edu.pitt.sis.exp.colfusion.utils.PropertyKeys;
  */
 public class EmailNotifier {
 
-    private static String senderAddress = ConfigManager.getInstance().getProperty(PropertyKeys.emailSenderAddress);
-    private static String senderPassword = ConfigManager.getInstance().getProperty(PropertyKeys.emailSenderPassword);
+    private static String senderAddress = ConfigManager.getInstance().getProperty(PropertyKeys.COLFUSION_SERVICE_MONITOR_EMAIL_NOTIFICATION_SENDER_ADDRESS);
+    private static String senderPassword = ConfigManager.getInstance().getProperty(PropertyKeys.COLFUSION_SERVICE_MONITOR_EMAIL_NOTIFICATION_SENDER_PASSWORD);
     
-    private static String smtpStarttlsEnable = ConfigManager.getInstance().getProperty(PropertyKeys.smtpStarttlsEnable);
-    private static String smtpAuth = ConfigManager.getInstance().getProperty(PropertyKeys.smtpAuth);
-    private static String smtpHost = ConfigManager.getInstance().getProperty(PropertyKeys.smtpHost);
-    private static String smtpPort = ConfigManager.getInstance().getProperty(PropertyKeys.smtpPort);
+    private static String smtpStarttlsEnable = ConfigManager.getInstance().getProperty(PropertyKeys.COLFUSION_SERVICE_MONITOR_EMAIL_NOTIFICATION_SMTP_START_TLS_ENABLE);
+    private static String smtpAuth = ConfigManager.getInstance().getProperty(PropertyKeys.COLFUSION_SERVICE_MONITOR_EMAIL_NOTIFICATION_SMTP_AUTH);
+    private static String smtpHost = ConfigManager.getInstance().getProperty(PropertyKeys.COLFUSION_SERVICE_MONITOR_EMAIL_NOTIFICATION_SMTP_HOST);
+    private static String smtpPort = ConfigManager.getInstance().getProperty(PropertyKeys.COLFUSION_SERVICE_MONITOR_EMAIL_NOTIFICATION_SMTP_PORT);
     
     private Logger logger = LogManager.getLogger(ServiceMonitor.class.getName());
     
