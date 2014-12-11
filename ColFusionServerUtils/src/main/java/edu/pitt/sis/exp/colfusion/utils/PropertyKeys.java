@@ -193,6 +193,8 @@ public enum PropertyKeys {
 	
 	HIBERNATE_DIALECT ("hibernate.dialect"),
 	
+	HIBERNATE_HBM2DDL_AUTO ("hibernate.hbm2ddl.auto"),
+	
 	HIBERNATE_CONNECTION_ZERO_DATE_TIME_BEHAVIOR ("hibernate.connection.zeroDateTimeBehavior"),
 		
 	HIBERNATE_C3P0_MIN_SIZE ("hibernate.c3p0.min_size"),

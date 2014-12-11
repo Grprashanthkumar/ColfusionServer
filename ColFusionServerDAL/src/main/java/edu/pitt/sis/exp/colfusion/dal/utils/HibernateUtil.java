@@ -54,6 +54,9 @@ public class HibernateUtil {
 		cfg.setProperty(PropertyKeys.HIBERNATE_CONNECTION_USERNAME.getKey(), configMng.getProperty(PropertyKeys.HIBERNATE_CONNECTION_USERNAME));
 		cfg.setProperty(PropertyKeys.HIBERNATE_CONNECTION_PASSWORD.getKey(), configMng.getProperty(PropertyKeys.HIBERNATE_CONNECTION_PASSWORD));		
 		cfg.setProperty(PropertyKeys.HIBERNATE_DIALECT.getKey(), configMng.getProperty(PropertyKeys.HIBERNATE_DIALECT));
+		
+		cfg.setProperty(PropertyKeys.HIBERNATE_HBM2DDL_AUTO.getKey(), configMng.getProperty(PropertyKeys.HIBERNATE_HBM2DDL_AUTO));
+		
 		cfg.setProperty(PropertyKeys.HIBERNATE_CONNECTION_ZERO_DATE_TIME_BEHAVIOR.getKey(), configMng.getProperty(PropertyKeys.HIBERNATE_CONNECTION_ZERO_DATE_TIME_BEHAVIOR));
 		
 		cfg.setProperty(PropertyKeys.HIBERNATE_C3P0_MIN_SIZE.getKey(), configMng.getProperty(PropertyKeys.HIBERNATE_C3P0_MIN_SIZE));
