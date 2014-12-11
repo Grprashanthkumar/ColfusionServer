@@ -10,8 +10,14 @@ public class ResourceUtils {
 	}
 	
 	public static File getResourceAsFile(final Class<?> clazz, final String resourceName) {
+		String resourceFileLocation = getResourceAsFileLocation(clazz, resourceName);
+		
+		return resourceFileLocation == null ? null : new File(resourceFileLocation);
+	}
+	
+	public static String getResourceAsFileLocation(final Class<?> clazz, final String resourceName) {
 		URL resourceFile = clazz.getClassLoader().getResource(resourceName);
 		
-		return resourceFile == null ? null : new File(resourceFile.getFile());
+		return resourceFile == null ? null : resourceFile.getFile();
 	}
 }

@@ -5,38 +5,44 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
-import junit.framework.TestCase;
-
 import org.apache.commons.compress.archivers.ArchiveException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
 
+import edu.pitt.sis.exp.colfusion.tests.TestResourcesNames;
 import edu.pitt.sis.exp.colfusion.utils.ConfigManager;
 import edu.pitt.sis.exp.colfusion.utils.IOUtils;
-import edu.pitt.sis.exp.colfusion.utils.PropertyKeysTest;
+import edu.pitt.sis.exp.colfusion.utils.PropertyKeys;
 import edu.pitt.sis.exp.colfusion.utils.models.IOUtilsStoredFileInfoModel;
+import edu.pitt.sis.exp.colfusion.utils.test.infra.UnitTestBase;
 
-public class IOUtilsTest extends TestCase {
+//TODO might need to move to the utils projects
+public class IOUtilsTest extends UnitTestBase {
 	
 	Logger logger = LogManager.getLogger(IOUtilsTest.class.getName());
 	ConfigManager configManager = ConfigManager.getInstance();
 	
-	public IOUtilsTest(final String name) {
-		super(name);
-	}
+	@Rule
+    public TemporaryFolder folder = new TemporaryFolder();
 	
 	/**
 	 * Test if the Excel file from the test/resources is written to specified in the properties location.
 	 */
+	@Test
 	public void testWriteExcelAsInputStreamToFile() {
 			
-		String testFileUploadDir = IOUtils.getAbsolutePathInColfutionRoot(configManager.getProperty(PropertyKeysTest.testUploadRawFilesBaseLocation));
+		String testFileUploadDir = folder.newFolder("testWriteExcelAsInputStreamToFile").toString();
 	
-		String testEcelFileName = configManager.getProperty(PropertyKeysTest.testExcelFileNameInResourceFolder);
+		String testExcelFileName = TestResourcesNames.TEST_EXCEL_FILE_XLSX;
 		
-		assertEquals("testExcelFile.xlsx", testEcelFileName);
+		assertEquals("testExcelFile.xlsx", testExcelFileName);
 		
-		InputStream testExcelFileInputStream = this.getClass().getResourceAsStream(testEcelFileName);
+		InputStream testExcelFileInputStream = getResourceAsStream(testExcelFileName);
+		
+		assertNotNull("Get resource as stream returned null for resource name " + testExcelFileName, testExcelFileInputStream);
 		
 		IOUtilsStoredFileInfoModel testFileInfo = new IOUtilsStoredFileInfoModel();
 		
@@ -44,7 +50,7 @@ public class IOUtilsTest extends TestCase {
 		testFileInfo.setFileExtension("xlsx");
 		
 		try {
-			IOUtilsStoredFileInfoModel fileInfo = IOUtils.writeInputStreamToFile(testExcelFileInputStream, testFileUploadDir, testEcelFileName, true);
+			IOUtilsStoredFileInfoModel fileInfo = IOUtils.writeInputStreamToFile(testExcelFileInputStream, testFileUploadDir, testExcelFileName, true);
 			
 			assertEquals(testFileInfo.getFileName(), fileInfo.getFileName());
 			assertEquals(testFileInfo.getFileExtension(), fileInfo.getFileExtension());
@@ -57,14 +63,17 @@ public class IOUtilsTest extends TestCase {
 	/**
 	 * Test if the TarGz Archive file from the test/resources is written to specified in the properties location.
 	 */
+	@Test
 	public void testWriteTarGzArchiveAsInputStremToFile() {
-		String testFileUploadDir = IOUtils.getAbsolutePathInColfutionRoot(configManager.getProperty(PropertyKeysTest.testUploadRawFilesBaseLocation));
+		String testFileUploadDir = folder.newFolder("testWriteTarGzArchiveAsInputStremToFile").toString();
 		
-		String testFileName = configManager.getProperty(PropertyKeysTest.testTarGzArchiveFileNameInResourceFolder);
+		String testFileName = TestResourcesNames.TEST_TAR_GZ_ARCHIVE_TAR_GZ;
 		
 		assertEquals("testTarGzArchive.tar.gz", testFileName);
 		
-		InputStream testInputStream = this.getClass().getResourceAsStream(testFileName);
+		InputStream testInputStream = getResourceAsStream(testFileName);
+		
+		assertNotNull("Get resource as stream returned null for resource name " + testFileName, testInputStream);
 		
 		IOUtilsStoredFileInfoModel testFileInfo = new IOUtilsStoredFileInfoModel();
 		
@@ -85,16 +94,16 @@ public class IOUtilsTest extends TestCase {
 	/**
 	 * Test unarchival of a zip archive
 	 */
+	@Test
 	public void testUnarchive() {
-		String testFileUploadDir = IOUtils.getAbsolutePathInColfutionRoot(configManager.getProperty(PropertyKeysTest.testUploadRawFilesBaseLocation));
+		String testFileUploadDir = folder.newFolder("testUnarchive").toString();
 		
-		String testFileName = configManager.getProperty(PropertyKeysTest.testZipArchive);
+		String testFileName = TestResourcesNames.TEST_ZIP_ARCHIVE_ZIP;
 		
 		assertEquals("testZipArchive.zip", testFileName);
 		
-		String testFileNameAbsolutePath = this.getClass().getResource(testFileName).getFile();
-		
-		
+		String testFileNameAbsolutePath = getResourceAsAbsoluteURI(testFileName);
+		assertNotNull("Get resource as absolute uri returned null for resource name " + testFileName, testFileNameAbsolutePath);
 		
 		try {
 			List<IOUtilsStoredFileInfoModel> fileInfo = IOUtils.unarchive(testFileNameAbsolutePath, testFileUploadDir);
@@ -110,11 +119,13 @@ public class IOUtilsTest extends TestCase {
 		}
 	}
 	
+	@Test
 	public void testCopyFileContentOnKTRTemplates() {
-		String testKTRBaseDirLocation = IOUtils.getAbsolutePathInColfutionRoot(configManager.getProperty(PropertyKeysTest.testKtrFielsBaseLocation));
+		String testKTRBaseDirLocation = folder.newFolder("testCopyFileContentOnKTRTemplates").toString();
 		
-		String fileToCopyName = configManager.getProperty(PropertyKeysTest.testCsvToDatabaseKTRTemplate);
-		String fileToCopyLocation = this.getClass().getResource(fileToCopyName).getFile();
+		String fileToCopyName = configManager.getProperty(PropertyKeys.COLFUSION_KTR_TEMPLATES_CSV_TO_DATABASE);
+		String fileToCopyLocation = getResourceAsAbsoluteURI(fileToCopyName);
+		assertNotNull("Get resource as absolute uri returned null for resource name " + fileToCopyName, fileToCopyLocation);
 		
 		try {
 			IOUtilsStoredFileInfoModel result =  IOUtils.copyFileContent(fileToCopyLocation, testKTRBaseDirLocation + File.separator + 
@@ -130,5 +141,4 @@ public class IOUtilsTest extends TestCase {
 			logger.error("testCopyFileContentOnKTRTemplates failed!", e);
 		}
 	}
-
 }

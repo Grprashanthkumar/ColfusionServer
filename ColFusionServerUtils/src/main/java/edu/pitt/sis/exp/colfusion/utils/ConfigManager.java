@@ -52,13 +52,6 @@ public final class ConfigManager {
 	public final static String CONFIG_FILE_NAME = "config.properties";
 	
 	/**
-	 * The system property that can be passed to JVM that provides absolute path to the
-	 * properties file that need to be loaded. 
-	 * This file's properties will override {@value #CONFIG_FILE_NAME} properties. 
-	 */
-	public final static String CONFIG_FILE_NAME_SYSTEM_PROPERTY = "colfusion.config.properties";
-	
-	/**
 	 * This class is not intended to be initialize. Use {@link #getInstance()}.
 	 */
 	private ConfigManager() {}
@@ -141,20 +134,21 @@ public final class ConfigManager {
 	 */
 	void loadCustomPropertiesProvidedViaSystemProperty(final Properties prop)
 			throws RuntimeException {
-		String propertyFilePath = getSystemProperty(CONFIG_FILE_NAME_SYSTEM_PROPERTY);
+		String propertyFilePath = getSystemProperty(PropertyKeys.CONFIG_FILE_NAME_SYSTEM_PROPERTY);
 		if (propertyFilePath == null) {
-			logger.info(String.format("System property '%s' was not provided, so no properties to load", CONFIG_FILE_NAME_SYSTEM_PROPERTY));
+			logger.info(String.format("System property '%s' was not provided, so no properties to load", 
+					PropertyKeys.CONFIG_FILE_NAME_SYSTEM_PROPERTY));
 		}
 		else {
 			logger.info(String.format("System property '%s' was provided, "
-					+ "so goin load properties from '%s' file", CONFIG_FILE_NAME_SYSTEM_PROPERTY, propertyFilePath));
+					+ "so goin load properties from '%s' file", PropertyKeys.CONFIG_FILE_NAME_SYSTEM_PROPERTY, propertyFilePath));
 			File propertyFile = new File(propertyFilePath);
 			try (InputStream propertiesFileStream = new FileInputStream(propertyFile)) {
-				loadConfigFile(prop, propertiesFileStream, CONFIG_FILE_NAME_SYSTEM_PROPERTY);
+				loadConfigFile(prop, propertiesFileStream, propertyFilePath);
 			}
 			catch (IOException e) {				
 				String message = String.format("The '%s' file provided in the '%s' system property doesn't exist. "
-						+ "Thus cannot load custom properties.", propertyFilePath, CONFIG_FILE_NAME_SYSTEM_PROPERTY);
+						+ "Thus cannot load custom properties.", propertyFilePath, PropertyKeys.CONFIG_FILE_NAME_SYSTEM_PROPERTY);
 				logger.error(message);
 				throw new RuntimeException(message);				
 			}
@@ -199,10 +193,10 @@ public final class ConfigManager {
 	 * 			the name of the property for which to get the value.
 	 * @return the value of the property or null if the key is not found.
 	 */
-	public String getProperty(final String propertyName) {
-		String systemProperty = getSystemProperty(propertyName);
+	public String getProperty(final PropertyKeys propertyKey) {
+		String systemProperty = getSystemProperty(propertyKey);
 		
-		return systemProperty != null ? systemProperty: properties.getProperty(propertyName);
+		return systemProperty != null ? systemProperty: properties.getProperty(propertyKey.getKey());
 	}
 	
 	/**
@@ -215,10 +209,10 @@ public final class ConfigManager {
 	 * 			the default value that should be returned if the property name (key) is not found.
 	 * @return the value of the property or null if the key is not found.
 	 */
-	public String getProperty(final String propertyName, final String defaultValue) {
-		String systemProperty = getSystemProperty(propertyName);
+	public String getProperty(final PropertyKeys propertyKey, final String defaultValue) {
+		String systemProperty = getSystemProperty(propertyKey);
 		
-		return systemProperty != null ? systemProperty : properties.getProperty(propertyName, defaultValue);
+		return systemProperty != null ? systemProperty : properties.getProperty(propertyKey.getKey(), defaultValue);
 	}
 	
 	/**
@@ -227,7 +221,7 @@ public final class ConfigManager {
 	 * 			the name of the property.
 	 * @return the value of the property or null if the property not provided.
 	 */
-	private String getSystemProperty(final String propertyName) {
-		return System.getProperty(propertyName);
+	private String getSystemProperty(final PropertyKeys propertyKey) {
+		return System.getProperty(propertyKey.getKey());
 	}
 }

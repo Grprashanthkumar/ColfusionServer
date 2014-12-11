@@ -21,7 +21,7 @@ public class ConfigManagerTest extends TestCase {
 	
 	private static final String COLFUSION_PROPERTIES_SOURCE_VALUE_DEFAULT = "default";
 	private static final String COLFUSION_PROPERTIES_SOURCE_VALUE_CUSTOM = "custom";
-	private static final String COLFUSION_PROPERTIES_SOURCE_VALUE_CUSOM_VIA_SYSTEM_PROPERTY = "custom via system properties";
+	private static final String COLFUSION_PROPERTIES_SOURCE_VALUE_CUSTOM_VIA_SYSTEM_PROPERTY = "custom via system properties";
 	
 	Logger logger = LogManager.getLogger(ConfigManagerTest.class.getName());
 	
@@ -40,7 +40,7 @@ public class ConfigManagerTest extends TestCase {
 		configManager.loadProperties(); // Because other tests might have messed up with the properties.
 		configManager.loadDefaultPropertiesFoundInResource(properties);
 		
-		assertEquals(COLFUSION_PROPERTIES_SOURCE_VALUE_DEFAULT, properties.getProperty(PropertyKeys.COLFUSION_PROPERTIES_SOURCE));
+		assertEquals(COLFUSION_PROPERTIES_SOURCE_VALUE_DEFAULT, properties.getProperty(PropertyKeys.COLFUSION_PROPERTIES_SOURCE.getKey()));
 	}
 	
 	/**
@@ -54,7 +54,7 @@ public class ConfigManagerTest extends TestCase {
 		configManager.loadProperties(); // Because other tests might have messed up with the properties.
 		configManager.loadCustomPropertiesFoundInResource(properties);
 		
-		assertEquals(COLFUSION_PROPERTIES_SOURCE_VALUE_CUSTOM, properties.getProperty(PropertyKeys.COLFUSION_PROPERTIES_SOURCE));
+		assertEquals(COLFUSION_PROPERTIES_SOURCE_VALUE_CUSTOM, properties.getProperty(PropertyKeys.COLFUSION_PROPERTIES_SOURCE.getKey()));
 	}
 	
 	/**
@@ -64,10 +64,10 @@ public class ConfigManagerTest extends TestCase {
 	@Test
 	public void testLoadCustomPropertiesProvidedViaSystemProperty() throws IOException {
 		
-		String testValue = String.format("%s = %s", PropertyKeys.COLFUSION_PROPERTIES_SOURCE, COLFUSION_PROPERTIES_SOURCE_VALUE_CUSOM_VIA_SYSTEM_PROPERTY);
+		String testValue = String.format("%s = %s", PropertyKeys.COLFUSION_PROPERTIES_SOURCE.getKey(), COLFUSION_PROPERTIES_SOURCE_VALUE_CUSTOM_VIA_SYSTEM_PROPERTY);
 		File tempFile = createTestPropertyFile(testValue);
 		
-		System.setProperty(ConfigManager.CONFIG_FILE_NAME_SYSTEM_PROPERTY, tempFile.toString());
+		System.setProperty(PropertyKeys.CONFIG_FILE_NAME_SYSTEM_PROPERTY.getKey(), tempFile.toString());
 		
 		Properties properties = new Properties();
 		
@@ -75,9 +75,9 @@ public class ConfigManagerTest extends TestCase {
 		configManager.loadProperties(); // Because other tests might have messed up with the properties.
 		configManager.loadCustomPropertiesProvidedViaSystemProperty(properties);
 		
-		assertEquals(COLFUSION_PROPERTIES_SOURCE_VALUE_CUSOM_VIA_SYSTEM_PROPERTY, properties.getProperty(PropertyKeys.COLFUSION_PROPERTIES_SOURCE));
+		assertEquals(COLFUSION_PROPERTIES_SOURCE_VALUE_CUSTOM_VIA_SYSTEM_PROPERTY, properties.getProperty(PropertyKeys.COLFUSION_PROPERTIES_SOURCE.getKey()));
 		
-		System.clearProperty(ConfigManager.CONFIG_FILE_NAME_SYSTEM_PROPERTY); // cleaning up
+		System.clearProperty(PropertyKeys.CONFIG_FILE_NAME_SYSTEM_PROPERTY.getKey()); // cleaning up
 		
 		tempFile.delete();
 	}
@@ -98,14 +98,14 @@ public class ConfigManagerTest extends TestCase {
 		
 		// Now set system property to the temp config file and call loadProperties manually to reload the properties.
 		
-		String testValue = String.format("%s = %s", PropertyKeys.COLFUSION_PROPERTIES_SOURCE, COLFUSION_PROPERTIES_SOURCE_VALUE_CUSOM_VIA_SYSTEM_PROPERTY);
+		String testValue = String.format("%s = %s", PropertyKeys.COLFUSION_PROPERTIES_SOURCE.getKey(), COLFUSION_PROPERTIES_SOURCE_VALUE_CUSTOM_VIA_SYSTEM_PROPERTY);
 		File tempFile = createTestPropertyFile(testValue);
-		System.setProperty(ConfigManager.CONFIG_FILE_NAME_SYSTEM_PROPERTY, tempFile.toString());
+		System.setProperty(PropertyKeys.CONFIG_FILE_NAME_SYSTEM_PROPERTY.getKey(), tempFile.toString());
 		
 		configManager.loadProperties();
 		
-		assertEquals(COLFUSION_PROPERTIES_SOURCE_VALUE_CUSOM_VIA_SYSTEM_PROPERTY, configManager.getProperty(PropertyKeys.COLFUSION_PROPERTIES_SOURCE));
-		System.clearProperty(ConfigManager.CONFIG_FILE_NAME_SYSTEM_PROPERTY); //cleaning up
+		assertEquals(COLFUSION_PROPERTIES_SOURCE_VALUE_CUSTOM_VIA_SYSTEM_PROPERTY, configManager.getProperty(PropertyKeys.COLFUSION_PROPERTIES_SOURCE));
+		System.clearProperty(PropertyKeys.CONFIG_FILE_NAME_SYSTEM_PROPERTY.getKey()); //cleaning up
 		
 		tempFile.delete();
 	}
@@ -131,17 +131,17 @@ public class ConfigManagerTest extends TestCase {
 		
 		// A system property provided to JSV outside of any property file
 		// and that property was never read from any other properties file
-		System.setProperty(PropertyKeys.COLFUSION_PROPERTIES_TEST_NEVER_EXISTING_PROPERTY, propertyValueViaSystemProperties);
+		System.setProperty(PropertyKeys.COLFUSION_PROPERTIES_TEST_NEVER_EXISTING_PROPERTY.getKey(), propertyValueViaSystemProperties);
 		
 		assertEquals(propertyValueViaSystemProperties, configManager.getProperty(PropertyKeys.COLFUSION_PROPERTIES_TEST_NEVER_EXISTING_PROPERTY));
-		System.clearProperty(PropertyKeys.COLFUSION_PROPERTIES_TEST_NEVER_EXISTING_PROPERTY); // cleaning up
+		System.clearProperty(PropertyKeys.COLFUSION_PROPERTIES_TEST_NEVER_EXISTING_PROPERTY.getKey()); // cleaning up
 		
 		// A system property provided to JVM outside of any property file
 		// The property should override property with the same name but loaded form any file.
-		System.setProperty(PropertyKeys.COLFUSION_PROPERTIES_SOURCE, propertyValueViaSystemProperties);
+		System.setProperty(PropertyKeys.COLFUSION_PROPERTIES_SOURCE.getKey(), propertyValueViaSystemProperties);
 		
 		assertEquals(propertyValueViaSystemProperties, configManager.getProperty(PropertyKeys.COLFUSION_PROPERTIES_SOURCE));
-		System.clearProperty(PropertyKeys.COLFUSION_PROPERTIES_SOURCE); // cleaning up
+		System.clearProperty(PropertyKeys.COLFUSION_PROPERTIES_SOURCE.getKey()); // cleaning up
 	}
 	
 	/**
