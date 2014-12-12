@@ -5,7 +5,7 @@ import java.util.List;
 import org.hibernate.Query;
 
 import edu.pitt.sis.exp.colfusion.dal.orm.ColfusionDnameinfo;
-import edu.pitt.sis.exp.colfusion.dal.utils.HibernateUtil;
+import edu.pitt.sis.exp.colfusion.utils.HibernateUtil;
 
 public class DNameInfoDAOImpl extends GenericDAOImpl<ColfusionDnameinfo, Integer> implements DNameInfoDAO {
 

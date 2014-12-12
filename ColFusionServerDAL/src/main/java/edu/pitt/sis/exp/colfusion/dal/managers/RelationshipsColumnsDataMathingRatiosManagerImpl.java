@@ -12,7 +12,7 @@ import edu.pitt.sis.exp.colfusion.dal.dao.RelationshipsColumnsDataMathingRatiosD
 import edu.pitt.sis.exp.colfusion.dal.dao.RelationshipsColumnsDataMathingRatiosDAOImpl;
 import edu.pitt.sis.exp.colfusion.dal.orm.ColfusionRelationshipsColumnsDataMathingRatios;
 import edu.pitt.sis.exp.colfusion.dal.orm.ColfusionRelationshipsColumnsDataMathingRatiosId;
-import edu.pitt.sis.exp.colfusion.dal.utils.HibernateUtil;
+import edu.pitt.sis.exp.colfusion.utils.HibernateUtil;
 
 /**
  * @author Evgeny

@@ -23,8 +23,8 @@ import edu.pitt.sis.exp.colfusion.dal.orm.ColfusionRelationshipsColumns;
 import edu.pitt.sis.exp.colfusion.dal.orm.ColfusionRelationshipsColumnsDataMathingRatios;
 import edu.pitt.sis.exp.colfusion.dal.orm.ColfusionRelationshipsColumnsDataMathingRatiosId;
 import edu.pitt.sis.exp.colfusion.dal.orm.ColfusionSourceinfo;
-import edu.pitt.sis.exp.colfusion.dal.utils.HibernateUtil;
 import edu.pitt.sis.exp.colfusion.dal.viewmodels.RelationshipLinkViewModel;
+import edu.pitt.sis.exp.colfusion.utils.HibernateUtil;
 
 /**
  * @author Evgeny

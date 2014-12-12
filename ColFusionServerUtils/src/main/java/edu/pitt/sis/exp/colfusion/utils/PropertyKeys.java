@@ -8,7 +8,7 @@ package edu.pitt.sis.exp.colfusion.utils;
  * @author Evgeny
  *
  */
-public enum PropertyKeys {
+public enum PropertyKeys implements IPropertyKeys {
 	
 	/**
 	 * This is used only for testing.
@@ -242,6 +242,7 @@ public enum PropertyKeys {
 		this.propertyKey = propertyKey;
 	}
 	
+	@Override
 	public String getKey() {
 		return propertyKey;
 	}

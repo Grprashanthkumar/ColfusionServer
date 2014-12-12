@@ -11,7 +11,7 @@ import org.hibernate.Query;
 
 import edu.pitt.sis.exp.colfusion.dal.orm.ColfusionSourceinfoTableKtr;
 import edu.pitt.sis.exp.colfusion.dal.orm.ColfusionSourceinfoTableKtrId;
-import edu.pitt.sis.exp.colfusion.dal.utils.HibernateUtil;
+import edu.pitt.sis.exp.colfusion.utils.HibernateUtil;
 
 /**
  * @author Evgeny

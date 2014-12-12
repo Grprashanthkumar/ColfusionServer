@@ -98,14 +98,12 @@ public class MySQLDatabaseHandler extends DatabaseHandlerBase {
 
 	@Override
 	public boolean createDatabaseIfNotExist(final String databaseName) throws Exception {
-		Statement statement = null;
-		
 		String sql = "";
 		
-		try {
-			statement = getConnection().createStatement();
+		try (Statement statement = getConnection().createStatement()){
+			
 			//TODO: is SQL injection possible here? because we just put database name without any checks and the database name can come from user (or not?)
-			sql = String.format("CREATE DATABASE IF NOT EXISTS `%s`", databaseName);
+			sql = String.format("CREATE DATABASE IF NOT EXISTS %s", wrapName(databaseName));
 			
 			statement.executeUpdate(sql);
 			
@@ -125,15 +123,6 @@ public class MySQLDatabaseHandler extends DatabaseHandlerBase {
 			
 			logger.error(String.format("createDatabaseIfNotExist failed for %s", databaseName));
 			throw e;
-		}
-		finally {
-			if (statement != null) {
-				try { 
-					statement.close(); 
-				} 
-				catch (SQLException ignore) {				
-				}
-			}
 		}
 	}
 

@@ -193,7 +193,7 @@ public final class ConfigManager {
 	 * 			the name of the property for which to get the value.
 	 * @return the value of the property or null if the key is not found.
 	 */
-	public String getProperty(final PropertyKeys propertyKey) {
+	public String getProperty(final IPropertyKeys propertyKey) {
 		String systemProperty = getSystemProperty(propertyKey);
 		
 		return systemProperty != null ? systemProperty: properties.getProperty(propertyKey.getKey());
@@ -209,7 +209,7 @@ public final class ConfigManager {
 	 * 			the default value that should be returned if the property name (key) is not found.
 	 * @return the value of the property or null if the key is not found.
 	 */
-	public String getProperty(final PropertyKeys propertyKey, final String defaultValue) {
+	public String getProperty(final IPropertyKeys propertyKey, final String defaultValue) {
 		String systemProperty = getSystemProperty(propertyKey);
 		
 		return systemProperty != null ? systemProperty : properties.getProperty(propertyKey.getKey(), defaultValue);
@@ -221,7 +221,7 @@ public final class ConfigManager {
 	 * 			the name of the property.
 	 * @return the value of the property or null if the property not provided.
 	 */
-	private String getSystemProperty(final PropertyKeys propertyKey) {
+	private String getSystemProperty(final IPropertyKeys propertyKey) {
 		return System.getProperty(propertyKey.getKey());
 	}
 }

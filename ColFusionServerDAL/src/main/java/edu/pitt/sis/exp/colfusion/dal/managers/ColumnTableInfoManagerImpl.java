@@ -8,7 +8,7 @@ import org.hibernate.NonUniqueResultException;
 import edu.pitt.sis.exp.colfusion.dal.dao.ColumnTableInfoDAO;
 import edu.pitt.sis.exp.colfusion.dal.dao.ColumnTableInfoDAOImpl;
 import edu.pitt.sis.exp.colfusion.dal.orm.ColfusionColumnTableInfo;
-import edu.pitt.sis.exp.colfusion.dal.utils.HibernateUtil;
+import edu.pitt.sis.exp.colfusion.utils.HibernateUtil;
 
 public class ColumnTableInfoManagerImpl extends GeneralManagerImpl<ColumnTableInfoDAO, ColfusionColumnTableInfo, Integer> implements ColumnTableInfoManager {
 	

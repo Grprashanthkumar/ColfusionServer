@@ -12,7 +12,7 @@ import edu.pitt.sis.exp.colfusion.dal.dao.ProcessesDAO;
 import edu.pitt.sis.exp.colfusion.dal.dao.ProcessesDAOImpl;
 import edu.pitt.sis.exp.colfusion.dal.orm.ColfusionProcesses;
 //import edu.pitt.sis.exp.colfusion.process.ProcessStatusEnum;
-import edu.pitt.sis.exp.colfusion.dal.utils.HibernateUtil;
+import edu.pitt.sis.exp.colfusion.utils.HibernateUtil;
 
 /**
  * @author Evgeny

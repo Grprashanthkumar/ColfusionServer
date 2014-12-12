@@ -1,7 +1,7 @@
 /**
  * 
  */
-package edu.pitt.sis.exp.colfusion.dal.utils;
+package edu.pitt.sis.exp.colfusion.utils;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -13,9 +13,6 @@ import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
 
-import edu.pitt.sis.exp.colfusion.utils.ConfigManager;
-import edu.pitt.sis.exp.colfusion.utils.PropertyKeys;
-
 
 
 public class HibernateUtil {
@@ -24,6 +21,13 @@ public class HibernateUtil {
 	private static SessionFactory sessionFactory;
 	
 	static {
+		initiSessionFactory();
+	}
+
+	/**
+	 * @throws RuntimeException
+	 */
+	static void initiSessionFactory() throws RuntimeException {
 		try {
 			Configuration cfg = new Configuration().configure("hibernate.cfg.xml"); 
 			

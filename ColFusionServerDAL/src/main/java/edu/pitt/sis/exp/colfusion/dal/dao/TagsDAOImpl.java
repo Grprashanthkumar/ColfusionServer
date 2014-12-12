@@ -8,7 +8,7 @@ import org.apache.logging.log4j.Logger;
 import org.hibernate.Query;
 
 import edu.pitt.sis.exp.colfusion.dal.orm.ColfusionTags;
-import edu.pitt.sis.exp.colfusion.dal.utils.HibernateUtil;
+import edu.pitt.sis.exp.colfusion.utils.HibernateUtil;
 
 /**
  * @author Evgeny

@@ -6,7 +6,7 @@ package edu.pitt.sis.exp.colfusion.dal.dao;
 import org.hibernate.Query;
 
 import edu.pitt.sis.exp.colfusion.dal.orm.ColfusionColumnTableInfo;
-import edu.pitt.sis.exp.colfusion.dal.utils.HibernateUtil;
+import edu.pitt.sis.exp.colfusion.utils.HibernateUtil;
 /**
  * @author Evgeny
  *
