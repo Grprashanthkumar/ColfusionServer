@@ -8,10 +8,13 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -52,7 +55,7 @@ public abstract class DatabaseUnitTestBase extends UnitTestBase {
 	
 	private static final Set<String> systemPropertiesToClean = new HashSet<String>();
 	
-	private static String dbConnectionUrl;
+	protected static String dbConnectionUrl;
 	
 	/**
 	 * Set's up database for test.
@@ -76,7 +79,7 @@ public abstract class DatabaseUnitTestBase extends UnitTestBase {
 		String sql = String.format("CREATE DATABASE IF NOT EXISTS `%s`", 
 				configMng.getProperty(PropertyKeys.HIBERNATE_DEFAULT_CATALOG));
 		
-		executeMySQLUpdateQuery(sql);
+		executeMySQLUpdateQuery(dbConnectionUrl, sql);
 	}
 	
 	@After
@@ -84,22 +87,56 @@ public abstract class DatabaseUnitTestBase extends UnitTestBase {
 		String sql = String.format("DROP DATABASE IF EXISTS `%s`", 
 				configMng.getProperty(PropertyKeys.HIBERNATE_DEFAULT_CATALOG));
 		
-		executeMySQLUpdateQuery(sql);
+		executeMySQLUpdateQuery(dbConnectionUrl, sql);
 	}
 	
 	/**
 	 * @throws ClassNotFoundException
 	 * @throws SQLException
 	 */
-	private void executeMySQLUpdateQuery(final String query) throws ClassNotFoundException,
+	protected void executeMySQLUpdateQuery(final String connectionUrl, final String query) throws ClassNotFoundException,
 			SQLException {
 		Class.forName("com.mysql.jdbc.Driver");
 		
-		try (Connection connection = DriverManager.getConnection(dbConnectionUrl, 
+		try (Connection connection = DriverManager.getConnection(connectionUrl, 
 				DOCKER_MYSQL_ROOT_USER, DOCKER_ENV_MYSQL_ROOT_PASSWORD_VALUE)) {
 			try (Statement statement = connection.createStatement()){
 				
 				statement.executeUpdate(query);
+			} 
+		}
+	}
+	
+	/**
+	 * @throws ClassNotFoundException
+	 * @throws SQLException
+	 */
+	protected List<Object[]> executeMySQLQuery(final String connectionUrl, final String query) throws ClassNotFoundException,
+			SQLException {
+		Class.forName("com.mysql.jdbc.Driver");
+		
+		try (Connection connection = DriverManager.getConnection(connectionUrl, 
+				DOCKER_MYSQL_ROOT_USER, DOCKER_ENV_MYSQL_ROOT_PASSWORD_VALUE)) {
+			try (Statement statement = connection.createStatement()){
+				
+				 ResultSet resultSet = statement.executeQuery(query);
+				 
+				 List<Object[]> result = new ArrayList<Object[]>();
+				 
+				 int numColumns = resultSet.getMetaData().getColumnCount();
+				 
+				 while (resultSet.next()) {
+					 
+					 Object[] row = new Object[numColumns];
+					 
+					 for (int i = 1; i <= numColumns; i++) {
+						 row[i - 1] = resultSet.getObject(i);
+					 }
+					 
+					 result.add(row);
+				 }
+				 
+				 return result;
 			} 
 		}
 	}
