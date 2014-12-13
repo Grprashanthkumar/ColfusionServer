@@ -118,6 +118,26 @@
 					<target>1.7</target>
 				</configuration>
 			</plugin>
+<!--
+			<plugin>
+			  <groupId>org.apache.maven.plugins</groupId>
+			  <artifactId>maven-enforcer-plugin</artifactId>
+			  <version>1.0.1</version>
+			  <configuration>
+			    	<rules>
+			      		<DependencyConvergence/>
+			    	</rules>
+			  </configuration>
+			  <executions>
+			    	<execution>
+			      		<id>enforce</id>
+			      		<goals>
+			        		<goal>enforce</goal>
+			      		</goals>
+			      		<phase>validate</phase>
+			    	</execution>
+			 	</executions>
+			</plugin> -->
 		</plugins>
 	</build>
 	
@@ -128,6 +148,7 @@
 			<artifactId>log4j-api</artifactId>
 			<version>2.0-rc1</version>
 		</dependency>
+		
 		<dependency>
 			<groupId>org.apache.logging.log4j</groupId>
 			<artifactId>log4j-core</artifactId>
@@ -140,6 +161,13 @@
 			<version>4.8.1</version>
 			<scope>test</scope>
 		</dependency>
+
+		<dependency>
+		      <groupId>com.github.docker-java</groupId>
+		      <artifactId>docker-java</artifactId>
+		      <version>0.10.4</version>
+			  <scope>test</scope>
+		</dependency> 
 
 		<dependency>
 			<groupId>com.google.code.gson</groupId>
