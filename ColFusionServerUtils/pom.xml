@@ -31,13 +31,13 @@
 			<artifactId>commons-compress</artifactId>
 			<version>1.7</version>
 		</dependency>
-		<!--
+		
 		<dependency>
 		      <groupId>com.github.docker-java</groupId>
 		      <artifactId>docker-java</artifactId>
 		      <version>0.10.4</version>
 			  <scope>test</scope>
-		</dependency>  -->
+		</dependency> 
 		
 	</dependencies>
 	<description>Utility functions</description>
