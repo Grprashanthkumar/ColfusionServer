@@ -3,6 +3,9 @@
  */
 package edu.pitt.sis.exp.colfusion.dal.utils;
 
+import java.util.Map;
+import java.util.Map.Entry;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.hibernate.HibernateException;
@@ -14,12 +17,19 @@ import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
 
 import edu.pitt.sis.exp.colfusion.utils.ConfigManager;
-import edu.pitt.sis.exp.colfusion.utils.PropertyKeys;
 import edu.pitt.sis.exp.colfusion.utils.StringUtils;
 
 public class HibernateUtil {
  
 	private static final Logger logger = LogManager.getLogger(HibernateUtil.class.getName());
+	
+	private static final String COLFUSION_PREFIX = "colfusion.";
+	
+	/**
+	 * Prefix of all colfusion hibernate properties. 
+	 */
+	//TODO: Maybe it is better to switch to different config format (e.g. https://github.com/typesafehub/config#using-hocon-the-json-superset)
+	private static final String COLFUSION_HIBERNATE_PROPERTIES_PREFIX = "colfusion.hibernate";
 	private static SessionFactory sessionFactory;
 	
 	static {
@@ -55,28 +65,12 @@ public class HibernateUtil {
 	 * 			hibernate configuration to set properties to 
 	 */
 	private static void setProperties(final Configuration cfg) {
-		ConfigManager configMng = ConfigManager.getInstance();
-		cfg.setProperty(removeColfuionPrefix(PropertyKeys.COLFUSION_HIBERNATE_CONNECTION_DRIVER_CLASS), configMng.getProperty(PropertyKeys.COLFUSION_HIBERNATE_CONNECTION_DRIVER_CLASS));
-		cfg.setProperty(removeColfuionPrefix(PropertyKeys.COLFUSION_HIBERNATE_CONNECTION_URL), configMng.getProperty(PropertyKeys.COLFUSION_HIBERNATE_CONNECTION_URL));
-		cfg.setProperty(removeColfuionPrefix(PropertyKeys.COLFUSION_HIBERNATE_DEFAULT_CATALOG), configMng.getProperty(PropertyKeys.COLFUSION_HIBERNATE_DEFAULT_CATALOG));
-		cfg.setProperty(removeColfuionPrefix(PropertyKeys.COLFUSION_HIBERNATE_CONNECTION_USERNAME), configMng.getProperty(PropertyKeys.COLFUSION_HIBERNATE_CONNECTION_USERNAME));
-		cfg.setProperty(removeColfuionPrefix(PropertyKeys.COLFUSION_HIBERNATE_CONNECTION_PASSWORD), configMng.getProperty(PropertyKeys.COLFUSION_HIBERNATE_CONNECTION_PASSWORD));		
-		cfg.setProperty(removeColfuionPrefix(PropertyKeys.COLFUSION_HIBERNATE_DIALECT), configMng.getProperty(PropertyKeys.COLFUSION_HIBERNATE_DIALECT));
+		Map<String, String> hibernateProperties = ConfigManager.getInstance().getPropertiesForPrefix(COLFUSION_HIBERNATE_PROPERTIES_PREFIX);
 		
-		cfg.setProperty(removeColfuionPrefix(PropertyKeys.COLFUSION_HIBERNATE_HBM2DDL_AUTO), configMng.getProperty(PropertyKeys.COLFUSION_HIBERNATE_HBM2DDL_AUTO));
-		
-		cfg.setProperty(removeColfuionPrefix(PropertyKeys.COLFUSION_HIBERNATE_CONNECTION_ZERO_DATE_TIME_BEHAVIOR), configMng.getProperty(PropertyKeys.COLFUSION_HIBERNATE_CONNECTION_ZERO_DATE_TIME_BEHAVIOR));
-		
-		cfg.setProperty(removeColfuionPrefix(PropertyKeys.COLFUSION_HIBERNATE_C3P0_MIN_SIZE), configMng.getProperty(PropertyKeys.COLFUSION_HIBERNATE_C3P0_MIN_SIZE));
-		cfg.setProperty(removeColfuionPrefix(PropertyKeys.COLFUSION_HIBERNATE_C3P0_MAX_SIZE), configMng.getProperty(PropertyKeys.COLFUSION_HIBERNATE_C3P0_MAX_SIZE));
-		cfg.setProperty(removeColfuionPrefix(PropertyKeys.COLFUSION_HIBERNATE_C3P0_TIMEOUT), configMng.getProperty(PropertyKeys.COLFUSION_HIBERNATE_C3P0_TIMEOUT));
-		cfg.setProperty(removeColfuionPrefix(PropertyKeys.COLFUSION_HIBERNATE_C3P0_MAX_STATEMENTS), configMng.getProperty(PropertyKeys.COLFUSION_HIBERNATE_C3P0_MAX_STATEMENTS));
-		cfg.setProperty(removeColfuionPrefix(PropertyKeys.COLFUSION_HIBERNATE_C3P0_IDLE_TEST_PERIOD), configMng.getProperty(PropertyKeys.COLFUSION_HIBERNATE_C3P0_IDLE_TEST_PERIOD));
-		
-		// Somehow setting this property at this time doesn't work. So it is set via the hibernate config file.
-		cfg.setProperty(removeColfuionPrefix(PropertyKeys.COLFUSION_HIBERNATE_CURRENT_SESSION_CONTEXT_CLASS), configMng.getProperty(PropertyKeys.COLFUSION_HIBERNATE_CURRENT_SESSION_CONTEXT_CLASS));
-		cfg.setProperty(removeColfuionPrefix(PropertyKeys.COLFUSION_HIBERNATE_SHOW_SQL), configMng.getProperty(PropertyKeys.COLFUSION_HIBERNATE_SHOW_SQL));
-		cfg.setProperty(removeColfuionPrefix(PropertyKeys.COLFUSION_HIBERNATE_FORMAT_SQL), configMng.getProperty(PropertyKeys.COLFUSION_HIBERNATE_FORMAT_SQL));
+		for (Entry<String, String> entry : hibernateProperties.entrySet()) {
+			cfg.setProperty(removeColfuionPrefix(entry.getKey()), entry.getValue());
+			logger.info(String.format("Set %s = %s", removeColfuionPrefix(entry.getKey()), entry.getValue()));			
+		}
 	}
 	
 	/**
@@ -86,9 +80,9 @@ public class HibernateUtil {
 	 * @return
 	 */
 	static String removeColfuionPrefix(
-			final PropertyKeys hibernateConnectionDriverClass) {
+			final String hibernateConnectionDriverClass) {
 		
-		return StringUtils.removePrefix(hibernateConnectionDriverClass.getKey(), "colfusion.");
+		return StringUtils.removePrefix(hibernateConnectionDriverClass, COLFUSION_PREFIX);
 	}
 
 	public static SessionFactory getSessionFactory() {

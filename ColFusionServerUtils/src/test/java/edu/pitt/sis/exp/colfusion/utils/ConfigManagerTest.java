@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
+import java.util.Map;
 import java.util.Properties;
 
 import junit.framework.TestCase;
@@ -172,5 +173,37 @@ public class ConfigManagerTest extends TestCase {
 		configManager.loadTestProperties();
 		
 		assertEquals(COLFUSION_PROPERTIES_SOURCE_VALUE_TEST, configManager.getProperty(PropertyKeys.COLFUSION_PROPERTIES_SOURCE));
+	}
+	
+	@Test
+	public void testGetPropertiesForPrefixInternal() {
+		Properties prop = new Properties();
+		prop.setProperty("test.section1.key1", "test");
+		prop.setProperty("test.section1.key2", "test");
+		prop.setProperty("test.section1.key3", "test");
+		
+		prop.setProperty("test.section2.key1", "test");
+		prop.setProperty("test.section3.key2", "test");
+		prop.setProperty("test.section3.key3", "test");
+		
+		{
+			Map<String, String> propertiesForPrefix = ConfigManager.getPropertiesForPrefixInternal(prop, "test.section1");
+			assertEquals("Wrong # of properties for prefix", 3, propertiesForPrefix.size());
+		}
+		
+		{
+			Map<String, String> propertiesForPrefix = ConfigManager.getPropertiesForPrefixInternal(prop, "test.section2");
+			assertEquals("Wrong # of properties for prefix", 1, propertiesForPrefix.size());
+		}
+		
+		{
+			Map<String, String> propertiesForPrefix = ConfigManager.getPropertiesForPrefixInternal(prop, "");
+			assertEquals("Wrong # of properties for prefix", 6, propertiesForPrefix.size());
+		}
+		
+		{
+			Map<String, String> propertiesForPrefix = ConfigManager.getPropertiesForPrefixInternal(prop, "not existing");
+			assertEquals("Wrong # of properties for prefix", 0, propertiesForPrefix.size());
+		}
 	}
 }

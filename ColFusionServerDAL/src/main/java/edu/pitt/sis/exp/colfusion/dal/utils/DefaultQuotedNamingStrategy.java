@@ -1,9 +1,9 @@
 package edu.pitt.sis.exp.colfusion.dal.utils;
 
-import org.hibernate.cfg.ImprovedNamingStrategy;
+import org.hibernate.cfg.DefaultNamingStrategy;
 import org.hibernate.cfg.NamingStrategy;
 
-public class DefaultQuotedNamingStrategy extends ImprovedNamingStrategy {
+public class DefaultQuotedNamingStrategy extends DefaultNamingStrategy {
 
 	public static final NamingStrategy INSTANCE = new DefaultQuotedNamingStrategy();
 	
