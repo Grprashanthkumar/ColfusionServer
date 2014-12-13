@@ -15,7 +15,7 @@ import edu.pitt.sis.exp.colfusion.dal.dao.PSCSourceInfoTableDAO;
 import edu.pitt.sis.exp.colfusion.dal.dao.PSCSourceInfoTableDAOImpl;
 import edu.pitt.sis.exp.colfusion.dal.orm.ColfusionPscSourceinfoTable;
 import edu.pitt.sis.exp.colfusion.dal.orm.ColfusionPscSourceinfoTableId;
-import edu.pitt.sis.exp.colfusion.utils.HibernateUtil;
+import edu.pitt.sis.exp.colfusion.dal.utils.HibernateUtil;
 
 public class PSCSourceInfoTableManagerImpl extends
 		GeneralManagerImpl<PSCSourceInfoTableDAO, ColfusionPscSourceinfoTable, ColfusionPscSourceinfoTableId> implements PSCSourceInfoTableManager {

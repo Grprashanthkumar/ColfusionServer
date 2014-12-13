@@ -1,4 +1,4 @@
-package edu.pitt.sis.exp.colfusion.utils.test.infra;
+package edu.pitt.sis.exp.colfusion.dal.infra;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -36,6 +36,8 @@ import com.github.dockerjava.core.DockerClientConfig;
 
 import edu.pitt.sis.exp.colfusion.utils.ConfigManager;
 import edu.pitt.sis.exp.colfusion.utils.PropertyKeys;
+import edu.pitt.sis.exp.colfusion.utils.PropertyKeysTest;
+import edu.pitt.sis.exp.colfusion.utils.UnitTestBase;
 
 public abstract class DatabaseUnitTestBase extends UnitTestBase {
 
@@ -66,7 +68,8 @@ public abstract class DatabaseUnitTestBase extends UnitTestBase {
 	 * @throws InterruptedException 
 	 */
 	@BeforeClass
-	public static void setUp() throws URISyntaxException, ClassNotFoundException, SQLException, IOException, InterruptedException {
+	public static void setUp() throws Exception {
+	
 		initDockerClient();
 		String containerId = startMySQLContainer();
 		dbConnectionUrl = constructDbConnectionUrl(containerId);

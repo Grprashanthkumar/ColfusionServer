@@ -12,8 +12,8 @@ import org.hibernate.NonUniqueResultException;
 import edu.pitt.sis.exp.colfusion.dal.dao.AttachmentDAO;
 import edu.pitt.sis.exp.colfusion.dal.dao.AttachmentDAOImpl;
 import edu.pitt.sis.exp.colfusion.dal.orm.ColfusionDesAttachments;
+import edu.pitt.sis.exp.colfusion.dal.utils.HibernateUtil;
 import edu.pitt.sis.exp.colfusion.dal.viewmodels.AttachmentListViewModel;
-import edu.pitt.sis.exp.colfusion.utils.HibernateUtil;
 
 
 public class AttachmentManagerImpl extends GeneralManagerImpl<AttachmentDAO, ColfusionDesAttachments, Integer> implements AttachmentManager{

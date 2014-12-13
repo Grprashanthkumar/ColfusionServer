@@ -8,7 +8,7 @@ import org.apache.logging.log4j.Logger;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import edu.pitt.sis.exp.colfusion.utils.test.infra.DatabaseUnitTestBase;
+import edu.pitt.sis.exp.colfusion.dal.infra.DatabaseUnitTestBase;
 
 /**
  * @author Evgeny

@@ -1,8 +1,8 @@
-package edu.pitt.sis.exp.colfusion.utils.test.infra;
+package edu.pitt.sis.exp.colfusion.utils;
 
 import java.io.InputStream;
 
-import edu.pitt.sis.exp.colfusion.utils.ResourceUtils;
+import org.junit.BeforeClass;
 /**
  * Some functionality that is commonly used by many unit tests.
  * 
@@ -27,4 +27,10 @@ public abstract class UnitTestBase  {
 		return ResourceUtils.getResourceAsStream(this.getClass(), resourceName);
 	}
 
+	@BeforeClass
+	public static void prepareUp() throws Exception {
+		//TODO find a better way to do that because currently the same properties
+		// are reloaded foreach test class.
+		ConfigManager.getInstance().loadTestProperties();
+	}
 }

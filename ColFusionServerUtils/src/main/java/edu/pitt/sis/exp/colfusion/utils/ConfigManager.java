@@ -51,6 +51,10 @@ public final class ConfigManager {
 	 */
 	public final static String CONFIG_FILE_NAME = "config.properties";
 	
+	//TODO: might need to do more work on this
+	public final static String CONFIG_TEST_DEFAULT_FILE_NAME = "config_test_default.properties";
+	public final static String CONFIG_TEST_FILE_NAME = "config_test.properties";
+	
 	/**
 	 * This class is not intended to be initialize. Use {@link #getInstance()}.
 	 */
@@ -94,14 +98,7 @@ public final class ConfigManager {
 	 */
 	void loadDefaultPropertiesFoundInResource(final Properties prop)
 			throws RuntimeException {		
-		InputStream defaultPropertyFile = ResourceUtils.getResourceAsStream(this.getClass(), CONFIG_DEFAULT_FILE_NAME);
-		if (defaultPropertyFile == null) {
-			String message = String.format("Was trying to load properties from"
-					+ "required %s resource file, but got null.", CONFIG_DEFAULT_FILE_NAME);
-			logger.error(message);
-			throw new RuntimeException(message);
-		}
-		loadConfigFile(prop, defaultPropertyFile, CONFIG_DEFAULT_FILE_NAME);
+		loadPropertiesFromResoruceFile(prop, CONFIG_DEFAULT_FILE_NAME, true);
 	}
 	
 	/**
@@ -112,14 +109,30 @@ public final class ConfigManager {
 	 * 			the properties object where to load new properties.
 	 */
 	void loadCustomPropertiesFoundInResource(final Properties prop) {
-		InputStream propertyFile = ResourceUtils.getResourceAsStream(this.getClass(), CONFIG_FILE_NAME);
+		loadPropertiesFromResoruceFile(prop, CONFIG_FILE_NAME, false);
+	}
+
+	/**
+	 * @param prop
+	 */
+	private void loadPropertiesFromResoruceFile(final Properties prop, final String resourceName, final boolean isRequired) {
+		String propertiesLocation = ResourceUtils.getResourceAsFileLocation(this.getClass(), resourceName);
+		InputStream propertyFile = ResourceUtils.getResourceAsStream(this.getClass(), resourceName);
 		if (propertyFile == null) {
-			String message = String.format("Didn't find custom property file %s in resource",
-					CONFIG_FILE_NAME);
-			logger.info(message);
+			if (isRequired) {
+				String message = String.format("Was trying to load required properties from"
+						+ "%s resource file, but got null.", resourceName);
+				logger.error(message);
+				throw new RuntimeException(message);
+			}
+			else {
+				String message = String.format("Didn't find property file %s in resource",
+						CONFIG_FILE_NAME);
+				logger.info(message);
+			}			
 		}
 		else {
-			loadConfigFile(prop, propertyFile, CONFIG_FILE_NAME);
+			loadConfigFile(prop, propertyFile, resourceName, propertiesLocation);
 		}
 	}
 	
@@ -144,7 +157,7 @@ public final class ConfigManager {
 					+ "so goin load properties from '%s' file", PropertyKeys.CONFIG_FILE_NAME_SYSTEM_PROPERTY, propertyFilePath));
 			File propertyFile = new File(propertyFilePath);
 			try (InputStream propertiesFileStream = new FileInputStream(propertyFile)) {
-				loadConfigFile(prop, propertiesFileStream, propertyFilePath);
+				loadConfigFile(prop, propertiesFileStream, propertyFilePath, propertyFilePath);
 			}
 			catch (IOException e) {				
 				String message = String.format("The '%s' file provided in the '%s' system property doesn't exist. "
@@ -166,13 +179,15 @@ public final class ConfigManager {
 	 * 			properties file stream that needs to be loaded.
 	 * @param propertiesFilename
 	 * 			the name of the properties file (used only for logging).
+	 * @param propertiesLocation 
 	 * @throws RuntimeException if cannot read the file.
 	 */
-	private void loadConfigFile(final Properties prop, final InputStream propertiesFileStream, final String propertiesFilename) {
+	private void loadConfigFile(final Properties prop, final InputStream propertiesFileStream, 
+			final String propertiesFilename, final String propertiesFileLocation) {
 
 		try {
 			prop.load(propertiesFileStream);
-			logger.info(String.format("Loaded properties from '%s'", propertiesFilename));
+			logger.info(String.format("Loaded properties from '%s' located at '%s'", propertiesFilename, propertiesFileLocation));
 		} catch (IOException e) {
 			String message = String.format("Could not load properties.", propertiesFilename.toString());
 			logger.error(message, e);
@@ -223,5 +238,11 @@ public final class ConfigManager {
 	 */
 	private String getSystemProperty(final IPropertyKeys propertyKey) {
 		return System.getProperty(propertyKey.getKey());
+	}
+
+	//TODO find a better way to do that
+	void loadTestProperties() {
+		loadPropertiesFromResoruceFile(this.properties, CONFIG_TEST_DEFAULT_FILE_NAME, true);
+		loadPropertiesFromResoruceFile(this.properties, CONFIG_TEST_FILE_NAME, false);
 	}
 }

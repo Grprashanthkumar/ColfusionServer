@@ -18,7 +18,7 @@ import edu.pitt.sis.exp.colfusion.dal.dao.SourceInfoDAO;
 import edu.pitt.sis.exp.colfusion.dal.dao.SourceInfoDAOImpl;
 import edu.pitt.sis.exp.colfusion.dal.orm.ColfusionExecuteinfo;
 import edu.pitt.sis.exp.colfusion.dal.orm.ColfusionSourceinfo;
-import edu.pitt.sis.exp.colfusion.utils.HibernateUtil;
+import edu.pitt.sis.exp.colfusion.dal.utils.HibernateUtil;
 
 /**
  * @author Evgeny

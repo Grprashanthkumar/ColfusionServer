@@ -1,4 +1,4 @@
-package edu.pitt.sis.exp.colfusion.utils.test.infra;
+package edu.pitt.sis.exp.colfusion.utils;
 
 import edu.pitt.sis.exp.colfusion.utils.IPropertyKeys;
 
@@ -22,6 +22,4 @@ public enum PropertyKeysTest implements IPropertyKeys {
 	public String getKey() {
 		return propertyKey;
 	}
-
-	
 }

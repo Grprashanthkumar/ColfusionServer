@@ -9,7 +9,7 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 
 import edu.pitt.sis.exp.colfusion.dal.orm.Statonverdicts;
-import edu.pitt.sis.exp.colfusion.utils.HibernateUtil;
+import edu.pitt.sis.exp.colfusion.dal.utils.HibernateUtil;
 
 public class StatonverdictsDAOImpl implements StatonverdictsDAO{
 	

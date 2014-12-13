@@ -14,7 +14,7 @@ import org.hibernate.HibernateException;
 import org.hibernate.NonUniqueResultException;
 
 import edu.pitt.sis.exp.colfusion.dal.dao.GenericDAO;
-import edu.pitt.sis.exp.colfusion.utils.HibernateUtil;
+import edu.pitt.sis.exp.colfusion.dal.utils.HibernateUtil;
 
 /**
  * @author Evgeny

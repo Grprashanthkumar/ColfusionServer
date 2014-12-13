@@ -20,8 +20,11 @@ import org.junit.Test;
 public class ConfigManagerTest extends TestCase {
 	
 	private static final String COLFUSION_PROPERTIES_SOURCE_VALUE_DEFAULT = "default";
-	private static final String COLFUSION_PROPERTIES_SOURCE_VALUE_CUSTOM = "custom";
+	private static final String COLFUSION_PROPERTIES_SOURCE_VALUE_CUSTOM = "custom in main";
 	private static final String COLFUSION_PROPERTIES_SOURCE_VALUE_CUSTOM_VIA_SYSTEM_PROPERTY = "custom via system properties";
+	
+	private static final String COLFUSION_PROPERTIES_SOURCE_VALUE_TEST = "test custom properties";
+	
 	
 	Logger logger = LogManager.getLogger(ConfigManagerTest.class.getName());
 	
@@ -161,5 +164,13 @@ public class ConfigManagerTest extends TestCase {
 		writer.flush();
 		writer.close();
 		return tempFile;
+	}
+	
+	@Test
+	public void testLoadTestProperties() {
+		ConfigManager configManager = ConfigManager.getInstance();
+		configManager.loadTestProperties();
+		
+		assertEquals(COLFUSION_PROPERTIES_SOURCE_VALUE_TEST, configManager.getProperty(PropertyKeys.COLFUSION_PROPERTIES_SOURCE));
 	}
 }

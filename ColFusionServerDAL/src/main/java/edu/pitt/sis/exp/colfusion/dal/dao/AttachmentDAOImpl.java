@@ -5,7 +5,7 @@ import java.util.List;
 import org.hibernate.Query;
 
 import edu.pitt.sis.exp.colfusion.dal.orm.ColfusionDesAttachments;
-import edu.pitt.sis.exp.colfusion.utils.HibernateUtil;
+import edu.pitt.sis.exp.colfusion.dal.utils.HibernateUtil;
 
 public class AttachmentDAOImpl extends GenericDAOImpl<ColfusionDesAttachments, Integer> implements AttachmentDAO {
 

@@ -57,6 +57,7 @@ import edu.pitt.sis.exp.colfusion.dal.orm.ColfusionTagsId;
 import edu.pitt.sis.exp.colfusion.dal.orm.ColfusionUserroles;
 import edu.pitt.sis.exp.colfusion.dal.orm.ColfusionUsers;
 import edu.pitt.sis.exp.colfusion.dal.utils.DataSourceTypes;
+import edu.pitt.sis.exp.colfusion.dal.utils.HibernateUtil;
 import edu.pitt.sis.exp.colfusion.dal.utils.MappingUtils;
 import edu.pitt.sis.exp.colfusion.dal.utils.StoryStatusTypes;
 import edu.pitt.sis.exp.colfusion.dal.viewmodels.LicenseViewModel;
@@ -68,7 +69,6 @@ import edu.pitt.sis.exp.colfusion.dal.viewmodels.StoryMetadataHistoryViewModel;
 import edu.pitt.sis.exp.colfusion.dal.viewmodels.StoryMetadataViewModel;
 import edu.pitt.sis.exp.colfusion.dal.viewmodels.StoryTargetDBViewModel;
 import edu.pitt.sis.exp.colfusion.dal.viewmodels.UserViewModel;
-import edu.pitt.sis.exp.colfusion.utils.HibernateUtil;
 
 
 /**

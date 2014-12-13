@@ -26,8 +26,8 @@ import edu.pitt.sis.exp.colfusion.importers.ImporterFactory;
 import edu.pitt.sis.exp.colfusion.importers.ImporterType;
 import edu.pitt.sis.exp.colfusion.tests.TestResourcesNames;
 import edu.pitt.sis.exp.colfusion.utils.ConfigManager;
+import edu.pitt.sis.exp.colfusion.utils.UnitTestBase;
 import edu.pitt.sis.exp.colfusion.utils.models.IOUtilsStoredFileInfoModel;
-import edu.pitt.sis.exp.colfusion.utils.test.infra.UnitTestBase;
 
 /**
  * @author Evgeny

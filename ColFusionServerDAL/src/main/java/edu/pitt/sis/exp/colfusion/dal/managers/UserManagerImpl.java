@@ -13,7 +13,7 @@ import org.hibernate.NonUniqueResultException;
 import edu.pitt.sis.exp.colfusion.dal.dao.UsersDAO;
 import edu.pitt.sis.exp.colfusion.dal.dao.UsersDAOImpl;
 import edu.pitt.sis.exp.colfusion.dal.orm.ColfusionUsers;
-import edu.pitt.sis.exp.colfusion.utils.HibernateUtil;
+import edu.pitt.sis.exp.colfusion.dal.utils.HibernateUtil;
 
 /**
  * @author Evgeny

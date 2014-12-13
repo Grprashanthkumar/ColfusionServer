@@ -19,8 +19,8 @@ import edu.pitt.sis.exp.colfusion.tests.TestResourcesNames;
 import edu.pitt.sis.exp.colfusion.utils.ConfigManager;
 import edu.pitt.sis.exp.colfusion.utils.IOUtils;
 import edu.pitt.sis.exp.colfusion.utils.PropertyKeys;
+import edu.pitt.sis.exp.colfusion.utils.UnitTestBase;
 import edu.pitt.sis.exp.colfusion.utils.models.IOUtilsStoredFileInfoModel;
-import edu.pitt.sis.exp.colfusion.utils.test.infra.UnitTestBase;
 
 //TODO might need to move to the utils projects
 public class IOUtilsTest extends UnitTestBase {
