@@ -1,10 +1,11 @@
 package edu.pitt.sis.exp.colfusion.utils;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 
 import org.junit.Test;
 
-public class StringUtilsTest extends TestCase {
+public class StringUtilsTest extends UnitTestBase {
 	
 	@Test
 	public void testIsSpecified() {
