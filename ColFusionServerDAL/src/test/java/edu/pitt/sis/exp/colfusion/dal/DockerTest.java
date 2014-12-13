@@ -23,7 +23,7 @@ public class DockerTest extends DatabaseUnitTestBase {
 	
 	private void wasDatabaseCreated() throws ClassNotFoundException, SQLException {
 		String sql = String.format("SELECT * FROM SCHEMATA WHERE SCHEMA_NAME = '%s'", 
-				ConfigManager.getInstance().getProperty(PropertyKeys.HIBERNATE_DEFAULT_CATALOG));
+				ConfigManager.getInstance().getProperty(PropertyKeys.COLFUSION_HIBERNATE_DEFAULT_CATALOG));
 		
 		List<Object[]> result = executeMySQLQuery(dbConnectionUrl + "/information_schema", sql);
 		assertEquals(1, result.size());		

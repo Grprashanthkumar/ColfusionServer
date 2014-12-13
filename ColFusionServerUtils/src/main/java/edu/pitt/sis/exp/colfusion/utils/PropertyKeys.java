@@ -181,37 +181,37 @@ public enum PropertyKeys implements IPropertyKeys {
 	COLFUSION_SERVICE_MONITOR_EMAIL_NOTIFICATION_SMTP_USER_LEVEL ("colfusion.service_monitor.email_notification.user_level"),
 	
 	//******* Hibernate properties (don't rename these properties) *************//
-	HIBERNATE_CONNECTION_DRIVER_CLASS ("hibernate.connection.driver_class"),
+	COLFUSION_HIBERNATE_CONNECTION_DRIVER_CLASS ("colfusion.hibernate.connection.driver_class"),
 	
-	HIBERNATE_CONNECTION_URL ("hibernate.connection.url"),
+	COLFUSION_HIBERNATE_CONNECTION_URL ("colfusion.hibernate.connection.url"),
 	
-	HIBERNATE_DEFAULT_CATALOG ("hibernate.default_catalog"),
+	COLFUSION_HIBERNATE_DEFAULT_CATALOG ("colfusion.hibernate.default_catalog"),
 	
-	HIBERNATE_CONNECTION_USERNAME ("hibernate.connection.username"),
+	COLFUSION_HIBERNATE_CONNECTION_USERNAME ("colfusion.hibernate.connection.username"),
 			
-	HIBERNATE_CONNECTION_PASSWORD ("hibernate.connection.password"),
+	COLFUSION_HIBERNATE_CONNECTION_PASSWORD ("colfusion.hibernate.connection.password"),
 	
-	HIBERNATE_DIALECT ("hibernate.dialect"),
+	COLFUSION_HIBERNATE_DIALECT ("colfusion.hibernate.dialect"),
 	
-	HIBERNATE_HBM2DDL_AUTO ("hibernate.hbm2ddl.auto"),
+	COLFUSION_HIBERNATE_HBM2DDL_AUTO ("colfusion.hibernate.hbm2ddl.auto"),
 	
-	HIBERNATE_CONNECTION_ZERO_DATE_TIME_BEHAVIOR ("hibernate.connection.zeroDateTimeBehavior"),
+	COLFUSION_HIBERNATE_CONNECTION_ZERO_DATE_TIME_BEHAVIOR ("colfusion.hibernate.connection.zeroDateTimeBehavior"),
 		
-	HIBERNATE_C3P0_MIN_SIZE ("hibernate.c3p0.min_size"),
+	COLFUSION_HIBERNATE_C3P0_MIN_SIZE ("colfusion.hibernate.c3p0.min_size"),
 	
-	HIBERNATE_C3P0_MAX_SIZE ("hibernate.c3p0.max_size"),
+	COLFUSION_HIBERNATE_C3P0_MAX_SIZE ("colfusion.hibernate.c3p0.max_size"),
 	
-	HIBERNATE_C3P0_TIMEOUT ("hibernate.c3p0.timeout"),
+	COLFUSION_HIBERNATE_C3P0_TIMEOUT ("colfusion.hibernate.c3p0.timeout"),
 	
-	HIBERNATE_C3P0_MAX_STATEMENTS ("hibernate.c3p0.max_statements"),
+	COLFUSION_HIBERNATE_C3P0_MAX_STATEMENTS ("colfusion.hibernate.c3p0.max_statements"),
 	
-	HIBERNATE_C3P0_IDLE_TEST_PERIOD ("hibernate.c3p0.idle_test_period"),
+	COLFUSION_HIBERNATE_C3P0_IDLE_TEST_PERIOD ("colfusion.hibernate.c3p0.idle_test_period"),
 	
-	HIBERNATE_CURRENT_SESSION_CONTEXT_CLASS ("hibernate.current_session_context_class"),
+	COLFUSION_HIBERNATE_CURRENT_SESSION_CONTEXT_CLASS ("colfusion.hibernate.current_session_context_class"),
 	
-	HIBERNATE_SHOW_SQL ("hibernate.show_sql"),
+	COLFUSION_HIBERNATE_SHOW_SQL ("colfusion.hibernate.show_sql"),
 	
-	HIBERNATE_FORMAT_SQL ("hibernate.format_sql"),
+	COLFUSION_HIBERNATE_FORMAT_SQL ("colfusion.hibernate.format_sql"),
 	
 	//***** END OF HIBERNATE PROPERTIES *****************//
 

@@ -33,10 +33,10 @@
   <mapping resource="hibernate/orm_mappings/ColfusionNotificationsUnread.hbm.xml"/>
   <mapping resource="hibernate/orm_mappings/ColfusionOldUrls.hbm.xml"/>
   <mapping resource="hibernate/orm_mappings/ColfusionOpenrefineProjectMap.hbm.xml"/>
-  <mapping resource="hibernate/orm_mappings/ColfusionPentahoLogLoggingChannels.hbm.xml"/>
+  <!-- <mapping resource="hibernate/orm_mappings/ColfusionPentahoLogLoggingChannels.hbm.xml"/>
   <mapping resource="hibernate/orm_mappings/ColfusionPentahoLogPerformance.hbm.xml"/>
   <mapping resource="hibernate/orm_mappings/ColfusionPentahoLogStep.hbm.xml"/>
-  <mapping resource="hibernate/orm_mappings/ColfusionPentahoLogTransformaion.hbm.xml"/>
+  <mapping resource="hibernate/orm_mappings/ColfusionPentahoLogTransformaion.hbm.xml"/>  -->
   <mapping resource="hibernate/orm_mappings/ColfusionProcesses.hbm.xml"/>
   <mapping resource="hibernate/orm_mappings/ColfusionPscSourceinfoTable.hbm.xml"/>
   <mapping resource="hibernate/orm_mappings/ColfusionRedirects.hbm.xml"/>

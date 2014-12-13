@@ -46,4 +46,14 @@ public class StringUtilsTest extends TestCase {
 		assertFalse(StringUtils.makeShortUnique("123456789123456789123456789123456789123456789123456789123456789123456789")
 				.equals(StringUtils.makeShortUnique("123456789123456789123456789123456789123456789123456789123456789123456780")));
 	}
+	
+	@Test
+	public void testRemovePrefix() {
+		assertEquals("hibernate.default_catalog", StringUtils.removePrefix("colfusion.hibernate.default_catalog", "colfusion."));
+		
+		assertEquals("hibernate.default_catalog", StringUtils.removePrefix("hibernate.default_catalog", "colfusion."));
+		
+		assertEquals("hibernate.default_catalog.colfusion.test", 
+				StringUtils.removePrefix("hibernate.default_catalog.colfusion.test", "colfusion."));
+	}
 }

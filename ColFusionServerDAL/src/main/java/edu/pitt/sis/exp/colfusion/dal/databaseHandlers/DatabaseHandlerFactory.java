@@ -83,15 +83,15 @@ public class DatabaseHandlerFactory {
 		if (metadataDbHandler == null) {
 			try{
 				Pattern pattern = Pattern.compile("/([A-Za-z0-9.]+):([0-9]+)/");
-				Matcher matcher = pattern.matcher(ConfigManager.getInstance().getProperty(PropertyKeys.HIBERNATE_CONNECTION_URL));
+				Matcher matcher = pattern.matcher(ConfigManager.getInstance().getProperty(PropertyKeys.COLFUSION_HIBERNATE_CONNECTION_URL));
 				
 				if (matcher.find()) {
 					String host = matcher.group(1);
 			        int port = Integer.valueOf(matcher.group(2));
 			        
-			        String user = ConfigManager.getInstance().getProperty(PropertyKeys.HIBERNATE_CONNECTION_USERNAME); 
-			        String password = ConfigManager.getInstance().getProperty(PropertyKeys.HIBERNATE_CONNECTION_PASSWORD); 
-			        String database = ConfigManager.getInstance().getProperty(PropertyKeys.HIBERNATE_DEFAULT_CATALOG); 
+			        String user = ConfigManager.getInstance().getProperty(PropertyKeys.COLFUSION_HIBERNATE_CONNECTION_USERNAME); 
+			        String password = ConfigManager.getInstance().getProperty(PropertyKeys.COLFUSION_HIBERNATE_CONNECTION_PASSWORD); 
+			        String database = ConfigManager.getInstance().getProperty(PropertyKeys.COLFUSION_HIBERNATE_DEFAULT_CATALOG); 
 			    	
 			        //TODO:　Read host,port, etc. from config file and/or system properties
 			        DatabaseConnectionInfo connectioInfo = new DatabaseConnectionInfo(host, port, user, password, database);

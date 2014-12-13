@@ -80,7 +80,7 @@ public abstract class DatabaseUnitTestBase extends UnitTestBase {
 	@Before
 	public void createDatabase() throws ClassNotFoundException, SQLException {
 		String sql = String.format("CREATE DATABASE IF NOT EXISTS `%s`", 
-				configMng.getProperty(PropertyKeys.HIBERNATE_DEFAULT_CATALOG));
+				configMng.getProperty(PropertyKeys.COLFUSION_HIBERNATE_DEFAULT_CATALOG));
 		
 		executeMySQLUpdateQuery(dbConnectionUrl, sql);
 	}
@@ -88,7 +88,7 @@ public abstract class DatabaseUnitTestBase extends UnitTestBase {
 	@After
 	public void dropDatabase() throws ClassNotFoundException, SQLException {
 		String sql = String.format("DROP DATABASE IF EXISTS `%s`", 
-				configMng.getProperty(PropertyKeys.HIBERNATE_DEFAULT_CATALOG));
+				configMng.getProperty(PropertyKeys.COLFUSION_HIBERNATE_DEFAULT_CATALOG));
 		
 		executeMySQLUpdateQuery(dbConnectionUrl, sql);
 	}
@@ -149,14 +149,14 @@ public abstract class DatabaseUnitTestBase extends UnitTestBase {
 	 */
 	private static void setSystemProperties(final String dbConnectionUrl) {
 		String connectionStringWithSchema = String.format("%s/%s", dbConnectionUrl, 
-				configMng.getProperty(PropertyKeys.HIBERNATE_DEFAULT_CATALOG));
+				configMng.getProperty(PropertyKeys.COLFUSION_HIBERNATE_DEFAULT_CATALOG));
 		
-		System.setProperty(PropertyKeys.HIBERNATE_CONNECTION_URL.getKey(), connectionStringWithSchema);
-		systemPropertiesToClean.add(PropertyKeys.HIBERNATE_CONNECTION_URL.getKey());
-		System.setProperty(PropertyKeys.HIBERNATE_CONNECTION_USERNAME.getKey(), DOCKER_MYSQL_ROOT_USER);
-		systemPropertiesToClean.add(PropertyKeys.HIBERNATE_CONNECTION_USERNAME.getKey());
-		System.setProperty(PropertyKeys.HIBERNATE_CONNECTION_PASSWORD.getKey(), DOCKER_ENV_MYSQL_ROOT_PASSWORD_VALUE);
-		systemPropertiesToClean.add(PropertyKeys.HIBERNATE_CONNECTION_PASSWORD.getKey());
+		System.setProperty(PropertyKeys.COLFUSION_HIBERNATE_CONNECTION_URL.getKey(), connectionStringWithSchema);
+		systemPropertiesToClean.add(PropertyKeys.COLFUSION_HIBERNATE_CONNECTION_URL.getKey());
+		System.setProperty(PropertyKeys.COLFUSION_HIBERNATE_CONNECTION_USERNAME.getKey(), DOCKER_MYSQL_ROOT_USER);
+		systemPropertiesToClean.add(PropertyKeys.COLFUSION_HIBERNATE_CONNECTION_USERNAME.getKey());
+		System.setProperty(PropertyKeys.COLFUSION_HIBERNATE_CONNECTION_PASSWORD.getKey(), DOCKER_ENV_MYSQL_ROOT_PASSWORD_VALUE);
+		systemPropertiesToClean.add(PropertyKeys.COLFUSION_HIBERNATE_CONNECTION_PASSWORD.getKey());
 	}
 
 	/**

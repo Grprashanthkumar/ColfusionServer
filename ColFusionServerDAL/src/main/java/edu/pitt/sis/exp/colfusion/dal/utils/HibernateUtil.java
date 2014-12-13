@@ -15,8 +15,7 @@ import org.hibernate.cfg.Configuration;
 
 import edu.pitt.sis.exp.colfusion.utils.ConfigManager;
 import edu.pitt.sis.exp.colfusion.utils.PropertyKeys;
-
-
+import edu.pitt.sis.exp.colfusion.utils.StringUtils;
 
 public class HibernateUtil {
  
@@ -35,6 +34,8 @@ public class HibernateUtil {
 			Configuration cfg = new Configuration().configure("hibernate.cfg.xml"); 
 			
 			setProperties(cfg);
+			
+			cfg.setNamingStrategy(DefaultQuotedNamingStrategy.INSTANCE);
 			
 			StandardServiceRegistryBuilder sb = new StandardServiceRegistryBuilder();
 	        sb.applySettings(cfg.getProperties());
@@ -55,29 +56,41 @@ public class HibernateUtil {
 	 */
 	private static void setProperties(final Configuration cfg) {
 		ConfigManager configMng = ConfigManager.getInstance();
-		cfg.setProperty(PropertyKeys.HIBERNATE_CONNECTION_DRIVER_CLASS.getKey(), configMng.getProperty(PropertyKeys.HIBERNATE_CONNECTION_DRIVER_CLASS));
-		cfg.setProperty(PropertyKeys.HIBERNATE_CONNECTION_URL.getKey(), configMng.getProperty(PropertyKeys.HIBERNATE_CONNECTION_URL));
-		cfg.setProperty(PropertyKeys.HIBERNATE_DEFAULT_CATALOG.getKey(), configMng.getProperty(PropertyKeys.HIBERNATE_DEFAULT_CATALOG));
-		cfg.setProperty(PropertyKeys.HIBERNATE_CONNECTION_USERNAME.getKey(), configMng.getProperty(PropertyKeys.HIBERNATE_CONNECTION_USERNAME));
-		cfg.setProperty(PropertyKeys.HIBERNATE_CONNECTION_PASSWORD.getKey(), configMng.getProperty(PropertyKeys.HIBERNATE_CONNECTION_PASSWORD));		
-		cfg.setProperty(PropertyKeys.HIBERNATE_DIALECT.getKey(), configMng.getProperty(PropertyKeys.HIBERNATE_DIALECT));
+		cfg.setProperty(removeColfuionPrefix(PropertyKeys.COLFUSION_HIBERNATE_CONNECTION_DRIVER_CLASS), configMng.getProperty(PropertyKeys.COLFUSION_HIBERNATE_CONNECTION_DRIVER_CLASS));
+		cfg.setProperty(removeColfuionPrefix(PropertyKeys.COLFUSION_HIBERNATE_CONNECTION_URL), configMng.getProperty(PropertyKeys.COLFUSION_HIBERNATE_CONNECTION_URL));
+		cfg.setProperty(removeColfuionPrefix(PropertyKeys.COLFUSION_HIBERNATE_DEFAULT_CATALOG), configMng.getProperty(PropertyKeys.COLFUSION_HIBERNATE_DEFAULT_CATALOG));
+		cfg.setProperty(removeColfuionPrefix(PropertyKeys.COLFUSION_HIBERNATE_CONNECTION_USERNAME), configMng.getProperty(PropertyKeys.COLFUSION_HIBERNATE_CONNECTION_USERNAME));
+		cfg.setProperty(removeColfuionPrefix(PropertyKeys.COLFUSION_HIBERNATE_CONNECTION_PASSWORD), configMng.getProperty(PropertyKeys.COLFUSION_HIBERNATE_CONNECTION_PASSWORD));		
+		cfg.setProperty(removeColfuionPrefix(PropertyKeys.COLFUSION_HIBERNATE_DIALECT), configMng.getProperty(PropertyKeys.COLFUSION_HIBERNATE_DIALECT));
 		
-		cfg.setProperty(PropertyKeys.HIBERNATE_HBM2DDL_AUTO.getKey(), configMng.getProperty(PropertyKeys.HIBERNATE_HBM2DDL_AUTO));
+		cfg.setProperty(removeColfuionPrefix(PropertyKeys.COLFUSION_HIBERNATE_HBM2DDL_AUTO), configMng.getProperty(PropertyKeys.COLFUSION_HIBERNATE_HBM2DDL_AUTO));
 		
-		cfg.setProperty(PropertyKeys.HIBERNATE_CONNECTION_ZERO_DATE_TIME_BEHAVIOR.getKey(), configMng.getProperty(PropertyKeys.HIBERNATE_CONNECTION_ZERO_DATE_TIME_BEHAVIOR));
+		cfg.setProperty(removeColfuionPrefix(PropertyKeys.COLFUSION_HIBERNATE_CONNECTION_ZERO_DATE_TIME_BEHAVIOR), configMng.getProperty(PropertyKeys.COLFUSION_HIBERNATE_CONNECTION_ZERO_DATE_TIME_BEHAVIOR));
 		
-		cfg.setProperty(PropertyKeys.HIBERNATE_C3P0_MIN_SIZE.getKey(), configMng.getProperty(PropertyKeys.HIBERNATE_C3P0_MIN_SIZE));
-		cfg.setProperty(PropertyKeys.HIBERNATE_C3P0_MAX_SIZE.getKey(), configMng.getProperty(PropertyKeys.HIBERNATE_C3P0_MAX_SIZE));
-		cfg.setProperty(PropertyKeys.HIBERNATE_C3P0_TIMEOUT.getKey(), configMng.getProperty(PropertyKeys.HIBERNATE_C3P0_TIMEOUT));
-		cfg.setProperty(PropertyKeys.HIBERNATE_C3P0_MAX_STATEMENTS.getKey(), configMng.getProperty(PropertyKeys.HIBERNATE_C3P0_MAX_STATEMENTS));
-		cfg.setProperty(PropertyKeys.HIBERNATE_C3P0_IDLE_TEST_PERIOD.getKey(), configMng.getProperty(PropertyKeys.HIBERNATE_C3P0_IDLE_TEST_PERIOD));
+		cfg.setProperty(removeColfuionPrefix(PropertyKeys.COLFUSION_HIBERNATE_C3P0_MIN_SIZE), configMng.getProperty(PropertyKeys.COLFUSION_HIBERNATE_C3P0_MIN_SIZE));
+		cfg.setProperty(removeColfuionPrefix(PropertyKeys.COLFUSION_HIBERNATE_C3P0_MAX_SIZE), configMng.getProperty(PropertyKeys.COLFUSION_HIBERNATE_C3P0_MAX_SIZE));
+		cfg.setProperty(removeColfuionPrefix(PropertyKeys.COLFUSION_HIBERNATE_C3P0_TIMEOUT), configMng.getProperty(PropertyKeys.COLFUSION_HIBERNATE_C3P0_TIMEOUT));
+		cfg.setProperty(removeColfuionPrefix(PropertyKeys.COLFUSION_HIBERNATE_C3P0_MAX_STATEMENTS), configMng.getProperty(PropertyKeys.COLFUSION_HIBERNATE_C3P0_MAX_STATEMENTS));
+		cfg.setProperty(removeColfuionPrefix(PropertyKeys.COLFUSION_HIBERNATE_C3P0_IDLE_TEST_PERIOD), configMng.getProperty(PropertyKeys.COLFUSION_HIBERNATE_C3P0_IDLE_TEST_PERIOD));
 		
 		// Somehow setting this property at this time doesn't work. So it is set via the hibernate config file.
-		cfg.setProperty(PropertyKeys.HIBERNATE_CURRENT_SESSION_CONTEXT_CLASS.getKey(), configMng.getProperty(PropertyKeys.HIBERNATE_CURRENT_SESSION_CONTEXT_CLASS));
-		cfg.setProperty(PropertyKeys.HIBERNATE_SHOW_SQL.getKey(), configMng.getProperty(PropertyKeys.HIBERNATE_SHOW_SQL));
-		cfg.setProperty(PropertyKeys.HIBERNATE_FORMAT_SQL.getKey(), configMng.getProperty(PropertyKeys.HIBERNATE_FORMAT_SQL));
+		cfg.setProperty(removeColfuionPrefix(PropertyKeys.COLFUSION_HIBERNATE_CURRENT_SESSION_CONTEXT_CLASS), configMng.getProperty(PropertyKeys.COLFUSION_HIBERNATE_CURRENT_SESSION_CONTEXT_CLASS));
+		cfg.setProperty(removeColfuionPrefix(PropertyKeys.COLFUSION_HIBERNATE_SHOW_SQL), configMng.getProperty(PropertyKeys.COLFUSION_HIBERNATE_SHOW_SQL));
+		cfg.setProperty(removeColfuionPrefix(PropertyKeys.COLFUSION_HIBERNATE_FORMAT_SQL), configMng.getProperty(PropertyKeys.COLFUSION_HIBERNATE_FORMAT_SQL));
 	}
 	
+	/**
+	 * Removes the colfusion. prefix from the given key.
+	 * E.g. given the key colfusion.hibernate.default_catalog the result will be hibernate.default_catalog
+	 * @param hibernateConnectionDriverClass
+	 * @return
+	 */
+	static String removeColfuionPrefix(
+			final PropertyKeys hibernateConnectionDriverClass) {
+		
+		return StringUtils.removePrefix(hibernateConnectionDriverClass.getKey(), "colfusion.");
+	}
+
 	public static SessionFactory getSessionFactory() {
 		return sessionFactory;
 	}

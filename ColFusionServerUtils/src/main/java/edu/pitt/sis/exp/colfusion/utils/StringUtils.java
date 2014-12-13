@@ -1,5 +1,7 @@
 package edu.pitt.sis.exp.colfusion.utils;
 
+import java.util.regex.Pattern;
+
 /**
  * Utility functions to work with strings.
  * @author Evgeny
@@ -84,5 +86,19 @@ public final class StringUtils {
 		String result = value.substring(0, endIndex) + hashValue;
 		
 		return result;
+	}
+
+	/**
+	 * Remove given prefix from given string value. If the prefix not found, then the value returned unchanged.
+	 * 
+	 * @param value
+	 * 		string from which to remove the prefix.
+	 * @param prefix
+	 * 		prefix to remove
+	 * @return the value with removed prefix
+	 */
+	public static String removePrefix(final String value, final String prefix) {
+		
+		return value.replaceFirst("^" + Pattern.quote(prefix), "");
 	}
 }
