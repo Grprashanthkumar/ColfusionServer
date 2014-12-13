@@ -114,4 +114,21 @@
 		</dependency>
 	</dependencies>
 	<description>Data Access Layer (DAL) that holds all database related classes including hibernate mappings and generated ORM classes for colfusion metadata (catalog) as wells as datahandlers to deal with the the actual ingested data.</description>
+	
+	<build>
+    	<plugins>
+     		<plugin>
+       			<groupId>org.apache.maven.plugins</groupId>
+       			<artifactId>maven-jar-plugin</artifactId>
+       			<version>2.5</version>
+       			<executions>
+         			<execution>
+           				<goals>
+             				<goal>test-jar</goal>
+           				</goals>
+         			</execution>
+       			</executions>
+     		</plugin>
+    	</plugins>
+  	</build>
 </project>
