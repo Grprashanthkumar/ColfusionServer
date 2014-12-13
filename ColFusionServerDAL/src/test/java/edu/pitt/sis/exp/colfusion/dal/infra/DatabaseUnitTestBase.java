@@ -250,8 +250,7 @@ public abstract class DatabaseUnitTestBase extends UnitTestBase {
 			throw new RuntimeException(message);
 		}
 		
-		//TODO not should why bindings is an array, just get the first one
-		
+		//TODO not should why bindings is an array, just get the first one		
 		return bindings[0].getHostPort();
 	}
 	
