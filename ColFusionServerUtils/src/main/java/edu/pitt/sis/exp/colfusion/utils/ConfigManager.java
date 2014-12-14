@@ -4,12 +4,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Properties;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -249,38 +244,5 @@ public final class ConfigManager {
 	void loadTestProperties() {
 		loadPropertiesFromResoruceFile(this.properties, CONFIG_TEST_DEFAULT_FILE_NAME, true);
 		loadPropertiesFromResoruceFile(this.properties, CONFIG_TEST_FILE_NAME, false);
-	}
-
-	/**
-	 * Get the subset of the properties that have specified prefix.
-	 * 
-	 * @param propertiesKeysPrefix
-	 * 		the property keys prefix
-	 * @return all properties that have specified prefix.
-	 */
-	public Map<String, String> getPropertiesForPrefix(
-			final String propertiesKeysPrefix) {
-		return getPropertiesForPrefixInternal(properties, propertiesKeysPrefix);
-	}
-
-	/**
-	 * @param propertiesKeysPrefix
-	 * @return
-	 */
-	static Map<String, String> getPropertiesForPrefixInternal(final Properties prop, 
-			final String propertiesKeysPrefix) {
-		Pattern pattern = Pattern.compile("^"+ Pattern.quote(propertiesKeysPrefix)); // strings that start with given prefix
-		
-		Map<String, String> result = new HashMap<String, String>();
-		//TODO: once we update to java 8, this is a good candidate for lamdas
-		for (Entry<Object, Object> entry : prop.entrySet()) {
-			Matcher matcher = pattern.matcher(entry.getKey().toString());
-			
-			if (matcher.find()) {
-				result.put(entry.getKey().toString(), entry.getValue().toString());
-			}
-		}
-		
-		return result;
 	}
 }

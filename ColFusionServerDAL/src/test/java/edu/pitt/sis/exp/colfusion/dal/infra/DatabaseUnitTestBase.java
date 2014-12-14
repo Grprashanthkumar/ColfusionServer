@@ -36,7 +36,6 @@ import com.github.dockerjava.core.DockerClientConfig;
 
 import edu.pitt.sis.exp.colfusion.utils.ConfigManager;
 import edu.pitt.sis.exp.colfusion.utils.PropertyKeys;
-import edu.pitt.sis.exp.colfusion.utils.PropertyKeysTest;
 import edu.pitt.sis.exp.colfusion.utils.UnitTestBase;
 
 public abstract class DatabaseUnitTestBase extends UnitTestBase {
@@ -166,7 +165,7 @@ public abstract class DatabaseUnitTestBase extends UnitTestBase {
 	 * @throws URISyntaxException
 	 */
 	private static String constructDbConnectionUrl(final String containerId) throws URISyntaxException {
-		String host = new URI(configMng.getProperty(PropertyKeysTest.COLFUSION_DOCKER_URI)).getHost();
+		String host = new URI(configMng.getProperty(PropertyKeys.COLFUSION_DOCKER_URI)).getHost();
 		int port = getHostPort(containerId, ExposedPort.tcp(MYSQL_PORT_DEFAULT));
 		
 		return String.format("jdbc:mysql://%s:%d", host, port);
@@ -177,10 +176,10 @@ public abstract class DatabaseUnitTestBase extends UnitTestBase {
 	 */
 	private static void initDockerClient() {
 		DockerClientConfig config = DockerClientConfig.createDefaultConfigBuilder()
-			    .withVersion(configMng.getProperty(PropertyKeysTest.COLFUSION_DOCKER_VERSION))
-			    .withUri(configMng.getProperty(PropertyKeysTest.COLFUSION_DOCKER_URI))
-			    .withServerAddress(configMng.getProperty(PropertyKeysTest.COLFUSION_DOCKER_SERVER_ADDRESS))
-			    .withDockerCertPath(configMng.getProperty(PropertyKeysTest.COLFUSION_DOCKER_CERT_PATH))
+			    .withVersion(configMng.getProperty(PropertyKeys.COLFUSION_DOCKER_VERSION))
+			    .withUri(configMng.getProperty(PropertyKeys.COLFUSION_DOCKER_URI))
+			    .withServerAddress(configMng.getProperty(PropertyKeys.COLFUSION_DOCKER_SERVER_ADDRESS))
+			    .withDockerCertPath(configMng.getProperty(PropertyKeys.COLFUSION_DOCKER_CERT_PATH))
 			    .build();
 				
 		dockerClient = DockerClientBuilder.getInstance(config).build();

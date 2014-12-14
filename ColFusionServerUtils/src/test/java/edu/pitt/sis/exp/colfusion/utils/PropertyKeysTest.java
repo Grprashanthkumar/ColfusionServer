@@ -1,25 +1,34 @@
 package edu.pitt.sis.exp.colfusion.utils;
 
-import edu.pitt.sis.exp.colfusion.utils.IPropertyKeys;
+import static org.junit.Assert.assertEquals;
 
-public enum PropertyKeysTest implements IPropertyKeys {
-	
-	COLFUSION_DOCKER_VERSION ("colfusion.docker.version"),
-	
-	COLFUSION_DOCKER_URI ("colfusion.docker.uri"),
-	
-	COLFUSION_DOCKER_SERVER_ADDRESS ("colfusion.docker.server_address"),
-	
-	COLFUSION_DOCKER_CERT_PATH ("colfusion.docker.cert_path");
+import java.util.Set;
 
-	private final String propertyKey;
+import org.junit.Test;
+
+public class PropertyKeysTest {
 	
-	PropertyKeysTest(final String propertyKey) {
-		this.propertyKey = propertyKey;
-	}
-	
-	@Override
-	public String getKey() {
-		return propertyKey;
+	@Test
+	public void testGetPropertiesForPrefixInternal() {
+		{
+			Set<PropertyKeys> propForPrefix = PropertyKeys.getPropertiesForPrefix("colfusion");
+		
+			// The expectation is that all properties have colfusion prefix
+			assertEquals("Wrong # of properties that has specified prefix", PropertyKeys.values().length, propForPrefix.size());
+		}
+		
+		{
+			Set<PropertyKeys> propForPrefix = PropertyKeys.getPropertiesForPrefix("");
+		
+			// If not prefix is specified then all properties shuould be returned
+			assertEquals("Wrong # of properties that has specified prefix", PropertyKeys.values().length, propForPrefix.size());
+		}
+		
+		{
+			Set<PropertyKeys> propForPrefix = PropertyKeys.getPropertiesForPrefix("definatelly not existing prefix");
+		
+			// If not prefix is specified then all properties shuould be returned
+			assertEquals("Wrong # of properties that has specified prefix", 0, propForPrefix.size());
+		}
 	}
 }

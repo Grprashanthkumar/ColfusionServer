@@ -1,5 +1,10 @@
 package edu.pitt.sis.exp.colfusion.utils;
 
+import java.util.HashSet;
+import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 /**
  * This class is used to collect all properties for the whole colfusion system. 
  * These properties can be specified either via the config.properties file 
@@ -234,8 +239,17 @@ public enum PropertyKeys implements IPropertyKeys {
 	 * properties file that need to be loaded. 
 	 * This file's properties will override {@value #CONFIG_FILE_NAME} properties. 
 	 */
-	CONFIG_FILE_NAME_SYSTEM_PROPERTY ("colfusion.config.properties");
+	CONFIG_FILE_NAME_SYSTEM_PROPERTY ("colfusion.config.properties"),
 	
+	/* Docker properties */
+	COLFUSION_DOCKER_VERSION ("colfusion.docker.version"),
+	
+	COLFUSION_DOCKER_URI ("colfusion.docker.uri"),
+	
+	COLFUSION_DOCKER_SERVER_ADDRESS ("colfusion.docker.server_address"),
+	
+	COLFUSION_DOCKER_CERT_PATH ("colfusion.docker.cert_path");
+
 	private final String propertyKey;
 	
 	PropertyKeys(final String propertyKey) {
@@ -245,5 +259,29 @@ public enum PropertyKeys implements IPropertyKeys {
 	@Override
 	public String getKey() {
 		return propertyKey;
+	}
+	
+	/**
+	 * Get the subset of the properties that have specified prefix.
+	 * 
+	 * @param propertiesKeysPrefix
+	 * 		the property keys prefix
+	 * @return all properties that have specified prefix.
+	 */
+	public static Set<PropertyKeys> getPropertiesForPrefix(
+			final String propertiesKeysPrefix) {
+		Pattern pattern = Pattern.compile("^"+ Pattern.quote(propertiesKeysPrefix)); // strings that start with given prefix
+		
+		Set<PropertyKeys> result = new HashSet<PropertyKeys>();
+		//TODO: once we update to java 8, this is a good candidate for lamdas
+		for (PropertyKeys propertyKey : PropertyKeys.values()) {
+			Matcher matcher = pattern.matcher(propertyKey.getKey());
+			
+			if (matcher.find()) {
+				result.add(propertyKey);
+			}
+		}
+		
+		return result;
 	}
 }

@@ -3,8 +3,7 @@
  */
 package edu.pitt.sis.exp.colfusion.dal.utils;
 
-import java.util.Map;
-import java.util.Map.Entry;
+import java.util.Set;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -17,6 +16,7 @@ import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
 
 import edu.pitt.sis.exp.colfusion.utils.ConfigManager;
+import edu.pitt.sis.exp.colfusion.utils.PropertyKeys;
 import edu.pitt.sis.exp.colfusion.utils.StringUtils;
 
 public class HibernateUtil {
@@ -65,11 +65,12 @@ public class HibernateUtil {
 	 * 			hibernate configuration to set properties to 
 	 */
 	private static void setProperties(final Configuration cfg) {
-		Map<String, String> hibernateProperties = ConfigManager.getInstance().getPropertiesForPrefix(COLFUSION_HIBERNATE_PROPERTIES_PREFIX);
+		Set<PropertyKeys> hibernateProperties = PropertyKeys.getPropertiesForPrefix(COLFUSION_HIBERNATE_PROPERTIES_PREFIX);
+		ConfigManager configMng = ConfigManager.getInstance();
 		
-		for (Entry<String, String> entry : hibernateProperties.entrySet()) {
-			cfg.setProperty(removeColfuionPrefix(entry.getKey()), entry.getValue());
-			logger.info(String.format("Set %s = %s", removeColfuionPrefix(entry.getKey()), entry.getValue()));			
+		for (PropertyKeys propertyKey : hibernateProperties) {
+			cfg.setProperty(removeColfuionPrefix(propertyKey.getKey()), configMng.getProperty(propertyKey));
+			logger.info(String.format("Set %s = %s", removeColfuionPrefix(propertyKey.getKey()), configMng.getProperty(propertyKey)));			
 		}
 	}
 	
