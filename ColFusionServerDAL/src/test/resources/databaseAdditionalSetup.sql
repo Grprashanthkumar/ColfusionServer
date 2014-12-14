@@ -1,5 +1,5 @@
 CREATE TABLE `colfusion_pentaho_log_logging_channels` (
-  `ID_BATCH` int(11) DEFAULT NULL,
+  `ID_BATCH` int DEFAULT NULL,
   `CHANNEL_ID` varchar(255) DEFAULT NULL,
   `LOG_DATE` datetime DEFAULT NULL,
   `LOGGING_OBJECT_TYPE` varchar(255) DEFAULT NULL,
@@ -11,15 +11,15 @@ CREATE TABLE `colfusion_pentaho_log_logging_channels` (
   `OBJECT_REVISION` varchar(255) DEFAULT NULL,
   `PARENT_CHANNEL_ID` varchar(255) DEFAULT NULL,
   `ROOT_CHANNEL_ID` varchar(255) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+);
 
 CREATE TABLE `colfusion_pentaho_log_performance` (
-  `ID_BATCH` int(11) DEFAULT NULL,
-  `SEQ_NR` int(11) DEFAULT NULL,
+  `ID_BATCH` int DEFAULT NULL,
+  `SEQ_NR` int DEFAULT NULL,
   `LOGDATE` datetime DEFAULT NULL,
   `TRANSNAME` varchar(255) DEFAULT NULL,
   `STEPNAME` varchar(255) DEFAULT NULL,
-  `STEP_COPY` int(11) DEFAULT NULL,
+  `STEP_COPY` int DEFAULT NULL,
   `LINES_READ` bigint(20) DEFAULT NULL,
   `LINES_WRITTEN` bigint(20) DEFAULT NULL,
   `LINES_UPDATED` bigint(20) DEFAULT NULL,
@@ -29,15 +29,15 @@ CREATE TABLE `colfusion_pentaho_log_performance` (
   `ERRORS` bigint(20) DEFAULT NULL,
   `INPUT_BUFFER_ROWS` bigint(20) DEFAULT NULL,
   `OUTPUT_BUFFER_ROWS` bigint(20) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+);
 
 CREATE TABLE `colfusion_pentaho_log_step` (
-  `ID_BATCH` int(11) DEFAULT NULL,
+  `ID_BATCH` int DEFAULT NULL,
   `CHANNEL_ID` varchar(255) DEFAULT NULL,
   `LOG_DATE` datetime DEFAULT NULL,
   `TRANSNAME` varchar(255) DEFAULT NULL,
   `STEPNAME` varchar(255) DEFAULT NULL,
-  `STEP_COPY` int(11) DEFAULT NULL,
+  `STEP_COPY` int DEFAULT NULL,
   `LINES_READ` bigint(20) DEFAULT NULL,
   `LINES_WRITTEN` bigint(20) DEFAULT NULL,
   `LINES_UPDATED` bigint(20) DEFAULT NULL,
@@ -46,10 +46,10 @@ CREATE TABLE `colfusion_pentaho_log_step` (
   `LINES_REJECTED` bigint(20) DEFAULT NULL,
   `ERRORS` bigint(20) DEFAULT NULL,
   `LOG_FIELD` mediumtext
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+);
 
 CREATE TABLE `colfusion_pentaho_log_transformaion` (
-  `ID_BATCH` int(11) DEFAULT NULL,
+  `ID_BATCH` int DEFAULT NULL,
   `CHANNEL_ID` varchar(255) DEFAULT NULL,
   `TRANSNAME` varchar(255) DEFAULT NULL,
   `STATUS` varchar(15) DEFAULT NULL,
@@ -68,4 +68,9 @@ CREATE TABLE `colfusion_pentaho_log_transformaion` (
   `LOG_FIELD` mediumtext,
   KEY `IDX_colfusion_pentaho_log_transformaion_1` (`ID_BATCH`),
   KEY `IDX_colfusion_pentaho_log_transformaion_2` (`ERRORS`,`STATUS`,`TRANSNAME`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+);
+
+INSERT INTO `colfusion_license` (license_Name, license_Des, license_URL) VALUES ('Creative Commons Attribution ShareAlike 4.0', 'Attribution-ShareAlike 4.0 International (CC BY-SA 4.0)', 'https://creativecommons.org/licenses/by-sa/4.0/'), ('Creative Commons Attribution ShareAlike 3.0', 'Attribution-ShareAlike 3.0 Unported (CC BY-SA 3.0)', 'https://creativecommons.org/licenses/by-sa/3.0/'), ('Creative Commons Attribution 4.0', 'Attribution 4.0 International (CC BY 4.0)', 'https://creativecommons.org/licenses/by/4.0/'), ('Creative Commons Attribution 3.0 ', 'Attribution 3.0 Unported (CC BY 3.0)', 'https://creativecommons.org/licenses/by/3.0/'), ('Creative Commons CC0 Waiver(release all rights, like public domain)', 'CC0 1.0 Universal (CC0 1.0) Public Domain Dedication', 'https://creativecommons.org/publicdomain/zero/1.0/');
+
+INSERT INTO `colfusion_userroles` (`role_id`, `role`, `description`) VALUES ('1', 'owner', 'owner');
+INSERT INTO `colfusion_userroles` (`role_id`, `role`, `description`) VALUES ('2', 'collector', 'collector');

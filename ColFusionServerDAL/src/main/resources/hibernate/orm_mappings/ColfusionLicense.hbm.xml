@@ -9,7 +9,7 @@
             <generator class="identity" />
         </id>
         <property name="licenseName" type="string">
-            <column name="license_Name" length="40" not-null="true" />
+            <column name="license_Name" length="250" not-null="true" />
         </property>
         <property name="licenseDes" type="string">
             <column name="license_Des" length="65535" />

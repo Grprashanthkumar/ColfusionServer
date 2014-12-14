@@ -32,6 +32,7 @@
   <mapping resource="hibernate/orm_mappings/ColfusionNotifications.hbm.xml"/>
   <mapping resource="hibernate/orm_mappings/ColfusionNotificationsUnread.hbm.xml"/>
   <mapping resource="hibernate/orm_mappings/ColfusionOldUrls.hbm.xml"/>
+    <mapping resource="hibernate/orm_mappings/ColfusionOpenrefineHistoryHelper.hbm.xml"/>
   <mapping resource="hibernate/orm_mappings/ColfusionOpenrefineProjectMap.hbm.xml"/>
   <!-- <mapping resource="hibernate/orm_mappings/ColfusionPentahoLogLoggingChannels.hbm.xml"/>
   <mapping resource="hibernate/orm_mappings/ColfusionPentahoLogPerformance.hbm.xml"/>
@@ -54,6 +55,7 @@
   <mapping resource="hibernate/orm_mappings/ColfusionSourceinfoUser.hbm.xml"/>
   <mapping resource="hibernate/orm_mappings/ColfusionSynonymsFrom.hbm.xml"/>
   <mapping resource="hibernate/orm_mappings/ColfusionSynonymsTo.hbm.xml"/>
+  <mapping resource="hibernate/orm_mappings/ColfusionTableChangeLog.hbm.xml"/>
   <mapping resource="hibernate/orm_mappings/ColfusionTagCache.hbm.xml"/>
   <mapping resource="hibernate/orm_mappings/ColfusionTags.hbm.xml"/>
   <mapping resource="hibernate/orm_mappings/ColfusionTarget.hbm.xml"/>

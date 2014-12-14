@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated Dec 13, 2014 7:23:01 PM by Hibernate Tools 4.0.0 -->
+<hibernate-mapping>
+    <class name="edu.pitt.sis.exp.colfusion.dal.orm.ColfusionTableChangeLog" table="colfusion_table_change_log">
+        <composite-id name="id" class="edu.pitt.sis.exp.colfusion.dal.orm.ColfusionTableChangeLogId">
+            <key-property name="sid" type="int">
+                <column name="sid" />
+            </key-property>
+            <key-property name="tableName" type="string">
+                <column name="tableName" />
+            </key-property>
+            <key-property name="startChangeTime" type="timestamp">
+                <column name="startChangeTime" length="19" />
+            </key-property>
+            <key-property name="endChangeTime" type="timestamp">
+                <column name="endChangeTime" length="19" />
+            </key-property>
+            <key-property name="operatedUser" type="string">
+                <column name="operatedUser" length="32" />
+            </key-property>
+        </composite-id>
+    </class>
+</hibernate-mapping>

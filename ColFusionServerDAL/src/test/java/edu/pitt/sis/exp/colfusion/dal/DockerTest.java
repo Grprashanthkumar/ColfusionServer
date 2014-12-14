@@ -8,7 +8,6 @@ import java.util.List;
 import org.junit.Test;
 
 import edu.pitt.sis.exp.colfusion.dal.infra.DatabaseUnitTestBase;
-import edu.pitt.sis.exp.colfusion.dal.utils.HibernateUtil;
 import edu.pitt.sis.exp.colfusion.utils.ConfigManager;
 import edu.pitt.sis.exp.colfusion.utils.PropertyKeys;
 
@@ -16,9 +15,7 @@ public class DockerTest extends DatabaseUnitTestBase {
 	
 	@Test
 	public void testDocker1() throws ClassNotFoundException, SQLException {
-		HibernateUtil.beginTransaction();
 		System.out.println("running hibernate transaction.");
-		HibernateUtil.commitTransaction();
 	}
 	
 	private void wasDatabaseCreated() throws ClassNotFoundException, SQLException {

@@ -34,11 +34,16 @@ import com.github.dockerjava.api.model.Ports.Binding;
 import com.github.dockerjava.core.DockerClientBuilder;
 import com.github.dockerjava.core.DockerClientConfig;
 
+import edu.pitt.sis.exp.colfusion.dal.utils.HibernateUtil;
 import edu.pitt.sis.exp.colfusion.utils.ConfigManager;
 import edu.pitt.sis.exp.colfusion.utils.PropertyKeys;
+import edu.pitt.sis.exp.colfusion.utils.ResourceUtils;
+import edu.pitt.sis.exp.colfusion.utils.StreamUtils;
 import edu.pitt.sis.exp.colfusion.utils.UnitTestBase;
 
 public abstract class DatabaseUnitTestBase extends UnitTestBase {
+
+	private static final String CREATE_PENTAHO_LOGGIN_TABLES_SQL_SCRIPT_NAME = "databaseAdditionalSetup.sql";
 
 	private static final Logger logger = LogManager.getLogger(DatabaseUnitTestBase.class.getName());
 	
@@ -77,13 +82,33 @@ public abstract class DatabaseUnitTestBase extends UnitTestBase {
 	}
 	
 	@Before
-	public void createDatabase() throws ClassNotFoundException, SQLException {
+	public void createDatabase() throws ClassNotFoundException, SQLException, IOException {
 		String sql = String.format("CREATE DATABASE IF NOT EXISTS `%s`", 
 				configMng.getProperty(PropertyKeys.COLFUSION_HIBERNATE_DEFAULT_CATALOG));
 		
 		executeMySQLUpdateQuery(dbConnectionUrl, sql);
+		
+		// This will trigger hibernate to create tables from mappings
+		HibernateUtil.beginTransaction();
+		HibernateUtil.commitTransaction();
+		
+		createPentahoLoggingTables();
 	}
 	
+	private void createPentahoLoggingTables() throws IOException, ClassNotFoundException, SQLException {
+		// Hibernate cannot create pentaho logging tables, so we create them manually from sql script
+		
+		InputStream fileContentStream = ResourceUtils.getResourceAsStream(this.getClass(), CREATE_PENTAHO_LOGGIN_TABLES_SQL_SCRIPT_NAME);
+		
+		String fileContentStrOneLine = StreamUtils.toString(fileContentStream).replaceAll("[\\t\\n\\r]+"," ");
+
+		String[] separateSqls = fileContentStrOneLine.split(";");
+		
+		for (String sql : separateSqls) {
+			executeMySQLUpdateQuery(getConnectionStringWithSchema(dbConnectionUrl), sql);
+		}
+	}
+
 	@After
 	public void dropDatabase() throws ClassNotFoundException, SQLException {
 		String sql = String.format("DROP DATABASE IF EXISTS `%s`", 
@@ -147,8 +172,7 @@ public abstract class DatabaseUnitTestBase extends UnitTestBase {
 	 * @param dbConnectionUrl
 	 */
 	private static void setSystemProperties(final String dbConnectionUrl) {
-		String connectionStringWithSchema = String.format("%s/%s", dbConnectionUrl, 
-				configMng.getProperty(PropertyKeys.COLFUSION_HIBERNATE_DEFAULT_CATALOG));
+		String connectionStringWithSchema = getConnectionStringWithSchema(dbConnectionUrl);
 		
 		System.setProperty(PropertyKeys.COLFUSION_HIBERNATE_CONNECTION_URL.getKey(), connectionStringWithSchema);
 		systemPropertiesToClean.add(PropertyKeys.COLFUSION_HIBERNATE_CONNECTION_URL.getKey());
@@ -156,6 +180,17 @@ public abstract class DatabaseUnitTestBase extends UnitTestBase {
 		systemPropertiesToClean.add(PropertyKeys.COLFUSION_HIBERNATE_CONNECTION_USERNAME.getKey());
 		System.setProperty(PropertyKeys.COLFUSION_HIBERNATE_CONNECTION_PASSWORD.getKey(), DOCKER_ENV_MYSQL_ROOT_PASSWORD_VALUE);
 		systemPropertiesToClean.add(PropertyKeys.COLFUSION_HIBERNATE_CONNECTION_PASSWORD.getKey());
+	}
+
+	/**
+	 * @param dbConnectionUrl
+	 * @return
+	 */
+	private static String getConnectionStringWithSchema(
+			final String dbConnectionUrl) {
+		String connectionStringWithSchema = String.format("%s/%s", dbConnectionUrl, 
+				configMng.getProperty(PropertyKeys.COLFUSION_HIBERNATE_DEFAULT_CATALOG));
+		return connectionStringWithSchema;
 	}
 
 	/**

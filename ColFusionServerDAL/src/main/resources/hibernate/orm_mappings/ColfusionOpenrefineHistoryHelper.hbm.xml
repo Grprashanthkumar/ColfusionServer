@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated Dec 13, 2014 7:23:01 PM by Hibernate Tools 4.0.0 -->
+<hibernate-mapping>
+    <class name="edu.pitt.sis.exp.colfusion.dal.orm.ColfusionOpenrefineHistoryHelper" table="colfusion_openrefine_history_helper">
+        <composite-id name="id" class="edu.pitt.sis.exp.colfusion.dal.orm.ColfusionOpenrefineHistoryHelperId">
+            <key-property name="sid" type="int">
+                <column name="sid" />
+            </key-property>
+            <key-property name="tableName" type="string">
+                <column name="tableName" />
+            </key-property>
+            <key-property name="count" type="int">
+                <column name="count" />
+            </key-property>
+            <key-property name="isSaved" type="int">
+                <column name="isSaved" />
+            </key-property>
+        </composite-id>
+    </class>
+</hibernate-mapping>
