@@ -1,14 +1,13 @@
 package edu.pitt.sis.exp.colfusion.tests.bll;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
-import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.http.client.ClientProtocolException;
 import org.junit.Test;
 
 import edu.pitt.sis.exp.colfusion.bll.RelationshipGraphBL;
@@ -27,8 +26,8 @@ import edu.pitt.sis.exp.colfusion.dal.orm.ColfusionSourceinfo;
 import edu.pitt.sis.exp.colfusion.dal.viewmodels.DnameViewModel;
 import edu.pitt.sis.exp.colfusion.relationships.relationshipGraph.RelationshipGraph;
 import edu.pitt.sis.exp.colfusion.relationships.relationshipGraph.RelationshipGraphEdge;
-import edu.pitt.sis.exp.colfusion.relationships.relationshipGraph.RelationshipGraphNode;
 import edu.pitt.sis.exp.colfusion.relationships.relationshipGraph.RelationshipGraphEdge.NodeInfo;
+import edu.pitt.sis.exp.colfusion.relationships.relationshipGraph.RelationshipGraphNode;
 import edu.pitt.sis.exp.colfusion.responseModels.RelationshipGraphResponseModel;
 
 public class RelationshipGraphBLTest {
@@ -92,7 +91,7 @@ public class RelationshipGraphBLTest {
 	
 	//Test case 3 : Test if system can detect the relationships.(Insert a new relationship(direct-related))
 	@Test
-	public void testGetRelationshipGraph_DirectRelationship() throws NoSuchFieldException, IllegalAccessException{
+	public void testGetRelationshipGraph_DirectRelationship() throws Exception{
 		RelationshipGraphResponseModel result = new RelationshipGraphResponseModel();
 		RelationshipGraphBL graphBL = new RelationshipGraphBL();
 		
@@ -137,7 +136,7 @@ public class RelationshipGraphBLTest {
 		}
 	}
 	
-	public void setExpEdges(List<ColfusionRelationships> relationships,List<RelationshipGraphEdge> edges) throws NoSuchFieldException, IllegalAccessException{
+	public void setExpEdges(final List<ColfusionRelationships> relationships,final List<RelationshipGraphEdge> edges) throws Exception{
 		StatonverdictsDAO dao = new StatonverdictsDAOImpl();
 		Map<Integer, BigDecimal> confidenceMap = dao.getAvgConfidence();
 		
@@ -161,7 +160,7 @@ public class RelationshipGraphBLTest {
 		
 	}
 	
-	public void setExpNodes(List<ColfusionSourceinfo> storyList, List<RelationshipGraphNode> nodes){
+	public void setExpNodes(final List<ColfusionSourceinfo> storyList, final List<RelationshipGraphNode> nodes){
 		SourceInfoManager sourceInfoMng = new SourceInfoManagerImpl();
 		DNameInfoManager dNameInfoMng = new DNameInfoManagerImpl();
 		for (ColfusionSourceinfo story : storyList) {
