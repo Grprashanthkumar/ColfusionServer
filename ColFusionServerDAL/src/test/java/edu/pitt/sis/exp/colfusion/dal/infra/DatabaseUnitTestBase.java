@@ -12,6 +12,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -21,6 +22,7 @@ import java.util.Set;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.hibernate.HibernateException;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -34,6 +36,23 @@ import com.github.dockerjava.api.model.Ports.Binding;
 import com.github.dockerjava.core.DockerClientBuilder;
 import com.github.dockerjava.core.DockerClientConfig;
 
+import edu.pitt.sis.exp.colfusion.dal.TestResourcesNames;
+import edu.pitt.sis.exp.colfusion.dal.managers.ColumnTableInfoManager;
+import edu.pitt.sis.exp.colfusion.dal.managers.ColumnTableInfoManagerImpl;
+import edu.pitt.sis.exp.colfusion.dal.managers.DNameInfoManager;
+import edu.pitt.sis.exp.colfusion.dal.managers.DNameInfoManagerImpl;
+import edu.pitt.sis.exp.colfusion.dal.managers.LicenseInfoManager;
+import edu.pitt.sis.exp.colfusion.dal.managers.LicenseInfoManagerImpl;
+import edu.pitt.sis.exp.colfusion.dal.managers.SourceInfoManager;
+import edu.pitt.sis.exp.colfusion.dal.managers.SourceInfoManagerImpl;
+import edu.pitt.sis.exp.colfusion.dal.managers.UserManager;
+import edu.pitt.sis.exp.colfusion.dal.managers.UserManagerImpl;
+import edu.pitt.sis.exp.colfusion.dal.orm.ColfusionColumnTableInfo;
+import edu.pitt.sis.exp.colfusion.dal.orm.ColfusionDnameinfo;
+import edu.pitt.sis.exp.colfusion.dal.orm.ColfusionLicense;
+import edu.pitt.sis.exp.colfusion.dal.orm.ColfusionSourceinfo;
+import edu.pitt.sis.exp.colfusion.dal.orm.ColfusionSourceinfoDb;
+import edu.pitt.sis.exp.colfusion.dal.orm.ColfusionUsers;
 import edu.pitt.sis.exp.colfusion.dal.utils.HibernateUtil;
 import edu.pitt.sis.exp.colfusion.utils.ConfigManager;
 import edu.pitt.sis.exp.colfusion.utils.PropertyKeys;
@@ -42,8 +61,10 @@ import edu.pitt.sis.exp.colfusion.utils.StreamUtils;
 import edu.pitt.sis.exp.colfusion.utils.UnitTestBase;
 
 public abstract class DatabaseUnitTestBase extends UnitTestBase {
+	
+	private static final String TEST_TARGET_DATABASE_VENDOR = "mysql";
 
-	private static final String CREATE_PENTAHO_LOGGIN_TABLES_SQL_SCRIPT_NAME = "databaseAdditionalSetup.sql";
+	private static final String TEST_TARGET_DATABASE_PREFIX = "test_target_database_";
 
 	private static final Logger logger = LogManager.getLogger(DatabaseUnitTestBase.class.getName());
 	
@@ -54,14 +75,17 @@ public abstract class DatabaseUnitTestBase extends UnitTestBase {
 	static final Map<String, InspectContainerResponse> containerIdToContainer = new HashMap<String, InspectContainerResponse>();
 	
 	private static final int MYSQL_PORT_DEFAULT = 3306;
-	private static final String DOCKER_MYSQL_IMAGE_NAME = "mysql";
+	private static final String DOCKER_MYSQL_IMAGE_NAME = TEST_TARGET_DATABASE_VENDOR;
 	private static final String DOCKER_MYSQL_ROOT_USER = "root";
 	private static final String DOCKER_ENV_MYSQL_ROOT_PASSWORD = "MYSQL_ROOT_PASSWORD";
 	private static final String DOCKER_ENV_MYSQL_ROOT_PASSWORD_VALUE = "root";
 	
 	private static final Set<String> systemPropertiesToClean = new HashSet<String>();
 	
-	protected static String dbConnectionUrl;
+	/**
+	 * Set during the {@link #setUp()}
+	 */
+	protected static DockerMySQLConnectionInfo dockerMySQLConnectionInfo;
 	
 	/**
 	 * Set's up database for test.
@@ -76,54 +100,166 @@ public abstract class DatabaseUnitTestBase extends UnitTestBase {
 	
 		initDockerClient();
 		String containerId = startMySQLContainer();
-		dbConnectionUrl = constructDbConnectionUrl(containerId);
 		
-		setSystemProperties(dbConnectionUrl);
+		Class.forName("com.mysql.jdbc.Driver");
+		
+		setDbConnectionUrlAndDockerMySQLConnectionInfo(containerId);
+		
+		setSystemProperties(dockerMySQLConnectionInfo);
 	}
 	
 	@Before
 	public void createDatabase() throws ClassNotFoundException, SQLException, IOException {
-		String sql = String.format("CREATE DATABASE IF NOT EXISTS `%s`", 
-				configMng.getProperty(PropertyKeys.COLFUSION_HIBERNATE_DEFAULT_CATALOG));
+		//Creating database
+		String colfusionDatabaseName = configMng.getProperty(PropertyKeys.COLFUSION_HIBERNATE_DEFAULT_CATALOG);
+		String sql = makeCreateDatabaseSqlStatement(colfusionDatabaseName);
+		executeMySQLUpdateQuery(dockerMySQLConnectionInfo.getConnectionString(), sql);
 		
-		executeMySQLUpdateQuery(dbConnectionUrl, sql);
+		String dbConectionUrl = dockerMySQLConnectionInfo.getConnectionString(colfusionDatabaseName);
 		
-		// This will trigger hibernate to create tables from mappings
-		HibernateUtil.beginTransaction();
-		HibernateUtil.commitTransaction();
-		
-		createPentahoLoggingTables();
+		// Creating tables
+		createTables(dbConectionUrl);
+		insertTestData(dbConectionUrl);
 	}
 	
-	private void createPentahoLoggingTables() throws IOException, ClassNotFoundException, SQLException {
-		// Hibernate cannot create pentaho logging tables, so we create them manually from sql script
-		
-		InputStream fileContentStream = ResourceUtils.getResourceAsStream(this.getClass(), CREATE_PENTAHO_LOGGIN_TABLES_SQL_SCRIPT_NAME);
-		
-		String fileContentStrOneLine = StreamUtils.toString(fileContentStream).replaceAll("[\\t\\n\\r]+"," ");
-
-		String[] separateSqls = fileContentStrOneLine.split(";");
-		
-		for (String sql : separateSqls) {
-			executeMySQLUpdateQuery(getConnectionStringWithSchema(dbConnectionUrl), sql);
-		}
-	}
-
 	@After
 	public void dropDatabase() throws ClassNotFoundException, SQLException {
 		String sql = String.format("DROP DATABASE IF EXISTS `%s`", 
 				configMng.getProperty(PropertyKeys.COLFUSION_HIBERNATE_DEFAULT_CATALOG));
 		
-		executeMySQLUpdateQuery(dbConnectionUrl, sql);
+		executeMySQLUpdateQuery(dockerMySQLConnectionInfo.getConnectionString(), sql);
+	}
+	
+	/**
+	 * Removes the database after test
+	 * @throws IOException 
+	 */
+	@AfterClass
+	public static void tearDown() throws IOException {
+		for (Entry<String, InspectContainerResponse> entry : containerIdToContainer.entrySet()) {
+			//TODO: check if container is running
+			dockerClient.stopContainerCmd(entry.getKey()).exec();
+			//TODO: check if container exists
+			dockerClient.removeContainerCmd(entry.getKey()).exec();
+		}
+		
+		for (String sysProperty : systemPropertiesToClean) {
+			System.clearProperty(sysProperty);
+		};
+		
+		dockerClient.close();
+	}
+	
+	/**
+	 * 
+	 * @param containerId
+	 * @return connection string lack schema name
+	 * @throws URISyntaxException
+	 */
+	private static void setDbConnectionUrlAndDockerMySQLConnectionInfo(final String containerId) throws URISyntaxException {
+		String host = new URI(configMng.getProperty(PropertyKeys.COLFUSION_DOCKER_URI)).getHost();
+		int port = getHostPort(containerId, ExposedPort.tcp(MYSQL_PORT_DEFAULT));
+		
+		dockerMySQLConnectionInfo = new DockerMySQLConnectionInfo(host,  port,  DOCKER_MYSQL_ROOT_USER, DOCKER_ENV_MYSQL_ROOT_PASSWORD_VALUE);
+	}
+	
+	/**
+	 * @param dbConectionUrl 
+	 * @throws ClassNotFoundException
+	 * @throws SQLException
+	 * @throws HibernateException
+	 * @throws IOException
+	 */
+	private void createTables(final String dbConectionUrl) throws ClassNotFoundException, SQLException,
+			HibernateException, IOException {
+		
+		// This will trigger hibernate to create tables from mappings
+		HibernateUtil.beginTransaction();
+		HibernateUtil.commitTransaction();
+		
+		createPentahoLoggingTables(dbConectionUrl);
+	}
+
+	/**
+	 * @param databaseName 
+	 * @return
+	 */
+	private static String makeCreateDatabaseSqlStatement(final String databaseName) {
+		String sql = String.format("CREATE DATABASE IF NOT EXISTS `%s`", databaseName);
+		return sql;
+	}
+	
+	private static String makeCreateTableSqlStatement(final String tableName, final String... columnNames) {
+		StringBuilder sqlBuilder = new StringBuilder(String.format("CREATE TABLE IF NOT EXISTS `%s` (", tableName));
+		
+		int index = 0;
+		
+		for (String columnName : columnNames) {
+			
+			if (index++ == columnNames.length - 1) { // The difference is in the last character: comma or parenthesis.
+				sqlBuilder.append(String.format("`%s` VARCHAR(255))", columnName));
+			}
+			else {
+				sqlBuilder.append(String.format("`%s` VARCHAR(255),", columnName));
+			}
+		}
+				
+		return sqlBuilder.toString();
+	}
+	
+	private static String makeRandomInsertSampleData(final String tableName,
+			final String[] columnNames, final int numTuples) {
+		StringBuilder sqlBuilder = new StringBuilder(String.format("INSERT INTO `%s` ", tableName)).append(" VALUES ");
+		
+		for (int i = 0; i < numTuples; i++) {
+			sqlBuilder.append("(");
+			
+			for (int j = 0; j < columnNames.length; j++) {
+				sqlBuilder.append(String.format("'%s %d %d'", columnNames[j], i, j));
+				if (j < columnNames.length - 1) {
+					sqlBuilder.append(",");
+				}
+			}
+			
+			sqlBuilder.append(")").append((i == numTuples - 1) ? ";" : ",");
+		}
+		
+		return sqlBuilder.toString();
+	}
+	
+	private void createPentahoLoggingTables(final String dbConnectionUrl) throws IOException, ClassNotFoundException, SQLException {
+		// Hibernate cannot create pentaho logging tables, so we create them manually from sql script
+		
+		InputStream fileContentStream = ResourceUtils.getResourceAsStream(this.getClass(), TestResourcesNames.DATABASE_ADDITONAL_SETUP_CREATE_PENTAHO_TABLES);
+		
+		executeUpdateMutliStatementScript(dbConnectionUrl, fileContentStream);
+	}
+
+	private void insertTestData(final String dbConnectionUrl) throws ClassNotFoundException, IOException, SQLException {
+		InputStream fileContentStream = ResourceUtils.getResourceAsStream(this.getClass(), TestResourcesNames.DATABASE_ADDITONAL_SETUP_INSERTS);
+		
+		executeUpdateMutliStatementScript(dbConnectionUrl, fileContentStream);
+	}
+	
+	private void executeUpdateMutliStatementScript(final String dbConnectionUrl, final InputStream fileContentStream) throws IOException, ClassNotFoundException, SQLException {
+		String fileContentStrOneLine = StreamUtils.toString(fileContentStream).replaceAll("[\\t\\n\\r]+"," ");
+
+		String[] separateSqls = fileContentStrOneLine.split(";");
+		
+		for (String sql : separateSqls) {
+			executeMySQLUpdateQuery(dbConnectionUrl, sql);
+		}
 	}
 	
 	/**
 	 * @throws ClassNotFoundException
 	 * @throws SQLException
 	 */
-	protected void executeMySQLUpdateQuery(final String connectionUrl, final String query) throws ClassNotFoundException,
+	protected static void executeMySQLUpdateQuery(final String connectionUrl, final String query) throws ClassNotFoundException,
 			SQLException {
-		Class.forName("com.mysql.jdbc.Driver");
+		if ("".equals(query)) {
+			return;
+		}
 		
 		try (Connection connection = DriverManager.getConnection(connectionUrl, 
 				DOCKER_MYSQL_ROOT_USER, DOCKER_ENV_MYSQL_ROOT_PASSWORD_VALUE)) {
@@ -169,10 +305,11 @@ public abstract class DatabaseUnitTestBase extends UnitTestBase {
 	}
 
 	/**
-	 * @param dbConnectionUrl
+	 * @param dockerMySQLConnectionInfo2
 	 */
-	private static void setSystemProperties(final String dbConnectionUrl) {
-		String connectionStringWithSchema = getConnectionStringWithSchema(dbConnectionUrl);
+	private static void setSystemProperties(final DockerMySQLConnectionInfo dockerMySQLConnectionInfo2) {
+		String connectionStringWithSchema = dockerMySQLConnectionInfo2.getConnectionString(
+				configMng.getProperty(PropertyKeys.COLFUSION_HIBERNATE_DEFAULT_CATALOG));
 		
 		System.setProperty(PropertyKeys.COLFUSION_HIBERNATE_CONNECTION_URL.getKey(), connectionStringWithSchema);
 		systemPropertiesToClean.add(PropertyKeys.COLFUSION_HIBERNATE_CONNECTION_URL.getKey());
@@ -180,30 +317,6 @@ public abstract class DatabaseUnitTestBase extends UnitTestBase {
 		systemPropertiesToClean.add(PropertyKeys.COLFUSION_HIBERNATE_CONNECTION_USERNAME.getKey());
 		System.setProperty(PropertyKeys.COLFUSION_HIBERNATE_CONNECTION_PASSWORD.getKey(), DOCKER_ENV_MYSQL_ROOT_PASSWORD_VALUE);
 		systemPropertiesToClean.add(PropertyKeys.COLFUSION_HIBERNATE_CONNECTION_PASSWORD.getKey());
-	}
-
-	/**
-	 * @param dbConnectionUrl
-	 * @return
-	 */
-	private static String getConnectionStringWithSchema(
-			final String dbConnectionUrl) {
-		String connectionStringWithSchema = String.format("%s/%s", dbConnectionUrl, 
-				configMng.getProperty(PropertyKeys.COLFUSION_HIBERNATE_DEFAULT_CATALOG));
-		return connectionStringWithSchema;
-	}
-
-	/**
-	 * 
-	 * @param containerId
-	 * @return connection string lack schema name
-	 * @throws URISyntaxException
-	 */
-	private static String constructDbConnectionUrl(final String containerId) throws URISyntaxException {
-		String host = new URI(configMng.getProperty(PropertyKeys.COLFUSION_DOCKER_URI)).getHost();
-		int port = getHostPort(containerId, ExposedPort.tcp(MYSQL_PORT_DEFAULT));
-		
-		return String.format("jdbc:mysql://%s:%d", host, port);
 	}
 
 	/**
@@ -288,23 +401,154 @@ public abstract class DatabaseUnitTestBase extends UnitTestBase {
 		return bindings[0].getHostPort();
 	}
 	
-	/**
-	 * Removes the database after test
-	 * @throws IOException 
-	 */
-	@AfterClass
-	public static void tearDown() throws IOException {
-		for (Entry<String, InspectContainerResponse> entry : containerIdToContainer.entrySet()) {
-			//TODO: check if container is running
-			dockerClient.stopContainerCmd(entry.getKey()).exec();
-			//TODO: check if container exists
-			dockerClient.removeContainerCmd(entry.getKey()).exec();
+	protected ColfusionSourceinfo setUpTestStory(final String tableName, final String... columnNames) throws Exception {
+		ColfusionSourceinfo story = createAndInsertNewStory();
+		
+		createAndInsertTableAndColumnMetadata(story, tableName, columnNames);
+		
+		String targetDatabaseName = TEST_TARGET_DATABASE_PREFIX + story.getSid();
+		createAndInsertSourceInfoDB(story, dockerMySQLConnectionInfo, targetDatabaseName, TEST_TARGET_DATABASE_VENDOR);
+		
+		generateAndInsertSampleData(tableName, columnNames, targetDatabaseName, dockerMySQLConnectionInfo);
+		
+		return story;
+	}
+	
+	private static void generateAndInsertSampleData(final String tabelName,
+			final String[] columnNames, final String targetDatabaseName,
+			final DockerMySQLConnectionInfo dockerMySQLConnectionInfoP) throws ClassNotFoundException, SQLException {
+		
+		{
+			String sql = makeCreateDatabaseSqlStatement(targetDatabaseName);
+			String dbConnectionUrl = dockerMySQLConnectionInfoP.getConnectionString();
+			executeMySQLUpdateQuery(dbConnectionUrl, sql);
 		}
 		
-		for (String sysProperty : systemPropertiesToClean) {
-			System.clearProperty(sysProperty);
-		};
+		String dbConnectionUrl = dockerMySQLConnectionInfoP.getConnectionString(targetDatabaseName);
 		
-		dockerClient.close();
+		{
+			String sql = makeCreateTableSqlStatement(tabelName, columnNames);
+			executeMySQLUpdateQuery(dbConnectionUrl, sql);
+		}
+		
+		{
+			String sql = makeRandomInsertSampleData(tabelName, columnNames, 5);
+			executeMySQLUpdateQuery(dbConnectionUrl, sql);
+		}		
+	}
+
+	/**
+	 * Creates and saves to db new sourceinfo tuple. It assumes database already has some licenses and users info.
+	 * @return
+	 * @throws Exception
+	 */
+	private ColfusionSourceinfo createAndInsertNewStory() throws Exception {
+		SourceInfoManager sourceInfoMng = new SourceInfoManagerImpl();
+		LicenseInfoManager licenseMng = new LicenseInfoManagerImpl();
+		UserManager userMng =  new UserManagerImpl();
+		
+		ColfusionLicense license = licenseMng.findAll().get(0);
+		ColfusionUsers user = userMng.findAll().get(0);
+		
+		ColfusionSourceinfo story = new ColfusionSourceinfo(license, user, "testDoReplication", "", new Date(), new Date(), "queued", 
+				"", "data type", "", null, null, null, null, null, null, null, null, null, null, null, null, null);
+	
+		sourceInfoMng.save(story);
+		
+		return story;
+	}
+	
+	/**
+	 * Creates and saves to db tuples in the dnameInfo table and ColunTableInfo table.
+	 * @param story
+	 * @param tableName
+	 * @param columnNames
+	 * @throws Exception
+	 */
+	private void createAndInsertTableAndColumnMetadata(
+			final ColfusionSourceinfo story, final String tableName, final String... columnNames) throws Exception {
+		DNameInfoManager dNameInfoMng = new DNameInfoManagerImpl();
+		ColumnTableInfoManager columnTableMng = new ColumnTableInfoManagerImpl();
+		
+		for(String columnName : columnNames) {
+			ColfusionDnameinfo column = new ColfusionDnameinfo(story, columnName, "dnameValueType", "dnameValueUnit", 
+					"dnameValueFormat", "dnameValueDescription", columnName, false, "constantValue", 
+					"missingValue", null, null);
+			
+			dNameInfoMng.save(column);
+			
+			ColfusionColumnTableInfo columnTable = new ColfusionColumnTableInfo(column, tableName, tableName);
+			
+			columnTableMng.save(columnTable);
+		}		
+	}
+	
+	private void createAndInsertSourceInfoDB(final ColfusionSourceinfo story,
+			final DockerMySQLConnectionInfo dockerMySQLConnectionInfo2,
+			final String targetDatabaseName, final String driver) throws Exception {
+		ColfusionSourceinfoDb sourceInfoDb = new ColfusionSourceinfoDb(story, dockerMySQLConnectionInfo2.getHost(), dockerMySQLConnectionInfo2.getPort(),
+				dockerMySQLConnectionInfo2.getUserName(), dockerMySQLConnectionInfo2.getPasswordt(), targetDatabaseName, driver);
+		
+		SourceInfoManager sourceInfoMng = new SourceInfoManagerImpl();
+		
+		story.setColfusionSourceinfoDb(sourceInfoDb);
+		sourceInfoMng.saveOrUpdate(story);
+	}
+	
+	public static class DockerMySQLConnectionInfo {
+		private final String host;
+		private final int port;
+		private final String userName;
+		private final String password;
+		
+		public DockerMySQLConnectionInfo(final String host, final int port, final String userName, final String password) {
+			this.host = host;
+			this.port = port;
+			this.userName = userName;
+			this.password = password;
+		}
+		
+		public String getHost() {
+			return host;
+		}
+		
+		public int getPort() {
+			return port;
+		}
+		
+		public String getUserName() {
+			return userName;
+		}
+		
+		public String getPasswordt() {
+			return password;
+		}
+		
+		/**
+		 * Constructs MySQL JDBC connection string without default catalog.
+		 * @return
+		 */
+		public String getConnectionString() {
+			return String.format("jdbc:mysql://%s:%d", host, port);
+		}
+		
+		/**
+		 * Constructs MySQL JDBC connection string including the provided database as the default catalog.
+		 * 
+		 * @param databaseName
+		 * 		the name of the database (NOTE: currently names containing spaces are not supported)
+		 * @return MySQL JDBC connection string
+		 * @throws RuntimeException is database name contains spaces.
+		 */
+		public String getConnectionString(final String databaseName) {
+			//TODO: this connection string will not work for database names with spaces
+			if (databaseName.contains(" ")) {
+				String message = String.format("Currently database names that contain spaces are not supported. '%s'", databaseName);
+				logger.error(message);
+				throw new RuntimeException(message);
+			}
+			
+			return String.format("jdbc:mysql://%s:%d/%s", host, port, databaseName);
+		}
 	}
 }

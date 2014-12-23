@@ -19,7 +19,12 @@ public class KTRManagerTest extends DatabaseUnitTestBase {
 	Logger logger = LogManager.getLogger(KTRManagerTest.class.getName());
 	ConfigManager configManager = ConfigManager.getInstance();
 	
-	//TODO: test different parts of KTRManager and most of it should not depend on the dataabse.
+	@Test
+	public void test() {
+		
+	}
+	
+	//TODO: test different parts of KTRManager and most of it should not depend on the database.
 	@Ignore
 	@Test
 	public void testCreateKTR() {

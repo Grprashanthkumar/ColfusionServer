@@ -41,6 +41,29 @@ public class DataReplicationBL {
 	private final static String PROPERTY_PSC_DATABASE_VENDOR = "psc.database.vendor";
 	
 	public int doDataReplication() throws Exception {
+		PscReplicationDatabaseInfo pscDatabaseInfo = getPscReplicationDatabaseInfo();
+		return doDataReplicationInternal(pscDatabaseInfo);
+	}
+
+	private PscReplicationDatabaseInfo getPscReplicationDatabaseInfo() {
+		String host = Utils.getProperty(PROPERTY_PSC_HOST, PSC_HOST);
+		int port = Integer.parseInt(Utils.getProperty(PROPERTY_PSC_DATABASE_PORT, String.valueOf(PSC_DATABASE_PORT)));
+		String databaseName = Utils.getProperty(PROPERTY_PSC_DATABASE_NAME, PSC_DATABASE_NAME);
+		String userName = Utils.getProperty(PROPERTY_PSC_DATABASE_USER, PSC_DATABASE_USER);
+		String password = Utils.getProperty(PROPERTY_PSC_DATABASE_PASSWORD, PSC_DATABASE_PASSWORD);
+		DatabaseHanderType vendor = DatabaseHanderType.fromString(Utils.getProperty(PROPERTY_PSC_DATABASE_VENDOR, PSC_DATABASE_VENDOR.getValue()));
+		
+		PscReplicationDatabaseInfo result = new PscReplicationDatabaseInfo(host, 
+				port, databaseName, userName, password, vendor);
+		
+		return result;
+	}
+
+	/**
+	 * @return
+	 * @throws Exception
+	 */
+	int doDataReplicationInternal(final PscReplicationDatabaseInfo pscDatabaseInfo) throws Exception {
 		PSCSourceInfoTableManager pscSourceInfoTableMng = new PSCSourceInfoTableManagerImpl();
 		List<SourceInfoAndTable> notReplicatedStories = pscSourceInfoTableMng.findAllNotReplicated();
 		
@@ -51,7 +74,7 @@ public class DataReplicationBL {
 			
 			try {
 				ColfusionPscSourceinfoTable pscSourceInfoTable = createAndSavePSCSourceIntoTable(
-						pscSourceInfoTableMng, sourceInfoAndTable);
+						pscSourceInfoTableMng, sourceInfoAndTable, pscDatabaseInfo);
 			
 			
 				ColfusionProcesses colfusionProcess = queueReplicationProcess(processMng, sourceInfoAndTable);
@@ -105,25 +128,26 @@ public class DataReplicationBL {
 	/**
 	 * @param pscSourceInfoTableMng
 	 * @param sourceInfoAndTable
+	 * @param pscDatabaseInfo 
 	 * @return
 	 * @throws Exception
 	 */
 	private ColfusionPscSourceinfoTable createAndSavePSCSourceIntoTable(
 			final PSCSourceInfoTableManager pscSourceInfoTableMng,
-			final SourceInfoAndTable sourceInfoAndTable) throws Exception {
+			final SourceInfoAndTable sourceInfoAndTable, final PscReplicationDatabaseInfo pscDatabaseInfo) throws Exception {
 		SourceInfoManager sourceInfoMng = new SourceInfoManagerImpl();
 		String pscTableName = generateUniquePSCTableName(sourceInfoAndTable.getSourceInfoId(), sourceInfoAndTable.getTableName());
 		
 		ColfusionPscSourceinfoTableId id = new ColfusionPscSourceinfoTableId(sourceInfoAndTable.getSourceInfoId(), sourceInfoAndTable.getTableName());
 		ColfusionPscSourceinfoTable pscSourceInfoTable = new ColfusionPscSourceinfoTable(id, 
 				sourceInfoMng.findByID(sourceInfoAndTable.getSourceInfoId()), 
-				Utils.getProperty(PROPERTY_PSC_DATABASE_NAME, PSC_DATABASE_NAME), 
+				pscDatabaseInfo.getPscDatabaseName(), 
 				pscTableName, 
-				Utils.getProperty(PROPERTY_PSC_HOST, PSC_HOST), 
-				Integer.parseInt(Utils.getProperty(PROPERTY_PSC_DATABASE_PORT, String.valueOf(PSC_DATABASE_PORT))),
-				Utils.getProperty(PROPERTY_PSC_DATABASE_USER, PSC_DATABASE_USER), 
-				Utils.getProperty(PROPERTY_PSC_DATABASE_PASSWORD, PSC_DATABASE_PASSWORD), 
-				Utils.getProperty(PROPERTY_PSC_DATABASE_VENDOR, PSC_DATABASE_VENDOR.getValue())); 
+				pscDatabaseInfo.getPscHost(), 
+				pscDatabaseInfo.getPscDatabasePort(),
+				pscDatabaseInfo.getPscDatabaseUser(), 
+				pscDatabaseInfo.getPscDatabasePassword(), 
+				pscDatabaseInfo.getPscDatabaseVendor().getValue()); 
 		
 		pscSourceInfoTableMng.saveOrUpdate(pscSourceInfoTable);
 		return pscSourceInfoTable;
@@ -131,5 +155,66 @@ public class DataReplicationBL {
 
 	private String generateUniquePSCTableName(final int sourceInfoId, final String tableName) {
 		return String.format("%d_%s", sourceInfoId, StringUtils.makeShortUnique(tableName)); //TODO: sourceInfoId takes several chars, but the table name lengths is 64, so need to take sid into consideration
+	}
+	
+	static class PscReplicationDatabaseInfo {
+		private final String pscHost;
+		private final int pscDatabasePort;
+		private final String pscDatabaseName;
+		private final String pscDatabaseUser;
+		private final String pscDatabasePassword;
+		private final DatabaseHanderType pscDatabaseVendor;
+		
+		public PscReplicationDatabaseInfo(final String pscHost, final int pscDatabasePort, final String pscDatabaseName, final String pscDatabaseUser,
+				final String pscDatabasePassword,final DatabaseHanderType pscDatabaseVendor) {
+			this.pscHost = pscHost;
+			this.pscDatabasePort = pscDatabasePort;
+			this.pscDatabaseName = pscDatabaseName;
+			this.pscDatabaseUser = pscDatabaseUser;
+			this.pscDatabasePassword = pscDatabasePassword;
+			this.pscDatabaseVendor = pscDatabaseVendor;
+		}
+
+		/**
+		 * @return the pscHost
+		 */
+		public String getPscHost() {
+			return pscHost;
+		}
+
+		/**
+		 * @return the pscDatabasePort
+		 */
+		public int getPscDatabasePort() {
+			return pscDatabasePort;
+		}
+
+		/**
+		 * @return the pscDatabaseName
+		 */
+		public String getPscDatabaseName() {
+			return pscDatabaseName;
+		}
+
+		/**
+		 * @return the pscDatabaseUser
+		 */
+		public String getPscDatabaseUser() {
+			return pscDatabaseUser;
+		}
+
+		/**
+		 * @return the pscDatabasePassword
+		 */
+		public String getPscDatabasePassword() {
+			return pscDatabasePassword;
+		}
+
+		/**
+		 * @return the pscDatabaseVendor
+		 */
+		public DatabaseHanderType getPscDatabaseVendor() {
+			return pscDatabaseVendor;
+		}	
 	}
 }

@@ -94,6 +94,7 @@ public class KTRManager {
 			
 			IOUtilsStoredFileInfoModel copiedKTRFileInfo = createKTRFileFromTemplate(sid, file.getExtension(), tableName);  
 			
+			//TODO: Maybe this functionality should be separated from this code, so to make it less dependent on the database
 			saveKTRFileLocationToDB(sid, tableName, copiedKTRFileInfo.getAbsoluteFileName());
 			
 			fillKTRFile(copiedKTRFileInfo.getAbsoluteFileName(), file.getExtension(), filesAbsoluteNames, worksheet, tableName);
