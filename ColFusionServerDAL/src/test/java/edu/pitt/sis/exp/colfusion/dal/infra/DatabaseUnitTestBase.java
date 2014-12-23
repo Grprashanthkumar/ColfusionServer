@@ -43,6 +43,8 @@ import edu.pitt.sis.exp.colfusion.dal.managers.DNameInfoManager;
 import edu.pitt.sis.exp.colfusion.dal.managers.DNameInfoManagerImpl;
 import edu.pitt.sis.exp.colfusion.dal.managers.LicenseInfoManager;
 import edu.pitt.sis.exp.colfusion.dal.managers.LicenseInfoManagerImpl;
+import edu.pitt.sis.exp.colfusion.dal.managers.SourceInfoDbManager;
+import edu.pitt.sis.exp.colfusion.dal.managers.SourceInfoDbManagerImpl;
 import edu.pitt.sis.exp.colfusion.dal.managers.SourceInfoManager;
 import edu.pitt.sis.exp.colfusion.dal.managers.SourceInfoManagerImpl;
 import edu.pitt.sis.exp.colfusion.dal.managers.UserManager;
@@ -62,6 +64,8 @@ import edu.pitt.sis.exp.colfusion.utils.UnitTestBase;
 
 public abstract class DatabaseUnitTestBase extends UnitTestBase {
 	
+	protected static final int DEFAULT_NUM_GENERATE_TUPLES = 5;
+
 	private static final String TEST_TARGET_DATABASE_VENDOR = "mysql";
 
 	private static final String TEST_TARGET_DATABASE_PREFIX = "test_target_database_";
@@ -432,7 +436,7 @@ public abstract class DatabaseUnitTestBase extends UnitTestBase {
 		}
 		
 		{
-			String sql = makeRandomInsertSampleData(tabelName, columnNames, 5);
+			String sql = makeRandomInsertSampleData(tabelName, columnNames, DEFAULT_NUM_GENERATE_TUPLES);
 			executeMySQLUpdateQuery(dbConnectionUrl, sql);
 		}		
 	}
@@ -489,10 +493,11 @@ public abstract class DatabaseUnitTestBase extends UnitTestBase {
 		ColfusionSourceinfoDb sourceInfoDb = new ColfusionSourceinfoDb(story, dockerMySQLConnectionInfo2.getHost(), dockerMySQLConnectionInfo2.getPort(),
 				dockerMySQLConnectionInfo2.getUserName(), dockerMySQLConnectionInfo2.getPasswordt(), targetDatabaseName, driver);
 		
-		SourceInfoManager sourceInfoMng = new SourceInfoManagerImpl();
+		SourceInfoDbManager sourceInfoDbMng = new SourceInfoDbManagerImpl();
+		
+		sourceInfoDbMng.saveOrUpdate(sourceInfoDb);
 		
 		story.setColfusionSourceinfoDb(sourceInfoDb);
-		sourceInfoMng.saveOrUpdate(story);
 	}
 	
 	public static class DockerMySQLConnectionInfo {

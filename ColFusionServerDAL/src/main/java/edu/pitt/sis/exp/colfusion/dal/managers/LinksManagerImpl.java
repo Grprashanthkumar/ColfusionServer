@@ -9,7 +9,7 @@ import edu.pitt.sis.exp.colfusion.dal.orm.ColfusionLinks;
 
 public class LinksManagerImpl extends GeneralManagerImpl<LinksDAO, ColfusionLinks, Integer> implements LinksManager {
 
-	Logger logger = LogManager.getLogger(SourceInfoManagerImpl.class.getName());
+	Logger logger = LogManager.getLogger(LinksManagerImpl.class.getName());
 	
 	public LinksManagerImpl() {
 		super(new LinksDAOImpl(), ColfusionLinks.class);

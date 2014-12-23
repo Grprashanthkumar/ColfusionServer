@@ -205,62 +205,34 @@ public abstract class GeneralManagerImpl<Dao extends GenericDAO<T, ID>, T extend
 		return result;	
 	}
 	
-	 public static <T extends Object> T initializeField(final T detachedParent, final String fieldName) throws NoSuchFieldException, IllegalAccessException  {
+	 public static <T extends Object> T initializeField(final T detachedParent, final String... fieldsNames) 
+			 throws Exception {
 		 try {
 			 //TODO:add a check whether field is already initialized
-			 
-	           HibernateUtil.beginTransaction();
-	            
-	            @SuppressWarnings("unchecked")
-				T reattachedParent = (T) HibernateUtil.getSession().merge(detachedParent); 
-	            
-	            // get the field from the entity and initialize it
+	 
+			 HibernateUtil.beginTransaction();
+        
+			 @SuppressWarnings("unchecked")
+			 T reattachedParent = (T) HibernateUtil.getSession().merge(detachedParent); 
+        
+	        for (String fieldName : fieldsNames) {
+	        	// get the field from the entity and initialize it
 	            Field fieldToInitialize = detachedParent.getClass().getDeclaredField(fieldName);
-	            fieldToInitialize.setAccessible(true);
+	            fieldToInitialize.setAccessible(true); //TODO: should it be set to false after the init is done?
 	            Object objectToInitialize = fieldToInitialize.get(reattachedParent);
-
+	
 	            Hibernate.initialize(objectToInitialize);
-	            
-	            HibernateUtil.commitTransaction();
-	            
-	            return reattachedParent;
-	        } catch (NonUniqueResultException ex) {
+	        }
+        
+	        HibernateUtil.commitTransaction();
+        
+	        return reattachedParent;
+        } catch (NonUniqueResultException | NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException ex) {
 
-	        	HibernateUtil.rollbackTransaction();
-	        	
-	        	logger.error("findByID failed NonUniqueResultException", ex);
-	        	throw ex;
-	        } catch (HibernateException ex) {
-
-	        	HibernateUtil.rollbackTransaction();
-	        	
-	        	logger.error("findByID failed HibernateException", ex);
-	        	throw ex;
-	        } catch (NoSuchFieldException e) {
-	        	
-	        	HibernateUtil.rollbackTransaction();
-	        	
-	        	logger.error(String.format("initializeField FAILED. No such field as %s.", fieldName), e);
-	        	throw e;
-			} catch (SecurityException e) {
-				
-				HibernateUtil.rollbackTransaction();
-				
-				logger.error(String.format("initializeField FAILED something wrong. Field name is %s.", fieldName), e);
-				throw e;
-			} catch (IllegalArgumentException e) {
-				
-				HibernateUtil.rollbackTransaction();
-				
-				logger.error(String.format("initializeField FAILED something wrong. Field name is %s.", fieldName), e);
-				throw e;
-			} catch (IllegalAccessException e) {
-				
-				HibernateUtil.rollbackTransaction();
-				
-				logger.error(String.format("initializeField FAILED something wrong. Field name is %s.", fieldName), e);
-				throw e;
-			}
+        	HibernateUtil.rollbackTransaction();
+        	
+        	logger.error("findByID failed NonUniqueResultException", ex);
+        	throw ex;
+        }
 	 }
-
 }
