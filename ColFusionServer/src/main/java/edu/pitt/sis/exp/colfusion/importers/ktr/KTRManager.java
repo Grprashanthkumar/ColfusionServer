@@ -599,7 +599,7 @@ public class KTRManager {
 	 */
 	private IOUtilsStoredFileInfoModel createKTRFileFromTemplate(final int sid, final String dataFileExtension, final String tableName) throws IOException {
 		
-		String ktrBaseDirLocation = IOUtils.getAbsolutePathInColfutionRoot(ConfigManager.getInstance().getProperty(PropertyKeys.COLFUSION_KTR_FOLDER));
+		String ktrBaseDirLocation = IOUtils.getAbsolutePathInColfution(ConfigManager.getInstance().getProperty(PropertyKeys.COLFUSION_KTR_FOLDER));
 		String ktrDirectoryLocation = ktrBaseDirLocation + File.separator +	sid;
 		
 		//TODO for now simple check for csv, but what if we going to have more extensions, need to rewrite this.

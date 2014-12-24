@@ -302,13 +302,36 @@ public class IOUtils {
 	}
 
 	/**
-	 * Makes absolute path by concatenating Col*Fusion root location with given string.
-	 * @param propertyByName
+	 * Return absolute value of the provided path by doing following:
+	 * if the provided path is absolute, then it will be returned without changes
+	 * else the provided path will be concatenated to the value of the {@link PropertyKeys#COLFUSION_STATIC_FILES_ROOT_LOCATION} property.
+	 * 
+	 * @param path 
 	 * @return
 	 */
-	public static String getAbsolutePathInColfutionRoot(final String dir) {
-		String colfusionRoot = ConfigManager.getInstance().getProperty(PropertyKeys.COLFUSION_STATIC_FILES_ROOT_LOCATION);
+	public static String getAbsolutePathInColfution(final String path) {
+		String ktrBaseDirLocation = "";
 		
-		return colfusionRoot + File.separator + dir;
+		if (IOUtils.isAbsolute(path)) {
+			ktrBaseDirLocation = path;
+		}
+		else {
+			String colfusionRoot = ConfigManager.getInstance().getProperty(PropertyKeys.COLFUSION_STATIC_FILES_ROOT_LOCATION);
+			ktrBaseDirLocation = colfusionRoot + File.separator + path;
+		}
+		
+		return ktrBaseDirLocation;
+	}
+	
+	/**
+	 * Check whether provided path is absolute or relative.
+	 * 
+	 * @param path
+	 * 		the path to check
+	 * @return true if provided path is absolute, otherwise false
+	 */
+	public static boolean isAbsolute(final String path) {
+		//TODO: check if this might throw an exception or not if the value is not correct.
+		return new File(path).isAbsolute();
 	}
 }

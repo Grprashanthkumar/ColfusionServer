@@ -11,9 +11,7 @@ import java.util.List;
 import org.apache.commons.compress.archivers.ArchiveException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
 
 import edu.pitt.sis.exp.colfusion.tests.TestResourcesNames;
 import edu.pitt.sis.exp.colfusion.utils.ConfigManager;
@@ -28,16 +26,13 @@ public class IOUtilsTest extends UnitTestBase {
 	Logger logger = LogManager.getLogger(IOUtilsTest.class.getName());
 	ConfigManager configManager = ConfigManager.getInstance();
 	
-	@Rule
-    public TemporaryFolder folder = new TemporaryFolder();
-	
 	/**
 	 * Test if the Excel file from the test/resources is written to specified in the properties location.
 	 */
 	@Test
 	public void testWriteExcelAsInputStreamToFile() {
 			
-		String testFileUploadDir = folder.newFolder("testWriteExcelAsInputStreamToFile").toString();
+		String testFileUploadDir = tempFolder.newFolder("testWriteExcelAsInputStreamToFile").toString();
 	
 		String testExcelFileName = TestResourcesNames.TEST_EXCEL_FILE_XLSX;
 		
@@ -68,7 +63,7 @@ public class IOUtilsTest extends UnitTestBase {
 	 */
 	@Test
 	public void testWriteTarGzArchiveAsInputStremToFile() {
-		String testFileUploadDir = folder.newFolder("testWriteTarGzArchiveAsInputStremToFile").toString();
+		String testFileUploadDir = tempFolder.newFolder("testWriteTarGzArchiveAsInputStremToFile").toString();
 		
 		String testFileName = TestResourcesNames.TEST_TAR_GZ_ARCHIVE_TAR_GZ;
 		
@@ -99,7 +94,7 @@ public class IOUtilsTest extends UnitTestBase {
 	 */
 	@Test
 	public void testUnarchive() {
-		String testFileUploadDir = folder.newFolder("testUnarchive").toString();
+		String testFileUploadDir = tempFolder.newFolder("testUnarchive").toString();
 		
 		String testFileName = TestResourcesNames.TEST_ZIP_ARCHIVE_ZIP;
 		
@@ -124,7 +119,7 @@ public class IOUtilsTest extends UnitTestBase {
 	
 	@Test
 	public void testCopyFileContentOnKTRTemplates() {
-		String testKTRBaseDirLocation = folder.newFolder("testCopyFileContentOnKTRTemplates").toString();
+		String testKTRBaseDirLocation = tempFolder.newFolder("testCopyFileContentOnKTRTemplates").toString();
 		
 		String fileToCopyName = configManager.getProperty(PropertyKeys.COLFUSION_KTR_TEMPLATES_CSV_TO_DATABASE);
 		String fileToCopyLocation = getResourceAsAbsoluteURI(fileToCopyName);
@@ -143,5 +138,53 @@ public class IOUtilsTest extends UnitTestBase {
 		} catch (Exception e) {
 			logger.error("testCopyFileContentOnKTRTemplates failed!", e);
 		}
+	}
+	
+	/**
+	 * Tests {@link IOUtils#isAbsolute(String)}.
+	 */
+	@Test
+	public void testIsAbsolute() {
+		assertEquals(false, IOUtils.isAbsolute(""));
+		
+		if (isWindows()) {
+			assertEquals(true, IOUtils.isAbsolute("C:\\drive"));
+			assertEquals(true, IOUtils.isAbsolute("C:/drive"));
+			assertEquals(false, IOUtils.isAbsolute("drive"));
+			
+			assertEquals(false, IOUtils.isAbsolute("drive\\drive"));
+			assertEquals(false, IOUtils.isAbsolute("drive/drive"));
+		}
+		else {
+			assertEquals(true, IOUtils.isAbsolute("/drive/drive"));
+			
+			assertEquals(false, IOUtils.isAbsolute("drive/drive"));
+		}
+		
+		assertEquals(false, IOUtils.isAbsolute("drive/.../drive"));		
+	}
+	
+	/**
+	 * Tests {@link IOUtils#getAbsolutePathInColfution(String)}.
+	 */
+	@Test
+	public void testGetAbsolutePathInColfution() {
+		String testStaticFilesRootLocation = "testLocaiton";
+		redefineSystemPropertyForMethod(PropertyKeys.COLFUSION_STATIC_FILES_ROOT_LOCATION.getKey(), testStaticFilesRootLocation);
+		
+		if (isWindows()) {
+			assertEquals("C:\\", IOUtils.getAbsolutePathInColfution("C:\\"));
+			assertEquals("C:\\bla", IOUtils.getAbsolutePathInColfution("C:\\bla"));
+			assertEquals(testStaticFilesRootLocation + "\\bla", IOUtils.getAbsolutePathInColfution("bla"));
+			assertEquals(testStaticFilesRootLocation + "\\bla\\blu", IOUtils.getAbsolutePathInColfution("bla\\blu"));
+			assertEquals(testStaticFilesRootLocation + "\\", IOUtils.getAbsolutePathInColfution(""));
+		}
+		else {
+			assertEquals("/", IOUtils.getAbsolutePathInColfution("/"));
+			assertEquals("/bla", IOUtils.getAbsolutePathInColfution("/bla"));
+			assertEquals(testStaticFilesRootLocation + "/bla", IOUtils.getAbsolutePathInColfution("bla"));
+			assertEquals(testStaticFilesRootLocation + "/bla/blu", IOUtils.getAbsolutePathInColfution("bla/blu"));
+			assertEquals(testStaticFilesRootLocation + "/", IOUtils.getAbsolutePathInColfution(""));
+		}		
 	}
 }

@@ -21,10 +21,7 @@ public class DockerTest extends DatabaseUnitTestBase {
 	
 	@Test
 	public void testSetUpTestStory() throws Exception {
-		String tableName = "test table name";
-		String[] columnNames = new String[] {"Column A", "Column B", "Column C"};
-		
-		ColfusionSourceinfo storyExpected = setUpTestStory(tableName, columnNames);
+		ColfusionSourceinfo storyExpected = setUpTestStory(TEST_TARGET_TABLE_NAME, TEST_TARGET_COLUMNS_NAMES);
 		
 		assertNotNull("Set up story is null", storyExpected);
 		
@@ -41,7 +38,7 @@ public class DockerTest extends DatabaseUnitTestBase {
 		assertEquals("License ids are not the same", storyExpected.getColfusionLicense().getLicenseId(), storyActual.getColfusionLicense().getLicenseId());
 		assertEquals("User ids are not the same", storyExpected.getColfusionUsers().getUserId(), storyActual.getColfusionUsers().getUserId());
 		
-		assertEquals("# of columns is not the same", columnNames.length, storyActual.getColfusionDnameinfos().size());
+		assertEquals("# of columns is not the same", TEST_TARGET_COLUMNS_NAMES.length, storyActual.getColfusionDnameinfos().size());
 		
 		ColfusionSourceinfoDb sourceInfoDb = storyActual.getColfusionSourceinfoDb();
 		
@@ -51,11 +48,11 @@ public class DockerTest extends DatabaseUnitTestBase {
 				sourceInfoDb.getPort(), sourceInfoDb.getUserName(), sourceInfoDb.getPassword());
 		
 		String connectionString = dockerMySQLConnectionInfo.getConnectionString(sourceInfoDb.getSourceDatabase());
-		String query = String.format("SELECT * FROM `%s`", tableName);
+		String query = String.format("SELECT * FROM `%s`", TEST_TARGET_TABLE_NAME);
 		List<Object[]> result = executeMySQLQuery(connectionString, query);
 		
 		assertEquals("# of tuples is not the same", DEFAULT_NUM_GENERATE_TUPLES, result.size());
-		assertEquals("# of columns is not the same", columnNames.length, result.get(0).length);
+		assertEquals("# of columns is not the same", TEST_TARGET_COLUMNS_NAMES.length, result.get(0).length);
 	}
 
 	@Test

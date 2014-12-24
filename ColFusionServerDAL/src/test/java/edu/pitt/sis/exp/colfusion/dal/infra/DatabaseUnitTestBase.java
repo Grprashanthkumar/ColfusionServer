@@ -14,11 +14,9 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Set;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -68,8 +66,12 @@ public abstract class DatabaseUnitTestBase extends UnitTestBase {
 
 	private static final String TEST_TARGET_DATABASE_VENDOR = "mysql";
 
-	private static final String TEST_TARGET_DATABASE_PREFIX = "test_target_database_";
+	private static final String TEST_TARGET_DATABASE_PREFIX = 
+			ConfigManager.getInstance().getProperty(PropertyKeys.COLFUSION_DATA_FROM_FILE_DATABASE_DATABASE_NAME_PREFIX);
 
+	protected String TEST_TARGET_TABLE_NAME = "test table name";
+	protected String[] TEST_TARGET_COLUMNS_NAMES = new String[] {"Column A", "Column B", "Column C"};
+	
 	private static final Logger logger = LogManager.getLogger(DatabaseUnitTestBase.class.getName());
 	
 	static DockerClient dockerClient; 
@@ -83,8 +85,6 @@ public abstract class DatabaseUnitTestBase extends UnitTestBase {
 	private static final String DOCKER_MYSQL_ROOT_USER = "root";
 	private static final String DOCKER_ENV_MYSQL_ROOT_PASSWORD = "MYSQL_ROOT_PASSWORD";
 	private static final String DOCKER_ENV_MYSQL_ROOT_PASSWORD_VALUE = "root";
-	
-	private static final Set<String> systemPropertiesToClean = new HashSet<String>();
 	
 	/**
 	 * Set during the {@link #setUp()}
@@ -146,10 +146,6 @@ public abstract class DatabaseUnitTestBase extends UnitTestBase {
 			//TODO: check if container exists
 			dockerClient.removeContainerCmd(entry.getKey()).exec();
 		}
-		
-		for (String sysProperty : systemPropertiesToClean) {
-			System.clearProperty(sysProperty);
-		};
 		
 		dockerClient.close();
 	}
@@ -315,12 +311,9 @@ public abstract class DatabaseUnitTestBase extends UnitTestBase {
 		String connectionStringWithSchema = dockerMySQLConnectionInfo2.getConnectionString(
 				configMng.getProperty(PropertyKeys.COLFUSION_HIBERNATE_DEFAULT_CATALOG));
 		
-		System.setProperty(PropertyKeys.COLFUSION_HIBERNATE_CONNECTION_URL.getKey(), connectionStringWithSchema);
-		systemPropertiesToClean.add(PropertyKeys.COLFUSION_HIBERNATE_CONNECTION_URL.getKey());
-		System.setProperty(PropertyKeys.COLFUSION_HIBERNATE_CONNECTION_USERNAME.getKey(), DOCKER_MYSQL_ROOT_USER);
-		systemPropertiesToClean.add(PropertyKeys.COLFUSION_HIBERNATE_CONNECTION_USERNAME.getKey());
-		System.setProperty(PropertyKeys.COLFUSION_HIBERNATE_CONNECTION_PASSWORD.getKey(), DOCKER_ENV_MYSQL_ROOT_PASSWORD_VALUE);
-		systemPropertiesToClean.add(PropertyKeys.COLFUSION_HIBERNATE_CONNECTION_PASSWORD.getKey());
+		redefineSystemPropertyForClass(PropertyKeys.COLFUSION_HIBERNATE_CONNECTION_URL.getKey(), connectionStringWithSchema);
+		redefineSystemPropertyForClass(PropertyKeys.COLFUSION_HIBERNATE_CONNECTION_USERNAME.getKey(), DOCKER_MYSQL_ROOT_USER);
+		redefineSystemPropertyForClass(PropertyKeys.COLFUSION_HIBERNATE_CONNECTION_PASSWORD.getKey(), DOCKER_ENV_MYSQL_ROOT_PASSWORD_VALUE);
 	}
 
 	/**
