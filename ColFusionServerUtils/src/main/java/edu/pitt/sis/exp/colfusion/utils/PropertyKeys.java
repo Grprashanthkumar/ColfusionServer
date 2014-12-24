@@ -132,7 +132,7 @@ public enum PropertyKeys implements IPropertyKeys {
 	 * 
 	 * Type is the database vendor, e.g. MySQL, MSSQL, etc.
 	 */
-	COLFUSION_PENTAHO_LOGGING_DATABASE_VENDOR ("colfusion.pentaho.logging_database."),
+	COLFUSION_PENTAHO_LOGGING_DATABASE_VENDOR ("colfusion.pentaho.logging_database.vendor"),
 	
 	
 	/**
