@@ -13,6 +13,11 @@ import java.util.List;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 
 import org.apache.commons.compress.archivers.ArchiveException;
 import org.apache.commons.compress.archivers.ArchiveInputStream;
@@ -278,11 +283,21 @@ public class IOUtils {
 		DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
 		Document doc = docBuilder.parse(ablsoluteXMLDocumentPath);
 		
+		doc.getDocumentElement().normalize();
+		
 		logger.info(String.format("readXMLDocument: Done to read XML document %s", ablsoluteXMLDocumentPath));
 		
 		return doc;
 	}
 
+	public static void writeXMLDocuemnt(final Document document, final String absoluteFileName) throws TransformerException {
+		TransformerFactory transformerFactory = TransformerFactory.newInstance();
+		Transformer transformer = transformerFactory.newTransformer();
+		DOMSource source = new DOMSource(document);
+		StreamResult result = new StreamResult(new File(absoluteFileName));
+		transformer.transform(source, result);
+	}
+	
 	/**
 	 * Make file URL from file absolute name.
 	 * @param fileName absolute file name.

@@ -10,11 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathFactory;
@@ -143,11 +139,7 @@ public class KTRManager {
 	 */
 	private void saveKTRFile() throws TransformerException {
 		// write the content into xml file
-		TransformerFactory transformerFactory = TransformerFactory.newInstance();
-		Transformer transformer = transformerFactory.newTransformer();
-		DOMSource source = new DOMSource(ktrDocument);
-		StreamResult result = new StreamResult(new File(ktrAbsoluteName));
-		transformer.transform(source, result);
+		IOUtils.writeXMLDocuemnt(ktrDocument, ktrAbsoluteName);
 	}
 	
 	/**

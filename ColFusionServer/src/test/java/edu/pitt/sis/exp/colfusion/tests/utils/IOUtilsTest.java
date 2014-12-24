@@ -4,14 +4,21 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
+
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerException;
 
 import org.apache.commons.compress.archivers.ArchiveException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.Test;
+import org.w3c.dom.Document;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
 
 import edu.pitt.sis.exp.colfusion.tests.TestResourcesNames;
 import edu.pitt.sis.exp.colfusion.utils.ConfigManager;
@@ -186,5 +193,32 @@ public class IOUtilsTest extends UnitTestBase {
 			assertEquals(testStaticFilesRootLocation + "/bla/blu", IOUtils.getAbsolutePathInColfution("bla/blu"));
 			assertEquals(testStaticFilesRootLocation + "/", IOUtils.getAbsolutePathInColfution(""));
 		}		
+	}
+	
+	@Test
+	public void testReadXMLDocument() throws ParserConfigurationException, SAXException, IOException {
+		
+		Document doc = IOUtils.readXMLDocument(getResourceAsAbsoluteURI(TestResourcesNames.TEST_COMPANY_XML_FILE));
+		
+		assertEquals("company", doc.getDocumentElement().getNodeName());
+		
+		NodeList nList = doc.getElementsByTagName("staff");
+		
+		assertEquals(2, nList.getLength());
+	}
+	
+	@Test
+	public void testWriteXMLDocument() throws ParserConfigurationException, SAXException, IOException, TransformerException {
+		String originalTestXMLFile = getResourceAsAbsoluteURI(TestResourcesNames.TEST_COMPANY_XML_FILE);
+		Document doc = IOUtils.readXMLDocument(originalTestXMLFile);
+		
+		String writtenFileName = tempFolder.newFile("testWriteXMLDocument").toString();
+		
+		IOUtils.writeXMLDocuemnt(doc, writtenFileName);
+		
+		String originalTestXMLFileContent = org.apache.commons.io.IOUtils.toString(new FileInputStream(originalTestXMLFile));
+		String writtenTestXMLFileContent = org.apache.commons.io.IOUtils.toString(new FileInputStream(writtenFileName));
+		
+		assertEquals(originalTestXMLFileContent, writtenTestXMLFileContent);
 	}
 }

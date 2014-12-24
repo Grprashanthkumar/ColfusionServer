@@ -13,4 +13,6 @@ public class TestResourcesNames {
 	public static final String TEST_TAR_GZ_ARCHIVE_TAR_GZ = "testTarGzArchive.tar.gz";
 
 	public static final String TEST_ZIP_ARCHIVE_ZIP = "testZipArchive.zip";
+	
+	public static final String TEST_COMPANY_XML_FILE = "testCompanyXMLFile.xml";
 }
