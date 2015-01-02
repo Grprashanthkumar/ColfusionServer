@@ -7,12 +7,13 @@ import junit.framework.TestCase;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.junit.Ignore;
+import org.junit.Test;
 
 import edu.pitt.sis.exp.colfusion.dal.utils.DataSourceTypes;
 import edu.pitt.sis.exp.colfusion.dataLoadExecutors.DataLoadExecutor;
 import edu.pitt.sis.exp.colfusion.dataLoadExecutors.DataLoadExecutorFactory;
 import edu.pitt.sis.exp.colfusion.process.ProcessBase;
-import edu.pitt.sis.exp.colfusion.process.ProcessManager;
 import edu.pitt.sis.exp.colfusion.utils.ConfigManager;
 
 /**
@@ -28,6 +29,7 @@ public class ProcessManagerTest extends TestCase {
 		super(name);
 	}
 	
+	@Test
 	public void testProcessSerialization() {
 		
 		//Gson gson = new Gson();
@@ -62,6 +64,7 @@ public class ProcessManagerTest extends TestCase {
         }
 	}
 	
+	@Test
 	public void testDataLoadExecutorProcessSerialization() {
 		
 		//Gson gson = new Gson();
@@ -97,28 +100,30 @@ public class ProcessManagerTest extends TestCase {
         }
 	}
 	
-	//TODO:this test uses DB, so the DB might need to be prepared
+	//TODO: redo ProcessManagerTest.testQueueProcesses this test uses DB, so the DB might need to be prepared
+	@Ignore
+	@Test
 	public void testQueueProcesses() {
-		TestProcess testProcess = new TestProcess();
-		
-		testProcess.setSid(123);
-		testProcess.setID(1);
-		
-		try {
-			int processId = ProcessManager.getInstance().queueProcess(testProcess);
-			
-			while (ProcessManager.getInstance().hasRunningProcesses()) {
-				logger.info(String.format("This many processes are running: %d", ProcessManager.getInstance().countRunningProcess()));
-				Thread.sleep(1000);
-			}
-			
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			
-			logger.error(String.format("testQueueProcesses failed"), e);
-			
-			fail(String.format("testQueueProcesses failed."));
-		}
+//		TestProcess testProcess = new TestProcess();
+//		
+//		testProcess.setSid(123);
+//		testProcess.setID(1);
+//		
+//		try {
+//			int processId = ProcessManager.getInstance().queueProcess(testProcess);
+//			
+//			while (ProcessManager.getInstance().hasRunningProcesses()) {
+//				logger.info(String.format("This many processes are running: %d", ProcessManager.getInstance().countRunningProcess()));
+//				Thread.sleep(1000);
+//			}
+//			
+//		} catch (Exception e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//			
+//			logger.error(String.format("testQueueProcesses failed"), e);
+//			
+//			fail(String.format("testQueueProcesses failed."));
+//		}
 	}
 }

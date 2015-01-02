@@ -23,8 +23,7 @@ public class TransformationTest extends TestCase {
 	private static Logger logger = LogManager.getLogger(TransformationTest.class.getName());
 	
 	public TransformationTest(final String name) {
-		super(name);
-		
+		super(name);	
 	}
 	
 	@Test

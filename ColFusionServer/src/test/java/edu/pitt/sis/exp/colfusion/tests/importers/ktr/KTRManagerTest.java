@@ -10,6 +10,7 @@ import java.util.ArrayList;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import edu.pitt.sis.exp.colfusion.dal.infra.DatabaseUnitTestBase;
@@ -33,6 +34,7 @@ public class KTRManagerTest extends DatabaseUnitTestBase {
 	Logger logger = LogManager.getLogger(KTRManagerTest.class.getName());
 	ConfigManager configManager = ConfigManager.getInstance();
 	
+	@Ignore
 	@Test
 	public void testCreateTemplate() throws Exception {
 		ColfusionSourceinfo story = setUpTestStory(TEST_TARGET_TABLE_NAME, TEST_TARGET_COLUMNS_NAMES);
@@ -43,7 +45,7 @@ public class KTRManagerTest extends DatabaseUnitTestBase {
 		
 		String folderForUpload = tempFolder.newFolder("testCreateTemplateUploadFolder").toString();
 		
-		FileContentInfoViewModel fileContentInfoViewModel = prepareDileContentInfoViewModel(
+		FileContentInfoViewModel fileContentInfoViewModel = prepareFileContentInfoViewModel(
 				story, folderForUpload);
 		
 		KTRManager ktrManager = new KTRManager(story.getSid());
@@ -77,7 +79,7 @@ public class KTRManagerTest extends DatabaseUnitTestBase {
 	 * @param folderForUpload
 	 * @return
 	 */
-	private FileContentInfoViewModel prepareDileContentInfoViewModel(
+	private FileContentInfoViewModel prepareFileContentInfoViewModel(
 			final ColfusionSourceinfo story, final String folderForUpload) {
 		FileContentInfoViewModel fileContentInfoViewModel = new FileContentInfoViewModel();
 		

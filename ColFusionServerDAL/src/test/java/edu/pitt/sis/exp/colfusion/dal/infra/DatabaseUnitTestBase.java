@@ -147,6 +147,8 @@ public abstract class DatabaseUnitTestBase extends UnitTestBase {
 			dockerClient.removeContainerCmd(entry.getKey()).exec();
 		}
 		
+		containerIdToContainer.clear();
+		
 		dockerClient.close();
 	}
 	

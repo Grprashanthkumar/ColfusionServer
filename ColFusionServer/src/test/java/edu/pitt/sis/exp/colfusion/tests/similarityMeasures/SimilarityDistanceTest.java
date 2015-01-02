@@ -7,6 +7,7 @@ import junit.framework.TestCase;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.junit.Test;
 
 import edu.pitt.sis.exp.colfusion.similarityMeasures.LevenshteinDistance;
 import edu.pitt.sis.exp.colfusion.similarityMeasures.NormalizedDistance;
@@ -19,6 +20,7 @@ import edu.pitt.sis.exp.colfusion.similarityMeasures.SimilarityDistanceMeasure;
 public class SimilarityDistanceTest extends TestCase {
 	static Logger logger = LogManager.getLogger(SimilarityDistanceTest.class.getName());
 	
+	@Test
 	public void testComputeSimilarity() {
 		SimilarityDistanceMeasure simMeasure = new LevenshteinDistance();
 		

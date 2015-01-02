@@ -2,10 +2,8 @@ package edu.pitt.sis.exp.colfusion.tests.bll;
 
 import junit.framework.TestCase;
 
+import org.junit.Ignore;
 import org.junit.Test;
-
-import edu.pitt.sis.exp.colfusion.bll.BasicTableBL;
-import edu.pitt.sis.exp.colfusion.responseModels.BasicTableResponseModel;
 
 public class BasicTableBLTest extends TestCase {
 	
@@ -77,11 +75,14 @@ public class BasicTableBLTest extends TestCase {
 //		assertEquals(true, true);
 //	}
 	
-	@Test public void testGetTableInfo(){
-		int sid = 1751;
-		String tableName = "Sheet1";
-		BasicTableBL basicBL=new BasicTableBL();
-		BasicTableResponseModel result = basicBL.getTableInfo(sid, tableName);
-		assertEquals(true, true);
+	//TODO: redo with DatabaseTestBase
+	@Ignore
+	@Test 
+	public void testGetTableInfo(){
+//		int sid = 1751;
+//		String tableName = "Sheet1";
+//		BasicTableBL basicBL=new BasicTableBL();
+//		BasicTableResponseModel result = basicBL.getTableInfo(sid, tableName);
+//		assertEquals(true, true);
 	}
 }

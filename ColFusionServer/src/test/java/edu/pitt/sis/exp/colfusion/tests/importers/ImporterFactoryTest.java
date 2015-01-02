@@ -90,7 +90,7 @@ public class ImporterFactoryTest extends UnitTestBase {
 	@Test
 	public void testGetTablesCSVFile() {
 		try {
-			String testFileName = TestResourcesNames.TEST_CSV_FILE_XLSX;
+			String testFileName = TestResourcesNames.TEST_CSV_FILE;
 			String testFileNameAbsolute = this.getResourceAsAbsoluteURI(testFileName);
 			
 			Collection<WorksheetViewModel> tables = getCSVWorksheets(testFileName, testFileNameAbsolute);
@@ -188,7 +188,7 @@ public class ImporterFactoryTest extends UnitTestBase {
 	@Test
 	public void testReadVariablesCSV() {
 			
-		String testFileName = TestResourcesNames.TEST_CSV_FILE_XLSX;
+		String testFileName = TestResourcesNames.TEST_CSV_FILE;
 		String testFileNameAbsolute = this.getResourceAsAbsoluteURI(testFileName);
 		
 		try {
@@ -278,7 +278,7 @@ public class ImporterFactoryTest extends UnitTestBase {
 		try {
 			Importer importer = getImporter(ImporterType.CSVImporter);
 			
-			String testFileName = TestResourcesNames.TEST_CSV_FILE_XLSX;
+			String testFileName = TestResourcesNames.TEST_CSV_FILE;
 			String testFileNameAbsolute = this.getResourceAsAbsoluteURI(testFileName);
 			
 			PreviewFileViewModel previewFileViewModel = new PreviewFileViewModel();

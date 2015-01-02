@@ -20,6 +20,7 @@ public class DatabaseHandlerFactoryTest extends DatabaseUnitTestBase {
 	Logger logger = LogManager.getLogger(DatabaseHandlerFactoryTest.class.getName());
 	ConfigManager configManager = ConfigManager.getInstance();
 	
+	//TODO: redo DatabaseHandlerFactoryTest.testOpenConnections
 	@Ignore
 	@Test
 	public void testOpenConnections() {
@@ -61,6 +62,7 @@ public class DatabaseHandlerFactoryTest extends DatabaseUnitTestBase {
 //		}
 	}
 	
+	//TODO: redo DatabaseHandlerFactoryTest.testCreateDeleteDatabase
 	@Ignore
 	@Test
 	public void testCreateDeleteDatabase() {
@@ -103,6 +105,7 @@ public class DatabaseHandlerFactoryTest extends DatabaseUnitTestBase {
 //		}
 	}
 	
+	//TODO: redo DatabaseHandlerFactoryTest.testCreateTableAndDeleteDatabase
 	@Ignore
 	@Test
 	public void testCreateTableAndDeleteDatabase() {

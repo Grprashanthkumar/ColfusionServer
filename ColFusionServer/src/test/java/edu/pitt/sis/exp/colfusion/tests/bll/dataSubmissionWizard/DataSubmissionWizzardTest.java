@@ -18,14 +18,13 @@ public class DataSubmissionWizzardTest extends TestCase {
 		super(name);
 	}
 	
+	//TODO: redo DataSubmissionWizzardTest.testStoreUploadedFiles
 	/**
 	 * Test Store Uploaded Files
 	 */
 	@Ignore
 	@Test
 	public void testStoreUploadedFiles() {
-		//TODO: redo
-		
 //		String testFileName = configManager.getProperty(PropertyKeysTest.testExcelFileNameInResourceFolder);
 //		String testArchiveFileName = configManager.getProperty(PropertyKeysTest.testZipArchive);
 //		
