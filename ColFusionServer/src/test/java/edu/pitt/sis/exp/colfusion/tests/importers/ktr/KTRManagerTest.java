@@ -10,7 +10,6 @@ import java.util.ArrayList;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import edu.pitt.sis.exp.colfusion.dal.infra.DatabaseUnitTestBase;
@@ -34,7 +33,6 @@ public class KTRManagerTest extends DatabaseUnitTestBase {
 	Logger logger = LogManager.getLogger(KTRManagerTest.class.getName());
 	ConfigManager configManager = ConfigManager.getInstance();
 	
-	@Ignore
 	@Test
 	public void testCreateTemplate() throws Exception {
 		ColfusionSourceinfo story = setUpTestStory(TEST_TARGET_TABLE_NAME, TEST_TARGET_COLUMNS_NAMES);
