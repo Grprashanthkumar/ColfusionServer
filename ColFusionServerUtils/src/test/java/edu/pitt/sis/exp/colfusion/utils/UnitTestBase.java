@@ -1,5 +1,7 @@
 package edu.pitt.sis.exp.colfusion.utils;
 
+import static org.junit.Assert.assertEquals;
+
 import java.io.InputStream;
 import java.util.HashSet;
 import java.util.Set;
@@ -9,6 +11,7 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.rules.TemporaryFolder;
+
 /**
  * Some functionality that is commonly used by many unit tests.
  * 
@@ -98,5 +101,10 @@ public abstract class UnitTestBase  {
 		}
 		
 		return false;
+	}
+	
+	protected void assertEqualsIgnoreWhiteSpaces(final String message, 
+			final String expected, final String actual) {
+		assertEquals(message, expected.replaceAll("\\s+",""), actual.replaceAll("\\s+",""));	
 	}
 }

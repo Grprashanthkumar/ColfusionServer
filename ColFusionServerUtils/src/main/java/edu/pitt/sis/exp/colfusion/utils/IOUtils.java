@@ -13,6 +13,7 @@ import java.util.List;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
@@ -40,6 +41,7 @@ import edu.pitt.sis.exp.colfusion.utils.models.IOUtilsStoredFileInfoModel;
  */
 public class IOUtils {
 
+	private static final String UTF_8 = "UTF-8";
 	final static Logger logger = LogManager.getLogger(IOUtils.class.getName());
 
 	protected IOUtils() {
@@ -290,9 +292,10 @@ public class IOUtils {
 		return doc;
 	}
 
-	public static void writeXMLDocuemnt(final Document document, final String absoluteFileName) throws TransformerException {
+	public static void writeXMLDocument(final Document document, final String absoluteFileName) throws TransformerException {
 		TransformerFactory transformerFactory = TransformerFactory.newInstance();
 		Transformer transformer = transformerFactory.newTransformer();
+		transformer.setOutputProperty(OutputKeys.ENCODING, UTF_8);
 		DOMSource source = new DOMSource(document);
 		StreamResult result = new StreamResult(new File(absoluteFileName));
 		transformer.transform(source, result);

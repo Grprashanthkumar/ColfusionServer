@@ -139,7 +139,7 @@ public class KTRManager {
 	 */
 	private void saveKTRFile() throws TransformerException {
 		// write the content into xml file
-		IOUtils.writeXMLDocuemnt(ktrDocument, ktrAbsoluteName);
+		IOUtils.writeXMLDocument(ktrDocument, ktrAbsoluteName);
 	}
 	
 	/**

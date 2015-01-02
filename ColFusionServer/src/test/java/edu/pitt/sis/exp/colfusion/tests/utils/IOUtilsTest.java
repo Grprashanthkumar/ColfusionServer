@@ -211,14 +211,15 @@ public class IOUtilsTest extends UnitTestBase {
 	public void testWriteXMLDocument() throws ParserConfigurationException, SAXException, IOException, TransformerException {
 		String originalTestXMLFile = getResourceAsAbsoluteURI(TestResourcesNames.TEST_COMPANY_XML_FILE);
 		Document doc = IOUtils.readXMLDocument(originalTestXMLFile);
+		doc.setXmlStandalone(false);
 		
 		String writtenFileName = tempFolder.newFile("testWriteXMLDocument").toString();
 		
-		IOUtils.writeXMLDocuemnt(doc, writtenFileName);
+		IOUtils.writeXMLDocument(doc, writtenFileName);
 		
 		String originalTestXMLFileContent = org.apache.commons.io.IOUtils.toString(new FileInputStream(originalTestXMLFile));
 		String writtenTestXMLFileContent = org.apache.commons.io.IOUtils.toString(new FileInputStream(writtenFileName));
 		
-		assertEquals(originalTestXMLFileContent, writtenTestXMLFileContent);
+		assertEqualsIgnoreWhiteSpaces("The content doesn't match", originalTestXMLFileContent, writtenTestXMLFileContent);
 	}
 }
