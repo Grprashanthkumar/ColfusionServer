@@ -1,11 +1,13 @@
 package edu.pitt.sis.exp.colfusion.psc.server.business;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 import edu.pitt.sis.exp.colfusion.dal.infra.DatabaseUnitTestBase;
 
 public class DataReplicationBLTest extends DatabaseUnitTestBase {
 
+	@Ignore
 	@Test 
 	public void testDoDataReplicationInternal() throws Exception {
 		prepareDatabaseForTestDoDataReplicationInternal();

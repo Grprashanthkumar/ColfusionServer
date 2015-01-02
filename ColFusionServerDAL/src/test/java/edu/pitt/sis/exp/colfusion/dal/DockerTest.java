@@ -6,6 +6,7 @@ import static org.junit.Assert.assertNotNull;
 import java.sql.SQLException;
 import java.util.List;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 import edu.pitt.sis.exp.colfusion.dal.infra.DatabaseUnitTestBase;
@@ -19,6 +20,7 @@ import edu.pitt.sis.exp.colfusion.utils.PropertyKeys;
 
 public class DockerTest extends DatabaseUnitTestBase {
 	
+	@Ignore
 	@Test
 	public void testSetUpTestStory() throws Exception {
 		ColfusionSourceinfo storyExpected = setUpTestStory(TEST_TARGET_TABLE_NAME, TEST_TARGET_COLUMNS_NAMES);
@@ -55,6 +57,7 @@ public class DockerTest extends DatabaseUnitTestBase {
 		assertEquals("# of columns is not the same", TEST_TARGET_COLUMNS_NAMES.length, result.get(0).length);
 	}
 
+	@Ignore
 	@Test
 	public void testColfusionDatabaseCreated() throws ClassNotFoundException, SQLException {
 		String sql = String.format("SELECT * FROM SCHEMATA WHERE SCHEMA_NAME = '%s'", 

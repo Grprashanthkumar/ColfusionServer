@@ -4,6 +4,7 @@ package edu.pitt.sis.exp.colfusion.psc.server;
 
 import javax.ws.rs.core.Response;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 import edu.pitt.sis.exp.colfusion.psc.server.util.ServerType;
@@ -11,6 +12,7 @@ import edu.pitt.sis.exp.colfusion.psc.server.util.Utils;
 
 public class ColfuseionPSCServerTest {
 	
+	@Ignore
 	@Test
 	public void testSendRequest() {
 		Thread serverThread1 = startServer(Utils.getPort(ServerType.JOINER));
@@ -24,6 +26,7 @@ public class ColfuseionPSCServerTest {
 		serverThread2.interrupt();
 	}
 	
+	@Ignore
 	@Test
 	public void testIsAlive() {
 		Thread serverThread1 = startServer(Utils.getPort(ServerType.JOINER));
