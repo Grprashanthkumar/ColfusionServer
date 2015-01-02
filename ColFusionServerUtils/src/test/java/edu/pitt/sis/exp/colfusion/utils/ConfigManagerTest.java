@@ -57,7 +57,7 @@ public class ConfigManagerTest extends TestCase {
 		configManager.loadProperties(); // Because other tests might have messed up with the properties.
 		configManager.loadCustomPropertiesFoundInResource(properties);
 		
-		assertEquals(COLFUSION_PROPERTIES_SOURCE_VALUE_CUSTOM, properties.getProperty(PropertyKeys.COLFUSION_PROPERTIES_SOURCE.getKey()));
+		assertCustomDefaultSourceProperty(configManager);
 	}
 	
 	/**
@@ -94,10 +94,7 @@ public class ConfigManagerTest extends TestCase {
 		ConfigManager configManager = ConfigManager.getInstance(); // this will also call loadProperties in the ConfigManager
 		configManager.loadProperties(); // Because other tests might have messed up with the properties.
 		
-		// Since the custom config.properties file is present in the src/test/resources then
-		// the default PropertyKeys.COLFUSION_PROPERTIES_SORUCE property should be overridden
-		
-		assertEquals(COLFUSION_PROPERTIES_SOURCE_VALUE_CUSTOM, configManager.getProperty(PropertyKeys.COLFUSION_PROPERTIES_SOURCE));
+		assertCustomDefaultSourceProperty(configManager);
 		
 		// Now set system property to the temp config file and call loadProperties manually to reload the properties.
 		
@@ -118,10 +115,7 @@ public class ConfigManagerTest extends TestCase {
 		ConfigManager configManager = ConfigManager.getInstance(); // this will also call loadProperties in the ConfigManager
 		configManager.loadProperties(); // Because other tests might have messed up with the properties.
 		
-		// Since the custom config.properties file is present in the src/test/resources then
-		// the default PropertyKeys.COLFUSION_PROPERTIES_SORUCE property should be overridden
-				
-		assertEquals(COLFUSION_PROPERTIES_SOURCE_VALUE_CUSTOM, configManager.getProperty(PropertyKeys.COLFUSION_PROPERTIES_SOURCE));
+		assertCustomDefaultSourceProperty(configManager);
 		
 		// Not existing key
 		assertTrue(null == configManager.getProperty(PropertyKeys.COLFUSION_PROPERTIES_TEST_NEVER_EXISTING_PROPERTY));
@@ -145,6 +139,23 @@ public class ConfigManagerTest extends TestCase {
 		
 		assertEquals(propertyValueViaSystemProperties, configManager.getProperty(PropertyKeys.COLFUSION_PROPERTIES_SOURCE));
 		System.clearProperty(PropertyKeys.COLFUSION_PROPERTIES_SOURCE.getKey()); // cleaning up
+	}
+
+	/**
+	 * @param configManager
+	 */
+	private void assertCustomDefaultSourceProperty(final ConfigManager configManager) {
+		if (ResourceUtils.resourceExists(configManager.getClass(), ConfigManager.CONFIG_FILE_NAME)) {
+			// Since the custom config.properties file is present in the src/test/resources then
+			// the default PropertyKeys.COLFUSION_PROPERTIES_SORUCE property should be overridden
+			
+			assertEquals("Wrong source in custom property file", 
+					COLFUSION_PROPERTIES_SOURCE_VALUE_CUSTOM, configManager.getProperty(PropertyKeys.COLFUSION_PROPERTIES_SOURCE));
+		}
+		else {
+			assertEquals("Wrong source in custom property file", 
+					COLFUSION_PROPERTIES_SOURCE_VALUE_DEFAULT, configManager.getProperty(PropertyKeys.COLFUSION_PROPERTIES_SOURCE));
+		}
 	}
 	
 	/**

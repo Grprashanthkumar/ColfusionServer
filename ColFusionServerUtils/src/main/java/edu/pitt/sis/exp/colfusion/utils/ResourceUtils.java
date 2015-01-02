@@ -20,4 +20,11 @@ public class ResourceUtils {
 		
 		return resourceFile == null ? null : resourceFile.getFile();
 	}
+
+	public static boolean resourceExists(final Class<?> clazz,
+			final String resourceName) {
+		URL resourceFile = clazz.getClassLoader().getResource(resourceName);
+		
+		return resourceFile != null;
+	}
 }
