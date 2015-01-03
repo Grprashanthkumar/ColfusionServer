@@ -142,9 +142,9 @@ public abstract class DatabaseUnitTestBase extends UnitTestBase {
 	public static void tearDown() throws IOException {
 		for (Entry<String, InspectContainerResponse> entry : containerIdToContainer.entrySet()) {
 			//TODO: check if container is running
-			dockerClient.stopContainerCmd(entry.getKey()).exec();
+//			dockerClient.stopContainerCmd(entry.getKey()).exec();
 			//TODO: check if container exists
-			dockerClient.removeContainerCmd(entry.getKey()).exec();
+//			dockerClient.removeContainerCmd(entry.getKey()).exec();
 		}
 		
 		containerIdToContainer.clear();
