@@ -263,6 +263,8 @@ public abstract class DatabaseUnitTestBase extends UnitTestBase {
 			return;
 		}
 		
+		logger.info(String.format("About to execute MySQL Update Query at connection %s query: %s", connectionUrl, query));
+		
 		try (Connection connection = DriverManager.getConnection(connectionUrl, 
 				DOCKER_MYSQL_ROOT_USER, DOCKER_ENV_MYSQL_ROOT_PASSWORD_VALUE)) {
 			try (Statement statement = connection.createStatement()){
