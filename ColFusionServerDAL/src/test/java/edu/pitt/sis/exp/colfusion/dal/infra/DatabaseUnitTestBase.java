@@ -103,6 +103,7 @@ public abstract class DatabaseUnitTestBase extends UnitTestBase {
 	public static void setUp() throws Exception {
 	
 		initDockerClient();
+		
 		String containerId = startMySQLContainer();
 		
 		Class.forName("com.mysql.jdbc.Driver");
@@ -325,6 +326,11 @@ public abstract class DatabaseUnitTestBase extends UnitTestBase {
 	 * 
 	 */
 	private static void initDockerClient() {
+		logger.info(String.format("Initializing docker client with version '%s', uri '%s', "
+				+ "server address '%s', docker cert path '%s'", 
+				configMng.getProperty(PropertyKeys.COLFUSION_DOCKER_VERSION), configMng.getProperty(PropertyKeys.COLFUSION_DOCKER_URI),
+				configMng.getProperty(PropertyKeys.COLFUSION_DOCKER_SERVER_ADDRESS), configMng.getProperty(PropertyKeys.COLFUSION_DOCKER_CERT_PATH)));
+		
 		DockerClientConfig config = DockerClientConfig.createDefaultConfigBuilder()
 			    .withVersion(configMng.getProperty(PropertyKeys.COLFUSION_DOCKER_VERSION))
 			    .withUri(configMng.getProperty(PropertyKeys.COLFUSION_DOCKER_URI))
@@ -333,6 +339,8 @@ public abstract class DatabaseUnitTestBase extends UnitTestBase {
 			    .build();
 				
 		dockerClient = DockerClientBuilder.getInstance(config).build();
+		
+		logger.info("Done initializing docker client");
 	}
 	
 	protected static String startMySQLContainer() throws IOException, InterruptedException {
