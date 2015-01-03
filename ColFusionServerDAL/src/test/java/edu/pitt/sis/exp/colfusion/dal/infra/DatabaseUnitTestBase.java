@@ -176,6 +176,7 @@ public abstract class DatabaseUnitTestBase extends UnitTestBase {
 			HibernateException, IOException {
 		
 		// This will trigger hibernate to create tables from mappings
+		HibernateUtil.initiSessionFactory();
 		HibernateUtil.beginTransaction();
 		HibernateUtil.commitTransaction();
 		

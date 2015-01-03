@@ -39,7 +39,7 @@ public class HibernateUtil {
 	/**
 	 * @throws RuntimeException
 	 */
-	static void initiSessionFactory() throws RuntimeException {
+	public static void initiSessionFactory() throws RuntimeException {
 		try {
 			Configuration cfg = new Configuration().configure("hibernate.cfg.xml"); 
 			
