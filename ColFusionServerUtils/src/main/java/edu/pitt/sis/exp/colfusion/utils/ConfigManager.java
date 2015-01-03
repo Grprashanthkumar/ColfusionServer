@@ -241,6 +241,9 @@ public final class ConfigManager {
 	}
 
 	//TODO find a better way to do that
+	/**
+	 * Load properties from {@value #CONFIG_TEST_DEFAULT_FILE_NAME} and {@value #CONFIG_TEST_FILE_NAME} files.
+	 */
 	void loadTestProperties() {
 		loadPropertiesFromResoruceFile(this.properties, CONFIG_TEST_DEFAULT_FILE_NAME, true);
 		loadPropertiesFromResoruceFile(this.properties, CONFIG_TEST_FILE_NAME, false);
