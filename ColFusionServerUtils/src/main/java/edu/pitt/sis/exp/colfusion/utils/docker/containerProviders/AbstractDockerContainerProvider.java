@@ -16,12 +16,19 @@ public abstract class AbstractDockerContainerProvider<DockerContainer extends Ab
 		
 		String containerId = dockerClient.createContainer(getImageName(), getEnvVariables());
 		
-		return createContainerInternal(containerId);
+		return createContainerInternal(containerId, dockerClient);
+	}
+	
+	public DockerContainer createAndStartContainer() throws Exception {
+		DockerContainer container = createContainer();
+		container.start();
+		
+		return container;
 	}
 
 	public abstract PairOf<String, String>[] getEnvVariables();
 
 	public abstract String getImageName();
 
-	protected abstract DockerContainer createContainerInternal(String containerId);
+	protected abstract DockerContainer createContainerInternal(String containerId, ColfusionDockerClient dockerClient);
 }

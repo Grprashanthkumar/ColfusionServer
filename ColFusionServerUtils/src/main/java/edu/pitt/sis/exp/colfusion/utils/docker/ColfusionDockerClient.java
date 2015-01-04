@@ -1,5 +1,6 @@
 package edu.pitt.sis.exp.colfusion.utils.docker;
 
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -9,6 +10,7 @@ import org.apache.logging.log4j.Logger;
 import com.github.dockerjava.api.DockerClient;
 import com.github.dockerjava.api.command.CreateContainerCmd;
 import com.github.dockerjava.api.command.CreateContainerResponse;
+import com.github.dockerjava.api.command.InspectContainerResponse;
 import com.github.dockerjava.core.DockerClientBuilder;
 import com.github.dockerjava.core.DockerClientConfig;
 
@@ -77,5 +79,28 @@ public final class ColfusionDockerClient {
 		CreateContainerResponse container = createContainerCmd.exec();
 		
 		return container.getId();
+	}
+
+	public void startContainer(final String containerId) {
+		dockerClient.startContainerCmd(containerId)
+		   .withPublishAllPorts(true)
+		   .exec();
+	}
+
+	public InputStream logContainer(final String containerId) {
+		InputStream io = dockerClient.logContainerCmd(containerId)
+				.withStdOut(true)
+				.withStdErr(true)
+				.withTailAll()
+				.withFollowStream(true)
+				.exec();
+		
+		return io;
+	}
+
+	public InspectContainerResponse inspectContainer(final String containerId) {
+		InspectContainerResponse inspectResponse = dockerClient.inspectContainerCmd(containerId).exec();
+		
+		return inspectResponse;
 	}
 }

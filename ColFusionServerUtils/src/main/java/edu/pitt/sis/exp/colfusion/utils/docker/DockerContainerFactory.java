@@ -16,19 +16,33 @@ public class DockerContainerFactory {
 	
 	static ColfusionDockerClient dockerClient = ColfusionDockerClient.getInstance();
 	
-	static Map<DockerImageType, AbstractDockerContainerProvider> initializedContainerProviders = new HashMap<DockerImageType, AbstractDockerContainerProvider>();
+	static Map<DockerImageType, AbstractDockerContainerProvider<?>> initializedContainerProviders = 
+			new HashMap<DockerImageType, AbstractDockerContainerProvider<?>>();
 	
-	public static AbstractDockerContainer createContainer(final DockerImageType imageType) {
-		AbstractDockerContainerProvider containerProvider = initializedContainerProviders.get(imageType);
+	public static AbstractDockerContainer createContainer(final DockerImageType imageType) throws Exception {
+		return createOrCreateAndStartInternal(imageType, false);
+	}
+	
+	public static AbstractDockerContainer createAndStartContainer(final DockerImageType imageType) throws Exception {
+		return createOrCreateAndStartInternal(imageType, true);
+	}
+	
+	private static AbstractDockerContainer createOrCreateAndStartInternal(final DockerImageType imageType, final boolean doStart) throws Exception {
+		AbstractDockerContainerProvider<?> containerProvider = initializedContainerProviders.get(imageType);
 		
 		if (containerProvider == null) {
 			containerProvider = initializeContainerProvider(imageType);
 		}
 		
-		return containerProvider.createContainer();
+		if (doStart) {
+			return containerProvider.createAndStartContainer();
+		}
+		else {
+			return containerProvider.createContainer();
+		}
 	}
 
-	private static AbstractDockerContainerProvider initializeContainerProvider(
+	private static AbstractDockerContainerProvider<?> initializeContainerProvider(
 			final DockerImageType imageType) {
 		try {
 			return imageType.getContainerProviderClass().getConstructor(ColfusionDockerClient.class).newInstance(new Object[] {dockerClient});
