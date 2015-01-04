@@ -14,6 +14,9 @@ import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.rules.TemporaryFolder;
 
+import edu.pitt.sis.exp.colfusion.utils.ConfigManager;
+import edu.pitt.sis.exp.colfusion.utils.ResourceUtils;
+
 /**
  * <p>Some functionality that is commonly used by many unit tests.</p>
  * 
