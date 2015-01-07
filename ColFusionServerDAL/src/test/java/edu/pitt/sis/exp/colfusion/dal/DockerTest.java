@@ -60,7 +60,7 @@ public class DockerTest extends DatabaseUnitTestBase {
 		String sql = String.format("SELECT * FROM SCHEMATA WHERE SCHEMA_NAME = '%s'", 
 				ConfigManager.getInstance().getProperty(PropertyKeys.COLFUSION_HIBERNATE_DEFAULT_CATALOG));
 		
-		List<Object[]> result = executeMySQLQuery(dockerMySQLConnectionInfo.getConnectionString("information_schema"), sql);
+		List<Object[]> result = executeMySQLQuery(mysqlContainer.getMySQLConnectionInfo().getConnectionString("information_schema"), sql);
 		assertEquals(1, result.size());	
 	}
 }

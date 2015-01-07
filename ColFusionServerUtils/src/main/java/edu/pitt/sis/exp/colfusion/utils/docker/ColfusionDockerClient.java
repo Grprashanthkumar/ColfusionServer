@@ -87,6 +87,14 @@ public final class ColfusionDockerClient {
 		   .exec();
 	}
 
+	public void stopContainer(final String containerId) {
+		dockerClient.stopContainerCmd(containerId).exec();
+	}
+	
+	public void deleteContainer(final String containerId) {
+		dockerClient.removeContainerCmd(containerId).exec();
+	}
+	
 	public InputStream logContainer(final String containerId) {
 		InputStream io = dockerClient.logContainerCmd(containerId)
 				.withStdOut(true)

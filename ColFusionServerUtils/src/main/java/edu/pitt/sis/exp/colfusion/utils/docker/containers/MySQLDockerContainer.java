@@ -65,6 +65,10 @@ public class MySQLDockerContainer extends AbstractDockerContainer {
 				MySQLContainerProvider.DOCKER_MYSQL_ROOT_USER, MySQLContainerProvider.DOCKER_ENV_MYSQL_ROOT_PASSWORD_VALUE);
 	}
 
+	public MySQLDockerContainerConnectionInfo getMySQLConnectionInfo() {
+		return connectionInfo;
+	}
+	
 	public static class MySQLDockerContainerConnectionInfo {
 		private final String host;
 		private final int port;

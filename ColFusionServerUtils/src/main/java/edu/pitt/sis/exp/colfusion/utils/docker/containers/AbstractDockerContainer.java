@@ -45,6 +45,14 @@ public abstract class AbstractDockerContainer {
 		}
 	}
 
+	public void stop() {
+		dockerClient.stopContainer(containerId);
+	}
+	
+	public void delete() {
+		dockerClient.deleteContainer(containerId);
+	}
+	
 	protected int getHostPort(final int port) {
 		if (inspectResponse == null) {
 			String message = String.format("Could not get host port for container port %d. "
