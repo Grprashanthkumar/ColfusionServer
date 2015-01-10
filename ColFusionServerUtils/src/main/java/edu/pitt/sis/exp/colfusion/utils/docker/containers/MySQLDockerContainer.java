@@ -10,6 +10,7 @@ import java.net.URI;
 
 import edu.pitt.sis.exp.colfusion.utils.ConfigManager;
 import edu.pitt.sis.exp.colfusion.utils.PropertyKeys;
+import edu.pitt.sis.exp.colfusion.utils.StringUtils;
 import edu.pitt.sis.exp.colfusion.utils.docker.ColfusionDockerClient;
 import edu.pitt.sis.exp.colfusion.utils.docker.containerProviders.AbstractDockerContainerProvider;
 import edu.pitt.sis.exp.colfusion.utils.docker.containerProviders.MySQLContainerProvider;
@@ -36,11 +37,19 @@ public class MySQLDockerContainer extends AbstractDockerContainer {
 		
 			BufferedReader bf = new BufferedReader(new InputStreamReader(io));
 			String line = null;
+			StringBuilder logBuilder = new StringBuilder();
 			//TODO: potential "deadlock" if there never a line that contains that string. Check for mysql shutdown
 			while ((line = bf.readLine()) != null) {
-				System.out.println(line);
+				logBuilder.append(line).append(StringUtils.NEWLINE);
+//				System.out.println(line);
 				if (line.toLowerCase().contains("mysqld: ready for connections.".toLowerCase())) {
 					break;
+				}
+				if (line.toLowerCase().contains("/usr/sbin/mysqld: Shutdown complete".toLowerCase())) {
+					String message = String.format("Couldn't start mysql image for container '%s' because mysqld could not start."
+							+ "The log from container is: %s", containerId, logBuilder.toString());
+					logger.error(message);
+					throw new RuntimeException(message);
 				}
 			}
 			

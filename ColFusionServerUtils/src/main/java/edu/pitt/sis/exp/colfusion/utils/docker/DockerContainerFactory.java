@@ -20,14 +20,23 @@ public class DockerContainerFactory {
 			new HashMap<DockerImageType, AbstractDockerContainerProvider<?>>();
 	
 	public static AbstractDockerContainer createContainer(final DockerImageType imageType) throws Exception {
-		return createOrCreateAndStartInternal(imageType, false);
+		return createOrCreateAndStartInternal(imageType, AbstractDockerContainerProvider.DOCKER_LATEST_TAG, false);
 	}
 	
 	public static AbstractDockerContainer createAndStartContainer(final DockerImageType imageType) throws Exception {
-		return createOrCreateAndStartInternal(imageType, true);
+		return createOrCreateAndStartInternal(imageType, AbstractDockerContainerProvider.DOCKER_LATEST_TAG, true);
 	}
 	
-	private static AbstractDockerContainer createOrCreateAndStartInternal(final DockerImageType imageType, final boolean doStart) throws Exception {
+	public static AbstractDockerContainer createContainer(final DockerImageType imageType, final String tag) throws Exception {
+		return createOrCreateAndStartInternal(imageType, tag, false);
+	}
+	
+	public static AbstractDockerContainer createAndStartContainer(final DockerImageType imageType, final String tag) throws Exception {
+		return createOrCreateAndStartInternal(imageType, tag, true);
+	}
+	
+	private static AbstractDockerContainer createOrCreateAndStartInternal(final DockerImageType imageType, 
+			final String tag, final boolean doStart) throws Exception {
 		AbstractDockerContainerProvider<?> containerProvider = initializedContainerProviders.get(imageType);
 		
 		if (containerProvider == null) {
@@ -35,10 +44,10 @@ public class DockerContainerFactory {
 		}
 		
 		if (doStart) {
-			return containerProvider.createAndStartContainer();
+			return containerProvider.createAndStartContainer(tag);
 		}
 		else {
-			return containerProvider.createContainer();
+			return containerProvider.createContainer(tag);
 		}
 	}
 

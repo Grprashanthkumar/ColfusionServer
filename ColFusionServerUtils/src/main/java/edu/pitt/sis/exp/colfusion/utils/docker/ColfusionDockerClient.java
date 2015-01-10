@@ -1,6 +1,9 @@
 package edu.pitt.sis.exp.colfusion.utils.docker;
 
+import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -63,7 +66,9 @@ public final class ColfusionDockerClient {
 	}
 
 	public String createContainer(final String imageName,
-			final PairOf<String, String>[] envVariables) {
+			final String tag, final PairOf<String, String>[] envVariables) throws IOException {
+		
+		pullImage(imageName, tag);
 		
 		CreateContainerCmd createContainerCmd = dockerClient.createContainerCmd(imageName);
 		
@@ -79,6 +84,22 @@ public final class ColfusionDockerClient {
 		CreateContainerResponse container = createContainerCmd.exec();
 		
 		return container.getId();
+	}
+
+	public void pullImage(final String imageName, final String tag) throws IOException {
+		InputStream io = dockerClient.pullImageCmd(imageName)
+				.withTag(tag)
+				.exec();
+		
+		BufferedReader bf = new BufferedReader(new InputStreamReader(io));
+		String line = null;
+		//TODO: potential "deadlock" if there never a line that contains that string. Check for mysql shutdown
+		while ((line = bf.readLine()) != null) {
+			logger.info(line);
+		}
+		
+		bf.close();
+		io.close();
 	}
 
 	public void startContainer(final String containerId) {
