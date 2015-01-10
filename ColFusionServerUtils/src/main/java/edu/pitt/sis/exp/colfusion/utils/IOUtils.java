@@ -307,7 +307,8 @@ public class IOUtils {
 	 * @return URL of the file.
 	 */
 	public static String getFileURLFromName(String fileAbsoluteName) {
-		
+		//TODO FIXME if COLFUSION_STATIC_FILES_ROOT_LOCATION provided in "windows" format using \\, then  fileRelativeName
+		// includes absolute path to the file and ktr execution fails.
 		String colfusionRoot = ConfigManager.getInstance().getProperty(PropertyKeys.COLFUSION_STATIC_FILES_ROOT_LOCATION);
 		
 		fileAbsoluteName = fileAbsoluteName.replace('\\', '/');
