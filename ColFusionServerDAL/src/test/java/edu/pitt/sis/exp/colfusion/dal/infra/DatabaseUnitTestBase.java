@@ -313,10 +313,9 @@ public abstract class DatabaseUnitTestBase extends DockerTestBase {
 	private ColfusionSourceinfo createAndInsertNewStory() throws Exception {
 		SourceInfoManager sourceInfoMng = new SourceInfoManagerImpl();
 		LicenseInfoManager licenseMng = new LicenseInfoManagerImpl();
-		UserManager userMng =  new UserManagerImpl();
 		
 		ColfusionLicense license = licenseMng.findAll().get(0);
-		ColfusionUsers user = userMng.findAll().get(0);
+		ColfusionUsers user = getTestUser();
 		
 		ColfusionSourceinfo story = new ColfusionSourceinfo(license, user, "testDoReplication", "", new Date(), new Date(), "queued", 
 				"", "data type", "", null, null, null, null, null, null, null, null, null, null, null, null, null);
@@ -324,6 +323,13 @@ public abstract class DatabaseUnitTestBase extends DockerTestBase {
 		sourceInfoMng.save(story);
 		
 		return story;
+	}
+	
+	protected ColfusionUsers getTestUser() throws Exception {
+		UserManager userMng =  new UserManagerImpl();
+		ColfusionUsers user = userMng.findAll().get(0);
+		
+		return user;
 	}
 	
 	/**
