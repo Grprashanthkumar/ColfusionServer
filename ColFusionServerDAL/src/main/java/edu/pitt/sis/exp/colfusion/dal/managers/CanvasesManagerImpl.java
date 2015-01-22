@@ -4,16 +4,14 @@
 package edu.pitt.sis.exp.colfusion.dal.managers;
 
 import java.util.Date;
-import java.util.List;
+
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import edu.pitt.sis.exp.colfusion.dal.dao.CanvasesDAO;
 import edu.pitt.sis.exp.colfusion.dal.dao.CanvasesDAOImpl;
-import edu.pitt.sis.exp.colfusion.dal.dao.LinksDAOImpl;
 import edu.pitt.sis.exp.colfusion.dal.orm.ColfusionCanvases;
-import edu.pitt.sis.exp.colfusion.dal.orm.ColfusionLinks;
 import edu.pitt.sis.exp.colfusion.dal.orm.ColfusionUsers;
 import edu.pitt.sis.exp.colfusion.dal.utils.HibernateUtil;
 

@@ -1,6 +1,6 @@
 package edu.pitt.sis.exp.colfusion.bll;
 
-import jnr.ffi.Struct.int16_t;
+
 import edu.pitt.sis.exp.colfusion.dal.managers.CanvasesManager;
 import edu.pitt.sis.exp.colfusion.dal.managers.CanvasesManagerImpl;
 import edu.pitt.sis.exp.colfusion.dal.managers.UserManager;
