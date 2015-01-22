@@ -56,7 +56,7 @@ public class BasicTableBL {
 		
 	}
 	
-	//Resturn Table Response according to sid and tableName.
+	//Return Table Response according to sid and tableName.
 	public JointTableByRelationshipsResponeModel getTableDataBySidAndName(final int sid, final String tableName,
 			final int perPage, final int pageNumber) {
 		SourceInfoManagerImpl sourceInfo = new SourceInfoManagerImpl();

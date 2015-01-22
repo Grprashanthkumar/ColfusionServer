@@ -1,11 +1,19 @@
 package edu.pitt.sis.exp.colfusion.tests.bll;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
 
+import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
-public class BasicTableBLTest extends TestCase {
+import edu.pitt.sis.exp.colfusion.bll.BasicTableBL;
+import edu.pitt.sis.exp.colfusion.dal.infra.DatabaseUnitTestBase;
+import edu.pitt.sis.exp.colfusion.dal.orm.ColfusionSourceinfo;
+import edu.pitt.sis.exp.colfusion.responseModels.BasicTableResponseModel;
+import edu.pitt.sis.exp.colfusion.responseModels.JointTableByRelationshipsResponeModel;
+import edu.pitt.sis.exp.colfusion.responseModels.StoryStatusResponseModel;
+
+public class BasicTableBLTest extends DatabaseUnitTestBase {
 	
 //	@Test
 //	public void testGetTableInfo() {
@@ -75,14 +83,69 @@ public class BasicTableBLTest extends TestCase {
 //		assertEquals(true, true);
 //	}
 	
+	public ColfusionSourceinfo testStory = new ColfusionSourceinfo();
+	public BasicTableBL basicBL = new BasicTableBL();
+	
+	//The var and fun in beforeclass should be static.
+	
+	@Before
+	public void testBefore() throws Exception{
+		testStory = setUpTestStory(TEST_TARGET_TABLE_NAME, TEST_TARGET_COLUMNS_NAMES);
+		basicBL = new BasicTableBL();
+	}
+	
 	//TODO: redo with DatabaseTestBase
 	@Ignore
 	@Test 
-	public void testGetTableInfo(){
-//		int sid = 1751;
-//		String tableName = "Sheet1";
-//		BasicTableBL basicBL=new BasicTableBL();
-//		BasicTableResponseModel result = basicBL.getTableInfo(sid, tableName);
-//		assertEquals(true, true);
+	public void testGetTableInfo() throws Exception{
+		BasicTableResponseModel result = basicBL.getTableInfo(testStory.getSid(), TEST_TARGET_TABLE_NAME);
+		assertEquals("Wrong number of columns.", TEST_TARGET_COLUMNS_NAMES.length,  result.getPayload().size());
+		assertEquals("Wrong column name", TEST_TARGET_COLUMNS_NAMES[0], result.getPayload().get(0).getDname_original_name());
+	}
+	
+	@Ignore
+	@Test
+	public void testGetTableDataBySidAndName() throws Exception{
+		int perPage = 3;
+		int pageNumber = 2;
+		int currentPageSize = 0;
+		JointTableByRelationshipsResponeModel result = basicBL.getTableDataBySidAndName(testStory.getSid(), TEST_TARGET_TABLE_NAME, perPage, pageNumber);
+		assertEquals("Wrong number of pageNo.", pageNumber,  result.getPayload().getPageNo());
+		if(Math.ceil(DEFAULT_NUM_GENERATE_TUPLES/perPage) + 1 < pageNumber){
+			currentPageSize = perPage;
+		}else{
+			currentPageSize = DEFAULT_NUM_GENERATE_TUPLES % perPage;
+		}
+		assertEquals("Wrong number of pageNo.", currentPageSize, result.getPayload().getJointTable().getRows().size());
+		assertEquals("Wrong table name", TEST_TARGET_TABLE_NAME, result.getPayload().getJointTable().getRows().get(0).getColumnGroups().get(0).getTableName()); 
+		assertEquals("Wrong column name", TEST_TARGET_COLUMNS_NAMES.length, result.getPayload().getJointTable().getRows().get(0).getColumnGroups().get(0).getColumns().size());
+	}
+	
+	@Ignore
+	@Test
+	public void testGetTableDataBySidAndName2() throws Exception{
+		JointTableByRelationshipsResponeModel result = basicBL.getTableDataBySidAndName(testStory.getSid(), TEST_TARGET_TABLE_NAME);
+		assertEquals("Wrong number of pageNo.", DEFAULT_NUM_GENERATE_TUPLES,  result.getPayload().getJointTable().getRows().size());
+		assertEquals("Wrong table name", TEST_TARGET_TABLE_NAME, result.getPayload().getJointTable().getRows().get(0).getColumnGroups().get(0).getTableName()); 
+		assertEquals("Wrong column name", TEST_TARGET_COLUMNS_NAMES.length, result.getPayload().getJointTable().getRows().get(0).getColumnGroups().get(0).getColumns().size());
+	}
+	
+	@Ignore
+	@Test
+	public void testGetStoryStatus() throws Exception{
+		StoryStatusResponseModel result = basicBL.getStoryStatus(testStory.getSid());
+		assertEquals("Wrong table name", TEST_TARGET_TABLE_NAME, result.getPayload().get(0).getTableName()); 
+	}
+	
+	@Ignore
+	@Test
+	public void testGetRelationships() throws Exception{
+		
+	}
+	
+	@Ignore
+	@Test
+	public void testGetAttachmentList() throws Exception{
+		
 	}
 }
