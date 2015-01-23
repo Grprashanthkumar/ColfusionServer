@@ -1,6 +1,8 @@
 package edu.pitt.sis.exp.colfusion.bll;
 
 
+import java.util.List;
+
 import edu.pitt.sis.exp.colfusion.dal.managers.CanvasesManager;
 import edu.pitt.sis.exp.colfusion.dal.managers.CanvasesManagerImpl;
 import edu.pitt.sis.exp.colfusion.dal.managers.UserManager;
@@ -16,7 +18,15 @@ public class VisualizationBL {
 		
 		CanvasesManager canvasMng = new CanvasesManagerImpl();
 		ColfusionCanvases newCanvas = canvasMng.createNewCanvas(user, canvasName);
-		
+	   
 		return newCanvas;
+	}
+	
+	public List<ColfusionCanvases> findByName(String name) throws Exception{
+		
+		CanvasesManager canvasMng = new CanvasesManagerImpl();
+		List<ColfusionCanvases> canvasesList = canvasMng.findByName(name);
+		
+		return canvasesList;
 	}
 }

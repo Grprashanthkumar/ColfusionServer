@@ -3,11 +3,12 @@
  */
 package edu.pitt.sis.exp.colfusion.dal.managers;
 
+import java.util.List;
 import java.util.Date;
-
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.hibernate.Query;
 
 import edu.pitt.sis.exp.colfusion.dal.dao.CanvasesDAO;
 import edu.pitt.sis.exp.colfusion.dal.dao.CanvasesDAOImpl;
@@ -49,5 +50,33 @@ public class CanvasesManagerImpl extends GeneralManagerImpl<CanvasesDAO, Colfusi
 		}
 		
 		return newCanvas;
+	}
+	
+	public List<ColfusionCanvases> findByName(String name){
+		
+		try {
+			HibernateUtil.beginTransaction();
+			
+			String hql = "SELECT C FROM ColfusionCanvases C WHERE C.name = :name";
+
+			Query query = HibernateUtil.getSession().createQuery(hql);
+			query.setParameter("name", name);
+			
+			List<ColfusionCanvases> result = _dao.findMany(query);
+			
+			HibernateUtil.commitTransaction();
+			
+			return result;
+		}
+		catch(Exception ex){
+			HibernateUtil.rollbackTransaction();
+			
+			this.logger.error("Cannot find the records", ex);
+			throw ex;
+		}
+		
+		
+		
+		
 	}
 }

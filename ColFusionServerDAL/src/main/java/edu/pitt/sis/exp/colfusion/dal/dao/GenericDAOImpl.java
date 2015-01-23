@@ -133,4 +133,5 @@ public abstract class GenericDAOImpl<T, ID extends Serializable> implements Gene
         result = query.list();
         return result;
     }
+    
 }
