@@ -33,6 +33,13 @@ public class VisualizationBL {
 		return canvasesList;
 	}
 	
+	public void deleteCanvas(int canvasId) throws Exception{
+		
+		CanvasesManager canvasMng = new CanvasesManagerImpl();
+		canvasMng.delete(canvasMng.findByID(canvasId));
+		
+	}
+	
 	public ColfusionCharts createChart(int canvasId, String chartName, String type) throws Exception{
 		CanvasesManager canvasMng = new CanvasesManagerImpl();
 		ColfusionCanvases canvases = canvasMng.findByID(canvasId);

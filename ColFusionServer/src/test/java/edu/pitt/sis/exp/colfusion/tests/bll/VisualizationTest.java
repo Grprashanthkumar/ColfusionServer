@@ -52,6 +52,28 @@ public class VisualizationTest extends DatabaseUnitTestBase{
 	}
 	
 	@Test
+	public void testDeleteCanvas() throws Exception{
+		
+        ColfusionUsers testUser = getTestUser();
+		
+		String canvasName = "testCanvas";
+		
+		VisualizationBL visualizationBL = new VisualizationBL();
+		ColfusionCanvases canvases = visualizationBL.createCanvase(testUser.getUserId(), canvasName);
+		
+		assertNotNull(canvases);
+		
+		visualizationBL.deleteCanvas(canvases.getVid());
+		
+		CanvasesManager canvasMng = new CanvasesManagerImpl();
+		
+        assertEquals(null, canvasMng.findByID(canvases.getVid()));
+		
+		
+	}
+	
+	
+	@Test
 	public void testCreateNewChart() throws Exception{
 		ColfusionUsers testUser = getTestUser();
 		
