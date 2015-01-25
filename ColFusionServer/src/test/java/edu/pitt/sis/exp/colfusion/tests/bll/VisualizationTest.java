@@ -4,14 +4,16 @@ import static org.junit.Assert.*;
 
 import java.util.List;
 
-import org.junit.Before;
 import org.junit.Test;
 
 import edu.pitt.sis.exp.colfusion.bll.VisualizationBL;
 import edu.pitt.sis.exp.colfusion.dal.infra.DatabaseUnitTestBase;
 import edu.pitt.sis.exp.colfusion.dal.managers.CanvasesManager;
 import edu.pitt.sis.exp.colfusion.dal.managers.CanvasesManagerImpl;
+import edu.pitt.sis.exp.colfusion.dal.managers.ChartsManager;
+import edu.pitt.sis.exp.colfusion.dal.managers.ChartsManagerImpl;
 import edu.pitt.sis.exp.colfusion.dal.orm.ColfusionCanvases;
+import edu.pitt.sis.exp.colfusion.dal.orm.ColfusionCharts;
 import edu.pitt.sis.exp.colfusion.dal.orm.ColfusionUsers;
 
 public class VisualizationTest extends DatabaseUnitTestBase{
@@ -47,5 +49,25 @@ public class VisualizationTest extends DatabaseUnitTestBase{
 		List<ColfusionCanvases> actualCanvasesList = canvasMng.findByName(canvasName);
 		
 		assertEquals("Wrong canvas list", canvasesList, actualCanvasesList);
+	}
+	
+	@Test
+	public void testCreateNewChart() throws Exception{
+		ColfusionUsers testUser = getTestUser();
+		
+		String canvasName = "newCanvas";
+		String chartName = "newChart";
+		String chartType = "pie";
+		
+		VisualizationBL visualizationBL = new VisualizationBL();
+		ColfusionCanvases canvas = visualizationBL.createCanvase(testUser.getUserId(), canvasName);
+		ColfusionCharts chart = visualizationBL.createChart(canvas.getVid(), chartName, chartType);
+		
+		assertNotNull(chart);
+		
+		ChartsManager chartMng = new ChartsManagerImpl();
+		ColfusionCharts actualChart = chartMng.findByID(chart.getCid());
+		
+		assertEquals("Wrong chart name", chart.getName(), actualChart.getName());
 	}
 }
