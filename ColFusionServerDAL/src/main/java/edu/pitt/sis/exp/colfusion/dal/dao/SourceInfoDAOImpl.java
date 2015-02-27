@@ -32,8 +32,24 @@ public class SourceInfoDAOImpl extends GenericDAOImpl<ColfusionSourceinfo, Integ
 
 	@Override
 	public List<ColfusionSourceinfo> findDatasetInfoBySidOrTitle(final String searchTerm) {
-		// TODO Auto-generated method stub
-		return null;
+		
+		ColfusionSourceinfo sourceInfo = null;
+		String hql = "";
+		
+		Query query = null;
+		try {
+			hql = "SELECT si FROM ColfusionSourceinfo si WHERE si.title like '%"+searchTerm+"%'";	
+			query = HibernateUtil.getSession().createQuery(hql);
+//			hql = "SELECT si FROM ColfusionSourceinfo si WHERE si.title like :title";		
+//			query = HibernateUtil.getSession().createQuery(hql).setParameter("title", searchTerm);
+		} catch (Exception e) {
+			logger.error(String.format("findDatasetInfoBySid failed on HibernateUtil.getSession().createQuery(sql).setParameter(title, title); for title = %s", searchTerm), e);
+			
+			throw e;
+		}
+    
+        List<ColfusionSourceinfo> results = findMany(query);
+		return results;
 	}
 
 	//TODO FIXME DON'T USE TRANSACTIONS ON THIS LEVEL

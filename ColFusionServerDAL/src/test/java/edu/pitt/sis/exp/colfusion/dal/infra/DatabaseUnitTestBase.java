@@ -303,6 +303,10 @@ public abstract class DatabaseUnitTestBase extends DockerTestBase {
 			String sql = makeRandomInsertSampleData(tabelName, columnNames, DEFAULT_NUM_GENERATE_TUPLES);
 			executeMySQLUpdateQuery(dbConnectionUrl, sql);
 		}		
+		
+		{
+			
+		}
 	}
 
 	/**
@@ -321,6 +325,10 @@ public abstract class DatabaseUnitTestBase extends DockerTestBase {
 				"", "data type", "", null, null, null, null, null, null, null, null, null, null, null, null, null);
 	
 		sourceInfoMng.save(story);
+		
+//		Does sourveInfoMng.save(story) save some random attachment data or relationship data in the database?
+//		String sql = makeRelatedStoryData();
+//		executeMySQLUpdateQuery(dbConnectionUrl, sql);
 		
 		return story;
 	}
@@ -355,6 +363,11 @@ public abstract class DatabaseUnitTestBase extends DockerTestBase {
 			
 			columnTableMng.save(columnTable);
 		}		
+	}
+	
+	private static String makeRelatedStoryData() {
+		StringBuilder sqlBuilder = new StringBuilder();
+		return sqlBuilder.toString();
 	}
 	
 	private void createAndInsertSourceInfoDB(final ColfusionSourceinfo story,

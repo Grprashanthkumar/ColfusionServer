@@ -155,8 +155,41 @@ public class SourceInfoManagerImpl extends GeneralManagerImpl<SourceInfoDAO, Col
 	@Override
 	public List<ColfusionSourceinfo> findBySidOrTitle(
 			final String searchTerm) {
-		// TODO Auto-generated method stub
-		return null;
+		List<ColfusionSourceinfo> results = null;
+		try {
+            HibernateUtil.beginTransaction();
+            
+            results = this._dao.findDatasetInfoBySidOrTitle(searchTerm);
+            
+            for (ColfusionSourceinfo sourceinfo : results) {
+            	
+            	Hibernate.initialize(sourceinfo.getColfusionUsers());
+	            Hibernate.initialize(sourceinfo.getColfusionSourceinfoUsers());
+	            
+	            for (Object sourceInfoUserObj : sourceinfo.getColfusionSourceinfoUsers().toArray()) {
+	    			ColfusionSourceinfoUser sourceInfoUser = (ColfusionSourceinfoUser) sourceInfoUserObj;
+	    			
+	    			if (sourceInfoUser != null) {
+	    				Hibernate.initialize(sourceInfoUser.getColfusionUsers());
+	    			}
+	    		}
+			}
+            
+            HibernateUtil.commitTransaction();
+        } catch (NonUniqueResultException ex) {
+
+        	HibernateUtil.rollbackTransaction();
+        	
+        	this.logger.error("findDatasetInfoBySidOrTitle failed NonUniqueResultException", ex);
+        	throw ex;
+        } catch (HibernateException ex) {
+
+        	HibernateUtil.rollbackTransaction();
+        	
+        	this.logger.error("findDatasetInfoBySidOrTitle failed HibernateException", ex);
+        	throw ex;
+        }
+		return results;		
 	}
 
 	@Override
