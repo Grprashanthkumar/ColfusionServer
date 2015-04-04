@@ -14,8 +14,11 @@
         <property name="cid" type="java.lang.Integer">
             <column name="cid" length="11" />
         </property>
-        <many-to-one name="colfusionDnameinfo" class="edu.pitt.sis.exp.colfusion.dal.orm.ColfusionDnameinfo" fetch="select">
+        <many-to-one name="colfusionDnameinfo" class="edu.pitt.sis.exp.colfusion.dal.orm.ColfusionDnameinfo" fetch="select" insert="false" update="false">
             <column name="cid" not-null="true" />
         </many-to-one>
-    </class>
+        <property name="sid" type="java.lang.Integer">
+            <column name="sid" length="11" />
+        </property>        
+         </class>
 </hibernate-mapping>
