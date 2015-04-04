@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 2014-6-10 16:18:00 by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="edu.pitt.sis.exp.colfusion.dal.orm.ColfusionIndexlocation" table="colfusion_index_location" >
+        <id name="lid" type="java.lang.Integer">
+            <column name="lid" />
+            <generator class="identity" />
+        </id>
+        <property name="locationSearchKey" type="string">
+            <column name="location_search_key" length="255"/>
+        </property>
+        <property name="cid" type="java.lang.Integer">
+            <column name="cid" length="11" />
+        </property>
+        <many-to-one name="colfusionDnameinfo" class="edu.pitt.sis.exp.colfusion.dal.orm.ColfusionDnameinfo" fetch="select">
+            <column name="cid" not-null="true" />
+        </many-to-one>
+    </class>
+</hibernate-mapping>

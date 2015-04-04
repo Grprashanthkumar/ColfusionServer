@@ -71,5 +71,6 @@
   <mapping resource="hibernate/orm_mappings/ColfusionVotes.hbm.xml"/>
   <mapping resource="hibernate/orm_mappings/ColfusionWidgets.hbm.xml"/>
   <mapping resource="hibernate/orm_mappings/Statonverdicts.hbm.xml"/>
+  <mapping resource="hibernate/orm_mappings/ColfusionIndexlocation.hbm.xml"/>
  </session-factory>
 </hibernate-configuration>
