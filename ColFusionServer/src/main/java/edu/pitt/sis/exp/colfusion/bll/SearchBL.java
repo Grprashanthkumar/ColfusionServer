@@ -172,7 +172,7 @@ public class SearchBL {
 	        System.out.println(pair.getKey() + " = " + pair.getValue());
 	        LocationViewModel locationViewModel = new LocationViewModel();
 	        locationViewModel.setLocationIndex((String)pair.getKey());
-	        locationViewModel.setSoureinfosList((ArrayList<SourceInfoViewModel>)pair.getValue());
+	        locationViewModel.setSourceinfoList((ArrayList<SourceInfoViewModel>)pair.getValue());
 	        payload.add(locationViewModel);
 	        it.remove();
 	    }

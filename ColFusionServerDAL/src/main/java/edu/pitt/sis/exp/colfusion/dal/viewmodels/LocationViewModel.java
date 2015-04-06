@@ -9,17 +9,17 @@ import com.google.gson.annotations.Expose;
 @XmlRootElement
 public class LocationViewModel {
 	@Expose private String locationIndex;
-	@Expose private ArrayList<SourceInfoViewModel> soureinfosList;
+	@Expose private ArrayList<SourceInfoViewModel> sourceinfoList;
 	public String getLocationIndex() {
 		return locationIndex;
 	}
 	public void setLocationIndex(final String locationIndex) {
 		this.locationIndex = locationIndex;
 	}
-	public ArrayList<SourceInfoViewModel> getSoureinfosList() {
-		return soureinfosList;
+	public ArrayList<SourceInfoViewModel> getSourceinfoList() {
+		return sourceinfoList;
 	}
-	public void setSoureinfosList(final ArrayList<SourceInfoViewModel> soureinfosList) {
-		this.soureinfosList = soureinfosList;
+	public void setSourceinfoList(final ArrayList<SourceInfoViewModel> soureinfosList) {
+		this.sourceinfoList = soureinfosList;
 	}
 }
