@@ -19,11 +19,9 @@ import edu.pitt.sis.exp.colfusion.dal.managers.SourceInfoManagerImpl;
 import edu.pitt.sis.exp.colfusion.dal.orm.ColfusionIndexlocation;
 import edu.pitt.sis.exp.colfusion.dal.orm.ColfusionSourceinfo;
 import edu.pitt.sis.exp.colfusion.dal.viewmodels.DnameViewModel;
-import edu.pitt.sis.exp.colfusion.dal.viewmodels.FacetedSearchViewModel;
 import edu.pitt.sis.exp.colfusion.dal.viewmodels.LocationViewModel;
 import edu.pitt.sis.exp.colfusion.dal.viewmodels.SourceInfoViewModel;
 import edu.pitt.sis.exp.colfusion.dal.viewmodels.StoryTableViewModel;
-import edu.pitt.sis.exp.colfusion.responseModels.FacetedSearchResponseModel;
 import edu.pitt.sis.exp.colfusion.responseModels.LocationListResponse;
 import edu.pitt.sis.exp.colfusion.responseModels.RowsResponseModel;
 import edu.pitt.sis.exp.colfusion.responseModels.StoryTableResponse;
@@ -32,23 +30,53 @@ public class SearchBL {
 
 	final Logger logger = LogManager.getLogger(StoryBL.class.getName());
 	
-	public FacetedSearchResponseModel getFacetedList(final String title){
-		FacetedSearchResponseModel result = new FacetedSearchResponseModel();
-		SearchBL searchBL = new SearchBL();
+	public LocationListResponse getFacetedList(final String title){
+		LocationListResponse result =new LocationListResponse();
+		HashMap<String, ArrayList<SourceInfoViewModel>> responseHashMap = new HashMap<String, ArrayList<SourceInfoViewModel>>();
 		try{
-			List<FacetedSearchViewModel> payload = new ArrayList<FacetedSearchViewModel>();
 			SourceInfoManagerImpl sourceInfoManagerImpl = new SourceInfoManagerImpl();
 			List<ColfusionSourceinfo> contents = sourceInfoManagerImpl.findBySidOrTitle(title);
-			for(int i=0;i<contents.size();i++){
-				FacetedSearchViewModel facetedSearchViewModel = new FacetedSearchViewModel();
-				facetedSearchViewModel.setDatasetName(contents.get(i).getTitle());
-				facetedSearchViewModel.setSid(contents.get(i).getSid());
-				RowsResponseModel locationRows = searchBL.getLocationRows(contents.get(i).getSid());
-				facetedSearchViewModel.setLocationList(locationRows.getPayload());
-				payload.add(facetedSearchViewModel);
+			LocationIndexDAOImpl locationIndexDAOImpl = new LocationIndexDAOImpl();
+			ArrayList<ColfusionIndexlocation> results =new ArrayList<ColfusionIndexlocation>();
+			for (int k=0;k<contents.size();k++) {
+				results.addAll(locationIndexDAOImpl.findLocationBySid(contents.get(k).getSid()));
 			}
-			result.setPayload(payload);
-			result.isSuccessful=true;
+			
+			for(int i=0;i<results.size();i++){
+				ColfusionSourceinfo colfusionSourceinfo = sourceInfoManagerImpl.findByID(results.get(i).getSid());
+				
+				if(responseHashMap.get(results.get(i).getLocationSearchKey()) == null){
+					SourceInfoViewModel sourceInfoViewModel = new SourceInfoViewModel();
+					sourceInfoViewModel.setSid(results.get(i).getSid());
+					sourceInfoViewModel.setTitle(colfusionSourceinfo.getTitle());
+					ArrayList<SourceInfoViewModel> sourceInfoViewModelList = new ArrayList<SourceInfoViewModel>();
+					sourceInfoViewModelList.add(sourceInfoViewModel);
+					responseHashMap.put(results.get(i).getLocationSearchKey(), sourceInfoViewModelList);
+				}else{
+					SourceInfoViewModel sourceInfoViewModel = new SourceInfoViewModel();
+					sourceInfoViewModel.setSid(results.get(i).getSid());
+					sourceInfoViewModel.setTitle(colfusionSourceinfo.getTitle());
+					ArrayList<SourceInfoViewModel> sourceInfoViewModelList = responseHashMap.get(results.get(i).getLocationSearchKey());
+					sourceInfoViewModelList.add(sourceInfoViewModel);
+					responseHashMap.put(results.get(i).getLocationSearchKey(), sourceInfoViewModelList);
+				}	
+				
+			}
+			ArrayList<LocationViewModel> payload = new ArrayList<LocationViewModel>();
+			Iterator it = responseHashMap.entrySet().iterator();
+		    while (it.hasNext()) {
+		    	Map.Entry pair = (Map.Entry)it.next();
+		        System.out.println(pair.getKey() + " = " + pair.getValue());
+		        LocationViewModel locationViewModel = new LocationViewModel();
+		        locationViewModel.setLocationIndex((String)pair.getKey());
+		        locationViewModel.setSourceinfoList((ArrayList<SourceInfoViewModel>)pair.getValue());
+		        payload.add(locationViewModel);
+		        it.remove();
+		    }
+			
+		    result.setPayload(payload);
+		    result.isSuccessful = true;
+			
 		}
 		catch(Exception e) {
 			result.isSuccessful=false;

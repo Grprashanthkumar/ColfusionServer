@@ -34,4 +34,29 @@ public class LocationIndexDAOImpl extends GenericDAOImpl<ColfusionIndexlocation,
 		return results;
 	}
 
+	@Override
+	public List<ColfusionIndexlocation> findLocationBySid(final int sid) {
+		Session session = null;
+		List<ColfusionIndexlocation>  results = null;
+		String hql = "From ColfusionIndexlocation cil Where cil.sid = :sid";
+        try {
+			session = HibernateUtil.getSession();
+			session.beginTransaction();
+			Query query = session.createQuery(hql);
+			query.setParameter("sid", sid);
+			results = findMany(query);
+			session.getTransaction().commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+			session.getTransaction().rollback();
+		}finally{
+			if(session != null){
+				if(session.isOpen()){
+					session.close();
+				}
+			}
+		}
+		return results;
+	}
+
 }

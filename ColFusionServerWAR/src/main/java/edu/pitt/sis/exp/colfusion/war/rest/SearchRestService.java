@@ -41,7 +41,7 @@ public class SearchRestService {
     @Produces(MediaType.APPLICATION_JSON)
 	public Response getFacetedSearch(@ApiParam(value = "title", required = true) @PathParam("title") final String title) {
 		SearchBL searchBL = new SearchBL();
-		FacetedSearchResponseModel result = searchBL.getFacetedList(title);
+		LocationListResponse result = searchBL.getFacetedList(title);
 		String json = result.toJson();
 		return Response.status(200).entity(json).build();
 	}
