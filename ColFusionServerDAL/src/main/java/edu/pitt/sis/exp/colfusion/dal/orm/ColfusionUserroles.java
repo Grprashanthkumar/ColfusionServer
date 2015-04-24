@@ -10,7 +10,7 @@ import java.util.Set;
  */
 public class ColfusionUserroles implements java.io.Serializable {
 
-	private int roleId;
+	private Integer roleId;
 	private String role;
 	private String description;
 	private Set colfusionSourceinfoUsers = new HashSet(0);
@@ -18,12 +18,12 @@ public class ColfusionUserroles implements java.io.Serializable {
 	public ColfusionUserroles() {
 	}
 
-	public ColfusionUserroles(int roleId, String role) {
+	public ColfusionUserroles(Integer roleId, String role) {
 		this.roleId = roleId;
 		this.role = role;
 	}
 
-	public ColfusionUserroles(int roleId, String role, String description,
+	public ColfusionUserroles(Integer roleId, String role, String description,
 			Set colfusionSourceinfoUsers) {
 		this.roleId = roleId;
 		this.role = role;
@@ -31,11 +31,11 @@ public class ColfusionUserroles implements java.io.Serializable {
 		this.colfusionSourceinfoUsers = colfusionSourceinfoUsers;
 	}
 
-	public int getRoleId() {
+	public Integer getRoleId() {
 		return this.roleId;
 	}
 
-	public void setRoleId(int roleId) {
+	public void setRoleId(Integer roleId) {
 		this.roleId = roleId;
 	}
 

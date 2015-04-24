@@ -123,17 +123,12 @@ public class StoryRestService  {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
 	public Response updateStoryMetadata(final StoryMetadataViewModel metadata) {
-    	
-		System.out.println("updateStoryMetadata function");
 		StoryBL storyBL = new StoryBL();
-		
 		StoryMetadataResponse result = storyBL.updateStoryMetadata(metadata);
     	
     	return Response.status(200).entity(result).build(); //.build();
     }
-	
 
-	
 	/**
 	 * Finds metadata for the story with provided sid.
 	 * 
@@ -274,7 +269,6 @@ public class StoryRestService  {
 	public Response getLicense(){
 		StoryBL storyBL = new StoryBL();
 		LicensesResponseModel  result = storyBL.getLicense();
-		//System.out.println(result.getPayload().toString());
 		return Response.status(200).entity(result).build();
 	}
 	
@@ -299,7 +293,7 @@ public class StoryRestService  {
 
 	
 	
-	@Path("{sid}/MineRelationships/{perPage}/{pageNumber}")
+	@Path("{userid}/{sid}/MineRelationships/{perPage}/{pageNumber}")
     @GET
     @ApiOperation(
     		value = "Finds Relationship list, according to perPage,pageNumber",
@@ -308,11 +302,11 @@ public class StoryRestService  {
 	@ApiResponses(value = {
 			@ApiResponse(code = 404, message = "Relationship not found") })
     @Produces(MediaType.APPLICATION_JSON)
-	public Response getMineRelationships(@ApiParam(value = "sid", required = true) @PathParam("sid") final int sid, @ApiParam(value = "perPage", required = true) @PathParam("perPage") final int perPage, @ApiParam(value = "pageNumber", required = true) @PathParam("pageNumber") final int pageNumber) {
+	public Response getMineRelationships(@ApiParam(value = "userid", required = true) @PathParam("userid") final int userid, @ApiParam(value = "sid", required = true) @PathParam("sid") final int sid, @ApiParam(value = "perPage", required = true) @PathParam("perPage") final int perPage, @ApiParam(value = "pageNumber", required = true) @PathParam("pageNumber") final int pageNumber) {
 		BasicTableBL basicBL = new BasicTableBL();
 		RelationshipBL relationshipBL = new RelationshipBL();
 		relationshipBL.doRelationshipMining(sid);
-		RelationshipsResponseModel result = basicBL.getRelationships(sid, perPage, pageNumber);
+		RelationshipsResponseModel result = basicBL.getRelationships(userid, sid, perPage, pageNumber);
 		String json = result.toJson();
 		return Response.status(200).entity(json).build();
 		
@@ -378,7 +372,7 @@ public class StoryRestService  {
 
 	
 	/**
-	 * Finds story list
+	 * Finds the published story list for the user
 	 * 
 	 * @return storyListViewModel with story list in the payload.
 	 * storyListViewModel:  int sid;
@@ -391,11 +385,9 @@ public class StoryRestService  {
 	 *						String rawDataPath;
 	 *						String sourceType;
 	 *						LicenseViewModel license;
+	 * @author modified by Shruti Sabusuresh
 	 */
-	
-
-
-	@Path("all/")
+	@Path("all/{userid : [0-9]*?}")
     @GET
     @ApiOperation(
     		value = "Finds story list.",
@@ -404,9 +396,9 @@ public class StoryRestService  {
 	@ApiResponses(value = {
 			@ApiResponse(code = 404, message = "StoryList not found") })
     @Produces(MediaType.APPLICATION_JSON)
-	public Response getAllStoryList() {
+	public Response getAllStoryList(@ApiParam(value = "userid", required = true) @PathParam("userid") final int userid) {
 		BasicTableBL basicBL = new BasicTableBL();
-		StoryListResponseModel result = basicBL.getAllStoryList();
+		StoryListResponseModel result = basicBL.getAllStoryList(userid);
 		String json = result.toJson();
 		return Response.status(200).entity(json).build();
 	}
@@ -526,5 +518,165 @@ public class StoryRestService  {
 		} 
 		
 		return Response.status(200).entity(result.toJson()).build();		
+	}
+	
+	/**
+	 * Finds all DRAFTS status story list of a user who is the OWNER and CONTRIBUTOR
+	 * 
+	 * @return storyListViewModel with story list in the payload.
+	 * storyListViewModel:  int sid;
+	 *						String title;
+	 *						UserViewModel user;
+	 *						String path;
+	 *						Date entryDate;
+	 *						Date lastUpdated;
+	 *						String status;
+	 *						String rawDataPath;
+	 *						String sourceType;
+	 *						LicenseViewModel license;
+	 * @author Shruti Sabusuresh
+	 */
+	@Path("alldrafts/{userid}")
+    @GET
+    @ApiOperation(
+    		value = "Finds draft story list.",
+    		notes = "getAllDraftStoryList note",
+    		response = StoryListResponseModel.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 404, message = "Draft StoryList not found") })
+    @Produces(MediaType.APPLICATION_JSON)
+	public Response getAllDraftStoryList(@ApiParam(value = "userid", required = true) @PathParam("userid") final int userid) {
+		BasicTableBL basicBL = new BasicTableBL();
+		StoryListResponseModel result = basicBL.getAllDraftStoryList(userid);
+		String json = result.toJson();
+		return Response.status(200).entity(json).build();
+	}
+	
+	/**
+	 * Finds all QUEUED status story list of a user who is the OWNER only
+	 * @param userid
+	 * @return storyListViewModel with story list in the payload.
+	 * storyListViewModel:  int sid;
+	 *						String title;
+	 *						UserViewModel user;
+	 *						String path;
+	 *						Date entryDate;
+	 *						Date lastUpdated;
+	 *						String status;
+	 *						String rawDataPath;
+	 *						String sourceType;
+	 *						LicenseViewModel license;
+	 * @author Shruti Sabusuresh
+	 */
+	@Path("allpublished/{userid}")
+    @GET
+    @ApiOperation(
+    		value = "Finds queued story list owned by user.",
+    		notes = "",
+    		response = StoryListResponseModel.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 404, message = "Queued StoryList not found") })
+    @Produces(MediaType.APPLICATION_JSON)
+	public Response getAllQueuedStoryListAuthoredByUser(@ApiParam(value = "userid", required = true) @PathParam("userid") final int userid) {
+		BasicTableBL basicBL = new BasicTableBL();
+		StoryListResponseModel result = basicBL.getAllQueuedStoryListAuthoredByUser(userid);
+		String json = result.toJson();
+		return Response.status(200).entity(json).build();
+	}
+	
+	/**
+	 * Finds all PRIVATE status story list of a user who is the OWNER only
+	 * @param userid
+	 * @return storyListViewModel with story list in the payload.
+	 * storyListViewModel:  int sid;
+	 *						String title;
+	 *						UserViewModel user;
+	 *						String path;
+	 *						Date entryDate;
+	 *						Date lastUpdated;
+	 *						String status;
+	 *						String rawDataPath;
+	 *						String sourceType;
+	 *						LicenseViewModel license;
+	 * @author Shruti Sabusuresh
+	 */
+	@Path("allprivate/{userid}")
+    @GET
+    @ApiOperation(
+    		value = "Finds private story list owned by user.",
+    		notes = "getAllPrivateStoryList note",
+    		response = StoryListResponseModel.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 404, message = "Private StoryList not found") })
+    @Produces(MediaType.APPLICATION_JSON)
+	public Response getAllPrivateStoryListAuthoredByUser(@ApiParam(value = "userid", required = true) @PathParam("userid") final int userid) {
+		BasicTableBL basicBL = new BasicTableBL();
+		StoryListResponseModel result = basicBL.getAllPrivateStoryListAuthoredByUser(userid);
+		String json = result.toJson();
+		return Response.status(200).entity(json).build();
+	}
+
+	/**
+	 * Finds all story list of a user who is the OWNER
+	 * @param userid
+	 * @return storyListViewModel with story list in the payload.
+	 * storyListViewModel:  int sid;
+	 *						String title;
+	 *						UserViewModel user;
+	 *						String path;
+	 *						Date entryDate;
+	 *						Date lastUpdated;
+	 *						String status;
+	 *						String rawDataPath;
+	 *						String sourceType;
+	 *						LicenseViewModel license;
+	 * @author Shruti Sabusuresh
+	 */
+	@Path("allauthored/{userid}")
+    @GET
+    @ApiOperation(
+    		value = "Finds the story list owned by user.",
+    		notes = "",
+    		response = StoryListResponseModel.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 404, message = "Authored StoryList not found") })
+    @Produces(MediaType.APPLICATION_JSON)
+	public Response getAllStoryListAuthoredByUser(@ApiParam(value = "userid", required = true) @PathParam("userid") final int userid) {
+		BasicTableBL basicBL = new BasicTableBL();
+		StoryListResponseModel result = basicBL.getAllStoryListAuthoredByUser(userid);
+		String json = result.toJson();
+		return Response.status(200).entity(json).build();
+	}
+	
+	/**
+	 * Finds all story list of a user who is the CONTRIBUTOR only and not the OWNER
+	 * @param userid
+	 * @return storyListViewModel with story list in the payload.
+	 * storyListViewModel:  int sid;
+	 *						String title;
+	 *						UserViewModel user;
+	 *						String path;
+	 *						Date entryDate;
+	 *						Date lastUpdated;
+	 *						String status;
+	 *						String rawDataPath;
+	 *						String sourceType;
+	 *						LicenseViewModel license;
+	 * @author Shruti Sabusuresh
+	 */
+	@Path("allshared/{userid}")
+    @GET
+    @ApiOperation(
+    		value = "Finds the story list where user is CONTRIBUTOR.",
+    		notes = "",
+    		response = StoryListResponseModel.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 404, message = "Shared StoryList not found") })
+    @Produces(MediaType.APPLICATION_JSON)
+	public Response getAllStoryListSharedToUser(@ApiParam(value = "userid", required = true) @PathParam("userid") final int userid) {
+		BasicTableBL basicBL = new BasicTableBL();
+		StoryListResponseModel result = basicBL.getAllStoryListSharedToUser(userid);
+		String json = result.toJson();
+		return Response.status(200).entity(json).build();
 	}
 }

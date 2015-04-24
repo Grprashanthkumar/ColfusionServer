@@ -8,13 +8,15 @@ import java.util.ArrayList;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import edu.pitt.sis.exp.colfusion.dal.viewmodels.StoryAuthorViewModel;
+import edu.pitt.sis.exp.colfusion.utils.Gsonazable;
+import edu.pitt.sis.exp.colfusion.utils.Gsonizer;
 
 /**
  * @author Evgeny
- *
+ * 
  */
 @XmlRootElement
-public class AuthorsResponse extends GeneralResponseImpl {
+public class AuthorsResponse extends GeneralResponseImpl{
 	private ArrayList<StoryAuthorViewModel> payload = new ArrayList<>();
 
 	/**
@@ -30,4 +32,5 @@ public class AuthorsResponse extends GeneralResponseImpl {
 	public void setPayload(final ArrayList<StoryAuthorViewModel> payload) {
 		this.payload = payload;
 	}
+
 }

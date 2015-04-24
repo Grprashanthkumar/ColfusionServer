@@ -146,10 +146,39 @@ public class SourceInfoManagerImpl extends GeneralManagerImpl<SourceInfoDAO, Col
 	// SOURCINFOMANAGER interface
 	//***********************************
 
+	/* modified by Shruti Sabusuresh
+	 */
+	/**
+	 * finds all stories submitted by user
+	 * @param userId
+	 * @return list of ColfusionSourceinfo objects
+	 */
 	@Override
 	public List<ColfusionSourceinfo> findByUserId(final int userId) {
-		// TODO Auto-generated method stub
-		return null;
+		try {
+            HibernateUtil.beginTransaction();            
+            List<ColfusionSourceinfo> result = this._dao.findDatasetsInfoByUserId(userId);           
+            for (ColfusionSourceinfo sourceinfo : result) {            	
+            	Hibernate.initialize(sourceinfo.getColfusionUsers());
+	            Hibernate.initialize(sourceinfo.getColfusionSourceinfoUsers());	            
+	            for (Object sourceInfoUserObj : sourceinfo.getColfusionSourceinfoUsers().toArray()) {
+	    			ColfusionSourceinfoUser sourceInfoUser = (ColfusionSourceinfoUser) sourceInfoUserObj;	    			
+	    			if (sourceInfoUser != null) {
+	    				Hibernate.initialize(sourceInfoUser.getColfusionUsers());
+	    			}
+	    		}
+			}
+            HibernateUtil.commitTransaction();     
+            return result;
+        } catch (HibernateException ex) {
+        	HibernateUtil.rollbackTransaction();
+        	this.logger.error("findByUserId failed: HibernateException ", ex);
+        	throw ex;
+        } catch (Exception ex) {
+        	HibernateUtil.rollbackTransaction();
+        	this.logger.error("findByUserId failed: Exception ", ex);
+        	throw ex;
+        }
 	}
 
 	@Override
@@ -218,15 +247,21 @@ public class SourceInfoManagerImpl extends GeneralManagerImpl<SourceInfoDAO, Col
         } catch (NonUniqueResultException ex) {
 
         	HibernateUtil.rollbackTransaction();
-        	
+        	 
         	this.logger.error("findDatasetInfoBySid failed NonUniqueResultException", ex);
         	throw ex;
         } catch (HibernateException ex) {
 
         	HibernateUtil.rollbackTransaction();
-        	
+        	 
         	this.logger.error("findDatasetInfoBySid failed HibernateException", ex);
         	throw ex;
+        }
+        catch(Exception ex){
+        	HibernateUtil.rollbackTransaction();
+       	 
+        	this.logger.error("findDatasetInfoBySid failed Exception", ex);
+        	throw ex; 
         }
         return sourceinfo;
 	}
@@ -297,59 +332,48 @@ public class SourceInfoManagerImpl extends GeneralManagerImpl<SourceInfoDAO, Col
             HibernateUtil.beginTransaction();
             
             UsersDAO usersDAO = new UsersDAOImpl();
-            
             ColfusionUsers userCreator = usersDAO.findByID(ColfusionUsers.class, userId);
-            
             if (userCreator == null) {
             	this.logger.error(String.format("newStory failed: could not find user by %d id", userId));
-            	
             	throw new Exception(String.format("newStory failed: could not find user by %d id", userId));
             }
             
             ColfusionSourceinfo newStoryEntity = new ColfusionSourceinfo(userCreator, date, source_type.getValue());
-            
             newStoryEntity.setStatus(StoryStatusTypes.DRAFT.getValue());
-            
             int sid = this._dao.save(newStoryEntity);
             
-            //Add user as submitter/contributer for newly created story.
-            
+            //Add user as submitter/owner for newly created story.
             UserRolesDAO userRolesDAO = new UserRolesDAOImpl();
-            // 1 is for contributor/submitter, TODO: maybe we should use enum here not hard wired value.
-            ColfusionUserroles userRole = userRolesDAO.findByID(ColfusionUserroles.class, 1);
-            
+            // 1 is for contributor/submitter, 2 for owner TODO: maybe we should use enum here not hard wired value.
+            //made the submitter as owner - Shruti
+            ColfusionUserroles userRole = userRolesDAO.findByID(ColfusionUserroles.class, 2);
             if (userRole == null) {
-            	this.logger.error(String.format("newStory failed: could not find userRole by %d id", 1));
+            	this.logger.error(String.format("newStory failed: could not find userRole by %d id", 2));
             	
-            	throw new Exception(String.format("newStory failed: could not find user by %d id", 1));
+            	throw new Exception(String.format("newStory failed: could not find userRole by %d id", 2));
             }
-            
             SourceinfoUserRolesDAO sourceinfoUserRoles = new SourceinfoUserRolesDAOImpl();
-            
-            
-            ColfusionSourceinfoUser colfusionSourceinfoUser = new ColfusionSourceinfoUser(new ColfusionSourceinfoUserId(sid, userCreator.getUserId(), userRole.getRoleId()), 
+            ColfusionSourceinfoUser colfusionSourceinfoUser = new ColfusionSourceinfoUser(new ColfusionSourceinfoUserId(sid, userCreator.getUserId()), 
             														newStoryEntity, userRole, userCreator);
-            
-            sourceinfoUserRoles.save(colfusionSourceinfoUser);
+            ColfusionSourceinfoUserId c = sourceinfoUserRoles.save(colfusionSourceinfoUser);
             
             newStoryEntity.getColfusionSourceinfoUsers().add(colfusionSourceinfoUser);
             //sourceInfoDAO.saveOrUpdate(newStoryEntity);
             
             Hibernate.initialize(newStoryEntity.getColfusionUsers());
-            
             HibernateUtil.commitTransaction();
             
             return newStoryEntity;
         } catch (NonUniqueResultException ex) {
 
         	HibernateUtil.rollbackTransaction();
-        	
+        	ex.printStackTrace();
         	this.logger.error("findDatasetInfoBySid failed NonUniqueResultException", ex);
             throw ex;
         } catch (HibernateException ex) {
 
         	HibernateUtil.rollbackTransaction();
-        	
+        	ex.printStackTrace();
         	this.logger.error("findDatasetInfoBySid failed HibernateException", ex);
         	throw ex;
         }
@@ -365,7 +389,6 @@ public class SourceInfoManagerImpl extends GeneralManagerImpl<SourceInfoDAO, Col
 	public void updateStory(final StoryMetadataViewModel metadata) throws Exception {
 		try {
             HibernateUtil.beginTransaction();
-            
             ColfusionSourceinfo addedUpdatedStory = this.updateSourceInfo(metadata);
             this.updateUserRoles(addedUpdatedStory, metadata);
             this.updateLink(metadata);
@@ -401,7 +424,8 @@ public class SourceInfoManagerImpl extends GeneralManagerImpl<SourceInfoDAO, Col
         ColfusionLicense colfusionLicense = licensedao.findByID(ColfusionLicense.class, metadata.getLicenseId());
         ColfusionSourceinfo newStoryEntity = new ColfusionSourceinfo(userCreator, metadata.getDateSubmitted(), metadata.getSourceType());
         newStoryEntity.setSid(metadata.getSid());
-        newStoryEntity.setTitle(metadata.getTitle()); //metadata.getTitle()
+        newStoryEntity.setTitle(metadata.getTitle());
+        newStoryEntity.setDescription(metadata.getDescription());
         newStoryEntity.setStatus(metadata.getStatus());
         newStoryEntity.setColfusionLicense(colfusionLicense);
         
@@ -505,9 +529,15 @@ public class SourceInfoManagerImpl extends GeneralManagerImpl<SourceInfoDAO, Col
 				//TODO: handle it better
 				continue;
 			}
-			ColfusionSourceinfoUserId colfusionSourceinfoUserId = new ColfusionSourceinfoUserId(addedUpdatedStory.getSid(), user.getUserId(), userRole.getRoleId());
+			ColfusionSourceinfoUserId colfusionSourceinfoUserId = new ColfusionSourceinfoUserId(addedUpdatedStory.getSid(), user.getUserId());
 			
-			ColfusionSourceinfoUser userRolesInStory = new ColfusionSourceinfoUser(colfusionSourceinfoUserId, addedUpdatedStory, userRole, user);
+			ColfusionSourceinfoUser userRolesInStory = userStoryRolesDAO.findByID(ColfusionSourceinfoUser.class, colfusionSourceinfoUserId);
+			//if user-sid combination does not exist in the database, add a new row in colfusion_sourceinfo_users table
+			if(userRolesInStory == null)
+				userRolesInStory = new ColfusionSourceinfoUser(colfusionSourceinfoUserId, addedUpdatedStory, userRole, user);
+			else
+			//else update the user's role for a particular sid - modified by Shruti
+				userRolesInStory.setColfusionUserroles(userRole);
 			
 			userStoryRolesDAO.saveOrUpdate(userRolesInStory);
 		}
@@ -525,7 +555,7 @@ public class SourceInfoManagerImpl extends GeneralManagerImpl<SourceInfoDAO, Col
 				//TODO: handle it better
 				continue;
 			}
-			ColfusionSourceinfoUserId colfusionSourceinfoUserId = new ColfusionSourceinfoUserId(addedUpdatedStory.getSid(), user.getUserId(), userRole.getRoleId());
+			ColfusionSourceinfoUserId colfusionSourceinfoUserId = new ColfusionSourceinfoUserId(addedUpdatedStory.getSid(), user.getUserId());
 			
 			ColfusionSourceinfoUser userRolesInStory = new ColfusionSourceinfoUser(colfusionSourceinfoUserId, addedUpdatedStory, userRole, user);
 			
@@ -536,6 +566,7 @@ public class SourceInfoManagerImpl extends GeneralManagerImpl<SourceInfoDAO, Col
 	}
 
 	private void updateLink(final StoryMetadataViewModel metadata) throws Exception {
+		logger.info(String.format("Starting processing updateLink for %s", metadata.getSid()));
 		ColfusionLinks newLink = new ColfusionLinks(metadata.getSid(), metadata.getStorySubmitter().getUserId(), 0, 0, 0, 0, new BigDecimal(0.0), metadata.getDateSubmitted(), metadata.getDateSubmitted(), 
         		metadata.getDateSubmitted(), 0, 1, 0, metadata.getStatus(), 0);
         newLink.setLinkTitle(metadata.getTitle());
@@ -555,6 +586,7 @@ public class SourceInfoManagerImpl extends GeneralManagerImpl<SourceInfoDAO, Col
         
         LinksDAO linksDAO = new LinksDAOImpl();
         linksDAO.merge(newLink);
+        logger.info(String.format("Ending processing updateLink for %s", metadata.getSid()));
 	}
 
 	private void updateTags(final StoryMetadataViewModel metadata) throws Exception {
@@ -926,9 +958,10 @@ public class SourceInfoManagerImpl extends GeneralManagerImpl<SourceInfoDAO, Col
 		return storyTo.getColfusionSourceinfoDb();
 	}
 	
+	//modified by Shruti Sabusuresh
 	@Override
 	public List<RelationshipsViewModel> getRelationshipsViewModel(
-			final int sid) {
+			final int sid, final int userid) {
 		try {
             HibernateUtil.beginTransaction();
             
@@ -945,11 +978,12 @@ public class SourceInfoManagerImpl extends GeneralManagerImpl<SourceInfoDAO, Col
 //            List<RelationshipsViewModel> result = query.list();
             
             //TODO: make it work with select new
-            String hql = "SELECT rel.relId, rel.name, rel.description, relUser.userId, rel.creationTime, relUser.userLogin, sidFrom.sid, sidTo.sid, sidFrom.title, sidTo.title, rel.tableName1, rel.tableName2, st.id.numberOfVerdicts, st.id.numberOfApproved, st.id.numberOfReject, st.id.numberOfNotSure, st.id.avgConfidence "
+            String hql = "SELECT DISTINCT rel.relId , rel.name, rel.description, relUser.userId, rel.creationTime, relUser.userLogin, sidFrom.sid, sidTo.sid, sidFrom.title, sidTo.title, rel.tableName1, rel.tableName2, st.id.numberOfVerdicts, st.id.numberOfApproved, st.id.numberOfReject, st.id.numberOfNotSure, st.id.avgConfidence "
             		+ "FROM ColfusionRelationships rel join rel.colfusionUsers relUser "
-            		+ "join rel.colfusionSourceinfoBySid1 sidFrom "
-            		+ "join rel.colfusionSourceinfoBySid2 sidTo, Statonverdicts st "
-            		+ "WHERE (rel.colfusionSourceinfoBySid1.sid = :sid or rel.colfusionSourceinfoBySid2.sid = :sid) "
+            		+ "join rel.colfusionSourceinfoBySid1 sidFrom right outer join sidFrom.colfusionSourceinfoUsers csuFrom "
+            		+ "join rel.colfusionSourceinfoBySid2 sidTo right outer join sidTo.colfusionSourceinfoUsers csuTo, Statonverdicts st "
+            		+ "WHERE ((rel.colfusionSourceinfoBySid1.sid = :sid AND (sidTo.status='"+StoryStatusTypes.QUEUED.getValue()+"' OR (sidTo.status='"+StoryStatusTypes.PRIVATE.getValue()+"' AND csuTo.colfusionUsers.userId="+userid+"))) "
+            		+ "or (rel.colfusionSourceinfoBySid2.sid = :sid AND (sidFrom.status='"+StoryStatusTypes.QUEUED.getValue()+"' OR (sidFrom.status='"+StoryStatusTypes.PRIVATE.getValue()+"' AND csuFrom.colfusionUsers.userId="+userid+")))) "
             		+ "AND rel.status <> 1 "
             		+ "AND rel.relId = st.id.relId";
             
@@ -961,16 +995,18 @@ public class SourceInfoManagerImpl extends GeneralManagerImpl<SourceInfoDAO, Col
             for (Object relationshipObj : relationshipsObjs) {
             	Object[] relationshipColumns = (Object[]) relationshipObj;
             	RelationshipsViewModel relationshipViewModel = new RelationshipsViewModel();
-            	relationshipViewModel.setRelid((int)relationshipColumns[0]);
+            	relationshipViewModel.setRelid((Integer)relationshipColumns[0]);
             	relationshipViewModel.setName(relationshipColumns[1].toString());
             	relationshipViewModel.setDescription(relationshipColumns[2].toString());
-            	relationshipViewModel.setCreator((int)relationshipColumns[3]);
+            	relationshipViewModel.setCreator((Integer)relationshipColumns[3]);
             	relationshipViewModel.setCreationTime((Date) relationshipColumns[4]);
             	relationshipViewModel.setCreatorLogin( relationshipColumns[5].toString());
-            	relationshipViewModel.setSidFrom((int)relationshipColumns[6]);
-            	relationshipViewModel.setSidTo((int)relationshipColumns[7]);
-            	relationshipViewModel.setTitleFrom(relationshipColumns[8].toString());
-            	relationshipViewModel.setTitleTo(relationshipColumns[9].toString());
+            	relationshipViewModel.setSidFrom((Integer)relationshipColumns[6]);
+            	relationshipViewModel.setSidTo((Integer)relationshipColumns[7]);
+            	//changes by Shruti
+            	relationshipViewModel.setTitleFrom((String)relationshipColumns[8]);
+            	relationshipViewModel.setTitleTo((String)relationshipColumns[9]);
+            	//end of changes by Shruti
             	relationshipViewModel.setTableNameFrom(relationshipColumns[10].toString());
             	relationshipViewModel.setTableNameTo(relationshipColumns[11].toString());
             	relationshipViewModel.setNumberOfVerdicts((long) relationshipColumns[12]);
@@ -980,26 +1016,21 @@ public class SourceInfoManagerImpl extends GeneralManagerImpl<SourceInfoDAO, Col
             	relationshipViewModel.setAvgConfidence((BigDecimal) relationshipColumns[16]);
             	result.add(relationshipViewModel);
             }
-                    
             HibernateUtil.commitTransaction();
-            
             return result;
-		
         } catch (NonUniqueResultException ex) {
-
         	HibernateUtil.rollbackTransaction();
-        	
-        	this.logger.error("getMineRelationshipsViewModel failed NonUniqueResultException", ex);
-            throw ex;
-        } catch (HibernateException ex) {
-
-        	HibernateUtil.rollbackTransaction();
-        	
-        	this.logger.error("getMineRelationshipsViewModel failed HibernateException", ex);
+        	this.logger.error(SourceInfoManagerImpl.class.getName(),"getMineRelationshipsViewModel failed NonUniqueResultException", ex);
         	throw ex;
-        }	
-		
-		
+        } catch (HibernateException ex) {
+        	HibernateUtil.rollbackTransaction();
+        	this.logger.error(SourceInfoManagerImpl.class.getName(),"getMineRelationshipsViewModel failed HibernateException", ex);
+        	throw ex;
+        } catch (Exception ex) {
+        	HibernateUtil.rollbackTransaction();
+        	this.logger.error(SourceInfoManagerImpl.class.getName(),"getMineRelationshipsViewModel failed Exception", ex);
+        	throw ex;
+        }
 	}
 
 
@@ -1033,30 +1064,32 @@ public class SourceInfoManagerImpl extends GeneralManagerImpl<SourceInfoDAO, Col
 	}
 
 	@Override
-	public List<StoryListViewModel> getStoryListViewModel() {
+	public List<StoryListViewModel> getStoryListViewModel(final int userid) {
 		try{
 			HibernateUtil.beginTransaction();
-			String hql = "SELECT src.sid, src.title, cus.userId, cus.userLogin, src.path, src.entryDate, src.lastUpdated, src.status, src.rawDataPath, src.sourceType, cli.licenseId, cli.licenseName, cli.licenseUrl " 
-	                  + "FROM ColfusionSourceinfo src join src.colfusionUsers cus join src.colfusionLicense cli";
+			String hql = "SELECT DISTINCT src.sid, src.title, src.description, cus.userId, cus.userLogin, src.path, src.entryDate, src.lastUpdated, src.status, src.rawDataPath, src.sourceType, cli.licenseId, cli.licenseName, cli.licenseUrl " 
+	                  + "FROM ColfusionSourceinfo src join src.colfusionUsers cus left outer join src.colfusionLicense cli right outer join src.colfusionSourceinfoUsers csu "
+	                  + "WHERE (cus.userId="+userid+" AND src.status<>'"+StoryStatusTypes.DRAFT+"') OR src.status='"+StoryStatusTypes.QUEUED.getValue()+"' OR (src.status='"+StoryStatusTypes.PRIVATE.getValue()+"' AND csu.colfusionUsers.userId="+userid+")";
 	        Query query = HibernateUtil.getSession().createQuery(hql);
 	        List<Object> storyListObjs = query.list();
+	        HibernateUtil.commitTransaction();
 	        List<StoryListViewModel> result = new ArrayList<>();
 	        StoryListToStoryViewModelList(storyListObjs, result);  
 	        return result;
   
 		} catch (NonUniqueResultException ex) {
-	
 	    	HibernateUtil.rollbackTransaction();
-	    	
-	    	this.logger.error("getStoryListViewModel failed NonUniqueResultException", ex);
+	    	this.logger.error(SourceInfoManagerImpl.class.getName(),"getStoryListViewModel failed NonUniqueResultException", ex);
 	        throw ex;
 	    } catch (HibernateException ex) {
-	
 	    	HibernateUtil.rollbackTransaction();
-	    	
-	    	this.logger.error("getStoryListViewModel failed HibernateException", ex);
+	    	this.logger.error(SourceInfoManagerImpl.class.getName(),"getStoryListViewModel failed HibernateException", ex);
 	    	throw ex;
-	    }	
+	    } catch (Exception ex) {
+	    	HibernateUtil.rollbackTransaction();	    	 
+	    	this.logger.error(SourceInfoManagerImpl.class.getName(),"getStoryListViewModel failed Exception", ex);
+	    	throw ex;
+	    }
 	}
 	
 	@Override
@@ -1082,7 +1115,6 @@ public class SourceInfoManagerImpl extends GeneralManagerImpl<SourceInfoDAO, Col
 	    } catch (HibernateException ex) {
 	
 	    	HibernateUtil.rollbackTransaction();
-	    	
 	    	this.logger.error("getStoryListViewModel failed HibernateException", ex);
 	    	throw ex;
 	    }	
@@ -1095,20 +1127,25 @@ public class SourceInfoManagerImpl extends GeneralManagerImpl<SourceInfoDAO, Col
 			StoryListViewModel storyListViewModel = new StoryListViewModel();
 			storyListViewModel.setSid((int)storyColumns[0]);
 			storyListViewModel.setTitle((String)storyColumns[1]);
+			storyListViewModel.setDescription((String)storyColumns[2]);
 			UserViewModel userViewModel = new UserViewModel();
-			userViewModel.setUserId((int)storyColumns[2]);
-			userViewModel.setUserLogin((String)storyColumns[3]);
+			userViewModel.setUserId((int)storyColumns[3]);
+			userViewModel.setUserLogin((String)storyColumns[4]);
 			storyListViewModel.setUser(userViewModel);
-			storyListViewModel.setPath((String)storyColumns[4]);
-			storyListViewModel.setEntryDate((Date)storyColumns[5]);
-			storyListViewModel.setLastUpdated((Date)storyColumns[6]);
-			storyListViewModel.setStatus((String)storyColumns[7]);
-			storyListViewModel.setRawDataPath((String)storyColumns[8]);
-			storyListViewModel.setSourceType((String)storyColumns[9]);
+			storyListViewModel.setPath((String)storyColumns[5]);
+			storyListViewModel.setEntryDate((Date)storyColumns[6]);
+			storyListViewModel.setLastUpdated((Date)storyColumns[7]);
+			storyListViewModel.setStatus((String)storyColumns[8]);
+			storyListViewModel.setRawDataPath((String)storyColumns[9]);
+			storyListViewModel.setSourceType((String)storyColumns[10]);
 			LicenseViewModel licenseViewModel = new LicenseViewModel();
-			licenseViewModel.setLicenseId((int)storyColumns[10]);
-			licenseViewModel.setLicenseName((String)storyColumns[11]);
-			licenseViewModel.setLicenseURL((String)storyColumns[12]);
+			//changed by Shruti Sabusuresh
+			if(storyColumns[11]!=null){
+				licenseViewModel.setLicenseId((int)storyColumns[11]);
+				licenseViewModel.setLicenseName((String)storyColumns[12]);
+				licenseViewModel.setLicenseURL((String)storyColumns[13]);
+			}
+			//ended changes
 			storyListViewModel.setLicense(licenseViewModel);
 			result.add(storyListViewModel);
 		}
@@ -1125,7 +1162,6 @@ public class SourceInfoManagerImpl extends GeneralManagerImpl<SourceInfoDAO, Col
 		} catch (HibernateException ex) {
 	
 	    	HibernateUtil.rollbackTransaction();
-	    	
 	    	this.logger.error("getSourceInfoByStatus failed HibernateException", ex);
 	    	throw ex;
 	    }	
@@ -1140,17 +1176,165 @@ public class SourceInfoManagerImpl extends GeneralManagerImpl<SourceInfoDAO, Col
 	        
 		} catch (NonUniqueResultException ex) {
 	
-	    	HibernateUtil.rollbackTransaction();
-	    	
+	    	HibernateUtil.rollbackTransaction();   	
 	    	this.logger.error("Realitonship mining is failed", ex);
 	        throw ex;
 	    } catch (HibernateException ex) {
 	
 	    	HibernateUtil.rollbackTransaction();
-	    	
 	    	this.logger.error("Realitonship mining is failed HibernateException", ex);
 	    	throw ex;
 	    }
 	}
-
+	
+	/**
+	 * Get all DRAFT story list from the database for the user as OWNER and CONTRIBUTOR
+	 * @param userid int
+	 * @return list of StoryListViewModel
+	 * @author Shruti Sabusuresh
+	 */
+	//TODO test for user as CONTRIBUTOR - how?
+	@Override
+	public List<StoryListViewModel> getDraftStoryListViewModelByUser(int userid) {
+		try{
+			HibernateUtil.beginTransaction();
+			String hql = "SELECT csi.sid, csi.title, csi.description, cu.userId, cu.userLogin, csi.path, csi.entryDate, csi.lastUpdated, csi.status, csi.rawDataPath, csi.sourceType, cl.licenseId, cl.licenseName, cl.licenseUrl "
+					+ "FROM ColfusionSourceinfo csi join csi.colfusionUsers cu left outer join csi.colfusionLicense cl right outer join csi.colfusionSourceinfoUsers csu "
+					+ "WHERE (cu.userId="+userid+" OR csu.colfusionUsers.userId="+userid+") AND csi.status='"+StoryStatusTypes.DRAFT.getValue()+"'";
+	        Query query = HibernateUtil.getSession().createQuery(hql);
+	        List<Object> storyListObjs = query.list();
+	        HibernateUtil.commitTransaction();
+	        List<StoryListViewModel> result = new ArrayList<>();
+	        StoryListToStoryViewModelList(storyListObjs, result);  
+	        return result;
+  
+		} catch (NonUniqueResultException ex) {
+	
+	    	HibernateUtil.rollbackTransaction();
+	    	this.logger.error(SourceInfoManagerImpl.class.getName(),"getDraftStoryListViewModelByUser failed NonUniqueResultException", ex);
+	        throw ex;
+	    } catch (HibernateException ex) {
+	
+	    	HibernateUtil.rollbackTransaction();
+	    	this.logger.error(SourceInfoManagerImpl.class.getName(),"getDraftStoryListViewModelByUser failed HibernateException", ex);
+	    	throw ex;
+	    }	
+		catch(Exception ex){
+			
+			HibernateUtil.rollbackTransaction();
+	    	this.logger.error(SourceInfoManagerImpl.class.getName(),"getDraftStoryListViewModelByUser failed Exception", ex);
+			throw ex;
+		}
+	}
+	
+	/**
+	 * Get all queued story list from the database for the user as OWNER
+	 * @param userid int
+	 * @return list of StoryListViewModel
+	 * @author Shruti Sabusuresh
+	 */
+	@Override
+	public List<StoryListViewModel> getStoryListViewModelByUser(int userid) {
+		try{
+			HibernateUtil.beginTransaction();
+			String hql = "SELECT csi.sid, csi.title, csi.description, cu.userId, cu.userLogin, csi.path, csi.entryDate, csi.lastUpdated, csi.status, csi.rawDataPath, csi.sourceType, cl.licenseId, cl.licenseName, cl.licenseUrl "
+					+ "FROM ColfusionSourceinfo csi join csi.colfusionUsers cu left outer join csi.colfusionLicense cl right outer join csi.colfusionSourceinfoUsers csu "
+					+ "WHERE cu.userId="+userid+" AND csi.status='"+StoryStatusTypes.QUEUED.getValue()+"'";
+	        Query query = HibernateUtil.getSession().createQuery(hql);
+	        List<Object> storyListObjs = query.list();
+	        HibernateUtil.commitTransaction();
+	        List<StoryListViewModel> result = new ArrayList<>();
+	        StoryListToStoryViewModelList(storyListObjs, result);  
+	        return result;
+  
+		} catch (NonUniqueResultException ex) {
+	    	HibernateUtil.rollbackTransaction();
+	    	this.logger.error(SourceInfoManagerImpl.class.getName(),"getStoryListViewModelByUser failed NonUniqueResultException", ex);
+	        throw ex;
+	    } catch (HibernateException ex) {
+	    	HibernateUtil.rollbackTransaction();
+	    	this.logger.error(SourceInfoManagerImpl.class.getName(),"getStoryListViewModelByUser failed HibernateException", ex);
+	    	throw ex;
+	    }	
+		catch(Exception ex){
+			HibernateUtil.rollbackTransaction();
+			this.logger.error(SourceInfoManagerImpl.class.getName(),"getStoryListViewModelByUser failed Exception", ex);
+			throw ex;
+		}
+	}
+	
+	
+	/**
+	 * Get all private story list from the database for the user as OWNER
+	 * @param userid int
+	 * @return list of StoryListViewModel
+	 * @author Shruti Sabusuresh
+	 */
+	@Override
+	public List<StoryListViewModel> getPrivateStoryListViewModelByUser(int userid) {
+		try{
+			HibernateUtil.beginTransaction();
+			String hql = "SELECT DISTINCT csi.sid, csi.title, csi.description, cu.userId, cu.userLogin, csi.path, csi.entryDate, csi.lastUpdated, csi.status, csi.rawDataPath, csi.sourceType, cl.licenseId, cl.licenseName, cl.licenseUrl "
+					+ "FROM ColfusionSourceinfo csi join csi.colfusionUsers cu left outer join csi.colfusionLicense cl right outer join csi.colfusionSourceinfoUsers csu "
+					//get all the private dataset which the user created
+					+ "WHERE cu.userId="+userid+" AND csi.status='"+StoryStatusTypes.PRIVATE.getValue()+"'";
+	        Query query = HibernateUtil.getSession().createQuery(hql);
+	        List<Object> storyListObjs = query.list();
+	        HibernateUtil.commitTransaction();
+	        List<StoryListViewModel> result = new ArrayList<>();
+	        StoryListToStoryViewModelList(storyListObjs, result);  
+	        return result;
+  
+		} catch (NonUniqueResultException ex) {
+	    	HibernateUtil.rollbackTransaction();
+	    	this.logger.error(SourceInfoManagerImpl.class.getName(),"getPrivateStoryListViewModelByUser failed NonUniqueResultException", ex);
+	        throw ex;
+	    } catch (HibernateException ex) {
+	    	HibernateUtil.rollbackTransaction();
+	    	this.logger.error(SourceInfoManagerImpl.class.getName(),"getPrivateStoryListViewModelByUser failed HibernateException", ex);
+	    	throw ex;
+	    }	
+		catch(Exception ex){
+			HibernateUtil.rollbackTransaction();
+	    	this.logger.error(SourceInfoManagerImpl.class.getName(),"getPrivateStoryListViewModelByUser failed HibernateException", ex);
+			throw ex;
+		}
+	}
+	
+	/**
+	 * Get all story list from the database for the user as CONTRIBUTOR only
+	 * @param userid int
+	 * @return list of StoryListViewModel
+	 * @author Shruti Sabusuresh
+	 */
+	@Override
+	public List<StoryListViewModel> getAllStoryListViewModelSharedToUser(int userid) {
+		try{
+			HibernateUtil.beginTransaction();
+			String hql = "SELECT DISTINCT csi.sid, csi.title, csi.description, cu.userId, cu.userLogin, csi.path, csi.entryDate, csi.lastUpdated, csi.status, csi.rawDataPath, csi.sourceType, cl.licenseId, cl.licenseName, cl.licenseUrl "
+					+ "FROM ColfusionSourceinfo csi join csi.colfusionUsers cu left outer join csi.colfusionLicense cl right outer join csi.colfusionSourceinfoUsers csu "
+					//gets all the queued and private stories where the user is contributor
+					+ "WHERE csu.colfusionUsers.userId="+userid+" AND csu.colfusionUserroles.roleId=1 AND (csi.status='"+StoryStatusTypes.QUEUED.getValue()+"' OR csi.status='"+StoryStatusTypes.PRIVATE.getValue()+"')";
+	        Query query = HibernateUtil.getSession().createQuery(hql);
+	        List<Object> storyListObjs = query.list();
+	        HibernateUtil.commitTransaction();
+	        List<StoryListViewModel> result = new ArrayList<>();
+	        StoryListToStoryViewModelList(storyListObjs, result);  
+	        return result;
+  
+		} catch (NonUniqueResultException ex) {
+	    	HibernateUtil.rollbackTransaction();
+	    	this.logger.error(SourceInfoManagerImpl.class.getName(),"getAllStoryListViewModelSharedToUser failed NonUniqueResultException", ex);
+	        throw ex;
+	    } catch (HibernateException ex) {
+	    	HibernateUtil.rollbackTransaction();
+	    	this.logger.error(SourceInfoManagerImpl.class.getName(),"getAllStoryListViewModelSharedToUser failed HibernateException", ex);
+	    	throw ex;
+	    }	
+		catch(Exception ex){
+			HibernateUtil.rollbackTransaction();
+	    	this.logger.error(SourceInfoManagerImpl.class.getName(),"getAllStoryListViewModelSharedToUser failed HibernateException: ", ex);
+			throw ex;
+		}
+	}
 }

@@ -185,6 +185,7 @@ public class StoryBL {
 				storyMetadata.setTitle("");
 				storyMetadata.setDescription("");
 				storyMetadata.setTags("");
+				storyMetadata.setStatus(storyInfo.getStatus());
 			}
 			
 			result.isSuccessful = true;

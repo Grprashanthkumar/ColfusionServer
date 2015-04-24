@@ -157,11 +157,12 @@ public interface SourceInfoManager extends GeneralManager<ColfusionSourceinfo, I
 	
 
 	/**
-	 * Find a MineRelationships  by the sid
+	 * Find a MineRelationships  by the sid and userid
 	 * @param integer sid.
+	 * @param integer userid.
 	 * @return MineRelationshipsViewModel List.
 	 */
-	public List<RelationshipsViewModel> getRelationshipsViewModel(int sid);
+	public List<RelationshipsViewModel> getRelationshipsViewModel(int sid, int userid);
 	
 	/**
 	 * @param int pageNo, int perPage
@@ -170,9 +171,9 @@ public interface SourceInfoManager extends GeneralManager<ColfusionSourceinfo, I
 	public List<StoryListViewModel> getStoryListViewModel(int pageNo, int perPage);
 	
 	/**
-	 * @return Story list table info.
+	 * @return Story list table info for the user
 	 */
-	public List<StoryListViewModel> getStoryListViewModel();
+	public List<StoryListViewModel> getStoryListViewModel(int userid);
 	
 	/**
 	 * @param int sid
@@ -186,5 +187,32 @@ public interface SourceInfoManager extends GeneralManager<ColfusionSourceinfo, I
 	 * Do the relationship mining
 	 */
 	public void doRelationshipMining(int sid);
+	
+	/** Gets all the DRAFT status based stories from the database of the user as OWNER and CONTRIBUTOR
+	 * @param int userid
+	 * @return List of StoryListViewModel
+	 * @author Shruti Sabusuresh
+	 */
+	public List<StoryListViewModel> getDraftStoryListViewModelByUser(int userid);
 
+	/** Gets all the QUEUED status based stories from the database of the user as OWNER
+	 * @param int userid
+	 * @return List of StoryListViewModel
+	 * @author Shruti Sabusuresh
+	 */
+	public List<StoryListViewModel> getStoryListViewModelByUser(int userid);
+
+	/** Gets all the PRIVATE status based stories from the database of the user as OWNER
+	 * @param int userid
+	 * @return List of StoryListViewModel
+	 * @author Shruti Sabusuresh
+	 */
+	public List<StoryListViewModel> getPrivateStoryListViewModelByUser(int userid);
+
+	/** Gets all the PRIVATE status based stories from the database of the user as CONTRIBUTOR
+	 * @param int userid
+	 * @return List of StoryListViewModel
+	 * @author Shruti Sabusuresh
+	 */
+	public List<StoryListViewModel> getAllStoryListViewModelSharedToUser(int userid);
 }

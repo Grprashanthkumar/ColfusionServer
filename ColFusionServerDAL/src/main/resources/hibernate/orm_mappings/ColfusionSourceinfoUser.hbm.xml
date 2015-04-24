@@ -11,14 +11,11 @@
             <key-property name="uid" type="int">
                 <column name="uid" />
             </key-property>
-            <key-property name="rid" type="int">
-                <column name="rid" />
-            </key-property>
         </composite-id>
         <many-to-one name="colfusionSourceinfo" class="edu.pitt.sis.exp.colfusion.dal.orm.ColfusionSourceinfo" update="false" insert="false" fetch="select">
             <column name="sid" not-null="true" />
         </many-to-one>
-        <many-to-one name="colfusionUserroles" class="edu.pitt.sis.exp.colfusion.dal.orm.ColfusionUserroles" update="false" insert="false" fetch="select">
+        <many-to-one name="colfusionUserroles" class="edu.pitt.sis.exp.colfusion.dal.orm.ColfusionUserroles" update="true" insert="true" fetch="select" cascade="save-update"> 
             <column name="rid" not-null="true" />
         </many-to-one>
         <many-to-one name="colfusionUsers" class="edu.pitt.sis.exp.colfusion.dal.orm.ColfusionUsers" update="false" insert="false" fetch="select">

@@ -70,7 +70,9 @@ public interface SourceInfoDAO extends GenericDAO<ColfusionSourceinfo, Integer> 
 	
 	public static enum SourceInfoStatus {
 		DRAFT("draft"),
-		QUEUED("queued");
+		QUEUED("queued"),
+		//modified by Shruti
+		PRIVATE("private");
 		
 		private final String databaseStatusValue;
 		

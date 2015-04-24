@@ -15,6 +15,7 @@ public class ColfusionSourceinfo implements java.io.Serializable {
 	private ColfusionLicense colfusionLicense;
 	private ColfusionUsers colfusionUsers;
 	private String title;
+	private String description;
 	private String path;
 	private Date entryDate;
 	private Date lastUpdated;
@@ -47,7 +48,7 @@ public class ColfusionSourceinfo implements java.io.Serializable {
 	}
 
 	public ColfusionSourceinfo(ColfusionLicense colfusionLicense,
-			ColfusionUsers colfusionUsers, String title, String path,
+			ColfusionUsers colfusionUsers, String title, String description, String path,
 			Date entryDate, Date lastUpdated, String status,
 			String rawDataPath, String sourceType, String provenance,
 			Set colfusionSynonymsFroms, Set colfusionExecuteinfos,
@@ -61,6 +62,7 @@ public class ColfusionSourceinfo implements java.io.Serializable {
 		this.colfusionLicense = colfusionLicense;
 		this.colfusionUsers = colfusionUsers;
 		this.title = title;
+		this.description = description;
 		this.path = path;
 		this.entryDate = entryDate;
 		this.lastUpdated = lastUpdated;
@@ -115,6 +117,14 @@ public class ColfusionSourceinfo implements java.io.Serializable {
 		this.title = title;
 	}
 
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+	
 	public String getPath() {
 		return this.path;
 	}

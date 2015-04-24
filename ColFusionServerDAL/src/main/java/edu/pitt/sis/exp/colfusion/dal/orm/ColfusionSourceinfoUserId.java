@@ -9,15 +9,13 @@ public class ColfusionSourceinfoUserId implements java.io.Serializable {
 
 	private int sid;
 	private int uid;
-	private int rid;
 
 	public ColfusionSourceinfoUserId() {
 	}
 
-	public ColfusionSourceinfoUserId(int sid, int uid, int rid) {
+	public ColfusionSourceinfoUserId(int sid, int uid) {
 		this.sid = sid;
 		this.uid = uid;
-		this.rid = rid;
 	}
 
 	public int getSid() {
@@ -36,14 +34,6 @@ public class ColfusionSourceinfoUserId implements java.io.Serializable {
 		this.uid = uid;
 	}
 
-	public int getRid() {
-		return this.rid;
-	}
-
-	public void setRid(int rid) {
-		this.rid = rid;
-	}
-
 	public boolean equals(Object other) {
 		if ((this == other))
 			return true;
@@ -54,8 +44,7 @@ public class ColfusionSourceinfoUserId implements java.io.Serializable {
 		ColfusionSourceinfoUserId castOther = (ColfusionSourceinfoUserId) other;
 
 		return (this.getSid() == castOther.getSid())
-				&& (this.getUid() == castOther.getUid())
-				&& (this.getRid() == castOther.getRid());
+				&& (this.getUid() == castOther.getUid());
 	}
 
 	public int hashCode() {
@@ -63,7 +52,6 @@ public class ColfusionSourceinfoUserId implements java.io.Serializable {
 
 		result = 37 * result + this.getSid();
 		result = 37 * result + this.getUid();
-		result = 37 * result + this.getRid();
 		return result;
 	}
 

@@ -15,6 +15,8 @@ import com.google.gson.annotations.Expose;
 public class StoryListViewModel {
 	@Expose private int sid;
 	@Expose private String title;
+	//added description property - Shruti Sabusuresh
+	@Expose private String description;
 	@Expose private UserViewModel user;
 	@Expose private String path;
 	@Expose private Date entryDate;
@@ -34,6 +36,12 @@ public class StoryListViewModel {
 	}
 	public void setTitle(String title) {
 		this.title = title;
+	}
+	public String getDescription() {
+		return description;
+	}
+	public void setDescription(String description) {
+		this.description = description;
 	}
 	public UserViewModel getUser() {
 		return user;

@@ -26,8 +26,17 @@ public class SourceInfoDAOImpl extends GenericDAOImpl<ColfusionSourceinfo, Integ
 	
 	@Override
 	public List<ColfusionSourceinfo> findDatasetsInfoByUserId(final int userId) {
-		// TODO Auto-generated method stub
-		return null;
+		String sql = "select DISTINCT si from ColfusionSourceinfo si join si.colfusionUsers cu left outer join si.colfusionLicense cl right outer join si.colfusionSourceinfoUsers csu where cu.userId = :userId";
+		Query query = null;
+		try {
+			query = HibernateUtil.getSession().createQuery(sql).setParameter("userId", userId);
+		} catch (Exception e) {
+			logger.error(String.format("findDatasetsInfoByUserId failed on HibernateUtil.getSession().... for userId = %d", userId), e);
+			
+			throw e;
+		}
+		
+		return this.findMany(query);
 	}
 
 	@Override
@@ -83,10 +92,10 @@ public class SourceInfoDAOImpl extends GenericDAOImpl<ColfusionSourceinfo, Integ
 		ColfusionSourceinfo sourceInfo = null;
 		String sql = "";
 		if (includeDraft) {
-			sql = "SELECT si FROM ColfusionSourceinfo si WHERE si.sid = :sid and (Status = 'queued' or Status = 'draft')";
+			sql = "SELECT si FROM ColfusionSourceinfo si WHERE si.sid = :sid and (Status = 'queued' or Status = 'draft' or Status = 'private')";
 	    }
 		else {
-			sql = "SELECT si FROM ColfusionSourceinfo si WHERE si.sid = :sid and Status = 'queued'";
+			sql = "SELECT si FROM ColfusionSourceinfo si WHERE si.sid = :sid and (Status = 'queued' or Status = 'private')";
 		}
 		
 		logger.info(String.format("Starting processing findDatasetInfoBySid for %s with drafts included %s", sid, includeDraft));

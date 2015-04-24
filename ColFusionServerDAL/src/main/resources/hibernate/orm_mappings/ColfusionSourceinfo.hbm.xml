@@ -17,6 +17,9 @@
         <property name="title" type="string">
             <column name="Title" length="40" />
         </property>
+        <property name="description" type="string">
+            <column name="Description" length="40" />
+        </property>
         <property name="path" type="string">
             <column name="Path" length="200" />
         </property>

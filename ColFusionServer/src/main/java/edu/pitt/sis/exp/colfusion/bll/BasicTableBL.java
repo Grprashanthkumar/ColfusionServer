@@ -2,10 +2,14 @@ package edu.pitt.sis.exp.colfusion.bll;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+
+import javax.persistence.Basic;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import edu.pitt.sis.exp.colfusion.dal.dao.SourceInfoDAO.SourceInfoStatus;
 import edu.pitt.sis.exp.colfusion.dal.dataModels.tableDataModel.RelationKey;
 import edu.pitt.sis.exp.colfusion.dal.dataModels.tableDataModel.Table;
 import edu.pitt.sis.exp.colfusion.dal.databaseHandlers.DatabaseHandlerBase;
@@ -18,15 +22,21 @@ import edu.pitt.sis.exp.colfusion.dal.managers.ExecutionInfoManagerImpl;
 import edu.pitt.sis.exp.colfusion.dal.managers.SourceInfoManagerImpl;
 import edu.pitt.sis.exp.colfusion.dal.orm.ColfusionColumnTableInfo;
 import edu.pitt.sis.exp.colfusion.dal.orm.ColfusionExecuteinfo;
+import edu.pitt.sis.exp.colfusion.dal.orm.ColfusionSourceinfo;
 import edu.pitt.sis.exp.colfusion.dal.orm.ColfusionSourceinfoDb;
+import edu.pitt.sis.exp.colfusion.dal.orm.ColfusionUsers;
+import edu.pitt.sis.exp.colfusion.dal.utils.StoryStatusTypes;
 import edu.pitt.sis.exp.colfusion.dal.viewmodels.AttachmentListViewModel;
 import edu.pitt.sis.exp.colfusion.dal.viewmodels.BasicTableInfoViewModel;
 import edu.pitt.sis.exp.colfusion.dal.viewmodels.DnameViewModel;
 import edu.pitt.sis.exp.colfusion.dal.viewmodels.JoinTablesByRelationshipsViewModel;
+import edu.pitt.sis.exp.colfusion.dal.viewmodels.LicenseViewModel;
 import edu.pitt.sis.exp.colfusion.dal.viewmodels.RelationshipsViewModel;
 import edu.pitt.sis.exp.colfusion.dal.viewmodels.StoryListViewModel;
 import edu.pitt.sis.exp.colfusion.dal.viewmodels.StoryStatusViewModel;
+import edu.pitt.sis.exp.colfusion.dal.viewmodels.UserViewModel;
 import edu.pitt.sis.exp.colfusion.responseModels.AttachmentListResponseModel;
+import edu.pitt.sis.exp.colfusion.responseModels.AuthorsResponse;
 import edu.pitt.sis.exp.colfusion.responseModels.BasicTableResponseModel;
 import edu.pitt.sis.exp.colfusion.responseModels.DnameResponseModel;
 import edu.pitt.sis.exp.colfusion.responseModels.JointTableByRelationshipsResponeModel;
@@ -175,15 +185,16 @@ public class BasicTableBL {
 		return result;	
 	}
 	
-	
-	//Return the relationship response according to sid.
-	public RelationshipsResponseModel getRelationships(final int sid,
+	//modified by Shruti Sabusuresh
+	//Return the relationship response according to sid and userid based on the user's accessibility
+	public RelationshipsResponseModel getRelationships(final int userid, final int sid,
 			final int perPage, final int pageNumber) {
 		RelationshipsResponseModel result = new RelationshipsResponseModel();
 		// The following code is to get data from the table and store it into payload.
 		try {
 			SourceInfoManagerImpl sourceInfoManagerImpl = new SourceInfoManagerImpl();
-			List<RelationshipsViewModel> contents = sourceInfoManagerImpl.getRelationshipsViewModel(sid);
+			List<RelationshipsViewModel> contents = sourceInfoManagerImpl.getRelationshipsViewModel(sid, userid);
+
 			result.setPayload(contents);
 			result.getControl().setPerPage(perPage);
 			result.getControl().setPageNO(pageNumber);
@@ -196,11 +207,10 @@ public class BasicTableBL {
 			}
 		}
 		catch(Exception e) {
-			logger.error("failed to get relationshipResponseModel");
+			logger.error(BasicTableBL.class.getName(),"Failed to get relationshipResponseModel: "+e.getMessage());
 			result.isSuccessful=false;
 			result.message = "Get MineRelationships failed";
 		}
-
 		return result;
 	}
 	
@@ -236,15 +246,23 @@ public class BasicTableBL {
 		return result;
 	}
 	
-	public StoryListResponseModel getAllStoryList(){
+	/**
+	 * this method returns all the public stories, private stories accessible to the user if any, and all drafts of the user
+	 * @param userid
+	 * @return StoryListResponseModel
+	 * @author modified by Shruti Sabusuresh
+	 */
+	public StoryListResponseModel getAllStoryList(final int userid){		
 		StoryListResponseModel result = new StoryListResponseModel();
 		try{
 			SourceInfoManagerImpl SourceInfoManagerImpl = new SourceInfoManagerImpl();
-			List<StoryListViewModel> contents = SourceInfoManagerImpl.getStoryListViewModel();
+			//get all stories where user is author or queued or has access to private datasets
+			List<StoryListViewModel> contents = SourceInfoManagerImpl.getStoryListViewModel(userid);
 			result.setPayload(contents);
 			result.isSuccessful=true;
 		}
 		catch(Exception e) {
+			logger.error(BasicTableBL.class.getName(),"Failed to get StoryListResponseModel: "+e.getMessage());
 			result.isSuccessful=false;
 			result.message = "Get StoryList failed";
 		}
@@ -292,6 +310,142 @@ public class BasicTableBL {
 		catch(Exception e){
 			result.isSuccessful=false;
 			result.message = "Get DnameList failed";
+		}
+		return result;
+	}
+	
+	/**
+	 * Get all draft story list by userid as OWNER and CONTRIBUTOR
+	 * @param userid as CONTRIBUTOR
+	 * @return StoryListResponseModel
+	 * @author Shruti Sabusuresh
+	 */
+	public StoryListResponseModel getAllDraftStoryList(final int userid){
+		StoryListResponseModel result = new StoryListResponseModel();
+		try{
+			SourceInfoManagerImpl SourceInfoManagerImpl = new SourceInfoManagerImpl();
+			List<StoryListViewModel> contents = SourceInfoManagerImpl.getDraftStoryListViewModelByUser(userid);
+			result.setPayload(contents);
+			result.isSuccessful=true;
+		}
+		catch(Exception e) {
+			logger.error(BasicTableBL.class.getName(),"Failed to get list of drafts: "+e.getMessage());
+			result.isSuccessful=false;
+			result.message = "Get StoryList failed";
+		}
+		return result;
+	}
+
+	/**
+	 * Get all QUEUED story list by userid as OWNER
+	 * @param userid as OWNER
+	 * @return StoryListResponseModel
+	 * @author Shruti Sabusuresh
+	 */
+	public StoryListResponseModel getAllQueuedStoryListAuthoredByUser(int userid) {
+		StoryListResponseModel result = new StoryListResponseModel();
+		try{
+			SourceInfoManagerImpl SourceInfoManagerImpl = new SourceInfoManagerImpl();
+			List<StoryListViewModel> contents = SourceInfoManagerImpl.getStoryListViewModelByUser(userid);
+			result.setPayload(contents);
+			result.isSuccessful=true;
+		}
+		catch(Exception e) {
+			logger.error(BasicTableBL.class.getName(),"Failed to get list of queued stories: "+e.getMessage());
+			result.isSuccessful=false;
+			result.message = "Get StoryList failed";
+		}
+		return result;
+	}
+
+	/**
+	 * Get all PRIVATE story list by userid as OWNER
+	 * @param userid as OWNER
+	 * @return StoryListResponseModel
+	 * @author Shruti Sabusuresh
+	 */
+	public StoryListResponseModel getAllPrivateStoryListAuthoredByUser(int userid) {
+		StoryListResponseModel result = new StoryListResponseModel();
+		try{
+			SourceInfoManagerImpl SourceInfoManagerImpl = new SourceInfoManagerImpl();
+			List<StoryListViewModel> contents = SourceInfoManagerImpl.getPrivateStoryListViewModelByUser(userid);
+			result.setPayload(contents);
+			result.isSuccessful=true;
+		}
+		catch(Exception e) {
+			logger.error(BasicTableBL.class.getName(),"Failed to get list of private stories: "+e.getMessage());
+			result.isSuccessful=false;
+			result.message = "Get StoryList failed";
+		}
+		return result;
+	}
+
+	/**
+	 * Get all story list by userid as OWNER
+	 * @param userid as OWNER
+	 * @return StoryListResponseModel
+	 * @author Shruti Sabusuresh
+	 */
+	public StoryListResponseModel getAllStoryListAuthoredByUser(int userid) {
+		StoryListResponseModel result = new StoryListResponseModel();
+		try{
+			SourceInfoManagerImpl SourceInfoManagerImpl = new SourceInfoManagerImpl();
+			List<ColfusionSourceinfo> sourceInfoList  = SourceInfoManagerImpl.findByUserId(userid);
+			List<StoryListViewModel> contents = new ArrayList<StoryListViewModel>();
+			for(ColfusionSourceinfo sourceInfo: sourceInfoList){
+				StoryListViewModel storyModel = new StoryListViewModel();
+				storyModel.setSid(sourceInfo.getSid());
+				storyModel.setTitle(sourceInfo.getTitle());
+				storyModel.setDescription(sourceInfo.getDescription());
+				UserViewModel user = new UserViewModel();
+				user.setUserId(sourceInfo.getColfusionUsers().getUserId());
+				user.setUserLogin(sourceInfo.getColfusionUsers().getUserLogin());
+				storyModel.setUser(user);
+				storyModel.setPath(sourceInfo.getPath());
+				storyModel.setEntryDate(sourceInfo.getEntryDate());
+				storyModel.setLastUpdated(sourceInfo.getLastUpdated());
+				storyModel.setStatus(sourceInfo.getStatus());
+				storyModel.setRawDataPath(sourceInfo.getRawDataPath());
+				storyModel.setSourceType(sourceInfo.getSourceType());
+				if(storyModel.getLicense() != null){
+					LicenseViewModel license = new LicenseViewModel();
+					license.setLicenseId(storyModel.getLicense().getLicenseId());
+					license.setLicenseName(storyModel.getLicense().getLicenseName());
+					license.setLicenseDescription(storyModel.getLicense().getLicenseDescription());
+					license.setLicenseURL(storyModel.getLicense().getLicenseURL());
+					storyModel.setLicense(license);
+				}
+				contents.add(storyModel);
+			}
+			result.setPayload(contents);
+			result.isSuccessful=true;
+		}
+		catch(Exception e) {
+			logger.error(BasicTableBL.class.getName(),"Failed to get list of all owned stories of user "+userid+": "+e.getMessage());
+			result.isSuccessful=false;
+			result.message = "Get StoryList failed";
+		}
+		return result;
+	}
+	
+	/**
+	 * Get all story list where userid is CONTRIBUTOR
+	 * @param userid as CONTRIBUTOR
+	 * @return StoryListResponseModel
+	 * @author Shruti Sabusuresh
+	 */
+	public StoryListResponseModel getAllStoryListSharedToUser(int userid) {
+		StoryListResponseModel result = new StoryListResponseModel();
+		try{
+			SourceInfoManagerImpl SourceInfoManagerImpl = new SourceInfoManagerImpl();
+			List<StoryListViewModel> contents = SourceInfoManagerImpl.getAllStoryListViewModelSharedToUser(userid);
+			result.setPayload(contents);
+			result.isSuccessful=true;
+		}
+		catch(Exception e) {
+			logger.error(BasicTableBL.class.getName(),"Failed to get list of stories shared to user "+userid+": "+e.getMessage());
+			result.isSuccessful=false;
+			result.message = "Get StoryList failed";
 		}
 		return result;
 	}

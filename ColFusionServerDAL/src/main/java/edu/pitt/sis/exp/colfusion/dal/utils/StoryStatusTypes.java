@@ -11,7 +11,9 @@ import org.apache.logging.log4j.Logger;
  *
  */
 public enum StoryStatusTypes {
-	DRAFT("draft"), QUEUED("queued");
+	DRAFT("draft"), QUEUED("queued"),
+	//modified by Shruti
+	PRIVATE("private");
     
 	private static Logger logger = LogManager.getLogger(StoryStatusTypes.class.getName());
 	

@@ -321,9 +321,8 @@ public abstract class DatabaseUnitTestBase extends DockerTestBase {
 		ColfusionLicense license = licenseMng.findAll().get(0);
 		ColfusionUsers user = getTestUser();
 		
-		ColfusionSourceinfo story = new ColfusionSourceinfo(license, user, "testDoReplication", "", new Date(), new Date(), "queued", 
+		ColfusionSourceinfo story = new ColfusionSourceinfo(license, user, "testDoReplication", "", "", new Date(), new Date(), "queued", 
 				"", "data type", "", null, null, null, null, null, null, null, null, null, null, null, null, null);
-	
 		sourceInfoMng.save(story);
 		
 //		Does sourveInfoMng.save(story) save some random attachment data or relationship data in the database?
