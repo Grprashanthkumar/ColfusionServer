@@ -1069,7 +1069,8 @@ public class SourceInfoManagerImpl extends GeneralManagerImpl<SourceInfoDAO, Col
 			HibernateUtil.beginTransaction();
 			String hql = "SELECT DISTINCT src.sid, src.title, src.description, cus.userId, cus.userLogin, src.path, src.entryDate, src.lastUpdated, src.status, src.rawDataPath, src.sourceType, cli.licenseId, cli.licenseName, cli.licenseUrl " 
 	                  + "FROM ColfusionSourceinfo src join src.colfusionUsers cus left outer join src.colfusionLicense cli right outer join src.colfusionSourceinfoUsers csu "
-	                  + "WHERE (cus.userId="+userid+" AND src.status<>'"+StoryStatusTypes.DRAFT+"') OR src.status='"+StoryStatusTypes.QUEUED.getValue()+"' OR (src.status='"+StoryStatusTypes.PRIVATE.getValue()+"' AND csu.colfusionUsers.userId="+userid+")";
+	                  + "WHERE (cus.userId="+userid+" AND src.status<>'"+StoryStatusTypes.DRAFT+"') OR src.status='"+StoryStatusTypes.QUEUED.getValue()+"' OR (src.status='"+StoryStatusTypes.PRIVATE.getValue()+"' AND csu.colfusionUsers.userId="+userid+") "
+	                  + "ORDER BY src.sid DESC";
 	        Query query = HibernateUtil.getSession().createQuery(hql);
 	        List<Object> storyListObjs = query.list();
 	        HibernateUtil.commitTransaction();
@@ -1200,7 +1201,8 @@ public class SourceInfoManagerImpl extends GeneralManagerImpl<SourceInfoDAO, Col
 			HibernateUtil.beginTransaction();
 			String hql = "SELECT csi.sid, csi.title, csi.description, cu.userId, cu.userLogin, csi.path, csi.entryDate, csi.lastUpdated, csi.status, csi.rawDataPath, csi.sourceType, cl.licenseId, cl.licenseName, cl.licenseUrl "
 					+ "FROM ColfusionSourceinfo csi join csi.colfusionUsers cu left outer join csi.colfusionLicense cl right outer join csi.colfusionSourceinfoUsers csu "
-					+ "WHERE (cu.userId="+userid+" OR csu.colfusionUsers.userId="+userid+") AND csi.status='"+StoryStatusTypes.DRAFT.getValue()+"'";
+					+ "WHERE (cu.userId="+userid+" OR csu.colfusionUsers.userId="+userid+") AND csi.status='"+StoryStatusTypes.DRAFT.getValue()+"' "
+					+ "ORDER BY csi.sid DESC";
 	        Query query = HibernateUtil.getSession().createQuery(hql);
 	        List<Object> storyListObjs = query.list();
 	        HibernateUtil.commitTransaction();
@@ -1237,9 +1239,10 @@ public class SourceInfoManagerImpl extends GeneralManagerImpl<SourceInfoDAO, Col
 	public List<StoryListViewModel> getStoryListViewModelByUser(int userid) {
 		try{
 			HibernateUtil.beginTransaction();
-			String hql = "SELECT csi.sid, csi.title, csi.description, cu.userId, cu.userLogin, csi.path, csi.entryDate, csi.lastUpdated, csi.status, csi.rawDataPath, csi.sourceType, cl.licenseId, cl.licenseName, cl.licenseUrl "
+			String hql = "SELECT DISTINCT csi.sid, csi.title, csi.description, cu.userId, cu.userLogin, csi.path, csi.entryDate, csi.lastUpdated, csi.status, csi.rawDataPath, csi.sourceType, cl.licenseId, cl.licenseName, cl.licenseUrl "
 					+ "FROM ColfusionSourceinfo csi join csi.colfusionUsers cu left outer join csi.colfusionLicense cl right outer join csi.colfusionSourceinfoUsers csu "
-					+ "WHERE cu.userId="+userid+" AND csi.status='"+StoryStatusTypes.QUEUED.getValue()+"'";
+					+ "WHERE cu.userId="+userid+" AND csi.status='"+StoryStatusTypes.QUEUED.getValue()+"' "
+					+ "ORDER BY csi.sid DESC";
 	        Query query = HibernateUtil.getSession().createQuery(hql);
 	        List<Object> storyListObjs = query.list();
 	        HibernateUtil.commitTransaction();
@@ -1277,7 +1280,8 @@ public class SourceInfoManagerImpl extends GeneralManagerImpl<SourceInfoDAO, Col
 			String hql = "SELECT DISTINCT csi.sid, csi.title, csi.description, cu.userId, cu.userLogin, csi.path, csi.entryDate, csi.lastUpdated, csi.status, csi.rawDataPath, csi.sourceType, cl.licenseId, cl.licenseName, cl.licenseUrl "
 					+ "FROM ColfusionSourceinfo csi join csi.colfusionUsers cu left outer join csi.colfusionLicense cl right outer join csi.colfusionSourceinfoUsers csu "
 					//get all the private dataset which the user created
-					+ "WHERE cu.userId="+userid+" AND csi.status='"+StoryStatusTypes.PRIVATE.getValue()+"'";
+					+ "WHERE cu.userId="+userid+" AND csi.status='"+StoryStatusTypes.PRIVATE.getValue()+"' "
+					+ "ORDER BY csi.sid DESC";
 	        Query query = HibernateUtil.getSession().createQuery(hql);
 	        List<Object> storyListObjs = query.list();
 	        HibernateUtil.commitTransaction();
@@ -1314,7 +1318,8 @@ public class SourceInfoManagerImpl extends GeneralManagerImpl<SourceInfoDAO, Col
 			String hql = "SELECT DISTINCT csi.sid, csi.title, csi.description, cu.userId, cu.userLogin, csi.path, csi.entryDate, csi.lastUpdated, csi.status, csi.rawDataPath, csi.sourceType, cl.licenseId, cl.licenseName, cl.licenseUrl "
 					+ "FROM ColfusionSourceinfo csi join csi.colfusionUsers cu left outer join csi.colfusionLicense cl right outer join csi.colfusionSourceinfoUsers csu "
 					//gets all the queued and private stories where the user is contributor
-					+ "WHERE csu.colfusionUsers.userId="+userid+" AND csu.colfusionUserroles.roleId=1 AND (csi.status='"+StoryStatusTypes.QUEUED.getValue()+"' OR csi.status='"+StoryStatusTypes.PRIVATE.getValue()+"')";
+					+ "WHERE csu.colfusionUsers.userId="+userid+" AND csu.colfusionUserroles.roleId=1 AND (csi.status='"+StoryStatusTypes.QUEUED.getValue()+"' OR csi.status='"+StoryStatusTypes.PRIVATE.getValue()+"') "
+					+ "ORDER BY csi.sid DESC";
 	        Query query = HibernateUtil.getSession().createQuery(hql);
 	        List<Object> storyListObjs = query.list();
 	        HibernateUtil.commitTransaction();

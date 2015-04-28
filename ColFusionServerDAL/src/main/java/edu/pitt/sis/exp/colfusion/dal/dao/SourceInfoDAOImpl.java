@@ -26,7 +26,7 @@ public class SourceInfoDAOImpl extends GenericDAOImpl<ColfusionSourceinfo, Integ
 	
 	@Override
 	public List<ColfusionSourceinfo> findDatasetsInfoByUserId(final int userId) {
-		String sql = "select DISTINCT si from ColfusionSourceinfo si join si.colfusionUsers cu left outer join si.colfusionLicense cl right outer join si.colfusionSourceinfoUsers csu where cu.userId = :userId";
+		String sql = "select DISTINCT si from ColfusionSourceinfo si join si.colfusionUsers cu left outer join si.colfusionLicense cl right outer join si.colfusionSourceinfoUsers csu where cu.userId = :userId order by si.sid DESC";
 		Query query = null;
 		try {
 			query = HibernateUtil.getSession().createQuery(sql).setParameter("userId", userId);
