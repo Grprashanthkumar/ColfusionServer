@@ -3,6 +3,8 @@
  */
 package edu.pitt.sis.exp.colfusion.dal.utils;
 
+import java.io.File;
+import java.io.InputStream;
 import java.util.Set;
 
 import org.apache.logging.log4j.LogManager;
@@ -16,7 +18,9 @@ import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
 
 import edu.pitt.sis.exp.colfusion.utils.ConfigManager;
+import edu.pitt.sis.exp.colfusion.utils.IOUtils;
 import edu.pitt.sis.exp.colfusion.utils.PropertyKeys;
+import edu.pitt.sis.exp.colfusion.utils.ResourceUtils;
 import edu.pitt.sis.exp.colfusion.utils.StringUtils;
 
 public class HibernateUtil {
@@ -41,7 +45,16 @@ public class HibernateUtil {
 	 */
 	public static void initiSessionFactory() throws RuntimeException {
 		try {
-			Configuration cfg = new Configuration().configure("hibernate.cfg.xml"); 
+			//TODO FIXME: workaround to read a file from jar. First copy to temp location then provide file from there, then delete the temp file.
+			
+			InputStream xmlInput = ResourceUtils.getResourceAsStream(HibernateUtil.class, "hibernate.cfg.xml");
+			File temp = File.createTempFile("colfusion", "hibernateProp");
+			IOUtils.writeToFile(xmlInput, temp, true);
+//			Document doc = IOUtils.readXMLDocument(xmlInput);
+			
+			Configuration cfg = new Configuration().configure(temp); 
+			
+			temp.delete();
 			
 			setProperties(cfg);
 			

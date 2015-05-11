@@ -151,7 +151,7 @@ public class IOUtils {
 	 * @throws FileNotFoundException
 	 * @throws IOException
 	 */
-	private static void writeToFile(final InputStream uploadedInputStream,
+	public static void writeToFile(final InputStream uploadedInputStream,
 			final File fileToSave, final boolean closeStream)
 			throws FileNotFoundException, IOException {
 		OutputStream out = new FileOutputStream(fileToSave);
@@ -281,14 +281,24 @@ public class IOUtils {
 		
 		logger.info(String.format("readXMLDocument: Starting to read XML document %s", ablsoluteXMLDocumentPath));
 		
+		File xmlFile = new File(ablsoluteXMLDocumentPath);
+		
+		if (!xmlFile.exists()) {
+			String message = String.format("%s file doesn't exist", ablsoluteXMLDocumentPath);
+			logger.error(message);
+			throw new IOException(message);
+		}
+		
+		return readXMLDocument(new FileInputStream(xmlFile));
+	}
+	
+	public static Document readXMLDocument(final InputStream xmlDocumentStream) throws SAXException, IOException, ParserConfigurationException {
 		DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
 		DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
-		Document doc = docBuilder.parse(ablsoluteXMLDocumentPath);
+		Document doc = docBuilder.parse(xmlDocumentStream);
 		
 		doc.getDocumentElement().normalize();
-		
-		logger.info(String.format("readXMLDocument: Done to read XML document %s", ablsoluteXMLDocumentPath));
-		
+				
 		return doc;
 	}
 
