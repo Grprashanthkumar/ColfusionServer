@@ -11,107 +11,110 @@ import java.util.Set;
  */
 public class ColfusionCanvases implements java.io.Serializable {
 
-	private Integer vid;
-	private ColfusionUsers colfusionUsers;
-	private String name;
-	private String note;
-	private Date mdate;
-	private Date cdate;
-	private Integer privilege;
-	private Set colfusionShareses = new HashSet(0);
-	private Set colfusionChartses = new HashSet(0);
+   private Integer vid;
+   private String name;
+   private String note;
+   private Date mdate;
+   private Date cdate;
+   private Integer privilege;
+   
+   private ColfusionUsers users;
+   private Set<ColfusionStory> storySet = new HashSet(0);
 
-	public ColfusionCanvases() {
-	}
+   public ColfusionCanvases() {
+   }
 
-	public ColfusionCanvases(Date mdate, Date cdate) {
-		this.mdate = mdate;
-		this.cdate = cdate;
-	}
+   public ColfusionCanvases(Date mdate, Date cdate) {
+     this.mdate = mdate;
+     this.cdate = cdate;
+   }
 
-	public ColfusionCanvases(ColfusionUsers colfusionUsers, String name,
-			String note, Date mdate, Date cdate, Integer privilege,
-			Set colfusionShareses, Set colfusionChartses) {
-		this.colfusionUsers = colfusionUsers;
-		this.name = name;
-		this.note = note;
-		this.mdate = mdate;
-		this.cdate = cdate;
-		this.privilege = privilege;
-		this.colfusionShareses = colfusionShareses;
-		this.colfusionChartses = colfusionChartses;
-	}
+   public ColfusionCanvases(ColfusionUsers users, String name,
+     String note, Date mdate, Date cdate, Integer privilege) {
+     this.users = users;
+     this.name = name;
+     this.note = note;
+     this.mdate = mdate;
+     this.cdate = cdate;
+     this.privilege = privilege;
+   }
+   
+   public ColfusionCanvases(Integer vid, Set<ColfusionStory> storySet, ColfusionUsers users, String name,
+		     String note, Date mdate, Date cdate, Integer privilege) {
+	   		 this.vid = vid;
+		     this.users = users;
+		     this.storySet = storySet;
+		     this.name = name;
+		     this.note = note;
+		     this.mdate = mdate;
+		     this.cdate = cdate;
+		     this.privilege = privilege;
+   }
 
-	public Integer getVid() {
-		return this.vid;
-	}
+   public Integer getVid() {
+     return this.vid;
+   }
 
-	public void setVid(Integer vid) {
-		this.vid = vid;
-	}
+   public void setVid(Integer vid) {
+     this.vid = vid;
+   }
 
-	public ColfusionUsers getColfusionUsers() {
-		return this.colfusionUsers;
-	}
+   public ColfusionUsers getUsers() {
+     return this.users;
+   }
 
-	public void setColfusionUsers(ColfusionUsers colfusionUsers) {
-		this.colfusionUsers = colfusionUsers;
-	}
+   public void setUsers(ColfusionUsers users) {
+     this.users = users;
+   }
 
-	public String getName() {
-		return this.name;
-	}
+   public String getName() {
+     return this.name;
+   }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+   public void setName(String name) {
+     this.name = name;
+  }
 
-	public String getNote() {
-		return this.note;
-	}
+   public String getNote() {
+     return this.note;
+   }
 
-	public void setNote(String note) {
-		this.note = note;
-	}
+   public void setNote(String note) {
+     this.note = note;
+  }
 
-	public Date getMdate() {
-		return this.mdate;
-	}
+   public Date getMdate() {
+     return this.mdate;
+  }
 
-	public void setMdate(Date mdate) {
-		this.mdate = mdate;
-	}
+   public void setMdate(Date mdate) {
+     this.mdate = mdate;
+  }
 
-	public Date getCdate() {
-		return this.cdate;
-	}
+   public Date getCdate() {
+     return this.cdate;
+  }
 
-	public void setCdate(Date cdate) {
-		this.cdate = cdate;
-	}
+   public void setCdate(Date cdate) {
+     this.cdate = cdate;
+  }
 
-	public Integer getPrivilege() {
-		return this.privilege;
-	}
+   public Integer getPrivilege() {
+     return this.privilege;
+  }
 
-	public void setPrivilege(Integer privilege) {
-		this.privilege = privilege;
-	}
+   public void setPrivilege(Integer privilege) {
+     this.privilege = privilege;
+  }
 
-	public Set getColfusionShareses() {
-		return this.colfusionShareses;
-	}
+public Set<ColfusionStory> getStorySet() {
+	return storySet;
+}
 
-	public void setColfusionShareses(Set colfusionShareses) {
-		this.colfusionShareses = colfusionShareses;
-	}
-
-	public Set getColfusionChartses() {
-		return this.colfusionChartses;
-	}
-
-	public void setColfusionChartses(Set colfusionChartses) {
-		this.colfusionChartses = colfusionChartses;
-	}
+public void setStorySet(Set<ColfusionStory> storySet) {
+	this.storySet = storySet;
+}
+  
 
 }
+

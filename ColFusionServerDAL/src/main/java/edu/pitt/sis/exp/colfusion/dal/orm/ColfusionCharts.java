@@ -8,121 +8,88 @@ package edu.pitt.sis.exp.colfusion.dal.orm;
 public class ColfusionCharts implements java.io.Serializable {
 
 	private Integer cid;
-	private ColfusionCanvases colfusionCanvases;
+	private ColfusionStory story;
 	private String name;
 	private String type;
-	private Integer left;
-	private Integer top;
-	private Integer depth;
-	private Integer height;
-	private Integer width;
-	private String datainfo;
-	private String note;
-
+	private String did;
+	private String dname;
+	private String tname;
+	private String columns;
+	
+	
 	public ColfusionCharts() {
+		
 	}
-
-	public ColfusionCharts(ColfusionCanvases colfusionCanvases, String name,
-			String type, Integer left, Integer top, Integer depth,
-			Integer height, Integer width, String datainfo, String note) {
-		this.colfusionCanvases = colfusionCanvases;
+	
+	public ColfusionCharts(String type, String did, String dname, String tname, String columns, ColfusionStory story){
+		this.type = type;
+		this.did = did;
+		this.dname = dname;
+		this.tname = tname;
+		this.columns = columns;
+		this.story = story;
+	}
+	
+	public ColfusionCharts(Integer cid, ColfusionStory story, String name, String type,
+			String did, String dname, String tname, String columns) {
+		super();
+		this.cid = cid;
+		this.story = story;
 		this.name = name;
 		this.type = type;
-		this.left = left;
-		this.top = top;
-		this.depth = depth;
-		this.height = height;
-		this.width = width;
-		this.datainfo = datainfo;
-		this.note = note;
+		this.did = did;
+		this.dname = dname;
+		this.tname = tname;
+		this.columns = columns;
 	}
 
+	
 	public Integer getCid() {
-		return this.cid;
+		return cid;
 	}
-
 	public void setCid(Integer cid) {
 		this.cid = cid;
 	}
-
-	public ColfusionCanvases getColfusionCanvases() {
-		return this.colfusionCanvases;
+	public ColfusionStory getStory() {
+		return story;
 	}
-
-	public void setColfusionCanvases(ColfusionCanvases colfusionCanvases) {
-		this.colfusionCanvases = colfusionCanvases;
+	public void setStory(ColfusionStory story) {
+		this.story = story;
 	}
-
 	public String getName() {
-		return this.name;
+		return name;
 	}
-
 	public void setName(String name) {
 		this.name = name;
 	}
-
 	public String getType() {
-		return this.type;
+		return type;
 	}
-
 	public void setType(String type) {
 		this.type = type;
 	}
-
-	public Integer getLeft() {
-		return this.left;
+	public String getDid() {
+		return did;
 	}
-
-	public void setLeft(Integer left) {
-		this.left = left;
+	public void setDid(String did) {
+		this.did = did;
 	}
-
-	public Integer getTop() {
-		return this.top;
+	public String getDname() {
+		return dname;
 	}
-
-	public void setTop(Integer top) {
-		this.top = top;
+	public void setDname(String dname) {
+		this.dname = dname;
 	}
-
-	public Integer getDepth() {
-		return this.depth;
+	public String getTname() {
+		return tname;
 	}
-
-	public void setDepth(Integer depth) {
-		this.depth = depth;
+	public void setTname(String tname) {
+		this.tname = tname;
 	}
-
-	public Integer getHeight() {
-		return this.height;
+	public String getColumns() {
+		return columns;
 	}
-
-	public void setHeight(Integer height) {
-		this.height = height;
+	public void setColumns(String columns) {
+		this.columns = columns;
 	}
-
-	public Integer getWidth() {
-		return this.width;
-	}
-
-	public void setWidth(Integer width) {
-		this.width = width;
-	}
-
-	public String getDatainfo() {
-		return this.datainfo;
-	}
-
-	public void setDatainfo(String datainfo) {
-		this.datainfo = datainfo;
-	}
-
-	public String getNote() {
-		return this.note;
-	}
-
-	public void setNote(String note) {
-		this.note = note;
-	}
-
 }

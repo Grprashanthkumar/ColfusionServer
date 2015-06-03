@@ -10,6 +10,7 @@ import edu.pitt.sis.exp.colfusion.war.rest.RelationshipRestService;
 import edu.pitt.sis.exp.colfusion.war.rest.SimilarityJoinRestService;
 import edu.pitt.sis.exp.colfusion.war.rest.StoryRestService;
 import edu.pitt.sis.exp.colfusion.war.rest.UserRestService;
+import edu.pitt.sis.exp.colfusion.war.rest.VisualizationRestService;
 import edu.pitt.sis.exp.colfusion.war.rest.WizardRestService;
 
 
@@ -27,7 +28,7 @@ public class ApplicationConfig extends Application {
         resources.add(RelationshipRestService.class);
         resources.add(OpenRefineRestService.class);
         resources.add(SimilarityJoinRestService.class);
-
+        resources.add(VisualizationRestService.class);
        
         // Add additional features such as support for Multipart.
 //        resources.add(MultiPartFeature.class);

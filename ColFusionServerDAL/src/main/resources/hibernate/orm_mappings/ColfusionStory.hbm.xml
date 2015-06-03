@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 2014-6-10 16:18:00 by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="edu.pitt.sis.exp.colfusion.dal.orm.Story" table="colfusion_story" >
+        <id name="sid" type="java.lang.Integer">
+            <column name="sid" />
+            <generator class="identity" />
+        </id>
+        <property name="did" type="java.lang.String">
+            <column name="did" length="40" />
+        </property>
+        <property name="dname" type="java.lang.String">
+            <column name="dname" length="40"/>
+        </property>
+        <property name="tname" type="java.lang.String">
+            <column name="tname" length="40"/>
+        </property>
+        <property name="cdate" type="timestamp">
+            <column name="cdate" length="19" not-null="true" />
+        </property>
+        
+		<many-to-one name="canvases" class="edu.pitt.sis.exp.colfusion.dal.orm.ColfusionCanvases" fetch="join">
+            <column name="vid" />
+        </many-to-one>
+       
+        <set name="chartSet" table="charts" inverse="true" fetch="join" >
+        	<key>
+          		<column name="sid" />
+          	</key>
+        	<one-to-many  class="edu.pitt.sis.exp.colfusion.dal.orm.ColfusionCharts" />
+        </set>
+    </class>
+</hibernate-mapping>

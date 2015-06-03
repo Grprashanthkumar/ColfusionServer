@@ -8,9 +8,7 @@
             <column name="vid" />
             <generator class="identity" />
         </id>
-        <many-to-one name="colfusionUsers" class="edu.pitt.sis.exp.colfusion.dal.orm.ColfusionUsers" fetch="select">
-            <column name="user_id" />
-        </many-to-one>
+        
         <property name="name" type="string">
             <column name="name" length="50" />
         </property>
@@ -26,17 +24,17 @@
         <property name="privilege" type="java.lang.Integer">
             <column name="privilege" />
         </property>
-        <set name="colfusionShareses" table="colfusion_shares" inverse="true" lazy="true" fetch="select">
-            <key>
-                <column name="vid" />
-            </key>
-            <one-to-many class="edu.pitt.sis.exp.colfusion.dal.orm.ColfusionShares" />
-        </set>
-        <set name="colfusionChartses" table="colfusion_charts" inverse="true" lazy="true" fetch="select">
-            <key>
-                <column name="vid" />
-            </key>
-            <one-to-many class="edu.pitt.sis.exp.colfusion.dal.orm.ColfusionCharts" />
-        </set>
+        
+        <many-to-one name="users" class="edu.pitt.sis.exp.colfusion.dal.orm.ColfusionUsers" fetch="join">
+            <column name="user_id" />
+        </many-to-one>
+        
+        <set name="storySet" table="story" inverse="true" fetch="join" >
+          	<key>
+          		<column name="vid" />
+          	</key>
+        	<one-to-many class="edu.pitt.sis.exp.colfusion.dal.orm.ColfusionStory" />
+        </set> 
+        
     </class>
 </hibernate-mapping>

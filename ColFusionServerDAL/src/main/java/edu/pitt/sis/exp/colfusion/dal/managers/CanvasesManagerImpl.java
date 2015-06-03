@@ -8,6 +8,7 @@ import java.util.Date;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.hibernate.Hibernate;
 import org.hibernate.Query;
 
 import edu.pitt.sis.exp.colfusion.dal.dao.CanvasesDAO;
@@ -31,13 +32,15 @@ public class CanvasesManagerImpl extends GeneralManagerImpl<CanvasesDAO, Colfusi
 	
 	public ColfusionCanvases createNewCanvas(ColfusionUsers canvasOwner, String name) {
 		ColfusionCanvases newCanvas = new ColfusionCanvases(new Date(), new Date());
-		newCanvas.setColfusionUsers(canvasOwner);
+		newCanvas.setUsers(canvasOwner);
 		newCanvas.setName(name);
 		
 		try {
 			HibernateUtil.beginTransaction();
 			
 			_dao.save(newCanvas);
+			
+			// Hibernate.initialize(newCanvas.getUsers());
 			
 			HibernateUtil.commitTransaction();
 			
@@ -52,31 +55,33 @@ public class CanvasesManagerImpl extends GeneralManagerImpl<CanvasesDAO, Colfusi
 		return newCanvas;
 	}
 	
-	public List<ColfusionCanvases> findByName(String name){
-		
-		try {
+
+	public List<ColfusionCanvases> findCanvasByUser(ColfusionUsers users){
+		try{
 			HibernateUtil.beginTransaction();
 			
-			String hql = "SELECT C FROM ColfusionCanvases C WHERE C.name = :name";
+			//int userId = users.getUserId();
+			String hql = "SELECT C FROM Canvases C WHERE C.users = :users";
 
 			Query query = HibernateUtil.getSession().createQuery(hql);
-			query.setParameter("name", name);
+			query.setParameter("users", users);
 			
 			List<ColfusionCanvases> result = _dao.findMany(query);
+			
+			for (ColfusionCanvases canvas : result) { // lazy
+				Hibernate.initialize(canvas.getUsers());
+			}
 			
 			HibernateUtil.commitTransaction();
 			
 			return result;
-		}
-		catch(Exception ex){
-			HibernateUtil.rollbackTransaction();
+			
+		}catch(Exception ex){
+            HibernateUtil.rollbackTransaction();
 			
 			this.logger.error("Cannot find the records", ex);
 			throw ex;
 		}
-		
-		
-		
-		
 	}
-}
+	}
+

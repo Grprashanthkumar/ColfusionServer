@@ -211,7 +211,8 @@ public class IOUtilsTest extends UnitTestBase {
 	public void testWriteXMLDocument() throws ParserConfigurationException, SAXException, IOException, TransformerException {
 		String originalTestXMLFile = getResourceAsAbsoluteURI(TestResourcesNames.TEST_COMPANY_XML_FILE);
 		Document doc = IOUtils.readXMLDocument(originalTestXMLFile);
-		doc.setXmlStandalone(false);
+		//TODO: the next line complains on setXmlStandalone after upgrade to Java 8, see if it is important
+		//doc.setXmlStandalone(false);
 		
 		String writtenFileName = tempFolder.newFile("testWriteXMLDocument").toString();
 		

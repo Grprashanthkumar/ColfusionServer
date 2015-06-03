@@ -19,9 +19,9 @@
 		<module>ColFusionServerDAL</module>
 		<module>ColFusionServer</module>
 		<module>ColFusionServerWAR</module>
-		<module>ColFusionServerServiceMonitor</module>
+<!-- 		<module>ColFusionServerServiceMonitor</module>  
 		<module>ColFusionServerPSCServer</module>	
-		<module>ColFusionServerPSCClient</module>	
+		<module>ColFusionServerPSCClient</module>	-->
 	</modules>
 	
 	<distributionManagement>
@@ -111,33 +111,32 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>2.5.1</version>
+				<version>3.2</version>
 				<inherited>true</inherited>
 				<configuration>
-					<source>1.7</source>
-					<target>1.7</target>
+					<source>1.8</source>
+					<target>1.8</target>
 				</configuration>
 			</plugin>
 
-	<!--		<plugin>
+			<plugin>
 			  <groupId>org.apache.maven.plugins</groupId>
 			  <artifactId>maven-enforcer-plugin</artifactId>
-			  <version>1.0.1</version>
-			  <configuration>
-			    	<rules>
-			      		<DependencyConvergence/>
-			    	</rules>
-			  </configuration>
+			  <version>1.4</version>
 			  <executions>
-			    	<execution>
-			      		<id>enforce</id>
-			      		<goals>
-			        		<goal>enforce</goal>
-			      		</goals>
-			      		<phase>validate</phase>
-			    	</execution>
-			 	</executions> 
-			</plugin>  -->
+		          <execution>
+		            <id>enforce</id>
+		            <configuration>
+		              <rules>
+		                <dependencyConvergence/>
+		              </rules>
+		            </configuration>
+		            <goals>
+		              <goal>enforce</goal>
+		            </goals>
+		          </execution>
+		        </executions>
+			</plugin> 
 		</plugins>
 	</build>
 	

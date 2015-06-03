@@ -11,6 +11,16 @@ import com.google.gson.annotations.Expose;
 public class UserViewModel {
 	@Expose private int userId;
 	@Expose private String userLogin;
+    private String userNames;
+	
+	public UserViewModel(){
+		
+	}
+	
+	 public UserViewModel(Integer userId, String  userNames){
+	    	this.userId = userId;
+	    	this.userNames = userNames;
+	    }
 	public int getUserId() {
 		return userId;
 	}
@@ -22,6 +32,14 @@ public class UserViewModel {
 	}
 	public void setUserLogin(String userLogin) {
 		this.userLogin = userLogin;
+	}
+
+	public String getUserNames() {
+		return userNames;
+	}
+
+	public void setUserNames(String userNames) {
+		this.userNames = userNames;
 	}
 	
 

@@ -53,6 +53,7 @@
   <mapping resource="hibernate/orm_mappings/ColfusionSourceinfoMetadataEditHistory.hbm.xml"/>
   <mapping resource="hibernate/orm_mappings/ColfusionSourceinfoTableKtr.hbm.xml"/>
   <mapping resource="hibernate/orm_mappings/ColfusionSourceinfoUser.hbm.xml"/>
+  <mapping resource="hibernate/orm_mappings/ColfusionStory.hbm.xml"/>
   <mapping resource="hibernate/orm_mappings/ColfusionSynonymsFrom.hbm.xml"/>
   <mapping resource="hibernate/orm_mappings/ColfusionSynonymsTo.hbm.xml"/>
   <mapping resource="hibernate/orm_mappings/ColfusionTableChangeLog.hbm.xml"/>

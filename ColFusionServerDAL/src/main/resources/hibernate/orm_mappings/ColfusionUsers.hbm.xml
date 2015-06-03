@@ -201,5 +201,12 @@
             </key>
             <one-to-many class="edu.pitt.sis.exp.colfusion.dal.orm.ColfusionSynonymsTo" />
         </set>
+        
+        <set name="canvasSet" table="colfusion_canvases" inverse="true" fetch="join">
+          	<key>
+          		<column name="user_id" />
+          	</key>
+        	<one-to-many class="edu.pitt.sis.exp.colfusion.dal.orm.ColfusionCanvases" />
+        </set>
     </class>
 </hibernate-mapping>
