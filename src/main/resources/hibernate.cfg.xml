@@ -5,9 +5,11 @@
  <session-factory>
   <property name="hibernate.connection.driver_class">com.mysql.jdbc.Driver</property>
   <property name="hibernate.connection.password">dataverse</property>
-  <property name="hibernate.connection.url">jdbc:mysql://localhost:3306/colfusion</property>
+  <property name="hibernate.connection.url">jdbc:mysql://localhost:3306/colfusion2_0</property>
   <property name="hibernate.connection.username">dataverse</property>
   <property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect</property>
+  
+  <property name="hibernate.default_catalog">colfuson2_0</property>
   
   <property name="hibernate.connection.zeroDateTimeBehavior">convertToNull</property>
   
