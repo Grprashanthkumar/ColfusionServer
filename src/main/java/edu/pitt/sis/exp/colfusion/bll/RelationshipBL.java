@@ -94,16 +94,20 @@ public class RelationshipBL {
 		
 		story = GeneralManagerImpl.initializeField(story, "colfusionRelationshipsesForSid1");
 		
+		//TODO: This need to be handled in a better way!!!
+		BigDecimal similarityThresholdScaled = similarityThreshold.setScale(3);
+		
+		
 		if (story.getColfusionRelationshipsesForSid1().size() != 0 ){
 			triggerDataMatchingRatiosCalculationsForAllNotCalculatedByRelationshipsSet(
-					sid, story.getColfusionRelationshipsesForSid1(), similarityThreshold);
+					sid, story.getColfusionRelationshipsesForSid1(), similarityThresholdScaled);
 		}
 		
 		story = GeneralManagerImpl.initializeField(story, "colfusionRelationshipsesForSid2");
 		
 		if (story.getColfusionRelationshipsesForSid2().size() != 0 ){
 			triggerDataMatchingRatiosCalculationsForAllNotCalculatedByRelationshipsSet(
-					sid, story.getColfusionRelationshipsesForSid2(), similarityThreshold);
+					sid, story.getColfusionRelationshipsesForSid2(), similarityThresholdScaled);
 		}
 		
 		result.setMessage("OK");
@@ -206,6 +210,20 @@ public class RelationshipBL {
 		ColfusionRelationshipsColumnsDataMathingRatiosId columnsDataMathingRatiosId = new ColfusionRelationshipsColumnsDataMathingRatiosId(relationshipColumns.getId().getClFrom(), 
 				relationshipColumns.getId().getClTo(), similarityThreshold);
 		
+		logger.info("------------------------------------");
+		logger.info("About to check if data matching for given columns was already calculated or not but searching for a record in colfusion_relationships_columns_dataMathing_ratios table for these values:");
+		logger.info(String.format("data matching for given columns (from: %s and to: %s) and similarity threshold (%f) was found in db.", 
+					relationshipColumns.getId().getClFrom(), relationshipColumns.getId().getClTo(), similarityThreshold));
+		
+		logger.info("And here is the current content of the data matching table:");
+		List<ColfusionRelationshipsColumnsDataMathingRatios> all = dataMatingRatiosMng.findAll();
+		for (ColfusionRelationshipsColumnsDataMathingRatios ratio : all) {
+			logger.info(String.format("data matching for given columns (from: %s and to: %s) and similarity threshold (%f)", 
+					ratio.getId().getClFrom(), ratio.getId().getClTo(), ratio.getId().getSimilarityThreshold()));			
+		}
+		logger.info("------------------------------------");
+		
+		
 		ColfusionRelationshipsColumnsDataMathingRatios colfusionRelationshipsColumnsDataMathingRatios = 
 				dataMatingRatiosMng.findColfusionRelationshipsColumnsDataMathingRatios(columnsDataMathingRatiosId);
 		// if a record found in colfusion_relationships_columns_dataMathing_ratios for given columns and sim threshold, then data matchng values are known.
@@ -218,7 +236,9 @@ public class RelationshipBL {
 			//TODO: we might check the status of the associated process and if it is a failure, then we can probably restart the calculations.
 		}
 		else {
-
+			logger.info(String.format("Didn't find ratios in db for givel columns (from: %s and to: %s) and similarity threshold (%f).", 
+					relationshipColumns.getId().getClFrom(), relationshipColumns.getId().getClTo(), similarityThreshold));
+			
 			ColumnToColumnDataMatchingProcess process = new ColumnToColumnDataMatchingProcess(relationshipColumns.getId().getRelId(), 
 					relationshipColumns.getId().getClFrom(), relationshipColumns.getId().getClTo(), similarityThreshold);
 			

@@ -112,7 +112,7 @@ public class ExcelImporter implements Importer {
 	            		throw new Exception("Requested sheet is out of number of sheets in the file");
 	            	}
 	            	
-	            	Sheet sheet = wb.getSheetAt(worksheet.getIndexInTheFile());
+	            	Sheet sheet = wb.getSheet(worksheet.getSheetName()); //wb.getSheetAt(worksheet.getIndexInTheFile());
 	            	
 	            	if (worksheet.getHeaderRow() > sheet.getLastRowNum() + 1) {
         				logger.error("Requested header row is out of number of rows in the sheet");

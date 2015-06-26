@@ -9,7 +9,7 @@
   <property name="hibernate.connection.username">dataverse</property>
   <property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect</property>
   
-  <property name="hibernate.default_catalog">colfuson2_0</property>
+  <property name="hibernate.default_catalog">colfusion2_0</property>
   
   <property name="hibernate.connection.zeroDateTimeBehavior">convertToNull</property>
   
