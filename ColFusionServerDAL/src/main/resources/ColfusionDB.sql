@@ -1089,7 +1089,7 @@ CREATE TABLE `colfusion_sourceinfo` (
   `license_ID` int(11) DEFAULT NULL,
   `UserId` int(11) NOT NULL,
   `Title` varchar(40) DEFAULT NULL,
-  `Description` varchar(40) DEFAULT NULL,
+  `Description` TEXT DEFAULT NULL,
   `Path` varchar(200) DEFAULT NULL,
   `EntryDate` datetime NOT NULL,
   `LastUpdated` datetime DEFAULT NULL,
