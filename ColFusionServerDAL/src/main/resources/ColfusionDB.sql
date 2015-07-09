@@ -1,4 +1,4 @@
-CREATE DATABASE  IF NOT EXISTS `colfusion` /*!40100 DEFAULT CHARACTER SET latin1 */;
+CREATE DATABASE  IF NOT EXISTS `colfusion` /*!40100 DEFAULT CHARACTER SET utf8 */;
 USE `colfusion`;
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -14,7 +14,7 @@ CREATE TABLE `colfusion_additional_categories` (
   `ac_link_id` int(11) NOT NULL,
   `ac_cat_id` int(11) NOT NULL,
   PRIMARY KEY (`ac_link_id`,`ac_cat_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -36,7 +36,7 @@ CREATE TABLE `colfusion_cached_queries_info` (
   `tableName` longtext NOT NULL,
   `expiration_date` datetime NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -57,7 +57,7 @@ CREATE TABLE `colfusion_canvases` (
   PRIMARY KEY (`vid`),
   KEY `FK_rrd90u4au11k7m0y7ys7wasw1` (`user_id`),
   CONSTRAINT `FK_rrd90u4au11k7m0y7ys7wasw1` FOREIGN KEY (`user_id`) REFERENCES `colfusion_users` (`user_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -85,7 +85,7 @@ CREATE TABLE `colfusion_categories` (
   `category_votes` varchar(4) NOT NULL,
   `category_karma` varchar(4) NOT NULL,
   PRIMARY KEY (`category__auto_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -121,7 +121,7 @@ CREATE TABLE `colfusion_charts` (
   PRIMARY KEY (`cid`),
   KEY `FK_lym1jififkghqs6a4q15gwq5p` (`vid`),
   CONSTRAINT `FK_lym1jififkghqs6a4q15gwq5p` FOREIGN KEY (`vid`) REFERENCES `colfusion_canvases` (`vid`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -137,7 +137,7 @@ CREATE TABLE `colfusion_columnTableInfo` (
   `dbTableName` varchar(255) NOT NULL COMMENT 'The name of the database table where the data is stored in colfusion data databases. THIS WHOLE TABLE IS THE WORST DESGIN EVERY. NEED TO FIX IT. DUPLICATIONS.',
   PRIMARY KEY (`cid`),
   CONSTRAINT `FK_fvy2f733w7jrq4drk1445o4nd` FOREIGN KEY (`cid`) REFERENCES `colfusion_dnameinfo` (`cid`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -159,7 +159,7 @@ CREATE TABLE `colfusion_comments` (
   `comment_votes` int(11) NOT NULL,
   `comment_status` varchar(9) NOT NULL,
   PRIMARY KEY (`comment_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -181,7 +181,7 @@ CREATE TABLE `colfusion_config` (
   `var_method` varchar(10) DEFAULT NULL,
   `var_enclosein` varchar(5) DEFAULT NULL,
   PRIMARY KEY (`var_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -307,7 +307,7 @@ CREATE TABLE `colfusion_des_attachments` (
   KEY `FK_oh83r9dat33w96070dew57c5i` (`UserId`),
   CONSTRAINT `FK_oh83r9dat33w96070dew57c5i` FOREIGN KEY (`UserId`) REFERENCES `colfusion_users` (`user_id`),
   CONSTRAINT `FK_5mhqsvq21yu9gh58ugt9y5uo8` FOREIGN KEY (`Sid`) REFERENCES `colfusion_sourceinfo` (`Sid`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -332,7 +332,7 @@ CREATE TABLE `colfusion_dnameinfo` (
   PRIMARY KEY (`cid`),
   KEY `FK_ry8xyg3e3a0hi225q8k0195q6` (`sid`),
   CONSTRAINT `FK_ry8xyg3e3a0hi225q8k0195q6` FOREIGN KEY (`sid`) REFERENCES `colfusion_sourceinfo` (`Sid`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -355,7 +355,7 @@ CREATE TABLE `colfusion_dnameinfo_metadata_edit_history` (
   KEY `FK_6qtapop8o9y3asb5d3ma7ngw4` (`uid`),
   CONSTRAINT `FK_6qtapop8o9y3asb5d3ma7ngw4` FOREIGN KEY (`uid`) REFERENCES `colfusion_users` (`user_id`),
   CONSTRAINT `FK_tknft8ptxphm2bnwca6g2di6k` FOREIGN KEY (`cid`) REFERENCES `colfusion_dnameinfo` (`cid`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -381,7 +381,7 @@ CREATE TABLE `colfusion_executeinfo` (
   PRIMARY KEY (`Eid`),
   KEY `FK_ok0jbkcb90fa4r6jla4akpn9e` (`Sid`),
   CONSTRAINT `FK_ok0jbkcb90fa4r6jla4akpn9e` FOREIGN KEY (`Sid`) REFERENCES `colfusion_sourceinfo` (`Sid`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -398,7 +398,7 @@ CREATE TABLE `colfusion_formulas` (
   `title` varchar(50) DEFAULT NULL,
   `formula` longtext,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -413,7 +413,7 @@ CREATE TABLE `colfusion_friends` (
   `friend_from` bigint(20) NOT NULL,
   `friend_to` bigint(20) NOT NULL,
   PRIMARY KEY (`friend_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -430,7 +430,7 @@ CREATE TABLE `colfusion_group_member` (
   `member_role` varchar(9) NOT NULL,
   `member_status` varchar(8) NOT NULL,
   PRIMARY KEY (`member_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -446,7 +446,7 @@ CREATE TABLE `colfusion_group_shared` (
   `share_group_id` int(11) NOT NULL,
   `share_user_id` int(11) NOT NULL,
   PRIMARY KEY (`share_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -476,7 +476,7 @@ CREATE TABLE `colfusion_groups` (
   `group_field6` varchar(255) DEFAULT NULL,
   `group_notify_email` bit(1) NOT NULL,
   PRIMARY KEY (`group_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -494,7 +494,7 @@ CREATE TABLE `colfusion_index_location` (
   PRIMARY KEY (`lid`),
   KEY `FK_5kuymbhhbe0doe96se9msab15` (`cid`),
   CONSTRAINT `FK_5kuymbhhbe0doe96se9msab15` FOREIGN KEY (`cid`) REFERENCES `colfusion_dnameinfo` (`cid`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -510,7 +510,7 @@ CREATE TABLE `colfusion_license` (
   `license_Des` longtext,
   `license_URL` longtext,
   PRIMARY KEY (`license_ID`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -535,7 +535,7 @@ CREATE TABLE `colfusion_likes` (
   `like_update_id` int(11) NOT NULL,
   `like_user_id` int(11) NOT NULL,
   PRIMARY KEY (`like_update_id`,`like_user_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -585,7 +585,7 @@ CREATE TABLE `colfusion_links` (
   `link_group_status` varchar(9) NOT NULL,
   `link_out` int(11) NOT NULL,
   PRIMARY KEY (`link_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -602,7 +602,7 @@ CREATE TABLE `colfusion_login_attempts` (
   `login_ip` varchar(100) DEFAULT NULL,
   `login_count` int(11) NOT NULL,
   PRIMARY KEY (`login_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -622,7 +622,7 @@ CREATE TABLE `colfusion_messages` (
   `readed` int(11) NOT NULL,
   `date` datetime NOT NULL,
   PRIMARY KEY (`idMsg`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -636,7 +636,7 @@ CREATE TABLE `colfusion_misc_data` (
   `name` varchar(20) NOT NULL,
   `data` longtext,
   PRIMARY KEY (`name`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -654,7 +654,7 @@ CREATE TABLE `colfusion_modules` (
   `folder` varchar(50) DEFAULT NULL,
   `enabled` bit(1) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -672,7 +672,7 @@ CREATE TABLE `colfusion_notifications` (
   PRIMARY KEY (`ntf_id`),
   KEY `FK_t1oenxdm5eync7fotfy18461t` (`sender_id`),
   CONSTRAINT `FK_t1oenxdm5eync7fotfy18461t` FOREIGN KEY (`sender_id`) REFERENCES `colfusion_users` (`user_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -687,7 +687,7 @@ CREATE TABLE `colfusion_notifications_unread` (
   `receiver_id` int(11) NOT NULL,
   PRIMARY KEY (`ntf_id`,`receiver_id`),
   CONSTRAINT `FK_puw1y1olw9etquspep1k2fbjk` FOREIGN KEY (`ntf_id`) REFERENCES `colfusion_notifications` (`ntf_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -702,7 +702,7 @@ CREATE TABLE `colfusion_old_urls` (
   `old_link_id` int(11) NOT NULL,
   `old_title_url` varchar(255) NOT NULL,
   PRIMARY KEY (`old_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -718,7 +718,7 @@ CREATE TABLE `colfusion_openrefine_history_helper` (
   `count` int(11) NOT NULL,
   `isSaved` int(11) NOT NULL,
   PRIMARY KEY (`sid`,`tableName`,`count`,`isSaved`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -733,7 +733,7 @@ CREATE TABLE `colfusion_openrefine_project_map` (
   `tableName` varchar(255) NOT NULL,
   `projectId` varchar(255) NOT NULL,
   PRIMARY KEY (`sid`,`tableName`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -756,7 +756,7 @@ CREATE TABLE `colfusion_pentaho_log_logging_channels` (
   `OBJECT_REVISION` varchar(255) DEFAULT NULL,
   `PARENT_CHANNEL_ID` varchar(255) DEFAULT NULL,
   `ROOT_CHANNEL_ID` varchar(255) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -782,7 +782,7 @@ CREATE TABLE `colfusion_pentaho_log_performance` (
   `ERRORS` bigint(20) DEFAULT NULL,
   `INPUT_BUFFER_ROWS` bigint(20) DEFAULT NULL,
   `OUTPUT_BUFFER_ROWS` bigint(20) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -807,7 +807,7 @@ CREATE TABLE `colfusion_pentaho_log_step` (
   `LINES_REJECTED` bigint(20) DEFAULT NULL,
   `ERRORS` bigint(20) DEFAULT NULL,
   `LOG_FIELD` mediumtext
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -837,7 +837,7 @@ CREATE TABLE `colfusion_pentaho_log_transformaion` (
   `LOG_FIELD` mediumtext,
   KEY `IDX_colfusion_pentaho_log_transformaion_1` (`ID_BATCH`),
   KEY `IDX_colfusion_pentaho_log_transformaion_2` (`ERRORS`,`STATUS`,`TRANSNAME`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -906,7 +906,7 @@ CREATE TABLE `colfusion_processes` (
   `processClass` longtext,
   `reasonForStatus` longtext,
   PRIMARY KEY (`pid`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -933,7 +933,7 @@ CREATE TABLE `colfusion_psc_sourceinfo_table` (
   KEY `FK_k74kljav616dstg1qf6pt5d6i` (`pid`),
   CONSTRAINT `FK_k74kljav616dstg1qf6pt5d6i` FOREIGN KEY (`pid`) REFERENCES `colfusion_processes` (`pid`),
   CONSTRAINT `FK_544gide45tq0p4uajsq5ly39x` FOREIGN KEY (`sid`) REFERENCES `colfusion_sourceinfo` (`Sid`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -948,7 +948,7 @@ CREATE TABLE `colfusion_redirects` (
   `redirect_old` varchar(255) DEFAULT NULL,
   `redirect_new` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`redirect_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -976,7 +976,7 @@ CREATE TABLE `colfusion_relationships` (
   CONSTRAINT `FK_1qm11x24s30iv7m83uu7gqs7b` FOREIGN KEY (`sid2`) REFERENCES `colfusion_sourceinfo` (`Sid`),
   CONSTRAINT `FK_jgq89ds8g9jluu07jwjuv92jk` FOREIGN KEY (`sid1`) REFERENCES `colfusion_sourceinfo` (`Sid`),
   CONSTRAINT `FK_p2pwoqg4uc0ccmubaaaldmoqo` FOREIGN KEY (`creator`) REFERENCES `colfusion_users` (`user_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -994,7 +994,7 @@ CREATE TABLE `colfusion_relationships_columns` (
   `dataMatchingToRatio` decimal(4,2) DEFAULT NULL,
   PRIMARY KEY (`rel_id`,`cl_from`,`cl_to`),
   CONSTRAINT `FK_q148qm7xyc1wk0dvcl9x7nsm2` FOREIGN KEY (`rel_id`) REFERENCES `colfusion_relationships` (`rel_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1012,7 +1012,7 @@ CREATE TABLE `colfusion_relationships_columns_cachingexecutioninfo` (
   `errorMessage` longtext,
   `query` longtext,
   PRIMARY KEY (`transformation`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1032,7 +1032,7 @@ CREATE TABLE `colfusion_relationships_columns_dataMathing_ratios` (
   PRIMARY KEY (`cl_from`,`cl_to`,`similarity_threshold`),
   KEY `FK_outwl9bbsr7rwqf2y4o5ktdvw` (`pid`),
   CONSTRAINT `FK_outwl9bbsr7rwqf2y4o5ktdvw` FOREIGN KEY (`pid`) REFERENCES `colfusion_processes` (`pid`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1048,7 +1048,7 @@ CREATE TABLE `colfusion_saved_links` (
   `saved_link_id` int(11) NOT NULL,
   `saved_privacy` varchar(8) NOT NULL,
   PRIMARY KEY (`saved_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1067,7 +1067,7 @@ CREATE TABLE `colfusion_services` (
   `service_command` varchar(100) NOT NULL,
   `service_status` varchar(20) NOT NULL,
   PRIMARY KEY (`service_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1085,7 +1085,7 @@ CREATE TABLE `colfusion_shares` (
   KEY `FK_mvoxkkf0u1q0c16g4r0351tds` (`user_id`),
   CONSTRAINT `FK_le1hbfj3cobun8oicmetgqs0f` FOREIGN KEY (`vid`) REFERENCES `colfusion_canvases` (`vid`),
   CONSTRAINT `FK_mvoxkkf0u1q0c16g4r0351tds` FOREIGN KEY (`user_id`) REFERENCES `colfusion_users` (`user_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1113,7 +1113,7 @@ CREATE TABLE `colfusion_sourceinfo` (
   KEY `FK_mrbc8gx8a89v6ge8jsx0ld8of` (`UserId`),
   CONSTRAINT `FK_mrbc8gx8a89v6ge8jsx0ld8of` FOREIGN KEY (`UserId`) REFERENCES `colfusion_users` (`user_id`),
   CONSTRAINT `FK_hrcfg5c3u36rphe7yqh391u3h` FOREIGN KEY (`license_ID`) REFERENCES `colfusion_license` (`license_ID`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1135,7 +1135,7 @@ CREATE TABLE `colfusion_sourceinfo_DB` (
   `linked_server_name` varchar(255) DEFAULT NULL COMMENT 'Stores linked server name of the database. This value will be different only for remotely submitted databases because we give collusion internal name for them when create a linked server.',
   PRIMARY KEY (`sid`),
   CONSTRAINT `FK_o1xn9y04rc6syxpop1fhk0ebr` FOREIGN KEY (`sid`) REFERENCES `colfusion_sourceinfo` (`Sid`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1158,7 +1158,7 @@ CREATE TABLE `colfusion_sourceinfo_metadata_edit_history` (
   KEY `FK_k5ms6go5yg2ly8gty3q2sxso6` (`uid`),
   CONSTRAINT `FK_k5ms6go5yg2ly8gty3q2sxso6` FOREIGN KEY (`uid`) REFERENCES `colfusion_users` (`user_id`),
   CONSTRAINT `FK_gsq54ere2j3yyaeoisbw9p508` FOREIGN KEY (`sid`) REFERENCES `colfusion_sourceinfo` (`Sid`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1174,7 +1174,7 @@ CREATE TABLE `colfusion_sourceinfo_table_ktr` (
   `pathToKTRFile` longtext NOT NULL,
   PRIMARY KEY (`sid`,`tableName`),
   CONSTRAINT `FK_ncgqkrengjpwm2pp9c24ekthj` FOREIGN KEY (`sid`) REFERENCES `colfusion_sourceinfo` (`Sid`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1194,7 +1194,7 @@ CREATE TABLE `colfusion_sourceinfo_user` (
   CONSTRAINT `FK_n7pcs7ldlq4smu87xlnjalsg7` FOREIGN KEY (`uid`) REFERENCES `colfusion_users` (`user_id`),
   CONSTRAINT `FK_kvymtcpvongyfrk5mq44dumrg` FOREIGN KEY (`rid`) REFERENCES `colfusion_userroles` (`role_id`),
   CONSTRAINT `FK_t8ec1amh37pv1vxuavws55t6s` FOREIGN KEY (`sid`) REFERENCES `colfusion_sourceinfo` (`Sid`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1216,7 +1216,7 @@ CREATE TABLE `colfusion_synonyms_from` (
   KEY `FK_anrqb561xlvudlccfcubno765` (`userId`),
   CONSTRAINT `FK_anrqb561xlvudlccfcubno765` FOREIGN KEY (`userId`) REFERENCES `colfusion_users` (`user_id`),
   CONSTRAINT `FK_hwaafrhxx1oxfq5bqvexub87f` FOREIGN KEY (`sid`) REFERENCES `colfusion_sourceinfo` (`Sid`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1238,7 +1238,7 @@ CREATE TABLE `colfusion_synonyms_to` (
   KEY `FK_iy15ri9da0iwp3tvrk7wiox5` (`userId`),
   CONSTRAINT `FK_iy15ri9da0iwp3tvrk7wiox5` FOREIGN KEY (`userId`) REFERENCES `colfusion_users` (`user_id`),
   CONSTRAINT `FK_7dw4w6lncy1u5fp68whu2l583` FOREIGN KEY (`sid`) REFERENCES `colfusion_sourceinfo` (`Sid`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1255,7 +1255,7 @@ CREATE TABLE `colfusion_table_change_log` (
   `endChangeTime` datetime NOT NULL,
   `operatedUser` varchar(32) NOT NULL,
   PRIMARY KEY (`sid`,`tableName`,`startChangeTime`,`endChangeTime`,`operatedUser`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1269,7 +1269,7 @@ CREATE TABLE `colfusion_tag_cache` (
   `tag_words` varchar(64) NOT NULL,
   `count` int(11) NOT NULL,
   PRIMARY KEY (`tag_words`,`count`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1285,7 +1285,7 @@ CREATE TABLE `colfusion_tags` (
   `tag_date` datetime NOT NULL,
   `tag_words` varchar(64) NOT NULL,
   PRIMARY KEY (`tag_link_id`,`tag_lang`,`tag_date`,`tag_words`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1313,7 +1313,7 @@ CREATE TABLE `colfusion_target` (
   `rownum` int(11) DEFAULT NULL,
   `columnnum` int(11) DEFAULT NULL,
   PRIMARY KEY (`Tid`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1341,7 +1341,7 @@ CREATE TABLE `colfusion_temporary` (
   PRIMARY KEY (`Tid`),
   KEY `FK_2bj6a8na5tiq0a98j6uxw2xr9` (`Sid`),
   CONSTRAINT `FK_2bj6a8na5tiq0a98j6uxw2xr9` FOREIGN KEY (`Sid`) REFERENCES `colfusion_sourceinfo` (`Sid`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1355,7 +1355,7 @@ CREATE TABLE `colfusion_totals` (
   `name` varchar(10) NOT NULL,
   `total` int(11) NOT NULL,
   PRIMARY KEY (`name`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1377,7 +1377,7 @@ CREATE TABLE `colfusion_trackbacks` (
   `trackback_title` longtext,
   `trackback_content` longtext,
   PRIMARY KEY (`trackback_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1398,7 +1398,7 @@ CREATE TABLE `colfusion_updates` (
   `update_level` varchar(25) DEFAULT NULL,
   `update_text` longtext NOT NULL,
   PRIMARY KEY (`update_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1418,7 +1418,7 @@ CREATE TABLE `colfusion_user_relationship_verdict` (
   KEY `FK_jwjbdowtd69g097tu6kke59ov` (`user_id`),
   CONSTRAINT `FK_hxtbjyt1nlmgc9bp234eqot0m` FOREIGN KEY (`rel_id`) REFERENCES `colfusion_relationships` (`rel_id`),
   CONSTRAINT `FK_jwjbdowtd69g097tu6kke59ov` FOREIGN KEY (`user_id`) REFERENCES `colfusion_users` (`user_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1433,7 +1433,7 @@ CREATE TABLE `colfusion_userroles` (
   `role` varchar(45) NOT NULL,
   `description` longtext,
   PRIMARY KEY (`role_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1492,7 +1492,7 @@ CREATE TABLE `colfusion_users` (
   `status_excludes` longtext,
   PRIMARY KEY (`user_id`),
   UNIQUE KEY `UK_25iqgtemiawp5w6njsj9c5efu` (`user_login`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1517,7 +1517,7 @@ CREATE TABLE `colfusion_validation_code` (
   `vcode` varchar(20) NOT NULL,
   `isUsed` bit(1) NOT NULL,
   PRIMARY KEY (`email`,`vcode`,`isUsed`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1540,7 +1540,7 @@ CREATE TABLE `colfusion_visualization` (
   PRIMARY KEY (`vid`),
   KEY `FK_4ya8fi7501pdiwl7688k39m3o` (`titleno`),
   CONSTRAINT `FK_4ya8fi7501pdiwl7688k39m3o` FOREIGN KEY (`titleno`) REFERENCES `colfusion_sourceinfo` (`Sid`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1560,7 +1560,7 @@ CREATE TABLE `colfusion_votes` (
   `vote_karma` int(11) DEFAULT NULL,
   `vote_ip` varchar(64) DEFAULT NULL,
   PRIMARY KEY (`vote_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1582,7 +1582,7 @@ CREATE TABLE `colfusion_widgets` (
   `display` varchar(5) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `UK_c094lydovql5fij4x3ygtu837` (`folder`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
