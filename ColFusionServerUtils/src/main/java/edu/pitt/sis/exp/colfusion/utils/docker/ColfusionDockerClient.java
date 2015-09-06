@@ -55,7 +55,7 @@ public final class ColfusionDockerClient {
 			    .withVersion(configMng.getProperty(PropertyKeys.COLFUSION_DOCKER_VERSION))
 			    .withUri(configMng.getProperty(PropertyKeys.COLFUSION_DOCKER_URI))
 			    .withServerAddress(configMng.getProperty(PropertyKeys.COLFUSION_DOCKER_SERVER_ADDRESS))
-			    .withDockerCertPath(configMng.getProperty(PropertyKeys.COLFUSION_DOCKER_CERT_PATH))
+//			    .withDockerCertPath(configMng.getProperty(PropertyKeys.COLFUSION_DOCKER_CERT_PATH))
 			    .build();
 				
 		DockerClient dockerClient = DockerClientBuilder.getInstance(config).build();

@@ -7,10 +7,6 @@ import edu.pitt.sis.exp.colfusion.utils.PairOf;
 import edu.pitt.sis.exp.colfusion.utils.docker.ColfusionDockerClient;
 import edu.pitt.sis.exp.colfusion.utils.docker.containers.MySQLDockerContainer;
 
-/**
- * @author Evgeny
- *
- */
 public class MySQLContainerProvider extends AbstractDockerContainerProvider<MySQLDockerContainer> {
 
 	public static final int MYSQL_PORT_DEFAULT = 3306;
