@@ -16,6 +16,9 @@ import com.github.dockerjava.api.command.CreateContainerResponse;
 import com.github.dockerjava.api.command.InspectContainerResponse;
 import com.github.dockerjava.core.DockerClientBuilder;
 import com.github.dockerjava.core.DockerClientConfig;
+import com.github.dockerjava.core.command.LogContainerResultCallback;
+import com.github.dockerjava.core.command.PullImageResultCallback;
+import com.github.dockerjava.jaxrs.DockerCmdExecFactoryImpl;
 
 import edu.pitt.sis.exp.colfusion.utils.ConfigManager;
 import edu.pitt.sis.exp.colfusion.utils.PairOf;
@@ -58,7 +61,14 @@ public final class ColfusionDockerClient {
 //			    .withDockerCertPath(configMng.getProperty(PropertyKeys.COLFUSION_DOCKER_CERT_PATH))
 			    .build();
 				
-		DockerClient dockerClient = DockerClientBuilder.getInstance(config).build();
+		DockerCmdExecFactoryImpl dockerCmdExecFactory = new DockerCmdExecFactoryImpl()
+				  .withReadTimeout(1000)
+				  .withConnectTimeout(1000);
+		
+		DockerClient dockerClient = DockerClientBuilder
+				.getInstance(config)
+				.withDockerCmdExecFactory(dockerCmdExecFactory)
+				.build();
 		
 		logger.info("Done initializing docker client");
 		
@@ -87,24 +97,13 @@ public final class ColfusionDockerClient {
 	}
 
 	public void pullImage(final String imageName, final String tag) throws IOException {
-		InputStream io = dockerClient.pullImageCmd(imageName)
+		dockerClient.pullImageCmd(imageName)
 				.withTag(tag)
-				.exec();
-		
-		BufferedReader bf = new BufferedReader(new InputStreamReader(io));
-		String line = null;
-		//TODO: potential "deadlock" if there never a line that contains that string. Check for mysql shutdown
-		while ((line = bf.readLine()) != null) {
-			logger.info(line);
-		}
-		
-		bf.close();
-		io.close();
+				.exec(new PullImageResultCallback()).awaitSuccess();
 	}
 
 	public void startContainer(final String containerId) {
 		dockerClient.startContainerCmd(containerId)
-		   .withPublishAllPorts(true)
 		   .exec();
 	}
 
@@ -116,15 +115,17 @@ public final class ColfusionDockerClient {
 		dockerClient.removeContainerCmd(containerId).exec();
 	}
 	
-	public InputStream logContainer(final String containerId) {
-		InputStream io = dockerClient.logContainerCmd(containerId)
+	public String logContainer(final String containerId) throws InterruptedException {
+		LogContainerResultCallback logContainerResult = new LogContainerResultCallback();
+		
+		LogContainerResultCallback io = dockerClient.logContainerCmd(containerId)
 				.withStdOut(true)
 				.withStdErr(true)
 				.withTailAll()
 				.withFollowStream(true)
-				.exec();
+				.exec(logContainerResult).awaitCompletion();
 		
-		return io;
+		return io.toString();
 	}
 
 	public InspectContainerResponse inspectContainer(final String containerId) {

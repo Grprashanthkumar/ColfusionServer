@@ -33,35 +33,25 @@ public class MySQLDockerContainer extends AbstractDockerContainer {
 	protected boolean isContainerStarted() {
 		
 		try {
-			InputStream io = dockerClient.logContainer(containerId);
-		
-			BufferedReader bf = new BufferedReader(new InputStreamReader(io));
-			String line = null;
-			StringBuilder logBuilder = new StringBuilder();
-			//TODO: potential "deadlock" if there never a line that contains that string. Check for mysql shutdown
-			while ((line = bf.readLine()) != null) {
-				logBuilder.append(line).append(StringUtils.NEWLINE);
-//				System.out.println(line);
-				if (line.toLowerCase().contains("mysqld: ready for connections.".toLowerCase())) {
-					break;
-				}
-				if (line.toLowerCase().contains("/usr/sbin/mysqld: Shutdown complete".toLowerCase())) {
-					String message = String.format("Couldn't start mysql image for container '%s' because mysqld could not start."
-							+ "The log from container is: %s", containerId, logBuilder.toString());
-					logger.error(message);
-					throw new RuntimeException(message);
-				}
+			String log = dockerClient.logContainer(containerId);
+			
+			if (log.toLowerCase().contains("mysqld: ready for connections.")) {
+				return true;
 			}
 			
-			bf.close();
-			io.close();
+			if (log.toLowerCase().contains("/usr/sbin/mysqld: Shutdown complete".toLowerCase())) {
+				String message = String.format("Couldn't start mysql image for container '%s' because mysqld could not start."
+						+ "The log from container is: %s", containerId, log);
+				logger.error(message);
+				throw new RuntimeException(message);
+			}
+			
+			return false;	
 		}
 		catch (Exception e) {
-			//TODO: add logger statements
-			return false;
+			logger.error(e);
+			throw new RuntimeException(e);
 		}
-		
-		return true;
 	}
 
 	@Override

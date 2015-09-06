@@ -25,12 +25,12 @@
 			<artifactId>colfusionserverutils</artifactId>
 			<version>2.0-SNAPSHOT</version>
 			<scope>compile</scope>
-			<exclusions>
-		        <exclusion>  <!-- declare the exclusion here -->
+			<!-- <exclusions>
+		        <exclusion>  
 		          <groupId>com.github.docker-java</groupId>
 		          <artifactId>docker-java</artifactId>
 		        </exclusion>		        
-   	        </exclusions>
+   	        </exclusions>  -->
 		</dependency>
 		
 		<dependency>
@@ -39,12 +39,12 @@
 		    <version>2.0-SNAPSHOT</version>
 		    <type>test-jar</type>
 		    <scope>test</scope>
-		    <exclusions>
-		        <exclusion>  <!-- declare the exclusion here -->
+		    <!--  <exclusions>
+		        <exclusion>  
 		          <groupId>com.github.docker-java</groupId>
 		          <artifactId>docker-java</artifactId>
 		        </exclusion>		        
-		      </exclusions>
+		      </exclusions>   -->
     	</dependency>
 
 		<dependency>

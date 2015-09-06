@@ -35,21 +35,21 @@
 		<dependency>
 		      <groupId>com.github.docker-java</groupId>
 		      <artifactId>docker-java</artifactId>
-		      <version>0.10.4</version>
-		      <exclusions>
-		        <exclusion>  <!-- declare the exclusion here -->
+		      <version>2.1.0</version>
+		  <!--     <exclusions>
+		        <exclusion>  
 		          <groupId>commons-io</groupId>
 		          <artifactId>commons-io</artifactId>
 		        </exclusion>
-		        <exclusion>  <!-- declare the exclusion here -->
+		        <exclusion>  
 		          <groupId>com.fasterxml.jackson.jaxrs</groupId>
 		          <artifactId>jackson-jaxrs-json-provider</artifactId>
 		        </exclusion>
-		        <exclusion>  <!-- declare the exclusion here -->
+		        <exclusion> 
 		          <groupId>org.apache.commons</groupId>
 		          <artifactId>commons-compress</artifactId>
 		        </exclusion>
-		      </exclusions>
+		      </exclusions>    -->
 		</dependency> 
 		
 	</dependencies>
