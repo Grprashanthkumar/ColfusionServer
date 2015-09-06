@@ -45,6 +45,16 @@ public abstract class AbstractDockerContainer {
 		}
 	}
 
+	public boolean isRunning() {
+		InspectContainerResponse inspectResponse = dockerClient.inspectContainer(containerId);
+		
+		if (inspectResponse == null) {
+			return false;
+		}
+		
+		return inspectResponse.getState().isRunning(); 
+	}
+	
 	public void stop() {
 		dockerClient.stopContainer(containerId);
 	}

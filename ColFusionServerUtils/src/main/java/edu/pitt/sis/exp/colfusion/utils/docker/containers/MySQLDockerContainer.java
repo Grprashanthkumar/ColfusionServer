@@ -15,14 +15,11 @@ import edu.pitt.sis.exp.colfusion.utils.docker.ColfusionDockerClient;
 import edu.pitt.sis.exp.colfusion.utils.docker.containerProviders.AbstractDockerContainerProvider;
 import edu.pitt.sis.exp.colfusion.utils.docker.containerProviders.MySQLContainerProvider;
 
-
-/**
- * @author Evgeny
- *
- */
 public class MySQLDockerContainer extends AbstractDockerContainer {
 
 	MySQLDockerContainerConnectionInfo connectionInfo;
+	private static int LOG_RETRY_NUMBER = 5;
+	private static int LOG_RETRY_SLEEP_MS = 1000;
 	
 	public MySQLDockerContainer(final String containerId, final ColfusionDockerClient dockerClient,
 			final AbstractDockerContainerProvider<MySQLDockerContainer> containerProvider) {
@@ -33,20 +30,29 @@ public class MySQLDockerContainer extends AbstractDockerContainer {
 	protected boolean isContainerStarted() {
 		
 		try {
-			String log = dockerClient.logContainer(containerId);
-			
-			if (log.toLowerCase().contains("mysqld: ready for connections.")) {
-				return true;
+			int time = 0;
+			while (time++ < LOG_RETRY_NUMBER) {			
+				if (!isRunning()) {
+					return false;
+				}
+				
+				String log = dockerClient.logContainer(containerId);
+				
+				if (log.toLowerCase().contains("mysqld: ready for connections.")) {
+					return true;
+				}
+				
+				if (log.toLowerCase().contains("/usr/sbin/mysqld: Shutdown complete".toLowerCase())) {
+					String message = String.format("Couldn't start mysql image for container '%s' because mysqld could not start."
+							+ "The log from container is: %s", containerId, log);
+					logger.error(message);
+					throw new RuntimeException(message);
+				}
+				
+				Thread.sleep(LOG_RETRY_SLEEP_MS);
 			}
 			
-			if (log.toLowerCase().contains("/usr/sbin/mysqld: Shutdown complete".toLowerCase())) {
-				String message = String.format("Couldn't start mysql image for container '%s' because mysqld could not start."
-						+ "The log from container is: %s", containerId, log);
-				logger.error(message);
-				throw new RuntimeException(message);
-			}
-			
-			return false;	
+			return false;
 		}
 		catch (Exception e) {
 			logger.error(e);

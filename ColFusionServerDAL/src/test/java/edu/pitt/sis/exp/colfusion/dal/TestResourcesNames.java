@@ -2,7 +2,6 @@ package edu.pitt.sis.exp.colfusion.dal;
 
 /**
  * This class lists names of all test resources for this project.
- * @author Evgeny
  *
  */
 public class TestResourcesNames {
