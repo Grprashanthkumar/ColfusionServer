@@ -253,8 +253,10 @@ public abstract class DatabaseUnitTestBase extends DockerTestBase {
 	}
 
 	protected static Connection getConnection(final String connectionUrl) throws SQLException {
+		logger.info(String.format("Getting connection for url '%s', username '%s'", connectionUrl, mysqlContainer.getMySQLConnectionInfo().getUserName()));
+		
 		return DriverManager.getConnection(connectionUrl, 
-				mysqlContainer.getMySQLConnectionInfo().getUserName(), mysqlContainer.getMySQLConnectionInfo().getPasswordt());
+				mysqlContainer.getMySQLConnectionInfo().getUserName(), mysqlContainer.getMySQLConnectionInfo().getPassword());
 	}
 	
 	/**
@@ -266,7 +268,7 @@ public abstract class DatabaseUnitTestBase extends DockerTestBase {
 		
 		redefineSystemPropertyForClass(PropertyKeys.COLFUSION_HIBERNATE_CONNECTION_URL.getKey(), connectionStringWithSchema);
 		redefineSystemPropertyForClass(PropertyKeys.COLFUSION_HIBERNATE_CONNECTION_USERNAME.getKey(), mySQLDockerContainerConnectionInfo.getUserName());
-		redefineSystemPropertyForClass(PropertyKeys.COLFUSION_HIBERNATE_CONNECTION_PASSWORD.getKey(), mySQLDockerContainerConnectionInfo.getPasswordt());
+		redefineSystemPropertyForClass(PropertyKeys.COLFUSION_HIBERNATE_CONNECTION_PASSWORD.getKey(), mySQLDockerContainerConnectionInfo.getPassword());
 	}
 		
 	protected ColfusionSourceinfo setUpTestStory(final String tableName, final String... columnNames) throws Exception {
@@ -374,7 +376,7 @@ public abstract class DatabaseUnitTestBase extends DockerTestBase {
 			final String targetDatabaseName, final String driver) throws Exception {
 		ColfusionSourceinfoDb sourceInfoDb = new ColfusionSourceinfoDb(story, mySQLDockerContainerConnectionInfo.getHost(), 
 				mySQLDockerContainerConnectionInfo.getPort(),
-				mySQLDockerContainerConnectionInfo.getUserName(), mySQLDockerContainerConnectionInfo.getPasswordt(), targetDatabaseName, driver);
+				mySQLDockerContainerConnectionInfo.getUserName(), mySQLDockerContainerConnectionInfo.getPassword(), targetDatabaseName, driver);
 		
 		SourceInfoDbManager sourceInfoDbMng = new SourceInfoDbManagerImpl();
 		

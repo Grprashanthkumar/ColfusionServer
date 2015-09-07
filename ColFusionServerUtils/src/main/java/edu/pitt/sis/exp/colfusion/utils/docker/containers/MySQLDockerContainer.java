@@ -18,8 +18,8 @@ import edu.pitt.sis.exp.colfusion.utils.docker.containerProviders.MySQLContainer
 public class MySQLDockerContainer extends AbstractDockerContainer {
 
 	MySQLDockerContainerConnectionInfo connectionInfo;
-	private static int LOG_RETRY_NUMBER = 5;
-	private static int LOG_RETRY_SLEEP_MS = 1000;
+	private static int LOG_RETRY_NUMBER = 25;
+	private static int LOG_RETRY_SLEEP_MS = 3000;
 	
 	public MySQLDockerContainer(final String containerId, final ColfusionDockerClient dockerClient,
 			final AbstractDockerContainerProvider<MySQLDockerContainer> containerProvider) {
@@ -31,14 +31,19 @@ public class MySQLDockerContainer extends AbstractDockerContainer {
 		
 		try {
 			int time = 0;
+			String log = "";
 			while (time++ < LOG_RETRY_NUMBER) {			
 				if (!isRunning()) {
+					logger.warn(String.format("Container %s is not running", containerId));
 					return false;
 				}
 				
-				String log = dockerClient.logContainer(containerId);
+				log = dockerClient.logContainer(containerId);
 				
 				if (log.toLowerCase().contains("mysqld: ready for connections.")) {
+					logger.info(String.format("Log for container %s contains the message that mysql is ready, "
+							+ "thus container is ready, but still going to sleep just a little bit before returning", containerId));
+					Thread.sleep(LOG_RETRY_SLEEP_MS);
 					return true;
 				}
 				
@@ -49,8 +54,16 @@ public class MySQLDockerContainer extends AbstractDockerContainer {
 					throw new RuntimeException(message);
 				}
 				
+				logger.info(String.format("Going to sleep for %d before checking log for container %s again. There are still %d more tries", 
+						LOG_RETRY_SLEEP_MS, containerId, LOG_RETRY_NUMBER - time));
 				Thread.sleep(LOG_RETRY_SLEEP_MS);
 			}
+			
+			logger.info(String.format("Exiting isContainerStarted for container %s with false because used up "
+					+ "all try attempts to read the log and see that mysql is ready", 
+					containerId));
+			
+			logger.info(String.format("Here is the log from container %s: %s", containerId, log));
 			
 			return false;
 		}
@@ -99,7 +112,7 @@ public class MySQLDockerContainer extends AbstractDockerContainer {
 			return userName;
 		}
 		
-		public String getPasswordt() {
+		public String getPassword() {
 			return password;
 		}
 		
