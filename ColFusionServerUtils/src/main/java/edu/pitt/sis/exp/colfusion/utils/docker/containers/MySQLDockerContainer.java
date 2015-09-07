@@ -15,14 +15,11 @@ import edu.pitt.sis.exp.colfusion.utils.docker.ColfusionDockerClient;
 import edu.pitt.sis.exp.colfusion.utils.docker.containerProviders.AbstractDockerContainerProvider;
 import edu.pitt.sis.exp.colfusion.utils.docker.containerProviders.MySQLContainerProvider;
 
-
-/**
- * @author Evgeny
- *
- */
 public class MySQLDockerContainer extends AbstractDockerContainer {
 
 	MySQLDockerContainerConnectionInfo connectionInfo;
+	private static int LOG_RETRY_NUMBER = 25;
+	private static int LOG_RETRY_SLEEP_MS = 3000;
 	
 	public MySQLDockerContainer(final String containerId, final ColfusionDockerClient dockerClient,
 			final AbstractDockerContainerProvider<MySQLDockerContainer> containerProvider) {
@@ -33,35 +30,47 @@ public class MySQLDockerContainer extends AbstractDockerContainer {
 	protected boolean isContainerStarted() {
 		
 		try {
-			InputStream io = dockerClient.logContainer(containerId);
-		
-			BufferedReader bf = new BufferedReader(new InputStreamReader(io));
-			String line = null;
-			StringBuilder logBuilder = new StringBuilder();
-			//TODO: potential "deadlock" if there never a line that contains that string. Check for mysql shutdown
-			while ((line = bf.readLine()) != null) {
-				logBuilder.append(line).append(StringUtils.NEWLINE);
-//				System.out.println(line);
-				if (line.toLowerCase().contains("mysqld: ready for connections.".toLowerCase())) {
-					break;
+			int time = 0;
+			String log = "";
+			while (time++ < LOG_RETRY_NUMBER) {			
+				if (!isRunning()) {
+					logger.warn(String.format("Container %s is not running", containerId));
+					return false;
 				}
-				if (line.toLowerCase().contains("/usr/sbin/mysqld: Shutdown complete".toLowerCase())) {
+				
+				log = dockerClient.logContainer(containerId);
+				
+				if (log.toLowerCase().contains("mysqld: ready for connections.")) {
+					logger.info(String.format("Log for container %s contains the message that mysql is ready, "
+							+ "thus container is ready, but still going to sleep just a little bit before returning", containerId));
+					Thread.sleep(LOG_RETRY_SLEEP_MS);
+					return true;
+				}
+				
+				if (log.toLowerCase().contains("/usr/sbin/mysqld: Shutdown complete".toLowerCase())) {
 					String message = String.format("Couldn't start mysql image for container '%s' because mysqld could not start."
-							+ "The log from container is: %s", containerId, logBuilder.toString());
+							+ "The log from container is: %s", containerId, log);
 					logger.error(message);
 					throw new RuntimeException(message);
 				}
+				
+				logger.info(String.format("Going to sleep for %d before checking log for container %s again. There are still %d more tries", 
+						LOG_RETRY_SLEEP_MS, containerId, LOG_RETRY_NUMBER - time));
+				Thread.sleep(LOG_RETRY_SLEEP_MS);
 			}
 			
-			bf.close();
-			io.close();
-		}
-		catch (Exception e) {
-			//TODO: add logger statements
+			logger.info(String.format("Exiting isContainerStarted for container %s with false because used up "
+					+ "all try attempts to read the log and see that mysql is ready", 
+					containerId));
+			
+			logger.info(String.format("Here is the log from container %s: %s", containerId, log));
+			
 			return false;
 		}
-		
-		return true;
+		catch (Exception e) {
+			logger.error(e);
+			throw new RuntimeException(e);
+		}
 	}
 
 	@Override
@@ -103,7 +112,7 @@ public class MySQLDockerContainer extends AbstractDockerContainer {
 			return userName;
 		}
 		
-		public String getPasswordt() {
+		public String getPassword() {
 			return password;
 		}
 		

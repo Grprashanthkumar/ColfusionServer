@@ -12,10 +12,6 @@ import edu.pitt.sis.exp.colfusion.utils.docker.DockerContainerFactory;
 import edu.pitt.sis.exp.colfusion.utils.docker.DockerImageType;
 import edu.pitt.sis.exp.colfusion.utils.docker.containers.AbstractDockerContainer;
 
-/**
- * @author Evgeny
- *
- */
 public class DockerTestBase extends UnitTestBase {
 	private static final List<AbstractDockerContainer> containers = new ArrayList<AbstractDockerContainer>();
 	

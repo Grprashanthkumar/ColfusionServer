@@ -14,8 +14,12 @@ import com.github.dockerjava.api.DockerClient;
 import com.github.dockerjava.api.command.CreateContainerCmd;
 import com.github.dockerjava.api.command.CreateContainerResponse;
 import com.github.dockerjava.api.command.InspectContainerResponse;
+import com.github.dockerjava.api.model.Frame;
 import com.github.dockerjava.core.DockerClientBuilder;
 import com.github.dockerjava.core.DockerClientConfig;
+import com.github.dockerjava.core.command.LogContainerResultCallback;
+import com.github.dockerjava.core.command.PullImageResultCallback;
+import com.github.dockerjava.jaxrs.DockerCmdExecFactoryImpl;
 
 import edu.pitt.sis.exp.colfusion.utils.ConfigManager;
 import edu.pitt.sis.exp.colfusion.utils.PairOf;
@@ -51,14 +55,23 @@ public final class ColfusionDockerClient {
 				configMng.getProperty(PropertyKeys.COLFUSION_DOCKER_VERSION), configMng.getProperty(PropertyKeys.COLFUSION_DOCKER_URI),
 				configMng.getProperty(PropertyKeys.COLFUSION_DOCKER_SERVER_ADDRESS), configMng.getProperty(PropertyKeys.COLFUSION_DOCKER_CERT_PATH)));
 		
-		DockerClientConfig config = DockerClientConfig.createDefaultConfigBuilder()
-			    .withVersion(configMng.getProperty(PropertyKeys.COLFUSION_DOCKER_VERSION))
-			    .withUri(configMng.getProperty(PropertyKeys.COLFUSION_DOCKER_URI))
-			    .withServerAddress(configMng.getProperty(PropertyKeys.COLFUSION_DOCKER_SERVER_ADDRESS))
-			    .withDockerCertPath(configMng.getProperty(PropertyKeys.COLFUSION_DOCKER_CERT_PATH))
-			    .build();
+		DockerClient dockerClient = DockerClientBuilder.getInstance(configMng.getProperty(PropertyKeys.COLFUSION_DOCKER_URI)).build();
+		
+//		DockerClientConfig config = DockerClientConfig.createDefaultConfigBuilder()
+//			    .withVersion(configMng.getProperty(PropertyKeys.COLFUSION_DOCKER_VERSION))
+//			    .withUri(configMng.getProperty(PropertyKeys.COLFUSION_DOCKER_URI))
+//			    .withServerAddress(configMng.getProperty(PropertyKeys.COLFUSION_DOCKER_SERVER_ADDRESS))
+////			    .withDockerCertPath(configMng.getProperty(PropertyKeys.COLFUSION_DOCKER_CERT_PATH))
+//			    .build();
 				
-		DockerClient dockerClient = DockerClientBuilder.getInstance(config).build();
+//		DockerCmdExecFactoryImpl dockerCmdExecFactory = new DockerCmdExecFactoryImpl()
+//				  .withReadTimeout(1000)
+//				  .withConnectTimeout(1000);
+//		
+//		DockerClient dockerClient = DockerClientBuilder
+//				.getInstance(config)
+//				.withDockerCmdExecFactory(dockerCmdExecFactory)
+//				.build();
 		
 		logger.info("Done initializing docker client");
 		
@@ -70,7 +83,8 @@ public final class ColfusionDockerClient {
 		
 		pullImage(imageName, tag);
 		
-		CreateContainerCmd createContainerCmd = dockerClient.createContainerCmd(imageName);
+		CreateContainerCmd createContainerCmd = dockerClient.createContainerCmd(imageName)
+				.withPublishAllPorts(true);
 		
 		if (envVariables != null && envVariables.length > 0) {
 			String[] envVariablesParams = new String[envVariables.length];
@@ -87,24 +101,13 @@ public final class ColfusionDockerClient {
 	}
 
 	public void pullImage(final String imageName, final String tag) throws IOException {
-		InputStream io = dockerClient.pullImageCmd(imageName)
+		dockerClient.pullImageCmd(imageName)
 				.withTag(tag)
-				.exec();
-		
-		BufferedReader bf = new BufferedReader(new InputStreamReader(io));
-		String line = null;
-		//TODO: potential "deadlock" if there never a line that contains that string. Check for mysql shutdown
-		while ((line = bf.readLine()) != null) {
-			logger.info(line);
-		}
-		
-		bf.close();
-		io.close();
+				.exec(new PullImageResultCallback()).awaitSuccess();
 	}
 
 	public void startContainer(final String containerId) {
 		dockerClient.startContainerCmd(containerId)
-		   .withPublishAllPorts(true)
 		   .exec();
 	}
 
@@ -116,15 +119,30 @@ public final class ColfusionDockerClient {
 		dockerClient.removeContainerCmd(containerId).exec();
 	}
 	
-	public InputStream logContainer(final String containerId) {
-		InputStream io = dockerClient.logContainerCmd(containerId)
+	public String logContainer(final String containerId) throws InterruptedException {
+		LogContainerResultCallback logContainerResult = new LogContainerResultCallback() {
+			protected final StringBuffer log = new StringBuffer();
+			
+			@Override
+	        public void onNext(Frame frame) {
+	            log.append(new String(frame.getPayload()));
+	            super.onNext(frame);
+	        }
+
+	        @Override
+	        public String toString() {
+	            return log.toString();
+	        }
+		};
+		
+		dockerClient.logContainerCmd(containerId)
 				.withStdOut(true)
 				.withStdErr(true)
 				.withTailAll()
-				.withFollowStream(true)
-				.exec();
-		
-		return io;
+//				.withFollowStream(true)
+				.exec(logContainerResult).awaitCompletion();
+
+		return logContainerResult.toString();
 	}
 
 	public InspectContainerResponse inspectContainer(final String containerId) {

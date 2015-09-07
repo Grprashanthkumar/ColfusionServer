@@ -25,10 +25,6 @@ import edu.pitt.sis.exp.colfusion.utils.ConfigManager;
 import edu.pitt.sis.exp.colfusion.utils.PropertyKeys;
 import edu.pitt.sis.exp.colfusion.utils.StringUtils;
 
-/**
- * @author Evgeny
- *
- */
 public class KTRManagerTest extends DatabaseUnitTestBase {
 	Logger logger = LogManager.getLogger(KTRManagerTest.class.getName());
 	ConfigManager configManager = ConfigManager.getInstance();

@@ -70,11 +70,6 @@ import edu.pitt.sis.exp.colfusion.dal.viewmodels.StoryMetadataViewModel;
 import edu.pitt.sis.exp.colfusion.dal.viewmodels.StoryTargetDBViewModel;
 import edu.pitt.sis.exp.colfusion.dal.viewmodels.UserViewModel;
 
-
-/**
- * @author Evgeny
- *
- */
 public class SourceInfoManagerImpl extends GeneralManagerImpl<SourceInfoDAO, ColfusionSourceinfo, Integer> implements SourceInfoManager {
 
 	Logger logger = LogManager.getLogger(SourceInfoManagerImpl.class.getName());

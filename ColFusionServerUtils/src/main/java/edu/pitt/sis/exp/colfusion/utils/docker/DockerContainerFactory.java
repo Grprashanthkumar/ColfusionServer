@@ -7,11 +7,6 @@ import java.util.Map;
 import edu.pitt.sis.exp.colfusion.utils.docker.containerProviders.AbstractDockerContainerProvider;
 import edu.pitt.sis.exp.colfusion.utils.docker.containers.AbstractDockerContainer;
 
-/**
- * 
- * @author Evgeny
- *
- */
 public class DockerContainerFactory {
 	
 	static ColfusionDockerClient dockerClient = ColfusionDockerClient.getInstance();

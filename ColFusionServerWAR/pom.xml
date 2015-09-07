@@ -133,7 +133,7 @@
 		          <groupId>com.github.docker-java</groupId>
 		          <artifactId>docker-java</artifactId>
 		        </exclusion>		        
-		      </exclusions>
+  	        </exclusions>
 		</dependency>
 
 		<dependency>
@@ -142,12 +142,6 @@
 			<version>${jersey.version}</version>
 			<!-- use the following artifactId if you don't need servlet 2.x compatibility -->
 			<!-- artifactId>jersey-container-servlet</artifactId -->
-			<exclusions>
-		        <exclusion>
-		          <groupId>com.google.guava</groupId>
-		          <artifactId>guava</artifactId>
-		        </exclusion>
-		      </exclusions>
 		</dependency>
 		
 		<dependency>
@@ -194,7 +188,7 @@
             <groupId>com.wordnik</groupId>
             <artifactId>swagger-jersey2-jaxrs_2.10</artifactId>
             <scope>compile</scope>
-            <version>1.3.7</version>
+            <version>1.3.12</version>
             <exclusions>
             	<exclusion>
                     <groupId>org.glassfish.jersey.media</groupId>
@@ -208,17 +202,14 @@
                     <groupId>javax.ws.rs</groupId>
                     <artifactId>jsr311-api</artifactId>
                 </exclusion>
-               <!-- <exclusion>
+                <!-- 
+                <exclusion>
                     <groupId>org.scala-lang</groupId>
                     <artifactId>scala-reflect</artifactId>
                 </exclusion>
                 <exclusion>
                     <groupId>com.fasterxml.jackson.core</groupId>
                     <artifactId>jackson-databind</artifactId>
-                </exclusion>
-                  <exclusion>
-                    <groupId>com.wordnik</groupId>
-                    <artifactId>swagger-jaxrs_2.10</artifactId>
                 </exclusion> -->
             </exclusions>
         </dependency>

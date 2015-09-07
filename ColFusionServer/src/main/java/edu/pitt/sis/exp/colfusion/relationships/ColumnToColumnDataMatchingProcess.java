@@ -36,7 +36,6 @@ import edu.pitt.sis.exp.colfusion.similarityMeasures.LevenshteinDistance;
 import edu.pitt.sis.exp.colfusion.similarityMeasures.NormalizedDistance;
 
 /**
- * @author Evgeny
  *
  */
 public class ColumnToColumnDataMatchingProcess extends ProcessBase {
@@ -199,7 +198,6 @@ public class ColumnToColumnDataMatchingProcess extends ProcessBase {
 			}
 		}
 		
-		// TODO Auto-generated method stub
 		return result;
 	}
 
