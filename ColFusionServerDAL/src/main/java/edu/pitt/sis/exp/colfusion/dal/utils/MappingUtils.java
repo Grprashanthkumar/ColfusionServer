@@ -9,10 +9,6 @@ import org.apache.logging.log4j.Logger;
 import edu.pitt.sis.exp.colfusion.dal.orm.ColfusionUsers;
 import edu.pitt.sis.exp.colfusion.dal.viewmodels.StoryAuthorViewModel;
 
-/**
- * @author Evgeny
- *
- */
 public class MappingUtils {
 	
 	final Logger logger = LogManager.getLogger(MappingUtils.class.getName());

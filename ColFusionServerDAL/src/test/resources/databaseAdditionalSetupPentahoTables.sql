@@ -1,4 +1,4 @@
-CREATE TABLE `colfusion_pentaho_log_logging_channels` (
+CREATE TABLE IF NOT EXISTS `colfusion_pentaho_log_logging_channels` (
   `ID_BATCH` int DEFAULT NULL,
   `CHANNEL_ID` varchar(255) DEFAULT NULL,
   `LOG_DATE` datetime DEFAULT NULL,
@@ -13,7 +13,7 @@ CREATE TABLE `colfusion_pentaho_log_logging_channels` (
   `ROOT_CHANNEL_ID` varchar(255) DEFAULT NULL
 );
 
-CREATE TABLE `colfusion_pentaho_log_performance` (
+CREATE TABLE IF NOT EXISTS `colfusion_pentaho_log_performance` (
   `ID_BATCH` int DEFAULT NULL,
   `SEQ_NR` int DEFAULT NULL,
   `LOGDATE` datetime DEFAULT NULL,
@@ -31,7 +31,7 @@ CREATE TABLE `colfusion_pentaho_log_performance` (
   `OUTPUT_BUFFER_ROWS` bigint(20) DEFAULT NULL
 );
 
-CREATE TABLE `colfusion_pentaho_log_step` (
+CREATE TABLE IF NOT EXISTS `colfusion_pentaho_log_step` (
   `ID_BATCH` int DEFAULT NULL,
   `CHANNEL_ID` varchar(255) DEFAULT NULL,
   `LOG_DATE` datetime DEFAULT NULL,
@@ -48,7 +48,7 @@ CREATE TABLE `colfusion_pentaho_log_step` (
   `LOG_FIELD` mediumtext
 );
 
-CREATE TABLE `colfusion_pentaho_log_transformaion` (
+CREATE TABLE IF NOT EXISTS `colfusion_pentaho_log_transformaion` (
   `ID_BATCH` int DEFAULT NULL,
   `CHANNEL_ID` varchar(255) DEFAULT NULL,
   `TRANSNAME` varchar(255) DEFAULT NULL,

@@ -176,7 +176,7 @@ public abstract class DatabaseUnitTestBase extends DockerTestBase {
 	}
 	
 	private void createPentahoLoggingTables(final String dbConnectionUrl) throws IOException, ClassNotFoundException, SQLException {
-		// Hibernate cannot create pentaho logging tables, so we create them manually from sql script
+		//TODO FIXME Hibernate cannot create SOME pentaho logging tables, so we create them manually from sql script
 		
 		InputStream fileContentStream = ResourceUtils.getResourceAsStream(this.getClass(), TestResourcesNames.DATABASE_ADDITONAL_SETUP_CREATE_PENTAHO_TABLES);
 		

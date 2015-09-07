@@ -6,13 +6,9 @@ package edu.pitt.sis.exp.colfusion.dal.utils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-/**
- * @author Evgeny
- *
- */
 public enum StoryStatusTypes {
-	DRAFT("draft"), QUEUED("queued"),
-	//modified by Shruti
+	DRAFT("draft"), 
+	QUEUED("queued"),
 	PRIVATE("private");
     
 	private static Logger logger = LogManager.getLogger(StoryStatusTypes.class.getName());
