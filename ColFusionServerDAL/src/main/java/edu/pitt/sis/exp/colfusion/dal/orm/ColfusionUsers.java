@@ -458,6 +458,10 @@ public class ColfusionUsers implements java.io.Serializable {
 		this.statusExcludes = statusExcludes;
 	}
 	
+	public String getDataverseToken() {
+		return this.dataverseToken;
+	}
+	
 	public void setDataverseToken(String dataverseToken) {
 		this.dataverseToken = dataverseToken;
 	}
