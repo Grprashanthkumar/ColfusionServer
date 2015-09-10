@@ -50,6 +50,7 @@ public class ColfusionUsers implements java.io.Serializable {
 	private Boolean statusAllFriends;
 	private String statusFriendList;
 	private String statusExcludes;
+	private String dataverseToken;
 	private Set colfusionSourceinfoUsers = new HashSet(0);
 	private Set colfusionDnameinfoMetadataEditHistories = new HashSet(0);
 	private Set colfusionCanvaseses = new HashSet(0);
@@ -90,7 +91,7 @@ public class ColfusionUsers implements java.io.Serializable {
 			String userLanguage, Boolean statusSwitch, Boolean statusFriends,
 			Boolean statusStory, Boolean statusComment, Boolean statusEmail,
 			Boolean statusGroup, Boolean statusAllFriends,
-			String statusFriendList, String statusExcludes,
+			String statusFriendList, String statusExcludes, String dataverseToken,
 			Set colfusionSourceinfoUsers,
 			Set colfusionDnameinfoMetadataEditHistories,
 			Set colfusionCanvaseses, Set colfusionShareses,
@@ -137,6 +138,7 @@ public class ColfusionUsers implements java.io.Serializable {
 		this.statusAllFriends = statusAllFriends;
 		this.statusFriendList = statusFriendList;
 		this.statusExcludes = statusExcludes;
+		this.dataverseToken = dataverseToken;
 		this.colfusionSourceinfoUsers = colfusionSourceinfoUsers;
 		this.colfusionDnameinfoMetadataEditHistories = colfusionDnameinfoMetadataEditHistories;
 		this.colfusionCanvaseses = colfusionCanvaseses;
@@ -451,9 +453,13 @@ public class ColfusionUsers implements java.io.Serializable {
 	public String getStatusExcludes() {
 		return this.statusExcludes;
 	}
-
+	
 	public void setStatusExcludes(String statusExcludes) {
 		this.statusExcludes = statusExcludes;
+	}
+	
+	public void setDataverseToken(String dataverseToken) {
+		this.dataverseToken = dataverseToken;
 	}
 
 	public Set getColfusionSourceinfoUsers() {

@@ -119,6 +119,11 @@
         <property name="statusExcludes" type="string">
             <column name="status_excludes" length="65535" />
         </property>
+        
+        <property name="dataverseToken" type="string">
+            <column name="dataverse_token" />
+        </property>
+        
         <set name="colfusionSourceinfoUsers" table="colfusion_sourceinfo_user" inverse="true" lazy="true" fetch="select">
             <key>
                 <column name="uid" not-null="true" />
