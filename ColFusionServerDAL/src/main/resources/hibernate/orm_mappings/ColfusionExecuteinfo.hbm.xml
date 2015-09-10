@@ -39,7 +39,7 @@
             <column name="tableName" length="300" not-null="true" />
         </property>
         <property name="log" type="string">
-            <column name="log" />
+            <column name="log" length="16777215" />
         </property>
     </class>
 </hibernate-mapping>
