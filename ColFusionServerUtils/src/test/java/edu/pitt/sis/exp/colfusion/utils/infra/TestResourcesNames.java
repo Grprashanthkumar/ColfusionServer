@@ -1,4 +1,4 @@
-package edu.pitt.sis.exp.colfusion.infra;
+package edu.pitt.sis.exp.colfusion.utils.infra;
 
 /**
  * This class lists names of all test resources for this project.
