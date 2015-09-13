@@ -1,14 +1,22 @@
 package edu.pitt.sis.exp.colfusion.dataverse;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.Test;
 
-public class DataverseClientTest {
+import edu.pitt.sis.exp.colfusion.utils.IOUtils;
+import edu.pitt.sis.exp.colfusion.utils.UnitTestBase;
+
+public class DataverseClientTest extends UnitTestBase {
 
 	@Test
 	public void testDataverSearchResultItemJsonItemToDataverseFileInfo() throws JSONException {
@@ -47,10 +55,31 @@ public class DataverseClientTest {
 
 		assertEquals("Wrong number of files", 1, files.size());
 
-		//TODO: make sure if order is always the same
 		final DataverseFileInfo file1 = files.get(0);
 
 		assertEquals("Wrong parsed file name", "Mortality.monthly_Madras.India_1916.1921.xlsx", file1.getFileName());
 		assertEquals("Wrong parsed file id", "2681803", file1.getFileId());
+	}
+
+	@Test
+	public void testGetDatafileCorrectId() throws IOException {
+		final DataverseClientImpl dataverseClient = new DataverseClientImpl();
+
+		final InputStream fileInputStream = dataverseClient.getDatafile("2681803");
+
+		final File dataFile = this.tempFolder.newFile("dataFileFromDataverse");
+
+		IOUtils.writeToFile(fileInputStream, dataFile, true);
+
+		assertNotNull("Got input stream that is null", fileInputStream);
+	}
+
+	@Test(expected = FileNotFoundException.class)
+	public void testGetDatafileWrongId() throws FileNotFoundException {
+		final DataverseClientImpl dataverseClient = new DataverseClientImpl();
+
+		final InputStream fileInputStream = dataverseClient.getDatafile("123");
+
+		assertNotNull("Got input stream that is null", fileInputStream);
 	}
 }

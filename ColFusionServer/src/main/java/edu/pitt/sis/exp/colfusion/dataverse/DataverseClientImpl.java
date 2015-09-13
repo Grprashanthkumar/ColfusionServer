@@ -1,9 +1,11 @@
 package edu.pitt.sis.exp.colfusion.dataverse;
 
+import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import org.apache.logging.log4j.LogManager;
@@ -28,9 +30,28 @@ public class DataverseClientImpl implements DataverseClient {
 	String dataverseKey = "551ceb21-bd44-456a-abe0-12d7412f401b";
 
 	@Override
-	public InputStream getDatafile() {
-		// TODO Auto-generated method stub
-		return null;
+	public InputStream getDatafile(final String fileId) throws FileNotFoundException {
+
+		final Escaper urlEscaper = UrlEscapers.urlPathSegmentEscaper();
+
+		final String restResource = String.format("/access/datafile/%s?format=original&key=%s",
+				urlEscaper.escape(fileId), urlEscaper.escape(this.dataverseKey));
+
+		final Response response = JerseyClientUtil.doGet(this.apiBaseUrl, restResource, MediaType.APPLICATION_OCTET_STREAM_TYPE, MediaType.WILDCARD_TYPE);
+
+		if (response.getStatus() != 200) {
+			final String message = String.format("getDatafile got response with status '%d' and message '%s' for fileid '%s'",
+					response.getStatus(), response.readEntity(String.class), fileId);
+
+			this.logger.info(message);
+
+			//TODO: alternatively we could propagate message from the dataverse server to the user to let him/her know what was wrong
+			throw new FileNotFoundException(message);
+		}
+
+		final InputStream entity = response.readEntity(InputStream.class);
+
+		return entity;
 	}
 
 	@Override
@@ -80,8 +101,10 @@ public class DataverseClientImpl implements DataverseClient {
 
 	static DataverseFileInfo dataverSearchResultItemJsonItemToDataverseFileInfo(final JSONObject item) throws JSONException {
 		//TODO:gson could be used here.
-		return new DataverseFileInfo(item.getString("file_id"), item.getString("name"),
-				item.getInt("size_in_bytes"), item.getString("dataset_citation"),
+		return new DataverseFileInfo(item.getString("file_id"),
+				item.getString("name"),
+				item.getInt("size_in_bytes"),
+				item.getString("dataset_citation"),
 				item.getString("published_at"));
 	}
 }
