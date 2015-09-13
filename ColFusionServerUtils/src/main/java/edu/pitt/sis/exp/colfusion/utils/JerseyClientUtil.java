@@ -29,19 +29,32 @@ public class JerseyClientUtil {
 	 *
 	 * @param restContext the context of the rest (e.g. the base part of the REST API URL)
 	 * @param restResource the resource name with params. MAKE SURE it starts with "/"
+	 * @param acceptedResponseTypes accepted response media types.
 	 * @return
 	 */
-	public static Response doGet(final String restContext,  final String restResource) {
+	public static Response doGet(final String restContext,  final String restResource, final MediaType... acceptedResponseTypes) {
 
 		logger.info(String.format("About to do Get ruquest to %s%s", restContext, restResource));
 
 		final WebTarget target = getTarget(restContext, restResource);
 
-		final Response response = target.request(MediaType.APPLICATION_JSON_TYPE).get();
+		final Response response = target.request(acceptedResponseTypes).get();
 
 		logger.info(String.format("Got reply from Get %s%s. Response status is %d", restContext, restResource, response.getStatus()));
 
 		return response;
+	}
+
+	/**
+	 * Will send get request to the address specified by the parameter with accept type set to {@link MediaType.APPLICATION_JSON_TYPE}
+	 *
+	 * @param restContext the context of the rest (e.g. the base part of the REST API URL)
+	 * @param restResource the resource name with params. MAKE SURE it starts with "/"
+	 * @return
+	 */
+	public static Response doGet(final String restContext,  final String restResource) {
+
+		return doGet(restContext, restResource, MediaType.APPLICATION_JSON_TYPE);
 	}
 
 	/**
