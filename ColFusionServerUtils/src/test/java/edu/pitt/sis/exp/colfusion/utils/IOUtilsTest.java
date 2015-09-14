@@ -24,7 +24,6 @@ import org.xml.sax.SAXException;
 import edu.pitt.sis.exp.colfusion.utils.infra.TestResourcesNames;
 import edu.pitt.sis.exp.colfusion.utils.models.IOUtilsStoredFileInfoModel;
 
-//TODO might need to move to the utils projects
 public class IOUtilsTest extends UnitTestBase {
 
 	Logger logger = LogManager.getLogger(IOUtilsTest.class.getName());

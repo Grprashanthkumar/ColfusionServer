@@ -77,7 +77,7 @@ public class KTRManagerTest extends DatabaseUnitTestBase {
 			final ColfusionSourceinfo story, final String folderForUpload) {
 		FileContentInfoViewModel fileContentInfoViewModel = new FileContentInfoViewModel();
 		
-		String testExcelFileName = edu.pitt.sis.exp.colfusion.infra.TestResourcesNames.TEST_EXCEL_FILE_XLSX;
+		String testExcelFileName = edu.pitt.sis.exp.colfusion.utils.infra.TestResourcesNames.TEST_EXCEL_FILE_XLSX;
 		
 		String uploadFileAbsolutePath = folderForUpload + File.separator + story.getSid(); 
 		

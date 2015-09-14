@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package edu.pitt.sis.exp.colfusion.dal.viewmodels;
 
@@ -9,23 +9,19 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 
-/**
- * @author Evgeny
- *
- */
 @XmlRootElement
 public class PreviewFileViewModel {
 	private String fileAbsoluteName;
 	private String fileName;
 	private int previewRowsPerPage;
 	private int previewPage;
-	
+
 	private ArrayList<WorksheetDataViewModel> worksheetsData;
-	
+
 	public PreviewFileViewModel() {
 		setWorksheetsData(new ArrayList<WorksheetDataViewModel>());
 	}
-	
+
 	public PreviewFileViewModel(final String fileAbsoluteName, final String fileName, final int previewRowsPerPage, final int previewPage,
 			final ArrayList<WorksheetDataViewModel> worksheetsData) {
 		setFileAbsoluteName(fileAbsoluteName);
@@ -34,12 +30,12 @@ public class PreviewFileViewModel {
 		setPreviewPage(previewPage);
 		setWorksheetsData(worksheetsData);
 	}
-	
+
 	/**
 	 * @return the fileAbsoluteName
 	 */
 	public String getFileAbsoluteName() {
-		return fileAbsoluteName;
+		return this.fileAbsoluteName;
 	}
 	/**
 	 * @param fileAbsoluteName the fileAbsoluteName to set
@@ -51,7 +47,7 @@ public class PreviewFileViewModel {
 	 * @return the fileName
 	 */
 	public String getFileName() {
-		return fileName;
+		return this.fileName;
 	}
 	/**
 	 * @param fileName the fileName to set
@@ -63,7 +59,7 @@ public class PreviewFileViewModel {
 	 * @return the rowsPerPage
 	 */
 	public int getPreviewRowsPerPage() {
-		return previewRowsPerPage;
+		return this.previewRowsPerPage;
 	}
 	/**
 	 * @param rowsPerPage the rowsPerPage to set
@@ -75,7 +71,7 @@ public class PreviewFileViewModel {
 	 * @return the page
 	 */
 	public int getPreviewPage() {
-		return previewPage;
+		return this.previewPage;
 	}
 	/**
 	 * @param page the page to set
@@ -88,7 +84,7 @@ public class PreviewFileViewModel {
 	 * @return the worksheetsData
 	 */
 	public ArrayList<WorksheetDataViewModel> getWorksheetsData() {
-		return worksheetsData;
+		return this.worksheetsData;
 	}
 
 	/**
@@ -97,10 +93,10 @@ public class PreviewFileViewModel {
 	public void setWorksheetsData(final ArrayList<WorksheetDataViewModel> worksheetsData) {
 		this.worksheetsData = worksheetsData;
 	}
-	
+
 	@Override
 	public String toString() {
-		//return String.format("fileAbsoluteName: %s, fileName: %s, previewRowsPerPage: %d, previewPage: %d, number of worksheets: %d", 
+		//return String.format("fileAbsoluteName: %s, fileName: %s, previewRowsPerPage: %d, previewPage: %d, number of worksheets: %d",
 		//		fileAbsoluteName, fileName, previewRowsPerPage, previewPage,worksheetsData.size());
 		return ReflectionToStringBuilder.toString(this);
 	}
