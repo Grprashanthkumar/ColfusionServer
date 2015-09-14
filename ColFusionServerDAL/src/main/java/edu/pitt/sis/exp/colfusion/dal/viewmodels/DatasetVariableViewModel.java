@@ -1,12 +1,11 @@
 /**
- * 
+ *
  */
 package edu.pitt.sis.exp.colfusion.dal.viewmodels;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
- * @author Evgeny
  *
  * @see DnameViewModel DnameViewModel they might be describing the same thing.
  */
@@ -21,11 +20,18 @@ public class DatasetVariableViewModel {
 	private String variableValueFormat;
 	private String missingValue;
 	private boolean checked;
-	
+
 	public DatasetVariableViewModel() {
-		cid = 0;
+		this.cid = 0;
 	}
-	
+
+	public DatasetVariableViewModel(final String originalName, final String chosenName, final String variableValueType) {
+		this.cid = 0;
+		setChosenName(chosenName);
+		setOriginalName(originalName);
+		setVariableValueType(variableValueType);
+	}
+
 	public DatasetVariableViewModel(final int cid, final String originalName, final String chosenName, final String description, final String variableMeasuringUnit, final String variableValueType, final String variableValueFormat,
 			final String missingValue, final boolean checked) {
 		setCid(cid);
@@ -43,7 +49,7 @@ public class DatasetVariableViewModel {
 	 * @return the cid
 	 */
 	public int getCid() {
-		return cid;
+		return this.cid;
 	}
 
 	/**
@@ -57,7 +63,7 @@ public class DatasetVariableViewModel {
 	 * @return the originalName
 	 */
 	public String getOriginalName() {
-		return originalName;
+		return this.originalName;
 	}
 
 	/**
@@ -71,7 +77,7 @@ public class DatasetVariableViewModel {
 	 * @return the chosenName
 	 */
 	public String getChosenName() {
-		return chosenName;
+		return this.chosenName;
 	}
 
 	/**
@@ -85,7 +91,7 @@ public class DatasetVariableViewModel {
 	 * @return the description
 	 */
 	public String getDescription() {
-		return description;
+		return this.description;
 	}
 
 	/**
@@ -99,7 +105,7 @@ public class DatasetVariableViewModel {
 	 * @return the unit
 	 */
 	public String getVariableMeasuringUnit() {
-		return variableMeasuringUnit;
+		return this.variableMeasuringUnit;
 	}
 
 	/**
@@ -113,7 +119,7 @@ public class DatasetVariableViewModel {
 	 * @return the valueType
 	 */
 	public String getVariableValueType() {
-		return variableValueType;
+		return this.variableValueType;
 	}
 
 	/**
@@ -127,7 +133,7 @@ public class DatasetVariableViewModel {
 	 * @return the format
 	 */
 	public String getVariableValueFormat() {
-		return variableValueFormat;
+		return this.variableValueFormat;
 	}
 
 	/**
@@ -141,7 +147,7 @@ public class DatasetVariableViewModel {
 	 * @return the checked
 	 */
 	public boolean isChecked() {
-		return checked;
+		return this.checked;
 	}
 
 	/**
@@ -155,7 +161,7 @@ public class DatasetVariableViewModel {
 	 * @return the missingValue
 	 */
 	public String getMissingValue() {
-		return missingValue;
+		return this.missingValue;
 	}
 
 	/**
