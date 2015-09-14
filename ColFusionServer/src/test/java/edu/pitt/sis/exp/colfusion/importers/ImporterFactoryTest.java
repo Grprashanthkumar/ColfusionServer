@@ -1,6 +1,3 @@
-/**
- *
- */
 package edu.pitt.sis.exp.colfusion.importers;
 
 import static org.junit.Assert.assertEquals;
@@ -21,9 +18,9 @@ import edu.pitt.sis.exp.colfusion.dal.viewmodels.FileContentInfoViewModel;
 import edu.pitt.sis.exp.colfusion.dal.viewmodels.PreviewFileViewModel;
 import edu.pitt.sis.exp.colfusion.dal.viewmodels.WorksheetDataViewModel;
 import edu.pitt.sis.exp.colfusion.dal.viewmodels.WorksheetViewModel;
+import edu.pitt.sis.exp.colfusion.infra.TestResourcesNames;
 import edu.pitt.sis.exp.colfusion.utils.ConfigManager;
 import edu.pitt.sis.exp.colfusion.utils.UnitTestBase;
-import edu.pitt.sis.exp.colfusion.utils.infra.TestResourcesNames;
 import edu.pitt.sis.exp.colfusion.utils.models.IOUtilsStoredFileInfoModel;
 
 public class ImporterFactoryTest extends UnitTestBase {
