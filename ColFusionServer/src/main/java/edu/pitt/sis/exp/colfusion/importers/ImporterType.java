@@ -1,12 +1,8 @@
 /**
- * 
+ *
  */
 package edu.pitt.sis.exp.colfusion.importers;
 
-/**
- * @author Evgeny
- *
- */
 public enum ImporterType {
 	ExcelImporter, CSVImporter;
 
@@ -15,16 +11,16 @@ public enum ImporterType {
 	 * @param fileExtension extension of the file without dot.
 	 * @return the {@link ImporterType}
 	 */
-	public static ImporterType getImporterType(String fileExtension) {
+	public static ImporterType getImporterType(final String fileExtension) {
 		ImporterType importerType = null;
-		
+
 		if (fileExtension.equals("csv")) {
 			importerType = ImporterType.CSVImporter;
 		}
 		else if (fileExtension.equals("xls") || fileExtension.equals("xlsx")) {
 			importerType = ImporterType.ExcelImporter;
 		}
-		
+
 		return importerType;
 	}
 }

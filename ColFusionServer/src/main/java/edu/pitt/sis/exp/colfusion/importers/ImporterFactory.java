@@ -1,31 +1,31 @@
 /**
- * 
+ *
  */
 package edu.pitt.sis.exp.colfusion.importers;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-/**
- * @author Evgeny
- *
- */
+import edu.pitt.sis.exp.colfusion.importers.csv.CSVImporter;
+import edu.pitt.sis.exp.colfusion.importers.excel.ExcelFileHandlerImpl;
+import edu.pitt.sis.exp.colfusion.importers.excel.ExcelImporter;
+
 public class ImporterFactory {
 
 	final static Logger logger = LogManager.getLogger(ImporterFactory.class.getName());
-	
-	public static Importer getImporter(ImporterType importerType) throws Exception {
+
+	public static Importer getImporter(final ImporterType importerType) throws Exception {
 		switch (importerType) {
 		case ExcelImporter:
-			return new ExcelImporter();
-			
+			return new ExcelImporter(new ExcelFileHandlerImpl());
+
 		case CSVImporter:
 			return new CSVImporter();
-			
+
 		default:
-			
+
 			logger.error("Importer type not found", importerType);
-			
+
 			//TODO, FIXME: throw proper exception
 			throw new Exception("Importer type not found");
 		}

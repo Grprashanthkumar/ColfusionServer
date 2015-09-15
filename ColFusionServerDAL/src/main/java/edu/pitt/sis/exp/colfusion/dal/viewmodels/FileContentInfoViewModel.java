@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package edu.pitt.sis.exp.colfusion.dal.viewmodels;
 
@@ -7,13 +7,9 @@ import java.util.ArrayList;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
-/**
- * @author Evgeny
- *
- */
 @XmlRootElement
 public class FileContentInfoViewModel {
-	
+
 	private String extension;
 	private String fileName;
 	private String fileAbsoluteName;
@@ -22,11 +18,11 @@ public class FileContentInfoViewModel {
 	//Assumption is that the settings for the first file will be applied for all files in the archive.
 	private String[] otherFilesAbsoluteNames;
 	private ArrayList<WorksheetViewModel> worksheets;
-	
+
 	public FileContentInfoViewModel() {
 		setWorksheets(new ArrayList<WorksheetViewModel>());
 	}
-	
+
 	public FileContentInfoViewModel(final String extension, final String fileName, final String fileAbsoluteName, final String[] otherFilesAbsoluteNames, final ArrayList<WorksheetViewModel> worksheets) {
 		setExtension(extension);
 		setFileName(fileName);
@@ -39,7 +35,7 @@ public class FileContentInfoViewModel {
 	 * @return the extension
 	 */
 	public String getExtension() {
-		return extension;
+		return this.extension;
 	}
 
 	/**
@@ -53,7 +49,7 @@ public class FileContentInfoViewModel {
 	 * @return the fileName
 	 */
 	public String getFileName() {
-		return fileName;
+		return this.fileName;
 	}
 
 	/**
@@ -67,7 +63,7 @@ public class FileContentInfoViewModel {
 	 * @return the worksheets
 	 */
 	public ArrayList<WorksheetViewModel> getWorksheets() {
-		return worksheets;
+		return this.worksheets;
 	}
 
 	/**
@@ -81,7 +77,7 @@ public class FileContentInfoViewModel {
 	 * @return the fileAbsoluteName
 	 */
 	public String getFileAbsoluteName() {
-		return fileAbsoluteName;
+		return this.fileAbsoluteName;
 	}
 
 	/**
@@ -95,7 +91,7 @@ public class FileContentInfoViewModel {
 	 * @return the otherFilesAbsoluteNames
 	 */
 	public String[] getOtherFilesAbsoluteNames() {
-		return otherFilesAbsoluteNames;
+		return this.otherFilesAbsoluteNames;
 	}
 
 	/**

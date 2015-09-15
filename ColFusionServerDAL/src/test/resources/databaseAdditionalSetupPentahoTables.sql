@@ -45,7 +45,7 @@ CREATE TABLE IF NOT EXISTS `colfusion_pentaho_log_step` (
   `LINES_OUTPUT` bigint(20) DEFAULT NULL,
   `LINES_REJECTED` bigint(20) DEFAULT NULL,
   `ERRORS` bigint(20) DEFAULT NULL,
-  `LOG_FIELD` mediumtext
+  `LOG_FIELD` longtext
 );
 
 CREATE TABLE IF NOT EXISTS `colfusion_pentaho_log_transformaion` (
@@ -65,7 +65,7 @@ CREATE TABLE IF NOT EXISTS `colfusion_pentaho_log_transformaion` (
   `LOGDATE` datetime DEFAULT NULL,
   `DEPDATE` datetime DEFAULT NULL,
   `REPLAYDATE` datetime DEFAULT NULL,
-  `LOG_FIELD` mediumtext,
+  `LOG_FIELD` longtext,
   KEY `IDX_colfusion_pentaho_log_transformaion_1` (`ID_BATCH`),
   KEY `IDX_colfusion_pentaho_log_transformaion_2` (`ERRORS`,`STATUS`,`TRANSNAME`)
 );
