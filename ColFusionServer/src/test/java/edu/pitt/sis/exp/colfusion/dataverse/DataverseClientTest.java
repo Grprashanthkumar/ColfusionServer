@@ -84,7 +84,7 @@ public class DataverseClientTest extends UnitTestBase {
 
 		final InputStream fileInputStream = dataverseClient.getDatafile("2681803");
 
-		final File dataFile = this.tempFolder.newFile("dataFileFromDataverse");
+		final File dataFile = this.tempFolder.newFile("dataFileFromDataverse.xlsx");
 
 		IOUtils.writeToFile(fileInputStream, dataFile, true);
 
