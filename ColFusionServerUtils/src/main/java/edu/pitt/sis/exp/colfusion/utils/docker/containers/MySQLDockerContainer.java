@@ -75,8 +75,16 @@ public class MySQLDockerContainer extends AbstractDockerContainer {
 
 	@Override
 	protected void postStartContainer() throws Exception {
-		
-		String host = new URI(ConfigManager.getInstance().getProperty(PropertyKeys.COLFUSION_DOCKER_URI)).getHost();
+		URI dockerUri = new URI(ConfigManager.getInstance().getProperty(PropertyKeys.COLFUSION_DOCKER_URI));
+		String scheme = dockerUri.getScheme();
+		String host;
+		if (scheme != null && scheme.equals("unix")) {
+			// if we're communicating through unix socket, getHost won't be defined
+			// This could possibly be a generic fallback for when getHost() is null
+			host = "127.0.0.1";
+		} else {
+			host = dockerUri.getHost();
+		}
 		int port = getHostPort(MySQLContainerProvider.MYSQL_PORT_DEFAULT);
 		
 		connectionInfo = new MySQLDockerContainerConnectionInfo(host,  port,  
