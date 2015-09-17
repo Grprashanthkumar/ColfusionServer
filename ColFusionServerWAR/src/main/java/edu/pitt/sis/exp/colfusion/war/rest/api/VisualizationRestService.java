@@ -1,4 +1,4 @@
-package edu.pitt.sis.exp.colfusion.war.rest;
+package edu.pitt.sis.exp.colfusion.war.rest.api;
 
 import java.util.ArrayList;
 import java.util.List;

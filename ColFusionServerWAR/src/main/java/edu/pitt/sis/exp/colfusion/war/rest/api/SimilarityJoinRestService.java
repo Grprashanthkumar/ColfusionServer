@@ -1,7 +1,7 @@
 /**
  * 
  */
-package edu.pitt.sis.exp.colfusion.war.rest;
+package edu.pitt.sis.exp.colfusion.war.rest.api;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;

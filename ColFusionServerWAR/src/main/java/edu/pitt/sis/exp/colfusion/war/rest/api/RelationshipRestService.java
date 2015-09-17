@@ -1,7 +1,7 @@
 /**
  * 
  */
-package edu.pitt.sis.exp.colfusion.war.rest;
+package edu.pitt.sis.exp.colfusion.war.rest.api;
 
 import java.math.BigDecimal;
 

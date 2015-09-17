@@ -1,25 +1,37 @@
-package edu.pitt.sis.exp.colfusion.war.rest;
+package edu.pitt.sis.exp.colfusion.war.rest.api;
 
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
+import javax.ws.rs.Consumes;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.google.gson.Gson;
+import com.wordnik.swagger.annotations.Api;
+import com.wordnik.swagger.annotations.ApiOperation;
+import com.wordnik.swagger.annotations.ApiResponse;
+import com.wordnik.swagger.annotations.ApiResponses;
 
-import edu.pitt.sis.exp.colfusion.dataverse.DataverseBL;
+import edu.pitt.sis.exp.colfusion.bll.DataverseBL;
+import edu.pitt.sis.exp.colfusion.dal.viewmodels.OneUploadedItemViewModel;
+import edu.pitt.sis.exp.colfusion.dataverse.DataverseFileInfo;
 import edu.pitt.sis.exp.colfusion.responseModels.AcceptedFilesResponse;
+import edu.pitt.sis.exp.colfusion.war.rest.responses.RestResponseBuilder;
+import edu.pitt.sis.exp.colfusion.war.rest.viewModels.harwardDataverse.GetDataFileViewModel;
+import edu.pitt.sis.exp.colfusion.war.rest.viewModels.harwardDataverse.SearchForFileResultViewModel;
 
+@Api(value = "/HarvardDataverse", description = "Harvard Dataverse reslated services")
 @Path("HarvardDataverse/")
 public class HarvardDataverseRestService {
 
@@ -35,15 +47,25 @@ public class HarvardDataverseRestService {
 	 * @return
 	 * @throws IOException
 	 */
-	@Path("Download/{ids}/{name}/{sid}/{uploadTimestamp}")
-	@GET
+	@Path("getDataFile")
+	@POST
+	@ApiOperation(
+			value = "Get data file from dataverse server and stores it in colfusion as uploaded data file from local machine",
+			notes = "",
+			response = AcceptedFilesResponse.class)
+	//TODO: come back and fix this annotations
+	@ApiResponses(value = {
+			@ApiResponse(code = 400, message = "Invalid ID supplied"),
+			@ApiResponse(code = 404, message = "StoryMetadata not found") })
+	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response dataverseDownloadRevise(@PathParam("name") final String name, @PathParam("ids") final String ids,
-			@PathParam("sid") final String sid, @PathParam("uploadTimestamp") final String uploadTimestamp) throws IOException{
-		final int id = Integer.parseInt(ids);
+	public Response getDataFile(final GetDataFileViewModel getDataFileViewModel) throws IOException{
+
 		final DataverseBL dataverSerivce = new DataverseBL();
-		final AcceptedFilesResponse result = dataverSerivce.dataverseById(id, name, sid, uploadTimestamp);
-		return Response.status(200).entity(result).build();
+		final List<OneUploadedItemViewModel> result = dataverSerivce.getDatafile(getDataFileViewModel.getSid(),
+				getDataFileViewModel.getFileId(), getDataFileViewModel.getFileName());
+
+		return RestResponseBuilder.build(result, true, "", Status.OK);
 	}
 
 	/**
@@ -53,23 +75,17 @@ public class HarvardDataverseRestService {
 	 * @param dataverseName
 	 * @return
 	 */
-	@Path("Search")
+	@Path("searchForFile")
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response dataverseFilesRevise(@QueryParam("fileName") final String fileName,
 			@QueryParam("dataverseName") final String dataverseName,
 			@DefaultValue("") @QueryParam("datasetName") final String datasetName) {
 		final DataverseBL dataverSerivce = new DataverseBL();
-		final ArrayList< String> filesArray = dataverSerivce.dataverseByNameRevise(fileName, dataverseName, datasetName);
+		final List<DataverseFileInfo> filesArray = dataverSerivce.searchForFile(fileName, dataverseName, datasetName);
 
-		final String[] s = new String[filesArray.size()];
-		for(int i = 0; i < filesArray.size(); i++){
-			s[i] = filesArray.get(i);
-		}
+		final List<SearchForFileResultViewModel> result = filesArray.stream().map(f -> new SearchForFileResultViewModel(f)).collect(Collectors.toList());
 
-		final Gson gson = new Gson();
-		final String json = gson.toJson(filesArray);
-
-		return Response.status(200).entity(json).build();
+		return RestResponseBuilder.build(result, true, "", Status.OK);
 	}
 }

@@ -1,4 +1,4 @@
-package edu.pitt.sis.exp.colfusion.war.rest;
+package edu.pitt.sis.exp.colfusion.war.rest.api;
 
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -60,7 +60,7 @@ public class WizardRestService {
 
 		//Store the files
 		final DataSubmissionWizzardBL wizardBLL = new DataSubmissionWizzardBL();
-		final AcceptedFilesResponse result = wizardBLL.storeUploadedFiles(sid, uploadTimestamp, fileType, dbType, inputStreams);
+		final AcceptedFilesResponse result = wizardBLL.storeUploadedFiles(sid, inputStreams);
 
 		return Response.status(200).entity(result).build(); //.build();
 	}
