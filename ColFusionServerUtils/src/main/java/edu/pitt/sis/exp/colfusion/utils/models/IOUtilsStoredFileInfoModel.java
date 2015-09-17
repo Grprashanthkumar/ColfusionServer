@@ -18,10 +18,10 @@ public class IOUtilsStoredFileInfoModel implements Serializable {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	private String _name = "";
-	private String _absoluteName = "";
-	private String _extension = "";
-	private long _lastModified;
+	private String fileName = "";
+	private String absoluteFileName = "";
+	private String fileExtension = "";
+	private long lastModified;
 
 	/**
 	 * Set the extension of the stored file.
@@ -29,7 +29,7 @@ public class IOUtilsStoredFileInfoModel implements Serializable {
 	 * @param extension of the files to be set.
 	 */
 	public void setFileExtension(final String extension) {
-		this._extension = extension;
+		this.fileExtension = extension;
 	}
 
 	/**
@@ -38,7 +38,7 @@ public class IOUtilsStoredFileInfoModel implements Serializable {
 	 * @return the extension of the file. If files don't have any extension returns empty string.
 	 */
 	public String getFileExtension() {
-		return this._extension;
+		return this.fileExtension;
 	}
 
 	/**
@@ -47,7 +47,7 @@ public class IOUtilsStoredFileInfoModel implements Serializable {
 	 * @param name of the file with extension.
 	 */
 	public void setFileName(final String name) {
-		this._name = name;
+		this.fileName = name;
 	}
 
 	/**
@@ -56,7 +56,7 @@ public class IOUtilsStoredFileInfoModel implements Serializable {
 	 * @return the name of the file with extension.
 	 */
 	public String getFileName() {
-		return this._name;
+		return this.fileName;
 	}
 
 	/**
@@ -65,7 +65,7 @@ public class IOUtilsStoredFileInfoModel implements Serializable {
 	 * @param name of the file.
 	 */
 	public void setAbsoluteFileName(final String absoluteName) {
-		this._absoluteName = absoluteName;
+		this.absoluteFileName = absoluteName;
 	}
 
 	/**
@@ -74,7 +74,7 @@ public class IOUtilsStoredFileInfoModel implements Serializable {
 	 * @return the absolute name of the file which include absolute path and the file name with extension
 	 */
 	public String getAbsoluteFileName() {
-		return this._absoluteName;
+		return this.absoluteFileName;
 	}
 
 	/**
@@ -83,7 +83,7 @@ public class IOUtilsStoredFileInfoModel implements Serializable {
 	 * @param lastModified in Unix epoch.
 	 */
 	public void setLastModified(final long lastModified) {
-		this._lastModified = lastModified;
+		this.lastModified = lastModified;
 	}
 
 	/**
@@ -92,7 +92,7 @@ public class IOUtilsStoredFileInfoModel implements Serializable {
 	 * @return last modified value in Unix epoch.
 	 */
 	public long getLastModified() {
-		return this._lastModified;
+		return this.lastModified;
 	}
 
 	/**
@@ -102,7 +102,7 @@ public class IOUtilsStoredFileInfoModel implements Serializable {
 	 */
 	public boolean isArchive() {
 		//TODO: check for other types of archives
-		if (this._extension.equals("zip")) {
+		if (this.fileExtension.equals("zip")) {
 			return true;
 		}
 

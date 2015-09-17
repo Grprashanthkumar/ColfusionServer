@@ -23,11 +23,11 @@ public class DataverseClientImpl implements DataverseClient {
 
 	final Logger logger = LogManager.getLogger(DataverseClientImpl.class.getName());
 
-	//TODO: apparently server base address should also be user provided
-	// because there are a number of dataverse servers, CHIA uses harvard's server
-	String apiBaseUrl = "https://dataverse.harvard.edu/api";
+	private final DataverseContext dataverseContext;
 
-	String dataverseKey = "551ceb21-bd44-456a-abe0-12d7412f401b";
+	public DataverseClientImpl(final DataverseContext dataverseContext) {
+		this.dataverseContext = dataverseContext;
+	}
 
 	@Override
 	public InputStream getDatafile(final String fileId) throws FileNotFoundException {
@@ -35,9 +35,10 @@ public class DataverseClientImpl implements DataverseClient {
 		final Escaper urlEscaper = UrlEscapers.urlPathSegmentEscaper();
 
 		final String restResource = String.format("/access/datafile/%s?format=original&key=%s",
-				urlEscaper.escape(fileId), urlEscaper.escape(this.dataverseKey));
+				urlEscaper.escape(fileId), urlEscaper.escape(this.dataverseContext.getTokenKey()));
 
-		final Response response = JerseyClientUtil.doGet(this.apiBaseUrl, restResource, MediaType.APPLICATION_OCTET_STREAM_TYPE, MediaType.WILDCARD_TYPE);
+		final Response response = JerseyClientUtil.doGet(this.dataverseContext.getRestApiBase(), restResource,
+				MediaType.APPLICATION_OCTET_STREAM_TYPE, MediaType.WILDCARD_TYPE);
 
 		if (response.getStatus() != 200) {
 			final String message = String.format("getDatafile got response with status '%d' and message '%s' for fileid '%s'",
@@ -58,10 +59,14 @@ public class DataverseClientImpl implements DataverseClient {
 	public List<DataverseFileInfo> searchForFile(final String fileName, final String dataverseName, final String datasetName) {
 		final Escaper urlEscaper = UrlEscapers.urlPathSegmentEscaper();
 
-		final String restResource = String.format("/search?q=%s&subtree=%s&type=file&key=%s",
-				urlEscaper.escape(fileName), urlEscaper.escape(dataverseName), urlEscaper.escape(this.dataverseKey));
+		String restResource = String.format("/search?q=%s&type=file&key=%s",
+				urlEscaper.escape(fileName), urlEscaper.escape(this.dataverseContext.getTokenKey()));
 
-		final Response response = JerseyClientUtil.doGet(this.apiBaseUrl, restResource);
+		if (dataverseName != null && !dataverseName.isEmpty()) {
+			restResource = String.format("%s&subtree=%s", restResource, urlEscaper.escape(dataverseName));
+		}
+
+		final Response response = JerseyClientUtil.doGet(this.dataverseContext.getRestApiBase(), restResource);
 		final String entity = response.readEntity(String.class);
 
 		if (response.getStatus() != 200) {
@@ -81,7 +86,7 @@ public class DataverseClientImpl implements DataverseClient {
 			for (int i = 0; i < item.length(); i++) {
 				final JSONObject file = item.getJSONObject(i);
 
-				if (!datasetName.equals("") && !file.getString("dataset_citation").contains(datasetName)) {
+				if (datasetName != null && !datasetName.equals("") && !file.getString("dataset_citation").contains(datasetName)) {
 					continue;
 				}
 

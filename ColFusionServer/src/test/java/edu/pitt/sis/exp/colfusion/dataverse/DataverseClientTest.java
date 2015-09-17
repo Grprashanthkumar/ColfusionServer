@@ -13,10 +13,24 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.Test;
 
+import edu.pitt.sis.exp.colfusion.importers.excel.ExcelFile;
+import edu.pitt.sis.exp.colfusion.importers.excel.ExcelFileHandler;
+import edu.pitt.sis.exp.colfusion.importers.excel.ExcelFileHandlerImpl;
 import edu.pitt.sis.exp.colfusion.utils.IOUtils;
 import edu.pitt.sis.exp.colfusion.utils.UnitTestBase;
 
+/**
+ * Tests {@link DataverseClientImpl}
+ */
 public class DataverseClientTest extends UnitTestBase {
+
+	private final String DATAVERSE_SERVER_ADDRESS = "dataverse.harvard.edu"; //Should use this after able to create file on dataverse: apitest.dataverse.org
+	private final String DATAVERSE_TOKEN_KEY = "551ceb21-bd44-456a-abe0-12d7412f401b"; // Get token for apitest server
+
+	private DataverseClient getDataverseClient() {
+		final DataverseContext dataverseContext = new DataverseContextImpl(this.DATAVERSE_SERVER_ADDRESS, this.DATAVERSE_TOKEN_KEY);
+		return new DataverseClientImpl(dataverseContext);
+	}
 
 	@Test
 	public void testDataverSearchResultItemJsonItemToDataverseFileInfo() throws JSONException {
@@ -48,7 +62,7 @@ public class DataverseClientTest extends UnitTestBase {
 
 	@Test
 	public void testSearchForFile() {
-		final DataverseClientImpl dataverseClient = new DataverseClientImpl();
+		final DataverseClient dataverseClient = getDataverseClient();
 
 		final List<DataverseFileInfo> files = dataverseClient.searchForFile("Mortality.monthly_Madras.India_1916.1921",
 				"worldhistorical", "Monthly mortality data of Madras, India from 1916 to 1921");
@@ -61,9 +75,12 @@ public class DataverseClientTest extends UnitTestBase {
 		assertEquals("Wrong parsed file id", "2681803", file1.getFileId());
 	}
 
+	//TODO: we should not test on real files in dataverse, instead use dataverse test api
+	// the problem is that they say that files on test api web site are deleted periodically
+	// so it would be nice if we could first "submit" a file programmatically to the dataverse.
 	@Test
 	public void testGetDatafileCorrectId() throws IOException {
-		final DataverseClientImpl dataverseClient = new DataverseClientImpl();
+		final DataverseClient dataverseClient = getDataverseClient();
 
 		final InputStream fileInputStream = dataverseClient.getDatafile("2681803");
 
@@ -71,12 +88,17 @@ public class DataverseClientTest extends UnitTestBase {
 
 		IOUtils.writeToFile(fileInputStream, dataFile, true);
 
+		final ExcelFileHandler excelFileHandler = new ExcelFileHandlerImpl();
+		try (ExcelFile excelFile = excelFileHandler.openFile(dataFile.getAbsolutePath())) {
+
+		}
+
 		assertNotNull("Got input stream that is null", fileInputStream);
 	}
 
 	@Test(expected = FileNotFoundException.class)
 	public void testGetDatafileWrongId() throws FileNotFoundException {
-		final DataverseClientImpl dataverseClient = new DataverseClientImpl();
+		final DataverseClient dataverseClient = getDataverseClient();
 
 		final InputStream fileInputStream = dataverseClient.getDatafile("123");
 

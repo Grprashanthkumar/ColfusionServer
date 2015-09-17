@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package edu.pitt.sis.exp.colfusion.dal.viewmodels;
 
@@ -8,12 +8,6 @@ import java.util.Date;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
-import edu.pitt.sis.exp.colfusion.dal.orm.ColfusionLicense;
-
-/**
- * @author Evgeny
- *
- */
 @XmlRootElement
 public class StoryMetadataViewModel {
 	private int sid;
@@ -26,17 +20,17 @@ public class StoryMetadataViewModel {
 	private Date dateSubmitted;
 	private String editReason;
 	private int licenseId;
-	
+
 	private StoryAuthorViewModel storySubmitter;
 	private ArrayList<StoryAuthorViewModel> storyAuthors;
 	private ArrayList<StoryAuthorViewModel> removedStoryAuthors;
-	
+
 	public StoryMetadataViewModel() {
 		this.storySubmitter = new StoryAuthorViewModel();
 		this.storyAuthors = new ArrayList<StoryAuthorViewModel>();
 		this.removedStoryAuthors = new ArrayList<>();
 	}
-	
+
 	public StoryMetadataViewModel(final int sid, final int userId, final String title, final String description, final String status, final String sourceType, final String tags, final Date dateSubmitted, final String editReason,
 			final StoryAuthorViewModel storySubmitter, final ArrayList<StoryAuthorViewModel> storyAuthors, final ArrayList<StoryAuthorViewModel> removedStoryAuthors,final int licenseId) {
 		setSid(sid);
@@ -53,12 +47,12 @@ public class StoryMetadataViewModel {
 		setRemovedStoryAuthors(removedStoryAuthors);
 		setLicenseId(licenseId);
 	}
-	
-	
-	public void setLicenseId(int licenseId){
+
+
+	public void setLicenseId(final int licenseId){
 		this.licenseId = licenseId;
 	}
-	
+
 	public int getLicenseId(){
 		return this.licenseId;
 	}
@@ -66,7 +60,7 @@ public class StoryMetadataViewModel {
 	 * @return the sid
 	 */
 	public int getSid() {
-		return sid;
+		return this.sid;
 	}
 	/**
 	 * @param sid the sid to set
@@ -78,7 +72,7 @@ public class StoryMetadataViewModel {
 	 * @return the title
 	 */
 	public String getTitle() {
-		return title;
+		return this.title;
 	}
 	/**
 	 * @param title the title to set
@@ -90,7 +84,7 @@ public class StoryMetadataViewModel {
 	 * @return the description
 	 */
 	public String getDescription() {
-		return description;
+		return this.description;
 	}
 	/**
 	 * @param description the description to set
@@ -102,7 +96,7 @@ public class StoryMetadataViewModel {
 	 * @return the status
 	 */
 	public String getStatus() {
-		return status;
+		return this.status;
 	}
 	/**
 	 * @param status the status to set
@@ -114,7 +108,7 @@ public class StoryMetadataViewModel {
 	 * @return the source_type
 	 */
 	public String getSourceType() {
-		return sourceType;
+		return this.sourceType;
 	}
 	/**
 	 * @param source_type the source_type to set
@@ -126,7 +120,7 @@ public class StoryMetadataViewModel {
 	 * @return the tags
 	 */
 	public String getTags() {
-		return tags;
+		return this.tags;
 	}
 	/**
 	 * @param tags the tags to set
@@ -138,7 +132,7 @@ public class StoryMetadataViewModel {
 	 * @return the dateSubmitted
 	 */
 	public Date getDateSubmitted() {
-		return dateSubmitted;
+		return this.dateSubmitted;
 	}
 	/**
 	 * @param dateSubmitted the dateSubmitted to set
@@ -150,7 +144,7 @@ public class StoryMetadataViewModel {
 	 * @return the storySubmitter
 	 */
 	public StoryAuthorViewModel getStorySubmitter() {
-		return storySubmitter;
+		return this.storySubmitter;
 	}
 	/**
 	 * @param storySubmitter the storySubmitter to set
@@ -162,7 +156,7 @@ public class StoryMetadataViewModel {
 	 * @return the storyAuthors
 	 */
 	public ArrayList<StoryAuthorViewModel> getStoryAuthors() {
-		return storyAuthors;
+		return this.storyAuthors;
 	}
 	/**
 	 * @param storyAuthors the storyAuthors to set
@@ -175,7 +169,7 @@ public class StoryMetadataViewModel {
 	 * @return the removedStoryAuthors
 	 */
 	public ArrayList<StoryAuthorViewModel> getRemovedStoryAuthors() {
-		return removedStoryAuthors;
+		return this.removedStoryAuthors;
 	}
 
 	/**
@@ -189,7 +183,7 @@ public class StoryMetadataViewModel {
 	 * @return the userId
 	 */
 	public int getUserId() {
-		return userId;
+		return this.userId;
 	}
 
 	/**
@@ -203,7 +197,7 @@ public class StoryMetadataViewModel {
 	 * @return the editReason
 	 */
 	public String getEditReason() {
-		return editReason;
+		return this.editReason;
 	}
 
 	/**
@@ -212,5 +206,5 @@ public class StoryMetadataViewModel {
 	public void setEditReason(final String editReason) {
 		this.editReason = editReason;
 	}
-	
+
 }
