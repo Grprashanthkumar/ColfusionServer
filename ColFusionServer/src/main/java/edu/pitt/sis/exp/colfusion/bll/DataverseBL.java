@@ -2,6 +2,7 @@ package edu.pitt.sis.exp.colfusion.bll;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.AccessDeniedException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -38,9 +39,10 @@ public class DataverseBL {
 	 * @param fileId
 	 * @param fileName
 	 * @return
+	 * @throws AccessDeniedException
 	 * @throws IOException
 	 */
-	public ArrayList<OneUploadedItemViewModel> getDatafile(final String sid, final String fileId, final String fileName) throws FileNotFoundException {
+	public ArrayList<OneUploadedItemViewModel> getDatafile(final String sid, final String fileId, final String fileName) throws FileNotFoundException, AccessDeniedException {
 
 		final DataverseContext dataverseContext = new DataverseContextImpl(this.DATAVERSE_SERVER_ADDRESS, this.DATAVERSE_TOKEN_KEY);
 		final DataverseClient dataverseClient = new DataverseClientImpl(dataverseContext);

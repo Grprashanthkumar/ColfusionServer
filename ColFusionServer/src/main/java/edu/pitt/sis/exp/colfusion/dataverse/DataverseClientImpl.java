@@ -2,6 +2,7 @@ package edu.pitt.sis.exp.colfusion.dataverse;
 
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.nio.file.AccessDeniedException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,7 +31,7 @@ public class DataverseClientImpl implements DataverseClient {
 	}
 
 	@Override
-	public InputStream getDatafile(final String fileId) throws FileNotFoundException {
+	public InputStream getDatafile(final String fileId) throws FileNotFoundException, AccessDeniedException {
 
 		final Escaper urlEscaper = UrlEscapers.urlPathSegmentEscaper();
 
@@ -39,6 +40,13 @@ public class DataverseClientImpl implements DataverseClient {
 
 		final Response response = JerseyClientUtil.doGet(this.dataverseContext.getRestApiBase(), restResource,
 				MediaType.APPLICATION_OCTET_STREAM_TYPE, MediaType.WILDCARD_TYPE);
+
+		if (response.getStatus() == 403) {
+			final String message = String.format("Access to the specified data file '%s' has been forbidden.", fileId);
+			this.logger.info(message);
+			//TODO: maybe custom exception is better.
+			throw new AccessDeniedException(message);
+		}
 
 		if (response.getStatus() != 200) {
 			final String message = String.format("getDatafile got response with status '%d' and message '%s' for fileid '%s'",

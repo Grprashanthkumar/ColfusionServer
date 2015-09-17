@@ -2,6 +2,7 @@ package edu.pitt.sis.exp.colfusion.war.rest.api;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.nio.file.AccessDeniedException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -54,11 +55,12 @@ public class HarvardDataverseRestService {
 			response = AcceptedFilesResponse.class)
 	@ApiResponses(value = {
 			@ApiResponse(code = 200, message = "Datafile from dataverse was successfully uploaded into colfusion server."),
+			@ApiResponse(code = 403, message = "If access to the specified datafile has been forbiden (e.g. user doesn't have rights to read that file."),
 			@ApiResponse(code = 404, message = "Request to dataverse server return status not equal 200 and so either something is wrong with "
 					+ "dataverse service, or with user provided parameters.")})
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response getDataFile(final GetDataFileViewModel getDataFileViewModel) throws FileNotFoundException {
+	public Response getDataFile(final GetDataFileViewModel getDataFileViewModel) {
 
 		final DataverseBL dataverSerivce = new DataverseBL();
 
@@ -70,6 +72,8 @@ public class HarvardDataverseRestService {
 		}
 		catch(final FileNotFoundException e) {
 			return Response.status(Status.NOT_FOUND).build();
+		} catch (final AccessDeniedException e) {
+			return Response.status(Status.FORBIDDEN).entity(e.getMessage()).build();
 		}
 	}
 
