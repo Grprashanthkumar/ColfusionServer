@@ -46,7 +46,6 @@ public class DataverseClientImpl implements DataverseClient {
 
 			this.logger.info(message);
 
-			//TODO: alternatively we could propagate message from the dataverse server to the user to let him/her know what was wrong
 			throw new FileNotFoundException(message);
 		}
 

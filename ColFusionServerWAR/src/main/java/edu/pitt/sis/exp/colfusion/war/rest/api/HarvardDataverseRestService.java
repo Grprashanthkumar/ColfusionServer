@@ -1,5 +1,6 @@
 package edu.pitt.sis.exp.colfusion.war.rest.api;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -40,45 +41,57 @@ public class HarvardDataverseRestService {
 	/**
 	 * Download file from Harvard Dataverse.
 	 *
-	 * @param name
-	 * @param ids
-	 * @param sid
-	 * @param uploadTimestamp
+	 * @param getDataFileViewModel parameters for the file to get form dataverse.
 	 * @return
-	 * @throws IOException
+	 * @throws IOException Request to dataverse server return status not equal 200 and so either something is wrong with
+	 *					dataverse service, or with user provided parameters.
 	 */
 	@Path("getDataFile")
 	@POST
 	@ApiOperation(
-			value = "Get data file from dataverse server and stores it in colfusion as uploaded data file from local machine",
+			value = "Get data file from dataverse server and stores it in colfusion as uploaded data file from local machine.",
 			notes = "",
 			response = AcceptedFilesResponse.class)
-	//TODO: come back and fix this annotations
 	@ApiResponses(value = {
-			@ApiResponse(code = 400, message = "Invalid ID supplied"),
-			@ApiResponse(code = 404, message = "StoryMetadata not found") })
+			@ApiResponse(code = 200, message = "Datafile from dataverse was successfully uploaded into colfusion server."),
+			@ApiResponse(code = 404, message = "Request to dataverse server return status not equal 200 and so either something is wrong with "
+					+ "dataverse service, or with user provided parameters.")})
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response getDataFile(final GetDataFileViewModel getDataFileViewModel) throws IOException{
+	public Response getDataFile(final GetDataFileViewModel getDataFileViewModel) throws FileNotFoundException {
 
 		final DataverseBL dataverSerivce = new DataverseBL();
-		final List<OneUploadedItemViewModel> result = dataverSerivce.getDatafile(getDataFileViewModel.getSid(),
-				getDataFileViewModel.getFileId(), getDataFileViewModel.getFileName());
 
-		return RestResponseBuilder.build(result, true, "", Status.OK);
+		try {
+			final List<OneUploadedItemViewModel> result = dataverSerivce.getDatafile(getDataFileViewModel.getSid(),
+					getDataFileViewModel.getFileId(), getDataFileViewModel.getFileName());
+
+			return RestResponseBuilder.build(result, true, "", Status.OK);
+		}
+		catch(final FileNotFoundException e) {
+			return Response.status(Status.NOT_FOUND).build();
+		}
 	}
 
 	/**
 	 * Search files in the Harvard Dataverse with file name and dataverse name.
 	 *
-	 * @param name
+	 * @param fileName
 	 * @param dataverseName
+	 * @param datasetName
 	 * @return
 	 */
 	@Path("searchForFile")
 	@GET
+	@ApiOperation(
+			value = "Search files in the Harvard Dataverse with given file name, dataverse name, and dataset name.",
+			notes = "",
+			response = SearchForFileResultViewModel.class,
+			responseContainer = "List")
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Search request was successfull (don't mean that anything was found though).")})
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response dataverseFilesRevise(@QueryParam("fileName") final String fileName,
+	public Response searchForFile(@QueryParam("fileName") final String fileName,
 			@QueryParam("dataverseName") final String dataverseName,
 			@DefaultValue("") @QueryParam("datasetName") final String datasetName) {
 		final DataverseBL dataverSerivce = new DataverseBL();
