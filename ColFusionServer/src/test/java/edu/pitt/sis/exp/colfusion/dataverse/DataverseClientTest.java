@@ -7,6 +7,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.AccessDeniedException;
 import java.util.List;
 
 import org.json.JSONException;
@@ -97,7 +98,7 @@ public class DataverseClientTest extends UnitTestBase {
 	}
 
 	@Test(expected = FileNotFoundException.class)
-	public void testGetDatafileWrongId() throws FileNotFoundException {
+	public void testGetDatafileWrongId() throws FileNotFoundException, AccessDeniedException {
 		final DataverseClient dataverseClient = getDataverseClient();
 
 		final InputStream fileInputStream = dataverseClient.getDatafile("123");
