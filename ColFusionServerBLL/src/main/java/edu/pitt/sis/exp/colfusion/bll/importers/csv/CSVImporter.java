@@ -28,7 +28,6 @@ import edu.pitt.sis.exp.colfusion.dal.viewmodels.WorksheetViewModel;
 import edu.pitt.sis.exp.colfusion.utils.models.IOUtilsStoredFileInfoModel;
 
 /**
- * @author Evgeny
  *
  */
 public class CSVImporter implements Importer {
