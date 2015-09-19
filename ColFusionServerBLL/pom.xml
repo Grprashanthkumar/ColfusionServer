@@ -3,9 +3,9 @@
 
 	<modelVersion>4.0.0</modelVersion>
 
-	<artifactId>colfusionserver</artifactId>
+	<artifactId>colfusionserverbll</artifactId>
 	<packaging>jar</packaging>
-	<name>ColFusionServer</name>
+	<name>ColFusionServerBLL</name>
 
 	<parent>
 		<groupId>edu.pitt.sis.exp.colfusion</groupId>

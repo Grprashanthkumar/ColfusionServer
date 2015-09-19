@@ -17,7 +17,7 @@
 	<modules>
 		<module>ColFusionServerUtils</module>
 		<module>ColFusionServerDAL</module>
-		<module>ColFusionServer</module>
+		<module>ColFusionServerBLL</module>
 		<module>ColFusionServerWAR</module>
 		<!--
 		<module>ColFusionServerServiceMonitor</module>
