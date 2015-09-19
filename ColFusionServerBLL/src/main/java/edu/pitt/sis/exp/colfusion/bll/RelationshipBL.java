@@ -11,6 +11,12 @@ import java.util.Set;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import edu.pitt.sis.exp.colfusion.bll.process.ProcessManager;
+import edu.pitt.sis.exp.colfusion.bll.relationships.ColumnToColumnDataMatchingProcess;
+import edu.pitt.sis.exp.colfusion.bll.responseModels.GeneralResponse;
+import edu.pitt.sis.exp.colfusion.bll.responseModels.GeneralResponseGen;
+import edu.pitt.sis.exp.colfusion.bll.responseModels.GeneralResponseGenImpl;
+import edu.pitt.sis.exp.colfusion.bll.responseModels.RelationshipLinksResponse;
 import edu.pitt.sis.exp.colfusion.dal.dataModels.relationships.transformation.RelationshipTransformation;
 import edu.pitt.sis.exp.colfusion.dal.dataModels.relationships.transformation.RelationshipTransofmationUtil;
 import edu.pitt.sis.exp.colfusion.dal.databaseHandlers.DatabaseHandlerBase;
@@ -33,12 +39,6 @@ import edu.pitt.sis.exp.colfusion.dal.orm.ColfusionSourceinfo;
 import edu.pitt.sis.exp.colfusion.dal.orm.ColfusionSourceinfoDb;
 import edu.pitt.sis.exp.colfusion.dal.viewmodels.RelationshipLinkViewModel;
 import edu.pitt.sis.exp.colfusion.dal.viewmodels.RelationshipMiningViewModel;
-import edu.pitt.sis.exp.colfusion.process.ProcessManager;
-import edu.pitt.sis.exp.colfusion.relationships.ColumnToColumnDataMatchingProcess;
-import edu.pitt.sis.exp.colfusion.responseModels.GeneralResponse;
-import edu.pitt.sis.exp.colfusion.responseModels.GeneralResponseGen;
-import edu.pitt.sis.exp.colfusion.responseModels.GeneralResponseGenImpl;
-import edu.pitt.sis.exp.colfusion.responseModels.RelationshipLinksResponse;
 
 /**
  * @author Evgeny

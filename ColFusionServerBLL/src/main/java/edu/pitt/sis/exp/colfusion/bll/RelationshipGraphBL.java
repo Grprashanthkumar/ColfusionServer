@@ -9,6 +9,10 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import edu.pitt.sis.exp.colfusion.dal.dao.SourceInfoDAO.SourceInfoStatus;
+import edu.pitt.sis.exp.colfusion.bll.relationships.relationshipGraph.RelationshipGraph;
+import edu.pitt.sis.exp.colfusion.bll.relationships.relationshipGraph.RelationshipGraphEdge;
+import edu.pitt.sis.exp.colfusion.bll.relationships.relationshipGraph.RelationshipGraphNode;
+import edu.pitt.sis.exp.colfusion.bll.relationships.relationshipGraph.RelationshipGraphEdge.NodeInfo;
 import edu.pitt.sis.exp.colfusion.dal.dao.StatonverdictsDAO;
 import edu.pitt.sis.exp.colfusion.dal.dao.StatonverdictsDAOImpl;
 import edu.pitt.sis.exp.colfusion.dal.dataModels.tableDataModel.RelationKey;
@@ -22,10 +26,6 @@ import edu.pitt.sis.exp.colfusion.dal.managers.SourceInfoManagerImpl;
 import edu.pitt.sis.exp.colfusion.dal.orm.ColfusionRelationships;
 import edu.pitt.sis.exp.colfusion.dal.orm.ColfusionSourceinfo;
 import edu.pitt.sis.exp.colfusion.dal.viewmodels.DnameViewModel;
-import edu.pitt.sis.exp.colfusion.relationships.relationshipGraph.RelationshipGraph;
-import edu.pitt.sis.exp.colfusion.relationships.relationshipGraph.RelationshipGraphEdge;
-import edu.pitt.sis.exp.colfusion.relationships.relationshipGraph.RelationshipGraphEdge.NodeInfo;
-import edu.pitt.sis.exp.colfusion.relationships.relationshipGraph.RelationshipGraphNode;
 
 public class RelationshipGraphBL {
 

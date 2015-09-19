@@ -7,6 +7,11 @@ import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import edu.pitt.sis.exp.colfusion.bll.responseModels.JointTableByRelationshipsResponeModel;
+import edu.pitt.sis.exp.colfusion.bll.responseModels.JointTableResponeModel;
+import edu.pitt.sis.exp.colfusion.bll.similarityJoins.NestedLoopSimilarityJoin;
+import edu.pitt.sis.exp.colfusion.bll.similarityMeasures.LevenshteinDistance;
+import edu.pitt.sis.exp.colfusion.bll.similarityMeasures.NormalizedDistance;
 import edu.pitt.sis.exp.colfusion.dal.dataModels.relationships.RelationshipLink;
 import edu.pitt.sis.exp.colfusion.dal.dataModels.relationships.transformation.RelationshipTransformation;
 import edu.pitt.sis.exp.colfusion.dal.dataModels.relationships.transformation.RelationshipTransofmationUtil;
@@ -27,11 +32,6 @@ import edu.pitt.sis.exp.colfusion.dal.orm.ColfusionSourceinfoDb;
 import edu.pitt.sis.exp.colfusion.dal.viewmodels.JoinTablesByRelationshipsViewModel;
 import edu.pitt.sis.exp.colfusion.dal.viewmodels.TwoJointTablesViewModel;
 import edu.pitt.sis.exp.colfusion.dal.viewmodels.TwoTableJoinInputViewModel;
-import edu.pitt.sis.exp.colfusion.responseModels.JointTableByRelationshipsResponeModel;
-import edu.pitt.sis.exp.colfusion.responseModels.JointTableResponeModel;
-import edu.pitt.sis.exp.colfusion.similarityJoins.NestedLoopSimilarityJoin;
-import edu.pitt.sis.exp.colfusion.similarityMeasures.LevenshteinDistance;
-import edu.pitt.sis.exp.colfusion.similarityMeasures.NormalizedDistance;
 
 public class JoinTablesBL {
 

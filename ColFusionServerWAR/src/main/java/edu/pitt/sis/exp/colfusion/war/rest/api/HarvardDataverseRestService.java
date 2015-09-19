@@ -26,9 +26,9 @@ import com.wordnik.swagger.annotations.ApiResponse;
 import com.wordnik.swagger.annotations.ApiResponses;
 
 import edu.pitt.sis.exp.colfusion.bll.DataverseBL;
+import edu.pitt.sis.exp.colfusion.bll.dataverse.DataverseFileInfo;
+import edu.pitt.sis.exp.colfusion.bll.responseModels.AcceptedFilesResponse;
 import edu.pitt.sis.exp.colfusion.dal.viewmodels.OneUploadedItemViewModel;
-import edu.pitt.sis.exp.colfusion.dataverse.DataverseFileInfo;
-import edu.pitt.sis.exp.colfusion.responseModels.AcceptedFilesResponse;
 import edu.pitt.sis.exp.colfusion.war.rest.responses.RestResponseBuilder;
 import edu.pitt.sis.exp.colfusion.war.rest.viewModels.harwardDataverse.GetDataFileViewModel;
 import edu.pitt.sis.exp.colfusion.war.rest.viewModels.harwardDataverse.SearchForFileResultViewModel;

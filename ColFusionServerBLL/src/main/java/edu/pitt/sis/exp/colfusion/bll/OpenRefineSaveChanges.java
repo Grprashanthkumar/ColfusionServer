@@ -3,11 +3,11 @@ package edu.pitt.sis.exp.colfusion.bll;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import edu.pitt.sis.exp.colfusion.bll.responseModels.GeneralResponseGen;
+import edu.pitt.sis.exp.colfusion.bll.responseModels.GeneralResponseGenImpl;
 import edu.pitt.sis.exp.colfusion.dal.databaseHandlers.DatabaseHandlerBase;
 import edu.pitt.sis.exp.colfusion.dal.databaseHandlers.DatabaseHandlerFactory;
 import edu.pitt.sis.exp.colfusion.dal.databaseHandlers.MetadataDbHandler;
-import edu.pitt.sis.exp.colfusion.responseModels.GeneralResponseGen;
-import edu.pitt.sis.exp.colfusion.responseModels.GeneralResponseGenImpl;
 import edu.pitt.sis.exp.colfusion.utils.ConfigManager;
 import edu.pitt.sis.exp.colfusion.utils.PropertyKeys;
 

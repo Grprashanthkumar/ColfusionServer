@@ -9,6 +9,9 @@ import junit.framework.TestCase;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import edu.pitt.sis.exp.colfusion.bll.relationships.relationshipGraph.RelationshipGraphEdge;
+import edu.pitt.sis.exp.colfusion.bll.relationships.relationshipGraph.RelationshipGraphNode;
+import edu.pitt.sis.exp.colfusion.bll.relationships.relationshipGraph.RelationshipGraphEdge.NodeInfo;
 import edu.pitt.sis.exp.colfusion.dal.dao.StatonverdictsDAO;
 import edu.pitt.sis.exp.colfusion.dal.dao.StatonverdictsDAOImpl;
 import edu.pitt.sis.exp.colfusion.dal.dataModels.tableDataModel.RelationKey;
@@ -20,9 +23,6 @@ import edu.pitt.sis.exp.colfusion.dal.managers.SourceInfoManagerImpl;
 import edu.pitt.sis.exp.colfusion.dal.orm.ColfusionRelationships;
 import edu.pitt.sis.exp.colfusion.dal.orm.ColfusionSourceinfo;
 import edu.pitt.sis.exp.colfusion.dal.viewmodels.DnameViewModel;
-import edu.pitt.sis.exp.colfusion.relationships.relationshipGraph.RelationshipGraphEdge;
-import edu.pitt.sis.exp.colfusion.relationships.relationshipGraph.RelationshipGraphEdge.NodeInfo;
-import edu.pitt.sis.exp.colfusion.relationships.relationshipGraph.RelationshipGraphNode;
 
 public class RelationshipGraphBLTest extends TestCase {
 

@@ -8,12 +8,12 @@ import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import edu.pitt.sis.exp.colfusion.bll.responseModels.AuthorsResponse;
 import edu.pitt.sis.exp.colfusion.dal.managers.UserManager;
 import edu.pitt.sis.exp.colfusion.dal.managers.UserManagerImpl;
 import edu.pitt.sis.exp.colfusion.dal.orm.ColfusionUsers;
 import edu.pitt.sis.exp.colfusion.dal.utils.MappingUtils;
 import edu.pitt.sis.exp.colfusion.dal.viewmodels.StoryAuthorViewModel;
-import edu.pitt.sis.exp.colfusion.responseModels.AuthorsResponse;
 
 /**
  * @author Evgeny

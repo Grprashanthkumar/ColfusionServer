@@ -7,11 +7,11 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import edu.pitt.sis.exp.colfusion.bll.BasicTableBL;
+import edu.pitt.sis.exp.colfusion.bll.responseModels.BasicTableResponseModel;
+import edu.pitt.sis.exp.colfusion.bll.responseModels.JointTableByRelationshipsResponeModel;
+import edu.pitt.sis.exp.colfusion.bll.responseModels.StoryStatusResponseModel;
 import edu.pitt.sis.exp.colfusion.dal.infra.DatabaseUnitTestBase;
 import edu.pitt.sis.exp.colfusion.dal.orm.ColfusionSourceinfo;
-import edu.pitt.sis.exp.colfusion.responseModels.BasicTableResponseModel;
-import edu.pitt.sis.exp.colfusion.responseModels.JointTableByRelationshipsResponeModel;
-import edu.pitt.sis.exp.colfusion.responseModels.StoryStatusResponseModel;
 
 public class BasicTableBLTest extends DatabaseUnitTestBase {
 	

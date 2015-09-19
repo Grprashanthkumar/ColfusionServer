@@ -21,15 +21,15 @@ import org.glassfish.jersey.media.multipart.FormDataBodyPart;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 
 import edu.pitt.sis.exp.colfusion.bll.dataSubmissionWizzard.DataSubmissionWizzardBL;
+import edu.pitt.sis.exp.colfusion.bll.responseModels.AcceptedFilesResponse;
+import edu.pitt.sis.exp.colfusion.bll.responseModels.FileContentInfoReponse;
+import edu.pitt.sis.exp.colfusion.bll.responseModels.GeneralResponseImpl;
+import edu.pitt.sis.exp.colfusion.bll.responseModels.OneNumberResponse;
+import edu.pitt.sis.exp.colfusion.bll.responseModels.PreviewFileResponse;
 import edu.pitt.sis.exp.colfusion.dal.viewmodels.CreateTemplateViewModel;
 import edu.pitt.sis.exp.colfusion.dal.viewmodels.FileContentInfoViewModel;
 import edu.pitt.sis.exp.colfusion.dal.viewmodels.FilesContentInfoViewModel;
 import edu.pitt.sis.exp.colfusion.dal.viewmodels.PreviewFileViewModel;
-import edu.pitt.sis.exp.colfusion.responseModels.AcceptedFilesResponse;
-import edu.pitt.sis.exp.colfusion.responseModels.FileContentInfoReponse;
-import edu.pitt.sis.exp.colfusion.responseModels.GeneralResponseImpl;
-import edu.pitt.sis.exp.colfusion.responseModels.OneNumberResponse;
-import edu.pitt.sis.exp.colfusion.responseModels.PreviewFileResponse;
 
 @Path("Wizard/")
 public class WizardRestService {

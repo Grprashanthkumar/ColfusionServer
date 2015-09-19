@@ -14,7 +14,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import edu.pitt.sis.exp.colfusion.bll.UserBL;
-import edu.pitt.sis.exp.colfusion.responseModels.AuthorsResponse;
+import edu.pitt.sis.exp.colfusion.bll.responseModels.AuthorsResponse;
 
 /**
  * @author Evgeny

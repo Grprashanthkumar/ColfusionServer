@@ -2,7 +2,7 @@ package edu.pitt.sis.exp.colfusion.war.rest.viewModels.harwardDataverse;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
-import edu.pitt.sis.exp.colfusion.dataverse.DataverseFileInfo;
+import edu.pitt.sis.exp.colfusion.bll.dataverse.DataverseFileInfo;
 import edu.pitt.sis.exp.colfusion.war.rest.viewModels.ViewModel;
 
 @XmlRootElement

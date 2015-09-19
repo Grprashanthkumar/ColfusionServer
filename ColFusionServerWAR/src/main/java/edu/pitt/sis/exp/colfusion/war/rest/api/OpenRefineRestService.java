@@ -15,7 +15,7 @@ import org.apache.logging.log4j.Logger;
 
 import edu.pitt.sis.exp.colfusion.bll.CreateProject;
 import edu.pitt.sis.exp.colfusion.bll.OpenRefineSaveChanges;
-import edu.pitt.sis.exp.colfusion.responseModels.GeneralResponseGen;
+import edu.pitt.sis.exp.colfusion.bll.responseModels.GeneralResponseGen;
 
 /**
  * @author xxl

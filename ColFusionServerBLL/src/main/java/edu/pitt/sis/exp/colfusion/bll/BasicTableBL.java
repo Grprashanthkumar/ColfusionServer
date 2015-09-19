@@ -9,6 +9,14 @@ import javax.persistence.Basic;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import edu.pitt.sis.exp.colfusion.bll.responseModels.AttachmentListResponseModel;
+import edu.pitt.sis.exp.colfusion.bll.responseModels.AuthorsResponse;
+import edu.pitt.sis.exp.colfusion.bll.responseModels.BasicTableResponseModel;
+import edu.pitt.sis.exp.colfusion.bll.responseModels.DnameResponseModel;
+import edu.pitt.sis.exp.colfusion.bll.responseModels.JointTableByRelationshipsResponeModel;
+import edu.pitt.sis.exp.colfusion.bll.responseModels.RelationshipsResponseModel;
+import edu.pitt.sis.exp.colfusion.bll.responseModels.StoryListResponseModel;
+import edu.pitt.sis.exp.colfusion.bll.responseModels.StoryStatusResponseModel;
 import edu.pitt.sis.exp.colfusion.dal.dao.SourceInfoDAO.SourceInfoStatus;
 import edu.pitt.sis.exp.colfusion.dal.dataModels.tableDataModel.RelationKey;
 import edu.pitt.sis.exp.colfusion.dal.dataModels.tableDataModel.Table;
@@ -35,14 +43,6 @@ import edu.pitt.sis.exp.colfusion.dal.viewmodels.RelationshipsViewModel;
 import edu.pitt.sis.exp.colfusion.dal.viewmodels.StoryListViewModel;
 import edu.pitt.sis.exp.colfusion.dal.viewmodels.StoryStatusViewModel;
 import edu.pitt.sis.exp.colfusion.dal.viewmodels.UserViewModel;
-import edu.pitt.sis.exp.colfusion.responseModels.AttachmentListResponseModel;
-import edu.pitt.sis.exp.colfusion.responseModels.AuthorsResponse;
-import edu.pitt.sis.exp.colfusion.responseModels.BasicTableResponseModel;
-import edu.pitt.sis.exp.colfusion.responseModels.DnameResponseModel;
-import edu.pitt.sis.exp.colfusion.responseModels.JointTableByRelationshipsResponeModel;
-import edu.pitt.sis.exp.colfusion.responseModels.RelationshipsResponseModel;
-import edu.pitt.sis.exp.colfusion.responseModels.StoryListResponseModel;
-import edu.pitt.sis.exp.colfusion.responseModels.StoryStatusResponseModel;
 
 public class BasicTableBL {
 

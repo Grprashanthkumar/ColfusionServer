@@ -11,6 +11,12 @@ import java.util.Map;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import edu.pitt.sis.exp.colfusion.bll.responseModels.AddColumnMetadataEditHistoryResponse;
+import edu.pitt.sis.exp.colfusion.bll.responseModels.ColumnMetadataResponse;
+import edu.pitt.sis.exp.colfusion.bll.responseModels.GetColumnMetadataEditHistoryResponse;
+import edu.pitt.sis.exp.colfusion.bll.responseModels.LicensesResponseModel;
+import edu.pitt.sis.exp.colfusion.bll.responseModels.StoryMetadataHistoryResponse;
+import edu.pitt.sis.exp.colfusion.bll.responseModels.StoryMetadataResponse;
 import edu.pitt.sis.exp.colfusion.dal.managers.DNameInfoManager;
 import edu.pitt.sis.exp.colfusion.dal.managers.DNameInfoManagerImpl;
 import edu.pitt.sis.exp.colfusion.dal.managers.LicenseInfoManager;
@@ -34,12 +40,6 @@ import edu.pitt.sis.exp.colfusion.dal.viewmodels.StoryAuthorViewModel;
 import edu.pitt.sis.exp.colfusion.dal.viewmodels.StoryMetadataHistoryLogRecordViewModel;
 import edu.pitt.sis.exp.colfusion.dal.viewmodels.StoryMetadataHistoryViewModel;
 import edu.pitt.sis.exp.colfusion.dal.viewmodels.StoryMetadataViewModel;
-import edu.pitt.sis.exp.colfusion.responseModels.AddColumnMetadataEditHistoryResponse;
-import edu.pitt.sis.exp.colfusion.responseModels.ColumnMetadataResponse;
-import edu.pitt.sis.exp.colfusion.responseModels.GetColumnMetadataEditHistoryResponse;
-import edu.pitt.sis.exp.colfusion.responseModels.LicensesResponseModel;
-import edu.pitt.sis.exp.colfusion.responseModels.StoryMetadataHistoryResponse;
-import edu.pitt.sis.exp.colfusion.responseModels.StoryMetadataResponse;
 
 
 /**

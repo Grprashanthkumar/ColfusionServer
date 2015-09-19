@@ -9,6 +9,9 @@ import java.util.Map;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import edu.pitt.sis.exp.colfusion.bll.responseModels.LocationListResponse;
+import edu.pitt.sis.exp.colfusion.bll.responseModels.RowsResponseModel;
+import edu.pitt.sis.exp.colfusion.bll.responseModels.StoryTableResponse;
 import edu.pitt.sis.exp.colfusion.dal.dao.LocationIndexDAOImpl;
 import edu.pitt.sis.exp.colfusion.dal.dataModels.tableDataModel.RelationKey;
 import edu.pitt.sis.exp.colfusion.dal.dataModels.tableDataModel.Table;
@@ -22,9 +25,6 @@ import edu.pitt.sis.exp.colfusion.dal.viewmodels.DnameViewModel;
 import edu.pitt.sis.exp.colfusion.dal.viewmodels.LocationViewModel;
 import edu.pitt.sis.exp.colfusion.dal.viewmodels.SourceInfoViewModel;
 import edu.pitt.sis.exp.colfusion.dal.viewmodels.StoryTableViewModel;
-import edu.pitt.sis.exp.colfusion.responseModels.LocationListResponse;
-import edu.pitt.sis.exp.colfusion.responseModels.RowsResponseModel;
-import edu.pitt.sis.exp.colfusion.responseModels.StoryTableResponse;
 
 public class SearchBL {
 

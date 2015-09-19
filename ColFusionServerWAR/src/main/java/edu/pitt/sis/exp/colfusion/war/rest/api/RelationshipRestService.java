@@ -16,9 +16,9 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import edu.pitt.sis.exp.colfusion.bll.RelationshipBL;
-import edu.pitt.sis.exp.colfusion.responseModels.GeneralResponse;
-import edu.pitt.sis.exp.colfusion.responseModels.GeneralResponseGenImpl;
-import edu.pitt.sis.exp.colfusion.responseModels.RelationshipLinksResponse;
+import edu.pitt.sis.exp.colfusion.bll.responseModels.GeneralResponse;
+import edu.pitt.sis.exp.colfusion.bll.responseModels.GeneralResponseGenImpl;
+import edu.pitt.sis.exp.colfusion.bll.responseModels.RelationshipLinksResponse;
 
 /**
  * @author Evgeny

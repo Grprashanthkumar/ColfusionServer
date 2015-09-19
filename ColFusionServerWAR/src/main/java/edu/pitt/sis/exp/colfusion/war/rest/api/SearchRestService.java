@@ -13,10 +13,10 @@ import com.wordnik.swagger.annotations.ApiResponse;
 import com.wordnik.swagger.annotations.ApiResponses;
 
 import edu.pitt.sis.exp.colfusion.bll.SearchBL;
-import edu.pitt.sis.exp.colfusion.responseModels.FacetedSearchResponseModel;
-import edu.pitt.sis.exp.colfusion.responseModels.LocationListResponse;
-import edu.pitt.sis.exp.colfusion.responseModels.RowsResponseModel;
-import edu.pitt.sis.exp.colfusion.responseModels.StoryTableResponse;
+import edu.pitt.sis.exp.colfusion.bll.responseModels.FacetedSearchResponseModel;
+import edu.pitt.sis.exp.colfusion.bll.responseModels.LocationListResponse;
+import edu.pitt.sis.exp.colfusion.bll.responseModels.RowsResponseModel;
+import edu.pitt.sis.exp.colfusion.bll.responseModels.StoryTableResponse;
 
 
 

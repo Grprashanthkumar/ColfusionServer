@@ -20,13 +20,13 @@ import com.wordnik.swagger.annotations.ApiResponses;
 
 import edu.pitt.sis.exp.colfusion.bll.RelationshipBL;
 import edu.pitt.sis.exp.colfusion.bll.VisualizationBL;
+import edu.pitt.sis.exp.colfusion.bll.responseModels.GeneralResponse;
+import edu.pitt.sis.exp.colfusion.bll.responseModels.GeneralResponseGenImpl;
+import edu.pitt.sis.exp.colfusion.bll.responseModels.RelationshipLinksResponse;
 import edu.pitt.sis.exp.colfusion.dal.orm.ColfusionCanvases;
 import edu.pitt.sis.exp.colfusion.dal.viewmodels.CanvasViewModel;
 import edu.pitt.sis.exp.colfusion.dal.viewmodels.ChartViewModel;
 import edu.pitt.sis.exp.colfusion.dal.viewmodels.StoryViewModel;
-import edu.pitt.sis.exp.colfusion.responseModels.GeneralResponse;
-import edu.pitt.sis.exp.colfusion.responseModels.GeneralResponseGenImpl;
-import edu.pitt.sis.exp.colfusion.responseModels.RelationshipLinksResponse;
 
 @Path("Visualization/")
 public class VisualizationRestService {
