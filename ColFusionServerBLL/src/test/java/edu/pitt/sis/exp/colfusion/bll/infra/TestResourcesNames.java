@@ -7,6 +7,8 @@ package edu.pitt.sis.exp.colfusion.bll.infra;
 public class TestResourcesNames {
 	public static final String TEST_EXCEL_FILE_XLSX = "testExcelFile.xlsx";
 
+	public static final String CHIA_TEST_EXCEL_TWO_SHEETS_XLSX = "chiaTestExcelTwoSheets.xlsx";
+
 	public static final String TEST_CSV_FILE = "testCSVFile.csv";
 
 	public static final String TEST_TAR_GZ_ARCHIVE_TAR_GZ = "testTarGzArchive.tar.gz";

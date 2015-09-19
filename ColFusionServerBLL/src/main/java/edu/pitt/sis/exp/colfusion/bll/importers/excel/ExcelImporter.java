@@ -34,6 +34,9 @@ public class ExcelImporter implements Importer {
 		this.excelFileHandler = excelFileHandler;
 	}
 
+	/**
+	 * Tests: {@link ExcelImporterTest#testGetTables()}
+	 */
 	@Override
 	public Collection<WorksheetViewModel> getTables(final IOUtilsStoredFileInfoModel fileModel) throws FileNotFoundException, IOException  {
 
@@ -59,6 +62,9 @@ public class ExcelImporter implements Importer {
 		}
 	}
 
+	/**
+	 * Tests: {@link ExcelImporterTest#testReadVariables()}
+	 */
 	@Override
 	public HashMap<String, ArrayList<DatasetVariableViewModel>> readVariables(final FileContentInfoViewModel fileAndSheetsInfo) throws Exception {
 

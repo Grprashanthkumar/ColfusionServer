@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package edu.pitt.sis.exp.colfusion.dal.viewmodels;
 
@@ -13,7 +13,6 @@ import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import edu.pitt.sis.exp.colfusion.utils.StringUtils;
 
 /**
- * @author Evgeny
  *
  */
 @XmlRootElement
@@ -24,22 +23,22 @@ public class WorksheetViewModel {
 	private int numberOfRows;
 	private int indexInTheFile;
 	private ArrayList<DatasetVariableViewModel> variables;
-	
+
 	/**
 	 * The unique (among sheets/tables in one file) short (not exceeding database table name limit) database save name of this sheet/table.
 	 * Clients don't need to set this.
-	 * 
+	 *
 	 * TODO this should be done somewhere else
 	 */
 	@XmlTransient
 	private String uniqueShortName = "";
-	
+
 	public WorksheetViewModel() {
-		variables = new ArrayList<>();
+		this.variables = new ArrayList<>();
 	}
-	
-	public WorksheetViewModel(final String sheetName, final int headerRow, 
-			final String startColumn, final int numberOfRows, 
+
+	public WorksheetViewModel(final String sheetName, final int headerRow,
+			final String startColumn, final int numberOfRows,
 			final int indexInTheFile, final ArrayList<DatasetVariableViewModel> variables) {
 		setSheetName(sheetName);
 		setHeaderRow(headerRow);
@@ -53,7 +52,7 @@ public class WorksheetViewModel {
 	 * @return the sheetName
 	 */
 	public String getSheetName() {
-		return sheetName;
+		return this.sheetName;
 	}
 
 	/**
@@ -65,11 +64,11 @@ public class WorksheetViewModel {
 
 	/**
 	 * One based row index.
-	 * 
+	 *
 	 * @return the headerRow
 	 */
 	public int getHeaderRow() {
-		return headerRow;
+		return this.headerRow;
 	}
 
 	/**
@@ -83,7 +82,7 @@ public class WorksheetViewModel {
 	 * @return the startColumn
 	 */
 	public String getStartColumn() {
-		return startColumn;
+		return this.startColumn;
 	}
 
 	/**
@@ -97,7 +96,7 @@ public class WorksheetViewModel {
 	 * @return the numberOfRows
 	 */
 	public int getNumberOfRows() {
-		return numberOfRows;
+		return this.numberOfRows;
 	}
 
 	/**
@@ -111,7 +110,7 @@ public class WorksheetViewModel {
 	 * @return the indexInTheFile
 	 */
 	public int getIndexInTheFile() {
-		return indexInTheFile;
+		return this.indexInTheFile;
 	}
 
 	/**
@@ -125,7 +124,7 @@ public class WorksheetViewModel {
 	 * @return the variables
 	 */
 	public ArrayList<DatasetVariableViewModel> getVariables() {
-		return variables;
+		return this.variables;
 	}
 
 	/**
@@ -134,26 +133,26 @@ public class WorksheetViewModel {
 	public void setVariables(final ArrayList<DatasetVariableViewModel> variables) {
 		this.variables = variables;
 	}
-	
+
 	@Override
 	public String toString() {
 		return ReflectionToStringBuilder.toString(this);
 	}
 
-//	public void setUniqueShortName(final String value) {
-//		uniqueShortName = value;
-//	}
-	
+	//	public void setUniqueShortName(final String value) {
+	//		uniqueShortName = value;
+	//	}
+
 	public String getUniqueShortName() {
-		if (StringUtils.isSpecified(uniqueShortName)) {
-			return uniqueShortName;
+		if (StringUtils.isSpecified(this.uniqueShortName)) {
+			return this.uniqueShortName;
 		}
-		
-		if (StringUtils.isNullOrEmpty(uniqueShortName)) {
-			//TODO FIXME: this is just a precocious 
-			uniqueShortName = StringUtils.makeShortUnique(StringUtils.replaceSpaces(sheetName));
+
+		if (StringUtils.isNullOrEmpty(this.uniqueShortName)) {
+			//TODO FIXME: this is just a precocious
+			this.uniqueShortName = StringUtils.makeShortUnique(StringUtils.replaceSpaces(this.sheetName));
 		}
-		
-		return uniqueShortName;
+
+		return this.uniqueShortName;
 	}
 }
