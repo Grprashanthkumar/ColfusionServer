@@ -48,9 +48,8 @@ public class StoryRestService  {
 
 	final Logger logger = LogManager.getLogger(StoryRestService.class.getName());
 
-
 	/**
-	 * Creates new story in the database.
+	 * Create new story in the database.
 	 *
 	 * @param userId is the id of the authors of the story.
 	 * @return response with story metadata in the payload.
@@ -58,14 +57,14 @@ public class StoryRestService  {
 	@Path("metadata/new/{userId}")
 	@GET
 	@ApiOperation(
-			value = "Creates new story in the database.",
-			notes = "newStoryMetadata note",
+			value = "Create new story.",
+			notes = "",
 			response = StoryMetadataResponse.class)
 	@ApiResponses(value = {
-			@ApiResponse(code = 400, message = "Invalid ID supplied"),
+			@ApiResponse(code = 400, message = "Invalid user id supplied"),
 			@ApiResponse(code = 404, message = "StoryMetadata not found") })
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response newStoryMetadata(@ApiParam(value = "the id of the authors of story", required = true) @PathParam("userId") final int userId) {
+	public Response newStoryMetadata(@ApiParam(value = "The id of the authors of story", required = true) @PathParam("userId") final int userId) {
 
 		final StoryBL storyBL = new StoryBL();
 
@@ -73,8 +72,6 @@ public class StoryRestService  {
 
 		return Response.status(200).entity(result).build(); //.build();
 	}
-
-
 
 	/**
 	 * Finds metadata for the story with provided sid.
@@ -150,8 +147,6 @@ public class StoryRestService  {
 		return Response.status(200).entity(result).build(); //.build();
 	}
 
-
-
 	@Path("{sid}/{tableName}/metadata/columns")
 	@GET
 	@ApiOperation(
@@ -169,8 +164,6 @@ public class StoryRestService  {
 
 		return Response.status(200).entity(result).build();
 	}
-
-
 
 	@Path("metadata/columns/addEditHistory/{cid}/{userid}/{editAttribute}/{reason}/{editValue}")
 	@GET
@@ -191,8 +184,6 @@ public class StoryRestService  {
 		return Response.status(200).entity(result).build();
 	}
 
-
-
 	@Path("metadata/columns/getEditHistory/{cid}/{showAttribute}")
 	@GET
 	@ApiOperation(
@@ -208,12 +199,8 @@ public class StoryRestService  {
 		final StoryBL storyBL = new StoryBL();
 		final GetColumnMetadataEditHistoryResponse result = storyBL.getColumnMetaEditHistory(cid,editAttribute);
 
-
 		return Response.status(200).entity(result).build();
 	}
-
-
-
 
 	@Path("{sid}/{tableName}/tableInfo")
 	@GET
@@ -230,8 +217,6 @@ public class StoryRestService  {
 		final BasicTableResponseModel result= basicBL.getTableInfo(sid, tableName);
 		return Response.status(200).entity(result).build();
 	}
-
-
 
 	@Path("{sid}/{tableName}/tableData/{perPage}/{pageNumber}")
 	@GET
@@ -268,8 +253,6 @@ public class StoryRestService  {
 		return Response.status(200).entity(result).build();
 	}
 
-
-
 	@Path("{sid}/StoryStatus")
 	@GET
 	@ApiOperation(
@@ -286,9 +269,7 @@ public class StoryRestService  {
 		return Response.status(200).entity(json).build();
 	}
 
-
-
-
+	//TODO:See issue #48
 	@Path("{userid}/{sid}/MineRelationships/{perPage}/{pageNumber}")
 	@GET
 	@ApiOperation(
@@ -296,16 +277,20 @@ public class StoryRestService  {
 			notes = "Also do the relationship mining",
 			response = RelationshipsResponseModel.class)
 	@ApiResponses(value = {
-			@ApiResponse(code = 404, message = "Relationship not found") })
+			@ApiResponse(code = 404, message = "Relationship not found") }) //TODO: Do we really return 404 if relationship was not found???
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response getMineRelationships(@ApiParam(value = "userid", required = true) @PathParam("userid") final int userid, @ApiParam(value = "sid", required = true) @PathParam("sid") final int sid, @ApiParam(value = "perPage", required = true) @PathParam("perPage") final int perPage, @ApiParam(value = "pageNumber", required = true) @PathParam("pageNumber") final int pageNumber) {
+	public Response getMineRelationships(@ApiParam(value = "Id of the user", required = true) @PathParam("userid") final int userid,
+			@ApiParam(value = "Id of the story", required = true) @PathParam("sid") final int sid,
+			@ApiParam(value = "perPage", required = true) @PathParam("perPage") final int perPage,
+			@ApiParam(value = "pageNumber", required = true) @PathParam("pageNumber") final int pageNumber) {
+
 		final BasicTableBL basicBL = new BasicTableBL();
 		final RelationshipBL relationshipBL = new RelationshipBL();
 		relationshipBL.doRelationshipMining(sid);
+
 		final RelationshipsResponseModel result = basicBL.getRelationships(userid, sid, perPage, pageNumber);
 		final String json = result.toJson();
 		return Response.status(200).entity(json).build();
-
 	}
 
 	/**
@@ -347,8 +332,6 @@ public class StoryRestService  {
 	 *						String sourceType;
 	 *						LicenseViewModel license;
 	 */
-
-
 	@Path("all/{pageNo}/{perPage}")
 	@GET
 	@ApiOperation(
@@ -365,7 +348,6 @@ public class StoryRestService  {
 		final String json = result.toJson();
 		return Response.status(200).entity(json).build();
 	}
-
 
 	/**
 	 * Finds the published story list for the user
@@ -398,7 +380,6 @@ public class StoryRestService  {
 		final String json = result.toJson();
 		return Response.status(200).entity(json).build();
 	}
-
 
 	/**
 	 * Finds story list

@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package edu.pitt.sis.exp.colfusion.bll;
 
@@ -46,153 +46,153 @@ import edu.pitt.sis.exp.colfusion.dal.viewmodels.RelationshipMiningViewModel;
  * Logic to deal with relationships.
  */
 public class RelationshipBL {
-	
+
 	final Logger logger = LogManager.getLogger(RelationshipBL.class.getName());
 
 	private static final RelationshipsManager relationshipsManager =  new RelationshipsManagerImpl();
-	
+
 	public GeneralResponse mineRelationshipsFor(final int sid) {
-	
-		GeneralResponseGen<RelationshipMiningViewModel> result = new GeneralResponseGenImpl<RelationshipMiningViewModel>();
-	
+
+		final GeneralResponseGen<RelationshipMiningViewModel> result = new GeneralResponseGenImpl<RelationshipMiningViewModel>();
+
 		//result.setPayload("Started");
-		
+
 		return result;
 	}
 
 	/**
 	 * Triggers background process for data matching calculations for all relationships of a given story that were not yet and are
 	 * not being calculated.
-	 * 
+	 *
 	 * @param sid is the id of the story.
-	 * @param similarityThreshold 
+	 * @param similarityThreshold
 	 * @return simple message if processes has been started.
-	 * @throws Exception 
+	 * @throws Exception
 	 */
 	public GeneralResponse triggerDataMatchingRatiosCalculationsForAllNotCalculatedBySid(final int sid, final BigDecimal similarityThreshold) throws Exception {
-		
-		SourceInfoManager storyMng = new SourceInfoManagerImpl();
-		
+
+		final SourceInfoManager storyMng = new SourceInfoManagerImpl();
+
 		ColfusionSourceinfo story = null;
-		
+
 		try {
-			story = storyMng.findByID(sid);			
-		} catch (Exception e) {
-			String msg = String.format("triggerDataMatchingRatiosCalculationsForAllNotCalculated FAILED to find story by sid %d", sid);
-			
-			logger.error(msg, e);
-			
+			story = storyMng.findByID(sid);
+		} catch (final Exception e) {
+			final String msg = String.format("triggerDataMatchingRatiosCalculationsForAllNotCalculated FAILED to find story by sid %d", sid);
+
+			this.logger.error(msg, e);
+
 			throw e;
 		}
-		
+
 		if (story == null) {
-			String msg = String.format("triggerDataMatchingRatiosCalculationsForAllNotCalculated found a story but it is null for sid %d", sid);
-			
-			logger.error(msg);
-			
+			final String msg = String.format("triggerDataMatchingRatiosCalculationsForAllNotCalculated found a story but it is null for sid %d", sid);
+
+			this.logger.error(msg);
+
 			throw new NullPointerException(msg);
 		}
-		
-		GeneralResponseGen<String> result = new GeneralResponseGenImpl<>();
-		
+
+		final GeneralResponseGen<String> result = new GeneralResponseGenImpl<>();
+
 		story = GeneralManagerImpl.initializeField(story, "colfusionRelationshipsesForSid1");
-		
+
 		if (story.getColfusionRelationshipsesForSid1().size() != 0 ){
 			triggerDataMatchingRatiosCalculationsForAllNotCalculatedByRelationshipsSet(
 					sid, story.getColfusionRelationshipsesForSid1(), similarityThreshold);
 		}
-		
+
 		story = GeneralManagerImpl.initializeField(story, "colfusionRelationshipsesForSid2");
-		
+
 		if (story.getColfusionRelationshipsesForSid2().size() != 0 ){
 			triggerDataMatchingRatiosCalculationsForAllNotCalculatedByRelationshipsSet(
 					sid, story.getColfusionRelationshipsesForSid2(), similarityThreshold);
 		}
-		
+
 		result.setMessage("OK");
 		result.setPayload("Started" + sid);
 		result.setSuccessful(true);
-	
+
 		return result;
 	}
 
 	/**
 	 * @param sid
-	 * @param similarityThreshold 
+	 * @param similarityThreshold
 	 * @param relsForSid1
-	 * @throws Exception 
+	 * @throws Exception
 	 */
 	private void triggerDataMatchingRatiosCalculationsForAllNotCalculatedByRelationshipsSet(
 			final int sid, final Set<?> relsForSid, final BigDecimal similarityThreshold) throws Exception {
-		for (Object object : relsForSid) {
+		for (final Object object : relsForSid) {
 			if (object instanceof ColfusionRelationships) {
 				ColfusionRelationships rel = (ColfusionRelationships) object;
-				
+
 				rel = GeneralManagerImpl.initializeField(rel, "colfusionRelationshipsColumnses");
-				
+
 				triggerDataMatchingRatiosCalculationsByRel(rel, similarityThreshold);
 			}
 			else {
-				
-				logger.error("triggerDataMatchingRatiosCalculationsForAllNotCalculatedBySid: was supposed to "
+
+				this.logger.error("triggerDataMatchingRatiosCalculationsForAllNotCalculatedBySid: was supposed to "
 						+ "iterate over set of ColfusionRelationship but could not cast object to ColfusionRelationship. Sid = " + sid);
-				
+
 				break;
 			}
-			
+
 		}
 	}
 
 	private void triggerDataMatchingRatiosCalculationsByRel(
 			final ColfusionRelationships rel, final BigDecimal similarityThreshold) throws Exception {
-		
-		for (Object object : rel.getColfusionRelationshipsColumnses()) {
+
+		for (final Object object : rel.getColfusionRelationshipsColumnses()) {
 			if (object instanceof ColfusionRelationshipsColumns) {
-				ColfusionRelationshipsColumns relationshipColumns = (ColfusionRelationshipsColumns) object;
-				
-				RelationshipTransformation transformationFrom = RelationshipTransofmationUtil.makeRelationshipTransformation(rel.getRelId(), relationshipColumns.getId().getClFrom()); 
-				RelationshipTransformation transformationTo = RelationshipTransofmationUtil.makeRelationshipTransformation(rel.getRelId(), relationshipColumns.getId().getClTo());
-				
+				final ColfusionRelationshipsColumns relationshipColumns = (ColfusionRelationshipsColumns) object;
+
+				final RelationshipTransformation transformationFrom = RelationshipTransofmationUtil.makeRelationshipTransformation(rel.getRelId(), relationshipColumns.getId().getClFrom());
+				final RelationshipTransformation transformationTo = RelationshipTransofmationUtil.makeRelationshipTransformation(rel.getRelId(), relationshipColumns.getId().getClTo());
+
 				//TODO: Once we add ability to chain processes or make some processes depend on other processes
 				//TODO: indices should be also created in a background process.
-				
-				SourceInfoManager sourceMng = new SourceInfoManagerImpl();
-				
-				ColfusionSourceinfoDb srouceInfoDBFrom = sourceMng.getColfusionSourceinfoDbFrom(rel.getRelId());
-				ColfusionSourceinfoDb srouceInfoDBTo = sourceMng.getColfusionSourceinfoDbTo(rel.getRelId());
-				
+
+				final SourceInfoManager sourceMng = new SourceInfoManagerImpl();
+
+				final ColfusionSourceinfoDb srouceInfoDBFrom = sourceMng.getColfusionSourceinfoDbFrom(rel.getRelId());
+				final ColfusionSourceinfoDb srouceInfoDBTo = sourceMng.getColfusionSourceinfoDbTo(rel.getRelId());
+
 				createIndeces(srouceInfoDBFrom, transformationFrom);
 				createIndeces(srouceInfoDBTo, transformationTo);
-				
+
 				for (double i = 0; i < 1.1; i+= 0.1) {
 					triggerDataMatchingRatiosCalculationsByRelationshipsColumns(relationshipColumns, new BigDecimal(new DecimalFormat("#.###").format(i)));
 				}
 			}
 			else {
-				
-				logger.error("triggerDataMatchingRatiosCalculationsForAllNotCalculatedByRel: was supposed to "
+
+				this.logger.error("triggerDataMatchingRatiosCalculationsForAllNotCalculatedByRel: was supposed to "
 						+ "iterate over set of ColfusionRelationshipsColumns but could not cast object to ColfusionRelationshipsColumns. RelId = " + rel.getRelId());
-				
+
 				break;
 			}
 		}
 	}
 
-		/**
+	/**
 	 * Creates indexed in the target database on the columns provided by their ids (cid).
 	 * @param cidFromOneStory a list of cids. Note all cids should be from one story only (from one target database/table).
-	 * @throws Exception 
+	 * @throws Exception
 	 */
 	private void createIndeces(final ColfusionSourceinfoDb targetDBInfo, final RelationshipTransformation transformation) throws Exception {
-		
+
 		try (DatabaseHandlerBase dbHandler = DatabaseHandlerFactory.getDatabaseHandler(targetDBInfo)) {
-		
+
 			//TODO FIXME: should indeces be created on all columns at once?
-			for (String columnDbName : transformation.getColumnDbNames()) {
+			for (final String columnDbName : transformation.getColumnDbNames()) {
 				try {
 					dbHandler.createIndecesIfNotExist(transformation.getRelationKey(), columnDbName);
-				} catch (Exception e) {
-					logger.error("createIndeces FAILED to initialize colfusionSourceinfoDb field.");
+				} catch (final Exception e) {
+					this.logger.error("createIndeces FAILED to initialize colfusionSourceinfoDb field.");
 					throw e;
 				}
 			}
@@ -200,91 +200,91 @@ public class RelationshipBL {
 	}
 
 	/**
-	 * Adds a {@link ColumnToColumnDataMatchingProcess} process to process queue for given relationships columns {@link ColfusionRelationshipsColumns} and 
+	 * Adds a {@link ColumnToColumnDataMatchingProcess} process to process queue for given relationships columns {@link ColfusionRelationshipsColumns} and
 	 * a similarity threshold, but only if data matching was not calculated already.
-	 * 
+	 *
 	 * @param relationshipColumns columns for which to calculate data matching values.
 	 * @param similarityThreshold at which similarity threshold to calculate data matching.
-	 * @throws Exception 
+	 * @throws Exception
 	 */
 	private void triggerDataMatchingRatiosCalculationsByRelationshipsColumns(
 			final ColfusionRelationshipsColumns relationshipColumns, final BigDecimal similarityThreshold) throws Exception {
-		
-		RelationshipsColumnsDataMathingRatiosManager dataMatingRatiosMng = new RelationshipsColumnsDataMathingRatiosManagerImpl();
-		
+
+		final RelationshipsColumnsDataMathingRatiosManager dataMatingRatiosMng = new RelationshipsColumnsDataMathingRatiosManagerImpl();
+
 		// Check if data matching for given columns was already calculated or not but searching for a record in colfusion_relationships_columns_dataMathing_ratios table
-		ColfusionRelationshipsColumnsDataMathingRatiosId columnsDataMathingRatiosId = new ColfusionRelationshipsColumnsDataMathingRatiosId(relationshipColumns.getId().getClFrom(), 
+		final ColfusionRelationshipsColumnsDataMathingRatiosId columnsDataMathingRatiosId = new ColfusionRelationshipsColumnsDataMathingRatiosId(relationshipColumns.getId().getClFrom(),
 				relationshipColumns.getId().getClTo(), similarityThreshold);
-		
-		ColfusionRelationshipsColumnsDataMathingRatios colfusionRelationshipsColumnsDataMathingRatios = 
+
+		final ColfusionRelationshipsColumnsDataMathingRatios colfusionRelationshipsColumnsDataMathingRatios =
 				dataMatingRatiosMng.findColfusionRelationshipsColumnsDataMathingRatios(columnsDataMathingRatiosId);
 		// if a record found in colfusion_relationships_columns_dataMathing_ratios for given columns and sim threshold, then data matchng values are known.
 		if (colfusionRelationshipsColumnsDataMathingRatios != null) {
-			logger.info(String.format("triggerDataMatchingRatiosCalculationsByRelationshipsColumns: don't need to trigger calculations because a record "
-					+ "about data matching for givel columns (from: %s and to: %s) and similarity threshold (%f) was found in db.", 
+			this.logger.info(String.format("triggerDataMatchingRatiosCalculationsByRelationshipsColumns: don't need to trigger calculations because a record "
+					+ "about data matching for givel columns (from: %s and to: %s) and similarity threshold (%f) was found in db.",
 					relationshipColumns.getId().getClFrom(), relationshipColumns.getId().getClTo(), similarityThreshold));
-			
-			
+
+
 			//TODO: we might check the status of the associated process and if it is a failure, then we can probably restart the calculations.
 		}
 		else {
 
-			ColumnToColumnDataMatchingProcess process = new ColumnToColumnDataMatchingProcess(relationshipColumns.getId().getRelId(), 
+			final ColumnToColumnDataMatchingProcess process = new ColumnToColumnDataMatchingProcess(relationshipColumns.getId().getRelId(),
 					relationshipColumns.getId().getClFrom(), relationshipColumns.getId().getClTo(), similarityThreshold);
-			
+
 			int processId = -1;
-			
+
 			try {
 				processId = ProcessManager.getInstance().queueProcess(process);
-			} catch (Exception e) {
-				logger.error(String.format("triggerDataMatchingRatiosCalculationsByRelationshipsColumns: FAILED to add a process "
-						+ "to calculate data matching for givel columns (from: %s and to: %s) and similarity threshold (%f) was found in db.", 
-					relationshipColumns.getId().getClFrom(), relationshipColumns.getId().getClTo(), similarityThreshold), e);
-				
+			} catch (final Exception e) {
+				this.logger.error(String.format("triggerDataMatchingRatiosCalculationsByRelationshipsColumns: FAILED to add a process "
+						+ "to calculate data matching for givel columns (from: %s and to: %s) and similarity threshold (%f) was found in db.",
+						relationshipColumns.getId().getClFrom(), relationshipColumns.getId().getClTo(), similarityThreshold), e);
+
 				throw e;
 			}
-			
-			ProcessPersistantManager processMng = new ProcessPersistantManagerImpl();
-			ColfusionProcesses colfusionProcess = processMng.findByID(processId);
-			
+
+			final ProcessPersistantManager processMng = new ProcessPersistantManagerImpl();
+			final ColfusionProcesses colfusionProcess = processMng.findByID(processId);
+
 			if (colfusionProcess != null) {
-				ColfusionRelationshipsColumnsDataMathingRatios dataMathingRatios = new 
+				final ColfusionRelationshipsColumnsDataMathingRatios dataMathingRatios = new
 						ColfusionRelationshipsColumnsDataMathingRatios(columnsDataMathingRatiosId, colfusionProcess);
-				
+
 				dataMatingRatiosMng.saveOrUpdate(dataMathingRatios);
 			}
-			
-		}		
+
+		}
 	}
 
 	public RelationshipLinksResponse getDataMatchingRatios(final int relId, final BigDecimal similarityThreshold) throws Exception {
-		
-		RelationshipLinksResponse result = new RelationshipLinksResponse();
-		
-		RelationshipsManager relMng = new RelationshipsManagerImpl();
-		
-		List<RelationshipLinkViewModel> payload = relMng.getRelationshipLinks(relId, similarityThreshold);
-		
+
+		final RelationshipLinksResponse result = new RelationshipLinksResponse();
+
+		final RelationshipsManager relMng = new RelationshipsManagerImpl();
+
+		final List<RelationshipLinkViewModel> payload = relMng.getRelationshipLinks(relId, similarityThreshold);
+
 		result.isSuccessful = true;
 		result.message = "OK";
 		result.setPayload(payload);
-		
+
 		return result;
 	}
-	
-	
+
 	/**
-	 * Do the Relationship Mining procedure.
+	 * Do relationship mining procedure.
+	 *
 	 * @param sid
-	 * @throws Exception 
+	 * @throws Exception
 	 */
 	public void doRelationshipMining(final int sid){
 		try{
-			SourceInfoManager sourceInfoManagerImpl = new SourceInfoManagerImpl();
+			final SourceInfoManager sourceInfoManagerImpl = new SourceInfoManagerImpl();
 			sourceInfoManagerImpl.doRelationshipMining(sid);
 		}
-		catch(Exception e) {
-			logger.error("failed to doRelationshipMining");
+		catch(final Exception e) {
+			this.logger.error("failed to doRelationshipMining");
 		}
 	}
 }

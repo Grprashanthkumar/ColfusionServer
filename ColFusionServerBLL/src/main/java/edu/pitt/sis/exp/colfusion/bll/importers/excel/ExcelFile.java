@@ -7,4 +7,6 @@ public interface ExcelFile extends Closeable {
 	public int getNumberOfSheets();
 
 	public ExcelSheet getSheet(int sheetIndex);
+
+	public ExcelSheet getSheet(String sheetName);
 }

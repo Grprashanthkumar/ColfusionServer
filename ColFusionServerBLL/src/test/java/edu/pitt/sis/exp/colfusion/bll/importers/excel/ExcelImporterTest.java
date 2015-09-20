@@ -107,7 +107,7 @@ public class ExcelImporterTest extends UnitTestBase {
 			assertEquals(1, worksheet.getHeaderRow());
 			assertEquals("A", worksheet.getStartColumn());
 			assertEquals(4, worksheet.getNumberOfRows());
-			assertEquals(0, worksheet.getIndexInTheFile());
+			//			assertEquals(0, worksheet.getIndexInTheFile());
 
 			worksheet = iterator.next();
 
@@ -115,7 +115,7 @@ public class ExcelImporterTest extends UnitTestBase {
 			assertEquals(1, worksheet.getHeaderRow());
 			assertEquals("A", worksheet.getStartColumn());
 			assertEquals(4, worksheet.getNumberOfRows());
-			assertEquals(1, worksheet.getIndexInTheFile());
+			//			assertEquals(1, worksheet.getIndexInTheFile());
 
 		} catch (final Exception e) {
 

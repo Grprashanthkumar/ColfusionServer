@@ -64,4 +64,9 @@ public class ExcelFileImpl implements ExcelFile {
 	public ExcelSheet getSheet(final int sheetIndex) {
 		return new ExcelSheetImpl(this.wb.getSheetAt(sheetIndex));
 	}
+
+	@Override
+	public ExcelSheet getSheet(final String sheetName) {
+		return new ExcelSheetImpl(this.wb.getSheet(sheetName));
+	}
 }

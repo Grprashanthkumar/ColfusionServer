@@ -137,6 +137,7 @@
 			<artifactId>jersey-media-moxy</artifactId>
 		</dependency>
 
+<!-- 
 		<dependency>
 			<groupId>com.sun.jersey</groupId>
 			<artifactId>jersey-json</artifactId>
@@ -152,7 +153,8 @@
 		        </exclusion>
 		      </exclusions>
 		</dependency>
-
+ -->
+ 
 		<dependency>
 			<groupId>org.glassfish.jersey.media</groupId>
 			<artifactId>jersey-media-multipart</artifactId>

@@ -72,7 +72,7 @@ public class ExcelImporter implements Importer {
 			final HashMap<String, ArrayList<DatasetVariableViewModel>> result = new HashMap<>();
 
 			for (final WorksheetViewModel worksheet : fileAndSheetsInfo.getWorksheets()) {
-				final ExcelSheet sheet = excelFile.getSheet(worksheet.getIndexInTheFile());
+				final ExcelSheet sheet = excelFile.getSheet(worksheet.getSheetName());
 				//TODO: change ArrayList to List
 				final ArrayList<DatasetVariableViewModel> oneSheetVariables = (ArrayList<DatasetVariableViewModel>) readVariablesOneSheet(worksheet, sheet);
 				result.put(worksheet.getSheetName(), oneSheetVariables);
