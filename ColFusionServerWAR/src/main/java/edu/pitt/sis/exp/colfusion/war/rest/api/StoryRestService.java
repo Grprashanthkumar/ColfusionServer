@@ -22,7 +22,6 @@ import com.wordnik.swagger.annotations.ApiResponse;
 import com.wordnik.swagger.annotations.ApiResponses;
 
 import edu.pitt.sis.exp.colfusion.bll.BasicTableBL;
-import edu.pitt.sis.exp.colfusion.bll.RelationshipBL;
 import edu.pitt.sis.exp.colfusion.bll.RelationshipGraphBL;
 import edu.pitt.sis.exp.colfusion.bll.StoryBL;
 import edu.pitt.sis.exp.colfusion.bll.relationships.relationshipGraph.RelationshipGraph;
@@ -285,8 +284,9 @@ public class StoryRestService  {
 			@ApiParam(value = "pageNumber", required = true) @PathParam("pageNumber") final int pageNumber) {
 
 		final BasicTableBL basicBL = new BasicTableBL();
-		final RelationshipBL relationshipBL = new RelationshipBL();
-		relationshipBL.doRelationshipMining(sid);
+		//TODO:Fix it once Neo4j functionality is implemented in java
+		//		final RelationshipBL relationshipBL = new RelationshipBL();
+		//		relationshipBL.doRelationshipMining(sid);
 
 		final RelationshipsResponseModel result = basicBL.getRelationships(userid, sid, perPage, pageNumber);
 		final String json = result.toJson();
