@@ -15,7 +15,7 @@
                 <column name="startChangeTime" length="19" />
             </key-property>
             <key-property name="endChangeTime" type="timestamp">
-                <column name="endChangeTime" length="19" />
+                <column name="endChangeTime" length="19" not-null="false" default="null" />
             </key-property>
             <key-property name="operatedUser" type="string">
                 <column name="operatedUser" length="32" />
