@@ -22,7 +22,6 @@ import edu.pitt.sis.exp.colfusion.dal.managers.ExecutionInfoManager;
 import edu.pitt.sis.exp.colfusion.utils.StringUtils;
 
 /**
- * @author Evgeny
  *
  */
 public class MySQLDatabaseHandler extends DatabaseHandlerBase {
@@ -127,14 +126,14 @@ public class MySQLDatabaseHandler extends DatabaseHandlerBase {
 	}
 
 	@Override
-	public void createTableIfNotExist(final String tableName, final List<String> variables) throws Exception {
+	public void createTableIfNotExist(final RelationKey tableInfo, final List<String> variables) throws Exception {
 		final LinkedHashMap<String, String> columnNameToType = new LinkedHashMap<String, String>();
 
 		for(final String variable : variables) {
 			columnNameToType.put(variable, "TEXT");
 		}
 
-		createTableIfNotExistInternal(tableName, columnNameToType);
+		createTableIfNotExistInternal(tableInfo, columnNameToType);
 	}
 
 	@Override
@@ -162,11 +161,11 @@ public class MySQLDatabaseHandler extends DatabaseHandlerBase {
 			columnNameToType.put(tableMetadata.getColumnLabel(i), columnTypeAndPrecision);
 		}
 
-		createTableIfNotExistInternal(tableTo.getDbTableName(), columnNameToType);
+		createTableIfNotExistInternal(tableTo, columnNameToType);
 	}
 
-	private void createTableIfNotExistInternal(final String tableName, final LinkedHashMap<String, String> columnNameToType) throws Exception {
-		final String sql = constructCreateTableQuery(tableName, columnNameToType);
+	private void createTableIfNotExistInternal(final RelationKey tableInfo, final LinkedHashMap<String, String> columnNameToType) throws Exception {
+		final String sql = constructCreateTableQuery(tableInfo, columnNameToType);
 
 		try {
 			executeUpdate(sql);
@@ -174,10 +173,10 @@ public class MySQLDatabaseHandler extends DatabaseHandlerBase {
 
 			if (this.executionInfoMgr != null) {
 				this.executionInfoMgr.appendLog(this.executionLogId, String.format("[ERROR] createTableIfNotExist failed for table %s when executing this query %s. Error: %s",
-						tableName, sql, e.toString()));
+						tableInfo.getDbTableName(), sql, e.toString()));
 			}
 
-			this.logger.error(String.format("createTableIfNotExist failed for %s. Error Message:", tableName, e.toString()));
+			this.logger.error(String.format("createTableIfNotExist failed for %s. Error Message:", tableInfo.getDbTableName(), e.toString()));
 			throw e;
 		}
 	}
@@ -191,12 +190,12 @@ public class MySQLDatabaseHandler extends DatabaseHandlerBase {
 	 * 			map of column names to their types. The order is important.
 	 * @return string that contain SQL create table if exists statement.
 	 */
-	private String constructCreateTableQuery(final String tableName,
+	private String constructCreateTableQuery(final RelationKey tableInfo,
 			final LinkedHashMap<String, String> columnNameToType) {
 		//TODO: is SQL injection possible here? because we just put database name without any checks and the database name can come from user (or not?)
 		final StringBuilder sqlBuilder = new StringBuilder();
 
-		sqlBuilder.append(String.format("CREATE TABLE IF NOT EXISTS `%s` (", tableName));
+		sqlBuilder.append(String.format("CREATE TABLE IF NOT EXISTS `%s` (", tableInfo.getDbTableName()));
 
 		final int numberOfColumns = columnNameToType.size();
 		int index = 0;
@@ -253,13 +252,13 @@ public class MySQLDatabaseHandler extends DatabaseHandlerBase {
 	}
 
 	@Override
-	public boolean tempTableExist(final int sid, final String tableName)
+	public boolean tempTableExist(final int sid, final RelationKey table)
 			throws SQLException {
-		this.logger.info(String.format("Getting if temp table exists for sid %d and tablename %s", sid, tableName));
+		this.logger.info(String.format("Getting if temp table exists for sid %d and tablename %s", sid, table.getDbTableName()));
 
 		try (Connection connection = getConnection()) {
 
-			final String sql = String.format("SHOW TABLES LIKE 'temp_%s'", tableName);
+			final String sql = String.format("SHOW TABLES LIKE 'temp_%s'", table.getDbTableName());
 
 			try (Statement statement = connection.createStatement()) {
 
@@ -272,13 +271,13 @@ public class MySQLDatabaseHandler extends DatabaseHandlerBase {
 
 			} catch (final SQLException e) {
 				this.logger.error(String.format("Getting if temp table exists for sid %d and tablename %s FAILED", sid,
-						tableName), e);
+						table.getDbTableName()), e);
 
 				throw e;
 			}
 		} catch (final SQLException e) {
 			this.logger.info(String.format("FAILED to getting if temp table exists for sid %d and tablename %s", sid,
-					tableName));
+					table.getDbTableName()));
 			throw e;
 		}
 	}
@@ -301,7 +300,7 @@ public class MySQLDatabaseHandler extends DatabaseHandlerBase {
 	}
 
 	@Override
-	public int getColCount(final int sid, final String tableName) throws SQLException {
+	public int getColCount(final int sid, final RelationKey tableInfo) throws SQLException {
 		this.logger.info(String.format("Getting column count for sid %d", sid));
 
 		try (Connection connection = getConnection()) {
@@ -310,7 +309,7 @@ public class MySQLDatabaseHandler extends DatabaseHandlerBase {
 
 			try (PreparedStatement statement = connection.prepareStatement(sql)) {
 				statement.setString(1, "colfusion_filetodb_" + sid);
-				statement.setString(2, tableName);
+				statement.setString(2, tableInfo.getDbTableName());
 
 				int colCount = 0;
 				final ResultSet rs = statement.executeQuery();
@@ -331,12 +330,13 @@ public class MySQLDatabaseHandler extends DatabaseHandlerBase {
 	}
 
 	@Override
-	public ArrayList<ArrayList<String>> getRows(final String tableName, final int colCount) throws SQLException {
-		this.logger.info(String.format("Getting rows for table %s", tableName));
+	public ArrayList<ArrayList<String>> getRows(final RelationKey tableInfo, final int colCount) throws SQLException {
+		this.logger.info(String.format("Getting rows for table %s", tableInfo.getDbTableName()));
 		final ArrayList<ArrayList<String>> rows = new ArrayList<ArrayList<String>>();
 		try (Connection connection = getConnection()) {
 
-			final String sql = String.format("select * from %s", tableName);
+			//TODO:use prepared statement
+			final String sql = String.format("select * from %s", wrapName(tableInfo.getDbTableName()));
 
 			try (Statement statement = connection.createStatement()) {
 
@@ -353,12 +353,12 @@ public class MySQLDatabaseHandler extends DatabaseHandlerBase {
 				return rows;
 
 			} catch (final SQLException e) {
-				this.logger.error(String.format("Getting rows for table %s FAILED", tableName), e);
+				this.logger.error(String.format("Getting rows for table %s FAILED", tableInfo.getDbTableName()), e);
 
 				throw e;
 			}
 		} catch (final SQLException e) {
-			this.logger.info(String.format("FAILED to getting rows for table %s", tableName));
+			this.logger.info(String.format("FAILED to getting rows for table %s", tableInfo.getDbTableName()));
 			throw e;
 		}
 	}
@@ -366,7 +366,6 @@ public class MySQLDatabaseHandler extends DatabaseHandlerBase {
 	@Override
 	public void createTableFromTable(final String tableNameToCreate, final String tableNameFromWhichToCreate)
 			throws SQLException {
-
 
 		final String message = String.format("Creating table %s from %s for sid %d", tableNameToCreate, tableNameFromWhichToCreate, getSid());
 		this.logger.info(message);
@@ -406,12 +405,12 @@ public class MySQLDatabaseHandler extends DatabaseHandlerBase {
 	}
 
 	@Override
-	public void importCsvToTable(final String dir, final String tableName) throws SQLException {
-		final String message = String.format("Importing from %s to table %s", dir, tableName);
+	public void importCsvToTable(final String dir, final RelationKey tableInfo) throws SQLException {
+		final String message = String.format("Importing from %s to table %s", dir, tableInfo.getDbTableName());
 		this.logger.info(message);
 
 		final String sql = String.format("LOAD DATA LOCAL INFILE '%s' into table %s  fields terminated by ','  optionally enclosed by '\"' escaped by '\"' lines terminated by '\\r\\n'",
-				dir, wrapName(tableName));
+				dir, wrapName(tableInfo.getDbTableName()));
 
 		try {
 			executeUpdate(sql);

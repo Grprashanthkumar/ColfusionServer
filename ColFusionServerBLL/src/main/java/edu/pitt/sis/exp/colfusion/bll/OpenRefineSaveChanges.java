@@ -5,6 +5,7 @@ import org.apache.logging.log4j.Logger;
 
 import edu.pitt.sis.exp.colfusion.bll.responseModels.GeneralResponseGen;
 import edu.pitt.sis.exp.colfusion.bll.responseModels.GeneralResponseGenImpl;
+import edu.pitt.sis.exp.colfusion.dal.dataModels.tableDataModel.RelationKey;
 import edu.pitt.sis.exp.colfusion.dal.databaseHandlers.DatabaseHandlerBase;
 import edu.pitt.sis.exp.colfusion.dal.databaseHandlers.DatabaseHandlerFactory;
 import edu.pitt.sis.exp.colfusion.dal.databaseHandlers.MetadataDbHandler;
@@ -16,32 +17,32 @@ public class OpenRefineSaveChanges {
 	final Logger logger = LogManager.getLogger(OpenRefineSaveChanges.class.getName());
 
 	/**
-	 * 
+	 *
 	 * @param sid
 	 * @param tableName
 	 * @return
-	 * @throws Exception 
+	 * @throws Exception
 	 */
 	public GeneralResponseGen<String> saveChanges(final String projectId, final String colfusionUserId) throws Exception {
 
-		int lockTime = Integer.valueOf(ConfigManager.getInstance().getProperty(PropertyKeys.COLFUSION_OPENREFINE_LOCK_TIME));
+		final int lockTime = Integer.valueOf(ConfigManager.getInstance().getProperty(PropertyKeys.COLFUSION_OPENREFINE_LOCK_TIME));
 
-		GeneralResponseGen<String> result = new GeneralResponseGenImpl<>();
+		final GeneralResponseGen<String> result = new GeneralResponseGenImpl<>();
 
 		result.setSuccessful(false);
 
-		MetadataDbHandler metadataDbHandler = DatabaseHandlerFactory.getMetadataDbHandler();
-		int sid = metadataDbHandler.getSid(projectId);
-		DatabaseHandlerBase databaseHandler = DatabaseHandlerFactory.getTargetDatabaseHandler(sid);
+		final MetadataDbHandler metadataDbHandler = DatabaseHandlerFactory.getMetadataDbHandler();
+		final int sid = metadataDbHandler.getSid(projectId);
+		final DatabaseHandlerBase databaseHandler = DatabaseHandlerFactory.getTargetDatabaseHandler(sid);
 
-		String tableName = metadataDbHandler.getTableNameByProjectId(projectId);
+		final RelationKey table = metadataDbHandler.getTableNameByProjectId(projectId);
 
 		String msg = "No change needs to be saved!";
-		if(!metadataDbHandler.isTimeOutForCurrentUser(sid, tableName, Integer.valueOf(colfusionUserId), lockTime)) {
-			if(databaseHandler.tempTableExist(sid, tableName)) {
-				databaseHandler.removeTable(tableName);
-				databaseHandler.createTableFromTable(tableName, "temp_" + tableName);
-				databaseHandler.removeTable("temp_" + tableName);
+		if(!metadataDbHandler.isTimeOutForCurrentUser(sid, table, Integer.valueOf(colfusionUserId), lockTime)) {
+			if(databaseHandler.tempTableExist(sid, table)) {
+				databaseHandler.removeTable(table.getDbTableName());
+				databaseHandler.createTableFromTable(table.getDbTableName(), "temp_" + table.getDbTableName());
+				databaseHandler.removeTable("temp_" + table.getDbTableName());
 				msg = "Changes have been saved!";
 			}
 		} else {
