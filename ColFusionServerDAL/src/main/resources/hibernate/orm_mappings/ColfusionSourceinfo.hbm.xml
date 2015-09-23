@@ -15,7 +15,7 @@
             <column name="UserId" not-null="true" />
         </many-to-one>
         <property name="title" type="string">
-            <column name="Title" length="40" />
+            <column name="Title" length="500" />
         </property>
         <property name="description" type="string">
             <column name="Description" length="16777215" />
