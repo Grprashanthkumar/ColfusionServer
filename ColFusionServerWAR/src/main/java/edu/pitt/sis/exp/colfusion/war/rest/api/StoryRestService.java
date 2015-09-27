@@ -229,7 +229,7 @@ public class StoryRestService  {
 	public Response getTableDataBySidAndName(@ApiParam(value = "sid", required = true) @PathParam("sid") final int sid,
 			@ApiParam(value = "tableName", required = true) @PathParam("tableName") final String tableName, @ApiParam(value = "perPage", required = true) @PathParam("perPage") final int perPage, @ApiParam(value = "pageNumber", required = true) @PathParam("pageNumber") final int pageNumber) {
 
-		final BasicTableBL basicBL=new BasicTableBL();
+		final BasicTableBL basicBL= new BasicTableBL();
 		final JointTableByRelationshipsResponeModel result = basicBL.getTableDataBySidAndName(sid, tableName, perPage, pageNumber);
 
 		final String json = result.toJson();
