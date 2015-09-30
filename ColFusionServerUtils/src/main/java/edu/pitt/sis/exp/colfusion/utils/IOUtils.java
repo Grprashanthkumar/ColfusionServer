@@ -332,10 +332,23 @@ public class IOUtils {
 		fileAbsoluteName = fileAbsoluteName.replace('\\', '/');
 
 		final String fileRelativeName = fileAbsoluteName.replace(colfusionRoot, "");
-
-		final String colfusionURL = ConfigManager.getInstance().getProperty(PropertyKeys.COLFUSION_URL);
-
-		return colfusionURL + "/" + fileRelativeName;
+		
+		final StringBuffer fileUrl = new StringBuffer();
+		
+		String colfusionURL = ConfigManager.getInstance().getProperty(PropertyKeys.COLFUSION_URL);
+		if (colfusionURL.endsWith("/"))
+			fileUrl.append(colfusionURL.substring(0, colfusionURL.length()-1));
+		else
+			fileUrl.append(colfusionURL);
+		
+		fileUrl.append("/");
+		
+		if (fileRelativeName.startsWith("/"))
+			fileUrl.append(fileRelativeName.substring(1, fileRelativeName.length()));
+		else
+			fileUrl.append(fileRelativeName);
+		
+		return fileUrl.toString();
 	}
 
 	/**
