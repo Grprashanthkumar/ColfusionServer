@@ -25,7 +25,7 @@ public enum PropertyKeys implements IPropertyKeys {
 	 */
 	COLFUSION_PROPERTIES_TEST_NEVER_EXISTING_PROPERTY ("colfusion.properties.test.never.existing.property"),
 	
-	COLFUSION_URL ("colfusion.url"),
+	COLFUSION_STATIC_FILES_URL ("colfusion.static_files.url"),
 	
 	COLFUSION_STATIC_FILES_ROOT_LOCATION ("colfusion.static_files.root_location"),
 	

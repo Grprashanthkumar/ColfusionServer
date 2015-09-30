@@ -335,7 +335,7 @@ public class IOUtils {
 		
 		final StringBuffer fileUrl = new StringBuffer();
 		
-		String colfusionURL = ConfigManager.getInstance().getProperty(PropertyKeys.COLFUSION_URL);
+		String colfusionURL = ConfigManager.getInstance().getProperty(PropertyKeys.COLFUSION_STATIC_FILES_URL);
 		if (colfusionURL.endsWith("/"))
 			fileUrl.append(colfusionURL.substring(0, colfusionURL.length()-1));
 		else
