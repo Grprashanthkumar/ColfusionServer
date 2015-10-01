@@ -70,7 +70,8 @@ public class MetadataDbHandler {
 			throws SQLException {
 		logger.info(String.format("Getting target database connectio info for sid %d", sid));
 
-		try (Connection connection = this.dbHandler.getConnection()) {
+		try {
+			final Connection connection = this.dbHandler.getConnection();
 
 			final String sql = "SELECT * FROM colfusion_sourceinfo_DB WHERE sid = ?";
 
@@ -110,7 +111,8 @@ public class MetadataDbHandler {
 			throws SQLException {
 		logger.info(String.format("Getting operating user id for sid %d and table name %s", sid, tableInfo.getDbTableName()));
 
-		try (Connection connection = this.dbHandler.getConnection()) {
+		try {
+			final Connection connection = this.dbHandler.getConnection();
 
 			final String sql = "SELECT operatedUser FROM colfusion_table_change_log WHERE endChangeTime IS NULL AND sid = ? AND tableName = ?";
 
@@ -147,7 +149,8 @@ public class MetadataDbHandler {
 
 		logger.info(String.format("Getting user login for userId %d", userId));
 		String userLogin = "";
-		try (Connection connection = this.dbHandler.getConnection()) {
+		try {
+			final Connection connection = this.dbHandler.getConnection();
 
 			final String sql = "SELECT user_login FROM colfusion_users WHERE user_id = ?";
 
@@ -177,7 +180,8 @@ public class MetadataDbHandler {
 			throws SQLException {
 
 		logger.info(String.format("Getting if current table is being edited by user %d", userId));
-		try (Connection connection = this.dbHandler.getConnection()) {
+		try {
+			final Connection connection = this.dbHandler.getConnection();
 
 			final String sql = "SELECT endChangeTime FROM colfusion_table_change_log WHERE sid = ? AND tableName = ? AND operatedUser = ?";
 
@@ -213,7 +217,8 @@ public class MetadataDbHandler {
 		final SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		final String currentTime = format.format(new Date());
 
-		try (Connection connection = this.dbHandler.getConnection()) {
+		try {
+			final Connection connection = this.dbHandler.getConnection();
 
 			final String sql = String
 					.format("UPDATE colfusion_table_change_log SET endChangeTime = '%s' WHERE endChangeTime IS NULL AND sid = %d  AND tableName = '%s'",
@@ -243,7 +248,8 @@ public class MetadataDbHandler {
 
 		String startTime = "";
 
-		try (Connection connection = this.dbHandler.getConnection()) {
+		try {
+			final Connection connection = this.dbHandler.getConnection();
 
 			final String sql = "SELECT startChangeTime FROM colfusion_table_change_log WHERE endChangeTime is NULL and sid = ? AND tableName = ?";
 
@@ -283,7 +289,8 @@ public class MetadataDbHandler {
 
 		String startTime = "";
 
-		try (Connection connection = this.dbHandler.getConnection()) {
+		try {
+			final Connection connection = this.dbHandler.getConnection();
 
 			final String sql = "SELECT startChangeTime FROM colfusion_table_change_log WHERE endChangeTime is NULL and sid = ? AND tableName = ? AND operatedUser = ?";
 
@@ -356,7 +363,8 @@ public class MetadataDbHandler {
 		final SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		final String startEditTime = format.format(new Date());
 
-		try (Connection connection = this.dbHandler.getConnection()) {
+		try {
+			final Connection connection = this.dbHandler.getConnection();
 
 			final String sql = String.format("INSERT INTO colfusion_table_change_log VALUES(%d, '%s', '%s', NULL, %d)", sid,
 					tableInfo.getDbTableName(), startEditTime, userId);
@@ -382,7 +390,8 @@ public class MetadataDbHandler {
 			throws SQLException {
 
 		logger.info(String.format("Getting if table locked for sid %d, table %s", sid, tableInfo.getDbTableName()));
-		try (Connection connection = this.dbHandler.getConnection()) {
+		try {
+			final Connection connection = this.dbHandler.getConnection();
 
 			final String sql = "SELECT endChangeTime FROM colfusion_table_change_log WHERE sid = ?  AND tableName = ?";
 
@@ -413,7 +422,8 @@ public class MetadataDbHandler {
 	public boolean isMapExist(final int sid, final RelationKey table)
 			throws SQLException {
 		logger.info(String.format("Getting if map exists for sid %d, table %s", sid, table.getDbTableName()));
-		try (Connection connection = this.dbHandler.getConnection()) {
+		try {
+			final Connection connection = this.dbHandler.getConnection();
 
 			final String sql = "select * from colfusion_openrefine_project_map where sid = ?  and tableName = ?";
 
@@ -444,7 +454,8 @@ public class MetadataDbHandler {
 			throws SQLException {
 		logger.info(String.format("Getting projectId for sid %d, table %s", sid, table.getDbTableName()));
 		String projectId = "";
-		try (Connection connection = this.dbHandler.getConnection()) {
+		try {
+			final Connection connection = this.dbHandler.getConnection();
 
 			final String sql = "select projectId from colfusion_openrefine_project_map where sid = ? and tableName = ?";
 
@@ -473,7 +484,8 @@ public class MetadataDbHandler {
 	public boolean isTableBeingEditing(final int sid, final String tableName)
 			throws SQLException {
 		logger.info(String.format("Getting if table is being edited for sid %d, table %s", sid, tableName));
-		try (Connection connection = this.dbHandler.getConnection()) {
+		try {
+			final Connection connection = this.dbHandler.getConnection();
 
 			final String sql = "SELECT endChangeTime FROM colfusion_table_change_log WHERE sid = ? AND tableName = ?";
 
@@ -508,7 +520,8 @@ public class MetadataDbHandler {
 			throws SQLException {
 		logger.info(String.format("Saving relation for project %d, sid %d and tablename %s", projectId, sid, table.getDbTableName()));
 
-		try (Connection connection = this.dbHandler.getConnection()) {
+		try {
+			final Connection connection = this.dbHandler.getConnection();
 
 			final String sql = String.format("insert into colfusion_openrefine_project_map (`projectId`, `sid`, `tableName`) values('%d', %d, '%s')",
 					projectId, sid, table.getDbTableName());
@@ -534,7 +547,8 @@ public class MetadataDbHandler {
 			throws SQLException {
 		logger.info(String.format("Getting column names for sid %d", sid));
 		final ArrayList<String> columnNames = new ArrayList<String>();
-		try (Connection connection = this.dbHandler.getConnection()) {
+		try {
+			final Connection connection = this.dbHandler.getConnection();
 
 			final String sql = "select dname_chosen from colfusion_dnameinfo where sid = ?";
 
@@ -590,7 +604,8 @@ public class MetadataDbHandler {
 			throws SQLException {
 		logger.info(String.format("Getting if still in the session for sid %d, tableName %s and user %d", sid, tableInfo.getDbTableName(), colfusionUserId));
 
-		try (Connection connection = this.dbHandler.getConnection()) {
+		try {
+			final Connection connection = this.dbHandler.getConnection();
 
 			final String sql = "SELECT * FROM colfusion_table_change_log WHERE endChangeTime is NULL and sid = ? and tableName = ? and operatedUser = ?";
 
@@ -620,8 +635,8 @@ public class MetadataDbHandler {
 	public int getSid(final String projectId) throws SQLException {
 		logger.info(String.format("Getting sid for project %s", projectId));
 
-		try (Connection connection = this.dbHandler.getConnection()) {
-
+		try {
+			final Connection connection = this.dbHandler.getConnection();
 
 			final String sql = "select sid from colfusion_openrefine_project_map where projectId = ?";
 
@@ -651,7 +666,8 @@ public class MetadataDbHandler {
 	public RelationKey getTableNameByProjectId(final String projectId) throws SQLException {
 		logger.info(String.format("Getting tableName for project %s", projectId));
 
-		try (Connection connection = this.dbHandler.getConnection()) {
+		try {
+			final Connection connection = this.dbHandler.getConnection();
 
 			final String sql = "select tableName from colfusion_openrefine_project_map where projectId = ?";
 
@@ -682,7 +698,8 @@ public class MetadataDbHandler {
 		final SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		final String currentTime = format.format(new Date());
 
-		try (Connection connection = this.dbHandler.getConnection()) {
+		try {
+			final Connection connection = this.dbHandler.getConnection();
 
 			final String sql = String.format("UPDATE colfusion_table_change_log SET startChangeTime = '%s' WHERE endChangeTime IS NULL and sid = %d and tableName = '%s'", currentTime, sid, tableName);
 
@@ -708,7 +725,8 @@ public class MetadataDbHandler {
 		logger.info(String.format("Getting cids for sid %d", sid));
 		final ArrayList<Integer> cids = new ArrayList<>();
 
-		try (Connection connection = this.dbHandler.getConnection()) {
+		try {
+			final Connection connection = this.dbHandler.getConnection();
 
 			final String sql = String.format("SELECT cid FROM colfusion_dnameinfo WHERE sid = %d", sid);
 
@@ -736,7 +754,8 @@ public class MetadataDbHandler {
 			throws SQLException {
 		logger.info(String.format("Deleting dnameinfo rows by sid %d", sid));
 
-		try (Connection connection = this.dbHandler.getConnection()) {
+		try {
+			final Connection connection = this.dbHandler.getConnection();
 
 			final String sql = String.format("DELETE FROM colfusion_dnameinfo WHERE sid = %d", sid);
 
@@ -761,7 +780,8 @@ public class MetadataDbHandler {
 			throws SQLException {
 		logger.info(String.format("Inserting into dnameinfo by sid %d", sid));
 
-		try (Connection connection = this.dbHandler.getConnection()) {
+		try {
+			final Connection connection = this.dbHandler.getConnection();
 
 			try (Statement statement = connection.createStatement()) {
 
@@ -784,7 +804,8 @@ public class MetadataDbHandler {
 			throws SQLException {
 		logger.info(String.format("Deleting row from columninfo for cid %d", cid));
 
-		try (Connection connection = this.dbHandler.getConnection()) {
+		try {
+			final Connection connection = this.dbHandler.getConnection();
 
 			try (Statement statement = connection.createStatement()) {
 
@@ -807,7 +828,8 @@ public class MetadataDbHandler {
 			throws SQLException {
 		logger.info(String.format("Inserting into columninfo by table %s", tableName));
 
-		try (Connection connection = this.dbHandler.getConnection()) {
+		try {
+			final Connection connection = this.dbHandler.getConnection();
 
 			try (Statement statement = connection.createStatement()) {
 
@@ -831,7 +853,8 @@ public class MetadataDbHandler {
 			throws SQLException {
 		logger.info(String.format("Inserting into OpenRefineHistoryHelper for sid %d, table %s", sid, tableInfo.getDbTableName()));
 
-		try (Connection connection = this.dbHandler.getConnection()) {
+		try {
+			final Connection connection = this.dbHandler.getConnection();
 
 			//TODO:replace with prepared statement
 			final String sql = String.format("INSERT INTO colfusion_openrefine_history_helper (`sid`, `tableName`, `count`, `isSaved`) VALUES(%d, '%s', 0, 1)",
@@ -858,7 +881,9 @@ public class MetadataDbHandler {
 			throws SQLException {
 		logger.info(String.format("Updating OpenRefineHistoryHelper for sid %d, table %s set count = %d", sid, tableInfo.getDbTableName(), count));
 
-		try (Connection connection = this.dbHandler.getConnection()) {
+		try {
+			final Connection connection = this.dbHandler.getConnection();
+
 			//TODO: use prepared statement
 			final String sql = String.format("UPDATE colfusion_openrefine_history_helper SET count = %d, isSaved = %d WHERE sid = %d and tableName = '%s'",
 					count, isSaved, sid, tableInfo.getDbTableName());
@@ -883,8 +908,8 @@ public class MetadataDbHandler {
 	public int getCountFromOpenRefineHistoryHelper(final int sid, final RelationKey tableInfo) throws SQLException {
 		logger.info(String.format("Getting count for sid %d table %s", sid, tableInfo.getDbTableName()));
 
-		try (Connection connection = this.dbHandler.getConnection()) {
-
+		try {
+			final Connection connection = this.dbHandler.getConnection();
 
 			final String sql = "select count from colfusion_openrefine_history_helper where sid = ? and tableName = ?";
 
@@ -915,8 +940,8 @@ public class MetadataDbHandler {
 	public int getIsSavedFromOpenRefineHistoryHelper(final int sid, final RelationKey tableInfo) throws SQLException {
 		logger.info(String.format("Getting isSaved for sid %d table %s", sid, tableInfo.getDbTableName()));
 
-		try (Connection connection = this.dbHandler.getConnection()) {
-
+		try {
+			final Connection connection = this.dbHandler.getConnection();
 
 			final String sql = "select isSaved from colfusion_openrefine_history_helper where sid = ? and tableName = ?";
 

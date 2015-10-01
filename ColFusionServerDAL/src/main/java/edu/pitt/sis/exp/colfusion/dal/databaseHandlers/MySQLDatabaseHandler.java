@@ -217,7 +217,8 @@ public class MySQLDatabaseHandler extends DatabaseHandlerBase {
 	public boolean deleteDatabaseIfExists(final String databaseName) throws Exception {
 		String sql = "";
 
-		try (Statement statement = getConnection().createStatement();) {
+		try {
+			final Statement statement = getConnection().createStatement();
 
 			//TODO: is SQL injection possible here? because we just put database name without any checks and the database name can come from user (or not?)
 			sql = String.format("DROP DATABASE IF EXISTS `%s`", databaseName);
@@ -256,7 +257,8 @@ public class MySQLDatabaseHandler extends DatabaseHandlerBase {
 			throws SQLException {
 		this.logger.info(String.format("Getting if temp table exists for sid %d and tablename %s", sid, table.getDbTableName()));
 
-		try (Connection connection = getConnection()) {
+		try {
+			final Connection connection = getConnection();
 
 			final String sql = String.format("SHOW TABLES LIKE 'temp_%s'", table.getDbTableName());
 
@@ -303,12 +305,13 @@ public class MySQLDatabaseHandler extends DatabaseHandlerBase {
 	public int getColCount(final int sid, final RelationKey tableInfo) throws SQLException {
 		this.logger.info(String.format("Getting column count for sid %d", sid));
 
-		try (Connection connection = getConnection()) {
+		try {
+			final Connection connection = getConnection();
 
 			final String sql = "select count(*) from information_schema.columns where table_schema= ? and table_name= ?";
 
 			try (PreparedStatement statement = connection.prepareStatement(sql)) {
-				statement.setString(1, "colfusion_filetodb_" + sid);
+				statement.setString(1, "colfusion_fileToDB_" + sid);
 				statement.setString(2, tableInfo.getDbTableName());
 
 				int colCount = 0;
@@ -333,7 +336,8 @@ public class MySQLDatabaseHandler extends DatabaseHandlerBase {
 	public ArrayList<ArrayList<String>> getRows(final RelationKey tableInfo, final int colCount) throws SQLException {
 		this.logger.info(String.format("Getting rows for table %s", tableInfo.getDbTableName()));
 		final ArrayList<ArrayList<String>> rows = new ArrayList<ArrayList<String>>();
-		try (Connection connection = getConnection()) {
+		try {
+			final Connection connection = getConnection();
 
 			//TODO:use prepared statement
 			final String sql = String.format("select * from %s", wrapName(tableInfo.getDbTableName()));
@@ -387,7 +391,8 @@ public class MySQLDatabaseHandler extends DatabaseHandlerBase {
 
 		this.logger.info(String.format("Inserting into table temp_%s for sid %d", tableName, sid));
 
-		try (Connection connection = getConnection()) {
+		try {
+			final Connection connection = getConnection();
 
 			try (Statement statement = connection.createStatement()) {
 
