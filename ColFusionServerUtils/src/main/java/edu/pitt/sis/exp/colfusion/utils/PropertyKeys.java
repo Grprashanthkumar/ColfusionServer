@@ -220,7 +220,7 @@ public enum PropertyKeys implements IPropertyKeys {
 	
 	//***** END OF HIBERNATE PROPERTIES *****************//
 
-	COLFUSION_OPENREFINE_URL ("colfusion.openrefine.url"),	
+	COLFUSION_OPENREFINE_PATH ("colfusion.openrefine.path"),	
 	
 	COLFUSION_OPENREFINE_FOLDER ("colfusion.openrefine.folder"),
 
