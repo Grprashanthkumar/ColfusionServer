@@ -19,6 +19,8 @@ public class DatasetVariableViewModel {
 	private String variableValueType;
 	private String variableValueFormat;
 	private String missingValue;
+	private String constantValue;
+	private boolean isConstant;
 	private boolean checked;
 
 	public DatasetVariableViewModel() {
@@ -43,6 +45,20 @@ public class DatasetVariableViewModel {
 		setVariableValueType(variableValueType);
 		setMissingValue(missingValue);
 		setChecked(checked);
+	}
+	
+	public DatasetVariableViewModel(final int cid, final String originalName, final String chosenName, final String description, final String variableMeasuringUnit, final String variableValueType, final String variableValueFormat,
+			final String missingValue, final String constantValue, final boolean checked) {
+		setCid(cid);
+		setChosenName(chosenName);
+		setDescription(description);
+		setVariableValueFormat(variableValueFormat);
+		setOriginalName(originalName);
+		setVariableMeasuringUnit(variableMeasuringUnit);
+		setVariableValueType(variableValueType);
+		setMissingValue(missingValue);
+		setChecked(checked);
+		setConstantValue(constantValue);
 	}
 
 	/**
@@ -169,5 +185,33 @@ public class DatasetVariableViewModel {
 	 */
 	public void setMissingValue(final String missingValue) {
 		this.missingValue = missingValue;
+	}
+
+	/**
+	 * @return the constantValue
+	 */
+	public String getConstantValue() {
+		return constantValue;
+	}
+
+	/**
+	 * @param constantValue the constantValue to set
+	 */
+	public void setConstantValue(String constantValue) {
+		this.constantValue = constantValue;
+	}
+
+	/**
+	 * @return the isConstant
+	 */
+	public boolean getIsConstant() {
+		return isConstant;
+	}
+
+	/**
+	 * @param isConstant the isConstant to set
+	 */
+	public void setIsConstant(boolean isConstant) {
+		this.isConstant = isConstant;
 	}
 }
