@@ -123,6 +123,13 @@ public class KTRManager {
 		
 		ktrDocumentAddFiles(dataFileExtension, filesAbsoluteNames);
 		ktrDocumentAddVariablesIntoInputInputSourceStep(dataFileExtension, worksheet.getVariables());
+
+		//select values step into ktr document
+		ktrDocumentSelectValues(dataFileExtension, worksheet.getVariables());
+		
+		//add constant value step
+		ktrDocumentConstantValues(dataFileExtension, worksheet.getVariables());
+				
 		ktrDocumentAddTableNameIntoTargetSchemaStep(tableName);
 		ktrDocumentAddVariablesIntoTargetSchemaStep(worksheet.getVariables());
 		
@@ -226,7 +233,7 @@ public class KTRManager {
 		logger.info("starting add variables into KTR document into Target Schema step");
 		
 		//XPath to get fields node to populate with selected variables
-		String expression = "/transformation/step[name = 'Target Schema']/fields";
+		String expression = "/transformation/step[name = 'Target Schema']/fields"; //Target Schema
 		
 		XPath xPath =  XPathFactory.newInstance().newXPath();
 		NodeList fieldsTag = (NodeList) xPath.compile(expression).evaluate(ktrDocument, XPathConstants.NODESET);
@@ -248,11 +255,15 @@ public class KTRManager {
 			Element field = ktrDocument.createElement("field");
 			
 			Element columnName = ktrDocument.createElement("column_name");
-			columnName.appendChild(ktrDocument.createTextNode(String.format("`%s`", variable.getOriginalName())));
-
+			columnName.appendChild(ktrDocument.createTextNode(String.format("%s", variable.getOriginalName())));
+			
 			Element streamName = ktrDocument.createElement("stream_name");
+			//stream name for the final step checking if constant column or not
+			if(!variable.getIsConstant())
 			streamName.appendChild(ktrDocument.createTextNode(variable.getOriginalName()));
-
+			else
+			streamName.appendChild(ktrDocument.createTextNode(variable.getOriginalName()+"_constant"));
+			
 			field.appendChild(columnName);
 			field.appendChild(streamName);
 				
@@ -261,7 +272,142 @@ public class KTRManager {
 		
 		logger.info("finished add variables into KTR document into TargetSchema step");
 	}
+	/**
+	 * Populates fields tag in the Constant Value step with variables information.
+	 * 
+	 * @param dataFileExtension extension of the data file.
+	 * @param variables the info about variables
+	 * @throws Exception
+	 */
+	private void ktrDocumentConstantValues(final String dataFileExtension, final ArrayList<DatasetVariableViewModel> variables) throws Exception {
+		
+		logger.info("starting select variables into KTR document into SelectValues step");
+		
+		//TODO: the CSV type as a string is not good, should be an enum.
+		String stepName = dataFileExtension.equals("csv") ? "Add constants" : "Excel Input File";
+		
+		//XPath to get fields node to populate with selected variables
+		String expression = String.format("/transformation/step[name = '%s']/fields", stepName);
+		
+		XPath xPath =  XPathFactory.newInstance().newXPath();
+		NodeList fieldsTag = (NodeList) xPath.compile(expression).evaluate(ktrDocument, XPathConstants.NODESET);
+		
+		if (fieldsTag.getLength() == 0) {
+			logger.error(String.format("fieldsTag failed, no /trasformation/step/fields tag "));
+			
+			throw new Exception("fieldsTag failed, no /trasformation/step/fields tag");
+		}
+		
+		Node fieldsNode = fieldsTag.item(0);
+		
+		for(DatasetVariableViewModel variable : variables) {
+			
+			if (!variable.isChecked()) {
+				continue;
+			}
+			
+			if(variable.getIsConstant())
+			{
+			
+			Element field = ktrDocument.createElement("field");
+			
+			Element name = ktrDocument.createElement("name");
+			name.appendChild(ktrDocument.createTextNode(variable.getOriginalName()+"_constant"));
 
+			Element type = ktrDocument.createElement("type");
+			type.appendChild(ktrDocument.createTextNode("String"));
+		
+			Element length = ktrDocument.createElement("length");
+			length.appendChild(ktrDocument.createTextNode("-1"));
+			
+			Element precision = ktrDocument.createElement("precision");
+			precision.appendChild(ktrDocument.createTextNode("-1"));
+			
+			Element nullif = ktrDocument.createElement("nullif");
+			nullif.appendChild(ktrDocument.createTextNode(variable.getConstantValue()));
+			
+			field.appendChild(name);
+			field.appendChild(type);
+			field.appendChild(length);
+			field.appendChild(precision);
+			field.appendChild(nullif);
+
+			
+			//TODO get the enum of possible types, don't compare with string.
+			if (variable.getVariableValueType() == "INT") {
+				Element format = ktrDocument.createElement("format");
+				format.appendChild(ktrDocument.createTextNode("0.##############;-0.##############"));
+				field.appendChild(format);
+            }
+
+			fieldsNode.appendChild(field);
+			}
+		}
+		
+		logger.info("finished add variables into KTR document into InputSource step");
+	}
+	
+	
+	
+	
+	/**
+	 * Populates fields tag in the Select Value step with variables information.
+	 * 
+	 * @param dataFileExtension extension of the data file.
+	 * @param variables the info about variables
+	 * @throws Exception
+	 */
+	private void ktrDocumentSelectValues(final String dataFileExtension, final ArrayList<DatasetVariableViewModel> variables) throws Exception {
+		
+		logger.info("starting select variables into KTR document into SelectValues step");
+		
+		//TODO: the CSV type as a string is not good, should be an enum.
+		String stepName = dataFileExtension.equals("csv") ? "Select values" : "Excel Input File";
+		
+		//XPath to get fields node to populate with selected variables
+		String expression = String.format("/transformation/step[name = '%s']/fields", stepName);
+		
+		XPath xPath =  XPathFactory.newInstance().newXPath();
+		NodeList fieldsTag = (NodeList) xPath.compile(expression).evaluate(ktrDocument, XPathConstants.NODESET);
+		
+		if (fieldsTag.getLength() == 0) {
+			logger.error(String.format("fieldsTag failed, no /trasformation/step/fields tag "));
+			
+			throw new Exception("fieldsTag failed, no /trasformation/step/fields tag");
+		}
+		
+		Node fieldsNode = fieldsTag.item(0);
+		
+		for(DatasetVariableViewModel variable : variables) {
+			
+			if (!variable.isChecked()) {
+				continue;
+			}
+			
+			Element field = ktrDocument.createElement("field");
+			
+			Element name = ktrDocument.createElement("name");
+			name.appendChild(ktrDocument.createTextNode(variable.getOriginalName()));
+		
+			Element length = ktrDocument.createElement("length");
+			length.appendChild(ktrDocument.createTextNode("-1"));
+			
+			Element precision = ktrDocument.createElement("precision");
+			precision.appendChild(ktrDocument.createTextNode("-1"));
+
+			field.appendChild(name);
+			field.appendChild(length);
+			field.appendChild(precision);
+
+			//TODO get the enum of possible types, don't compare with string.
+				
+			fieldsNode.appendChild(field);
+		}
+		
+		logger.info("finished add variables into KTR document into InputSource step");
+	}
+	
+	
 	/**
 	 * Populates fields tag in the InputSource tag with variables information.
 	 * 
